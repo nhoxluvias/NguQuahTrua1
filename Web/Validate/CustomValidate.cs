@@ -11,7 +11,7 @@ namespace Web.Validate
         public static void InitCustomValidate(CustomValidator customValidator, ServerValidateEventArgs args)
         {
             customValidator.ErrorMessage = "";
-            customValidator.ServerValidate = new ServerValidateEventHandler(null);
+            customValidator.ServerValidate = new ServerValidateEventHandler();
             customValidator.ClientValidationFunction = "";
 
         }
