@@ -16,42 +16,42 @@ namespace Web.Validate
 
         }
 
-        public static bool EmailValidate()
+        public static bool EmailValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
 
-        public static bool PasswordValidate()
+        public static bool PasswordValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
 
-        public static bool RePasswordValidate()
+        public static bool RePasswordValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
 
-        public static bool UsernameValidate()
+        public static bool UsernameValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
 
-        public static bool PhoneNumberValidate()
+        public static bool PhoneNumberValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
 
-        public static bool CardNumberValidate()
+        public static bool CardNumberValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         } 
 
-        public static bool CVVValidate()
+        public static bool CVVValidate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
 
-        public static bool ExpirationDate()
+        public static bool ExpirationDate(object source, ServerValidateEventArgs args)
         {
             return false;
         }
