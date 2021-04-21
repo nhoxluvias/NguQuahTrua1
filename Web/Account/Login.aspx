@@ -84,11 +84,11 @@
                 </div>
             </div>
             <div class="account-form-support">
-                <span>Bạn quên mật khẩu?</span>
-                <span>Bạn chưa có tài khoản?</span>
-                <span>Gửi ý kiến phản hồi</span>
-                <span>Liên hệ với chúng tôi</span>
-                <span>Điều khoản sử dụng dịch vụ</span>
+                <span><asp:HyperLink ID="hylnkResetPassword" runat="server">Bạn quên mật khẩu?</asp:HyperLink></span>
+                <span><asp:HyperLink ID="hylnkRegister" runat="server">Bạn chưa có tài khoản?</asp:HyperLink></span>
+                <span><asp:HyperLink ID="hylnkFeedback" runat="server">Gửi ý kiến phản hồi</asp:HyperLink></span>
+                <span><asp:HyperLink ID="hylnkContact" runat="server">Liên hệ với chúng tôi</asp:HyperLink></span>
+                <span><asp:HyperLink ID="hylnkTermOfUse" runat="server">Điều khoản sử dụng dịch vụ</asp:HyperLink></span>
             </div>
         </div>
         <script src="<%= ResolveUrl("~/js/account/account.js") %>">

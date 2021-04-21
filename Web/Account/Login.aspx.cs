@@ -11,7 +11,7 @@ namespace Web.Account
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            hylnkResetPassword.NavigateUrl = GetRouteUrl("ResetPassword", null);
         }
     }
 }

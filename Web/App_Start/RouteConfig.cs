@@ -12,8 +12,8 @@ namespace Web.App_Start
         {
             routes.MapPageRoute("Login", "account/login", "~/Account/Login.aspx");
             routes.MapPageRoute("Register", "account/register", "~/Account/Register.aspx");
-            routes.MapPageRoute("ResetPassword", "account/reset-password", "~/Account/ResetPassword");
-            routes.MapPageRoute("Confirm", "account/confirm", "~/Account/Confirm");
+            routes.MapPageRoute("ResetPassword", "account/reset-password", "~/Account/ResetPassword.aspx");
+            routes.MapPageRoute("Confirm", "account/confirm", "~/Account/Confirm.aspx");
         }
     }
 }
