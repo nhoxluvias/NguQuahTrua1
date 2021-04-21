@@ -11,7 +11,7 @@ namespace Web.App_Start
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.MapPageRoute("Login", "account/login", "~/Account/Login.aspx");
-            routes.MapPageRoute("Register", "account/register", "~/Account/Login.aspx");
+            routes.MapPageRoute("Register", "account/register", "~/Account/Register.aspx");
             routes.MapPageRoute("ResetPassword", "account/reset-password", "~/Account/ResetPassword");
             routes.MapPageRoute("Confirm", "account/confirm", "~/Account/Confirm");
         }
