@@ -20,14 +20,14 @@
             <div class="confirm-form-data">
                 <div class="confirm-form-group">
                     <p>Mã xác nhận</p>
-                    <input type="text" name="confirm-code" value="" placeholder="Nhập vào mã xác nhận">
+                    <asp:TextBox ID="txtConfirmCode" Text="" Placeholder="Nhập vào mã xác nhận" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvConfirmCode" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
                     </div>
                 </div>
             </div>
             <div class="confirm-form-submit">
-                <button class="button button-red button-confirm">Xác nhận</button>
+                <asp:Button ID="btnConfirm" CssClass="button button-red button-confirm" runat="server" Text="Xác nhận" />
             </div>
         </div>
     </form>

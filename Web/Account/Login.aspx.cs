@@ -27,15 +27,10 @@ namespace Web.Account
 
         private void InitValidation()
         {
-            cvUsername.ErrorMessage = "Không được trống, chỉ chứa a-z, 0-9, _ và -";
-            cvUsername.ControlToValidate = "txtUsername";
-            cvUsername.ValidateEmptyText = true;
-            cvUsername.ServerValidate += new ServerValidateEventHandler(CheckUsername);
-
-            cvPassword.ErrorMessage = "Tối thiểu 6 ký tự, tối đa 20 ký tự";
-            cvPassword.ControlToValidate = "txtPassword";
-            cvPassword.ValidateEmptyText = true;
-            cvPassword.ServerValidate += new ServerValidateEventHandler(CheckPassword);
+            CustomValidation
+                .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CheckUsername);
+            CustomValidation
+                .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CheckPassword);
         }
 
         private void CheckUsername(object source, ServerValidateEventArgs args)

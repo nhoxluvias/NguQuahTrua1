@@ -9,13 +9,15 @@ namespace Web.Validation
 {
     public class CustomValidation
     {
-        //public static void InitCustomValidate(CustomValidator customValidator, ServerValidateEventArgs args)
-        //{
-        //    customValidator.ErrorMessage = "";
-        //    customValidator.ServerValidate = new ServerValidateEventHandler();
-        //    customValidator.ClientValidationFunction = "";
+        public static void Init(CustomValidator customValidator, string controlToValidate, string errorMessage, bool validateEmptyText, string clientValidationFunction, ServerValidateEventHandler serverValidateEventHandler)
+        {
+            customValidator.ErrorMessage = errorMessage;
+            customValidator.ValidateEmptyText = validateEmptyText;
+            customValidator.ControlToValidate = controlToValidate;
+            customValidator.ServerValidate += serverValidateEventHandler;
+            customValidator.ClientValidationFunction = clientValidationFunction;
 
-        //}
+        }
 
         public static void EmailValidate(object source, ServerValidateEventArgs args)
         {
@@ -58,9 +60,9 @@ namespace Web.Validation
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
         }
 
-        public static bool ExpirationDate(object source, ServerValidateEventArgs args)
+        public static void ExpirationDate(object source, ServerValidateEventArgs args)
         {
-            return false;
+            args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
         }
     }
 }
