@@ -13,12 +13,11 @@
 <body>
     <form id="form1" runat="server">
         <video id="backgroundVideo" class="background-video" autoplay>
-            <source src="https://www.phanxuanchanh.com/trailer.mp4" type='video/mp4'>
-            <p class="cc">Không thể phát video</p>
-          </video>
+            <source src="<%--https://www.phanxuanchanh.com/trailer.mp4--%>" type='video/mp4'>
+            <p>Không thể phát video</p>
+        </video>
         <div class="audio-tool">
             <div class="space">
-
             </div>
             <div class="audio-control" onclick="switchAudioState();">
                 <i id="audioControlTitle" class="fa fa-volume-up"></i>
@@ -38,57 +37,48 @@
         <div class="notify">
             <div class="notify-title">
                 <h3>Bạn không thể không xem</h3>
-                <hr/>
+                <hr />
             </div>
             <div class="notify-list">
-                <div class="notify-item">
-                    <h5>Phim 1</h5>
-                    <p class="cc">Mô tả phim 1</p>
-                </div>
-                <div class="notify-item">
-                    <h5>Phim 1</h5>
-                    <p class="cc">Mô tả phim 1</p>
-                </div>
-                <div class="notify-item">
-                    <h5>Phim 1</h5>
-                    <p class="cc">Mô tả phim 1</p>
-                </div>
-                <div class="notify-item">
-                    <h5>Phim 1</h5>
-                    <p class="cc">Mô tả phim 1</p>
-                </div>
-                <div class="notify-item">
-                    <h5>Phim 1</h5>
-                    <p class="cc">Mô tả phim 1</p>
-                </div>
+                <% for (int i = 0; i < 5; i++) { %>
+                    <div class="notify-item">
+                        <h5>Phim <%= i %></h5>
+                        <p class="cc">Mô tả phim <%= i %></p>
+                    </div>
+                <% } %>
             </div>
         </div>
         <div class="account-form login">
             <div class="account-form-title">
                 <h3>Đăng nhập</h3>
-                <p class="cc">Đăng nhập ngay để không bỏ lỡ những bộ phim hấp dẫn</p>
+                <p>Đăng nhập ngay để không bỏ lỡ những bộ phim hấp dẫn</p>
             </div>
             <div class="account-form-data">
-                <input type="text" name="username" value="" placeholder="Nhập vào tên người dùng">
-                <input type="password" name="password" value="" placeholder="Nhập vào mật khẩu">
+                <asp:TextBox ID="txtUsername" Text="" Placeholder="Nhập vào tên người dùng" TextMode="SingleLine" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtPassword" Text="" Placeholder="Nhập vào mật khẩu" TextMode="Password" runat="server"></asp:TextBox>
             </div>
             <div class="account-form-submit">
-                <button class="button button-red button-login">Đăng nhập</button>
+                <asp:Button ID="btnLogin" CssClass="button button-red button-login" runat="server" Text="Đăng nhập" />
             </div>
             <div class="show-error">
                 <div class="show-error-item">
-                    <span>Lỗi sẽ xuất hiện tại đây</span>
+                    <asp:CustomValidator ID="cvUsername" runat="server"></asp:CustomValidator>
                 </div>
                 <div class="show-error-item">
-                    <span>Lỗi sẽ xuất hiện tại đây</span>
+                    <asp:CustomValidator ID="cvPassword" runat="server"></asp:CustomValidator>
                 </div>
             </div>
             <div class="account-form-support">
-                <span><asp:HyperLink ID="hylnkResetPassword" runat="server">Bạn quên mật khẩu?</asp:HyperLink></span>
-                <span><asp:HyperLink ID="hylnkRegister" runat="server">Bạn chưa có tài khoản?</asp:HyperLink></span>
-                <span><asp:HyperLink ID="hylnkFeedback" runat="server">Gửi ý kiến phản hồi</asp:HyperLink></span>
-                <span><asp:HyperLink ID="hylnkContact" runat="server">Liên hệ với chúng tôi</asp:HyperLink></span>
-                <span><asp:HyperLink ID="hylnkTermOfUse" runat="server">Điều khoản sử dụng dịch vụ</asp:HyperLink></span>
+                <span>
+                    <asp:HyperLink ID="hylnkResetPassword" runat="server">Bạn quên mật khẩu?</asp:HyperLink></span>
+                <span>
+                    <asp:HyperLink ID="hylnkRegister" runat="server">Bạn chưa có tài khoản?</asp:HyperLink></span>
+                <span>
+                    <asp:HyperLink ID="hylnkFeedback" runat="server">Gửi ý kiến phản hồi</asp:HyperLink></span>
+                <span>
+                    <asp:HyperLink ID="hylnkContact" runat="server">Liên hệ với chúng tôi</asp:HyperLink></span>
+                <span>
+                    <asp:HyperLink ID="hylnkTermOfUse" runat="server">Điều khoản sử dụng dịch vụ</asp:HyperLink></span>
             </div>
         </div>
         <script src="<%= ResolveUrl("~/js/account/account.js") %>">

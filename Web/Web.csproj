@@ -211,7 +211,7 @@
     <Compile Include="User\Watch.aspx.designer.cs">
       <DependentUpon>Watch.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Validate\CustomValidate.cs" />
+    <Compile Include="Validation\CustomValidation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="User\Layout\UserLayout.Master" />

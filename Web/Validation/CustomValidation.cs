@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI.WebControls;
 
-namespace Web.Validate
+namespace Web.Validation
 {
-    public class CustomValidate
+    public class CustomValidation
     {
         //public static void InitCustomValidate(CustomValidator customValidator, ServerValidateEventArgs args)
         //{
@@ -27,10 +27,7 @@ namespace Web.Validate
 
         public static void PasswordValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = false;
-            string value = args.Value;
-            if (Regex.IsMatch(value, @"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})"))
-                args.IsValid = true;
+            args.IsValid = Regex.IsMatch(args.Value, @"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})");
         }
 
         public static void RePasswordValidate(object source, ServerValidateEventArgs args)
@@ -43,25 +40,22 @@ namespace Web.Validate
 
         public static void UsernameValidate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = false;
-            string value = args.Value;
-            if (Regex.IsMatch(value, "^[a-z0-9_-]{3,15}$"))
-                args.IsValid = true;
+            args.IsValid = Regex.IsMatch(args.Value, "^[a-z0-9_-]{3,15}$");
         }
 
-        public static bool PhoneNumberValidate(object source, ServerValidateEventArgs args)
+        public static void PhoneNumberValidate(object source, ServerValidateEventArgs args)
         {
-            return false;
+            args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3,15}$");
         }
 
-        public static bool CardNumberValidate(object source, ServerValidateEventArgs args)
+        public static void CardNumberValidate(object source, ServerValidateEventArgs args)
         {
-            return false;
+            args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{16,19}$");
         } 
 
-        public static bool CVVValidate(object source, ServerValidateEventArgs args)
+        public static void CVVValidate(object source, ServerValidateEventArgs args)
         {
-            return false;
+            args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
         }
 
         public static bool ExpirationDate(object source, ServerValidateEventArgs args)

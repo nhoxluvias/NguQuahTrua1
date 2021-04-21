@@ -82,13 +82,18 @@
 
 .account-form-support {
     position: absolute;
-    color: rgb(255, 255, 255);
+/*    color: rgb(255, 255, 255);*/
     white-space: nowrap;
 }
 
     .account-form-support span {
         display: inline-block;
     }
+
+        .account-form-support span a {
+            text-decoration: none;
+            color: rgb(255, 255, 255);
+        }
 
 .notify {
     background-color: rgba(40, 40, 40, 0.4);
