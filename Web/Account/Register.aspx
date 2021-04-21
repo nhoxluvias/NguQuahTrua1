@@ -15,33 +15,59 @@
             <div class="register-form-title">
                 <h3>Đăng ký tài khoản</h3>
                 <p>Hãy đăng ký để thưởng thức những tác phẩm điện ảnh hay, chất lượng nhất</p>
-                <hr/>
+                <hr />
             </div>
             <div class="register-form-data">
                 <div class="register-form-group register-form-group-left">
                     <h4>Thông tin cơ bản</h4>
                     <p>Tên người dùng</p>
                     <input type="text" name="username" value="" placeholder="Nhập vào tên người dùng">
-                    <asp:TextBox ID="txtUsername" Text="" Placeholder="Nhập vào tên người dùng" runat="server"></asp:TextBox>
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Địa chỉ Email</p>
                     <input type="text" name="email" value="" placeholder="Nhập vào địa chỉ Email">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Số điện thoại</p>
                     <input type="text" name="phoneNumber" value="" placeholder="Nhập vào số điện thoại">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Mật khẩu</p>
                     <input type="password" name="password" value="" placeholder="Nhập vào mật khẩu">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Xác nhận mật khẩu</p>
                     <input type="password" name="rePassword" value="" placeholder="Nhập vào xác nhận mật khẩu">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                 </div>
                 <div class="register-form-group register-form-group-right">
                     <h4>Thông tin thanh toán</h4>
                     <p>Số thẻ</p>
                     <input type="text" name="cardNumber" value="" placeholder="Nhập vào số thẻ">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>CVV</p>
                     <input type="text" name="cvv" value="" placeholder="Nhập vào số CVV">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Tên chủ tài khoản</p>
                     <input type="text" name="accountName" value="" placeholder="Nhập vào tên tài khoản">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Ngày hết hạn</p>
                     <input type="text" name="expirationDate" value="" placeholder="Nhập vào ngày hết hạn">
+                    <div class="show-error">
+                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                    </div>
                     <p>Phương thức thanh toán</p>
                     <select name="paymentMethod" id="cars">
                         <option value="visa">Thẻ Visa</option>
