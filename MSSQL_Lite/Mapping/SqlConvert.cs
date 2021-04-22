@@ -117,7 +117,7 @@ namespace MSSQL_Lite.Mapping
             if (pairs == null)
                 return default(T);
             object model = Obj.CreateInstance<T>();
-            model = (T)Obj.SetValuesForPropertiesOfModelObject(model, pairs);
+            model = (T)Obj.SetValuesForPropertiesOfObject(model, pairs);
             if (model == null)
                 return default(T);
 
@@ -139,7 +139,7 @@ namespace MSSQL_Lite.Mapping
                         Dictionary<string, object> propertiesOfSubModel = subProperties
                             .Where(p => StringExtension.Substring(p.Key, 0, p.Key.IndexOf('.')) == prefixKey)
                             .ToDictionary(p => GetSuffixKey(p.Key), p => p.Value);
-                        subModel = Obj.SetValuesForPropertiesOfModelObject(subModel, propertiesOfSubModel);
+                        subModel = Obj.SetValuesForPropertiesOfObject(subModel, propertiesOfSubModel);
                         if (subModel != null)
                             subPropertyInfo.SetValue(model, subModel);
                     }

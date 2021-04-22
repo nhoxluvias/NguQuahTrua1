@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\DBContext.cs" />
     <Compile Include="Model\District.cs" />
     <Compile Include="Model\Gender.cs" />
     <Compile Include="Model\Province.cs" />
@@ -59,6 +60,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{2bafd121-9a00-48e8-921a-fb250b8f81ca}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MSSQL_Lite\MSSQL_Lite.csproj">
+      <Project>{d7c08863-5fbb-4131-b72c-2ca0e9ed3fe8}</Project>
+      <Name>MSSQL_Lite</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

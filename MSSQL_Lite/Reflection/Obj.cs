@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace MSSQL_Lite.Reflection
 {
@@ -262,35 +261,35 @@ namespace MSSQL_Lite.Reflection
 
         public static PropertyInfo GetProperty(object obj, string propertyName)
         {
-            return ModelObject.GetProperty(obj, p => p.Name == propertyName);
+            return GetProperty(obj, p => p.Name == propertyName);
         }
 
         public static PropertyInfo GetProperty<T>(string propertyName)
         {
-            return ModelObject.GetProperty<T>(p => p.Name == propertyName);
+            return GetProperty<T>(p => p.Name == propertyName);
         }
 
         public static PropertyInfo[] GetProperties(object obj, string customAttributeName)
         {
-            return ModelObject.GetProperties(obj, c => c.AttributeType.Name == customAttributeName);
+            return GetProperties(obj, c => c.AttributeType.Name == customAttributeName);
         }
 
         public static PropertyInfo[] GetProperties<T>(string customAttributeName)
         {
-            return ModelObject.GetProperties<T>(c => c.AttributeType.Name == customAttributeName);
+            return GetProperties<T>(c => c.AttributeType.Name == customAttributeName);
         }
 
         public static CustomAttributeData GetCustomAttribute(object obj, string customAttributeName)
         {
-            return ModelObject.GetCustomAttribute(obj, c => c.AttributeType.Name == customAttributeName);
+            return GetCustomAttribute(obj, c => c.AttributeType.Name == customAttributeName);
         }
 
-        public static CustomAttributeData GetCustomAttribute<T>(string customAttributeName)
+        public static CustomAttribute GetCustomAttribute<T>(string customAttributeName)
         {
-            return ModelObject.GetCustomAttribute<T>(c => c.AttributeType.Name == customAttributeName);
+            return GetCustomAttribute<T>(c => c.AttributeType.Name == customAttributeName);
         }
 
-        public static CustomAttributeNamedArgument GetNamedArgument(PropertyInfo propertyInfo, string memberName)
+        public static NamedArgument GetNamedArgument(PropertyInfo propertyInfo, string memberName)
         {
             CustomAttributeData customAttributeData = propertyInfo.CustomAttributes
                     .SingleOrDefault(c => c.AttributeType.Name == "Column" || c.AttributeType.Name == "PrimaryKey");
@@ -300,7 +299,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.SingleOrDefault(n => n.MemberName == memberName);
         }
 
-        public static object SetValuesForPropertiesOfModelObject(object model, Dictionary<string, object> pairs)
+        public static object SetValuesForPropertiesOfObject(object model, Dictionary<string, object> pairs)
         {
             Type type = model.GetType();
             if (type.IsValueType || type.Name == "String")
@@ -309,7 +308,7 @@ namespace MSSQL_Lite.Reflection
                 .ToDictionary(p => p.Key, p => p.Value);
             foreach (KeyValuePair<string, object> property in properties)
             {
-                PropertyInfo propertyInfo = ModelObject.GetProperty(model, property.Key);
+                PropertyInfo propertyInfo = GetProperty(model, property.Key);
                 if (propertyInfo != null)
                     propertyInfo.SetValue(model, property.Value);
             }

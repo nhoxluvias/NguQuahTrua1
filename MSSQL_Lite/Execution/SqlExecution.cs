@@ -1,10 +1,7 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Mapping;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Execution
@@ -59,11 +56,6 @@ namespace MSSQL_Lite.Execution
             this.command.Dispose();
             this.command = null;
             GC.SuppressFinalize(this);
-        }
-
-        private string GetDebuggerDisplay()
-        {
-            return ToString();
         }
     }
 }

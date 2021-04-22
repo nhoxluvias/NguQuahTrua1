@@ -1,7 +1,9 @@
-﻿using System;
+﻿using MSSQL_Lite.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,21 +47,21 @@ namespace MSSQL_Lite.Query
             return /*SqlMapping.ConvertToStandardQuery(*/"Select * from " + SqlMapping.GetTableName<T>() + " " + whereExpression/*)*/;
         }
 
-        public static string Insert<T>(T model)
-        {
-            string query = "Insert into " + SqlMapping.GetTableName(typeof(T)) + "(";
-            PropertyInfo[] props = ModelObject.GetProperties(model);
-            string into = null;
-            string values = null;
-            foreach (PropertyInfo prop in props)
-            {
-                into += SqlMapping.GetPropertyName(prop) + ", ";
-                values += SqlMapping.ConvertToStandardDataInSql<T>(prop.GetValue(model), prop.Name) + ", ";
-            }
-            into = into.TrimEnd(' ').TrimEnd(',');
-            values = into.TrimEnd(' ').TrimEnd(',');
-            return query + into + ") values (" + values + ")";
-        }
+        //public static string Insert<T>(T model)
+        //{
+        //    string query = "Insert into " + SqlMapping.GetTableName(typeof(T)) + "(";
+        //    PropertyInfo[] props = Obj.GetProperties(model);
+        //    string into = null;
+        //    string values = null;
+        //    foreach (PropertyInfo prop in props)
+        //    {
+        //        into += SqlMapping.GetPropertyName(prop) + ", ";
+        //        values += SqlMapping.ConvertToStandardDataInSql<T>(prop.GetValue(model), prop.Name) + ", ";
+        //    }
+        //    into = into.TrimEnd(' ').TrimEnd(',');
+        //    values = into.TrimEnd(' ').TrimEnd(',');
+        //    return query + into + ") values (" + values + ")";
+        //}
 
         public static string Delete<T>()
         {
