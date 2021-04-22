@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="register-form-submit">
-                <button class="button button-red button-register">Đăng ký</button>
+                <asp:Button ID="btnSubmit" CssClass="button button-red button-register" runat="server" Text="Button" />
             </div>
         </div>
     </form>

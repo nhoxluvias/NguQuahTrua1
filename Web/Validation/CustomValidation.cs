@@ -16,7 +16,6 @@ namespace Web.Validation
             customValidator.ControlToValidate = controlToValidate;
             customValidator.ServerValidate += serverValidateEventHandler;
             customValidator.ClientValidationFunction = clientValidationFunction;
-
         }
 
         public static void ValidateEmail(object source, ServerValidateEventArgs args)
