@@ -28,19 +28,9 @@ namespace Web.Account
         private void InitValidation()
         {
             CustomValidation
-                .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CheckUsername);
+                .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CustomValidation.ValidateUsername);
             CustomValidation
-                .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CheckPassword);
-        }
-
-        private void CheckUsername(object source, ServerValidateEventArgs args)
-        {
-            CustomValidation.UsernameValidate(source, args);
-        }
-
-        private void CheckPassword(object source, ServerValidateEventArgs args)
-        {
-            CustomValidation.PasswordValidate(source, args);
+                .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CustomValidation.ValidatePassword);
         }
     }
 }

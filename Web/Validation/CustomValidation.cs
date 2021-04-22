@@ -19,48 +19,46 @@ namespace Web.Validation
 
         }
 
-        public static void EmailValidate(object source, ServerValidateEventArgs args)
+        public static void ValidateEmail(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = false;
-            string value = args.Value;
-            if (Regex.IsMatch(value, "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"))
-                args.IsValid = true;
+            args.IsValid = Regex.IsMatch(
+                args.Value, 
+                @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
+                    @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
+            );
         }
 
-        public static void PasswordValidate(object source, ServerValidateEventArgs args)
+        public static void ValidatePassword(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = Regex.IsMatch(args.Value, @"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})");
+            args.IsValid = Regex.IsMatch(args.Value, "^[0-9a-zA-Z$%#@!*+-,.?/]{6,30}$");
         }
 
-        public static void RePasswordValidate(object source, ServerValidateEventArgs args)
-        {
-            args.IsValid = false;
-            string value = args.Value;
-            if (Regex.IsMatch(value, @"((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})"))
-                args.IsValid = true;
-        }
-
-        public static void UsernameValidate(object source, ServerValidateEventArgs args)
+        public static void ValidateUsername(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, "^[a-z0-9_-]{3,15}$");
         }
 
-        public static void PhoneNumberValidate(object source, ServerValidateEventArgs args)
+        public static void ValidatePhoneNumber(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3,15}$");
         }
 
-        public static void CardNumberValidate(object source, ServerValidateEventArgs args)
+        public static void ValidateConfirmCode(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{6,12}$");
+        }
+
+        public static void ValidateCardNumber(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{16,19}$");
         } 
 
-        public static void CVVValidate(object source, ServerValidateEventArgs args)
+        public static void ValidateCVV(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
         }
 
-        public static void ExpirationDate(object source, ServerValidateEventArgs args)
+        public static void ValidateExpirationDate(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
         }

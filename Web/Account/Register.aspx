@@ -21,52 +21,55 @@
                 <div class="register-form-group register-form-group-left">
                     <h4>Thông tin cơ bản</h4>
                     <p>Tên người dùng</p>
-                    <input type="text" name="username" value="" placeholder="Nhập vào tên người dùng">
+                    <asp:TextBox ID="txtUsername" Placeholder="Nhập vào tên người dùng" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvUsername" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Địa chỉ Email</p>
-                    <input type="text" name="email" value="" placeholder="Nhập vào địa chỉ Email">
+                    <asp:TextBox ID="txtEmail" Placeholder="Nhập vào địa chỉ Email" Text="" TextMode="Email" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvEmail" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Số điện thoại</p>
-                    <input type="text" name="phoneNumber" value="" placeholder="Nhập vào số điện thoại">
+                    <asp:TextBox ID="txtPhoneNumber" Placeholder="Nhập vào số điện thoại" Text="" TextMode="Email" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <<asp:CustomValidator ID="cvPhoneNumber" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Mật khẩu</p>
-                    <input type="password" name="password" value="" placeholder="Nhập vào mật khẩu">
+                    <asp:TextBox ID="txtPassword" Placeholder="Nhập vào mật khẩu" Text="" TextMode="Password" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvPassword" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Xác nhận mật khẩu</p>
-                    <input type="password" name="rePassword" value="" placeholder="Nhập vào xác nhận mật khẩu">
+                    <asp:TextBox ID="txtRePassword" Placeholder="Nhập vào xác nhận mật khẩu" Text="" TextMode="Password" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvRePassword" runat="server"></asp:CustomValidator>
                     </div>
                 </div>
                 <div class="register-form-group register-form-group-right">
                     <h4>Thông tin thanh toán</h4>
                     <p>Số thẻ</p>
-                    <input type="text" name="cardNumber" value="" placeholder="Nhập vào số thẻ">
+                    <asp:TextBox ID="txtCardNumber" Placeholder="Nhập vào số thẻ" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvCardNumber" runat="server"></asp:CustomValidator>
                     </div>
                     <p>CVV</p>
                     <input type="text" name="cvv" value="" placeholder="Nhập vào số CVV">
+                    <asp:TextBox ID="txtCvv" Placeholder="Nhập vào số CVV" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvCvv" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Tên chủ tài khoản</p>
                     <input type="text" name="accountName" value="" placeholder="Nhập vào tên tài khoản">
+                    <asp:TextBox ID="txtAccountName" Placeholder="Nhập vào tên tài khoản" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvAccountName" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Ngày hết hạn</p>
                     <input type="text" name="expirationDate" value="" placeholder="Nhập vào ngày hết hạn">
+                    <asp:TextBox ID="txtExprationDate" Placeholder="Nhập vào ngày hết hạn" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <span>Lỗi sẽ xuất hiện tại đây</span>
+                        <asp:CustomValidator ID="cvEpirationDate" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Phương thức thanh toán</p>
                     <select name="paymentMethod" id="cars">

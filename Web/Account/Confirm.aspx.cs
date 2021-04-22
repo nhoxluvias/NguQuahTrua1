@@ -18,12 +18,7 @@ namespace Web.Account
         private void InitValidation()
         {
             CustomValidation
-                .Init(cvConfirmCode, "txtConfirmCode", "Không được để trống, chỉ chứa số", true, null, CheckConfirmCode);
-        }
-
-        private void CheckConfirmCode(object source, ServerValidateEventArgs args)
-        {
-
+                .Init(cvConfirmCode, "txtConfirmCode", "Không được để trống, từ 6 đến 20 ký tự số", true, null, CustomValidation.ValidateConfirmCode);
         }
     }
 }

@@ -22,7 +22,7 @@
                     <p>Mã xác nhận</p>
                     <asp:TextBox ID="txtConfirmCode" Text="" Placeholder="Nhập vào mã xác nhận" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <asp:CustomValidator ID="cvConfirmCode" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
+                        <asp:CustomValidator ID="cvConfirmCode" runat="server"></asp:CustomValidator>
                     </div>
                 </div>
             </div>

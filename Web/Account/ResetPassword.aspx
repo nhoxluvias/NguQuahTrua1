@@ -22,7 +22,7 @@
                     <asp:TextBox ID="txtEmail" TextMode="Email" Text="" placeholder="Nhập vào địa chỉ Email" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <span>
-                            <asp:CustomValidator ID="cvEmail" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
+                            <asp:CustomValidator ID="cvEmail" runat="server"></asp:CustomValidator>
                         </span>
                     </div>
                 </div>
@@ -31,13 +31,13 @@
                     <asp:TextBox ID="txtConfirmCode"  TextMode="SingleLine" Text="" Placeholder="Nhập vào mã xác nhận" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <span>
-                            <asp:CustomValidator ID="cvConfirm" runat="server" ErrorMessage="CustomValidator"></asp:CustomValidator>
+                            <asp:CustomValidator ID="cvConfirmCode" runat="server"></asp:CustomValidator>
                         </span>
                     </div>
                 </div>
             </div>
             <div class="reset-password-form-submit">
-                <button class="button button-red button-reset-password">Xác nhận</button>
+                <asp:Button ID="btnSubmit" CssClass="button button-red button-reset-password" runat="server" Text="Xác nhận" />
             </div>
         </div>
     </form>
