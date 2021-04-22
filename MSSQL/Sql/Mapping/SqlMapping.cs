@@ -45,9 +45,10 @@ namespace MSSQL.Sql
                 .GetNamedArgument(
                     propertyInfo, 
                     c => c.AttributeType.Name == "PrimaryKey" || c.AttributeType.Name == "Column",
-                    n => n.MemberName == "Name"
+                    n => n.MemberName == "Name",
+                    false
                 );
-            if (namedArgument == null)
+            if (namedArgument.MemberInfo == null)
                 return propertyInfo.Name;
             else
                 return (string)namedArgument.TypedValue.Value;
@@ -208,6 +209,8 @@ namespace MSSQL.Sql
 
         public static string ConvertToStandardDataInSql<T>(object data, string propertyName)
         {
+            if (data == null)
+                return "NULL";
             if (data is string)
                 return "\"" + HtmlContent.HtmlEncode((string)data) + "\"";
             if (data is bool)

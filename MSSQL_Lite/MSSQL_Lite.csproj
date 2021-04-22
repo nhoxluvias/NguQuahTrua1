@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6233120C-50B1-48DB-A908-D745F922132D}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>Test</RootNamespace>
-    <AssemblyName>Test</AssemblyName>
+    <ProjectGuid>{D7C08863-5FBB-4131-B72C-2CA0E9ED3FE8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MSSQL_Lite</RootNamespace>
+    <AssemblyName>MSSQL_Lite</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,23 +42,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Address.cs" />
-    <Compile Include="Model\District.cs" />
-    <Compile Include="Model\Gender.cs" />
-    <Compile Include="Model\Province.cs" />
-    <Compile Include="Model\User.cs" />
-    <Compile Include="Model\UserInfo.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Access\SqlAccess.cs" />
+    <Compile Include="Access\SqlContext.cs" />
+    <Compile Include="Access\SqlData.cs" />
+    <Compile Include="Connection\SqlConnection.cs" />
+    <Compile Include="Connection\SqlConnectInfo.cs" />
+    <Compile Include="Execution\SqlExecution.cs" />
+    <Compile Include="Mapping\SqlConvert.cs" />
+    <Compile Include="Mapping\SqlMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Query\SqlQuery.cs" />
+    <Compile Include="Reflection\Obj.cs" />
+    <Compile Include="String\StringExtension.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj">
-      <Project>{2bafd121-9a00-48e8-921a-fb250b8f81ca}</Project>
-      <Name>Common</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

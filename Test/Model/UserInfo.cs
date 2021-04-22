@@ -10,6 +10,7 @@ namespace Test.Model
     [Table(Name = "User")]
     public class UserInfo
     {
+        [PrimaryKey(Name = "ID", DataType = "nvarchar(200)")]
         public string ID { get; set; }
         public string userName { get; set; }
         public string surName { get; set; }

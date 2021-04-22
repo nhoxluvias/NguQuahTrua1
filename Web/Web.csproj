@@ -238,10 +238,6 @@
       <Project>{2bafd121-9a00-48e8-921a-fb250b8f81ca}</Project>
       <Name>Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MSSQL\MSSQL.csproj">
-      <Project>{31a29855-f4df-4ea1-a284-856d4d46d502}</Project>
-      <Name>MSSQL</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
-namespace MSSQL.Reflection
+namespace MSSQL_Lite.Reflection
 {
-    using NamedArgument = CustomAttributeNamedArgument;
     using CustomAttribute = CustomAttributeData;
-    public partial class ModelObject
+    using NamedArgument = CustomAttributeNamedArgument;
+    public class Obj
     {
         public static T CreateInstance<T>()
         {
@@ -213,10 +213,10 @@ namespace MSSQL.Reflection
             CustomAttribute customAttribute = GetCustomAttribute(propertyInfo, predicate1);
             if (customAttribute == null)
             {
-                if(throwExceptionIfNull)
+                if (throwExceptionIfNull)
                     throw new Exception("");
                 return default(NamedArgument);
-            }   
+            }
             return customAttribute.NamedArguments.SingleOrDefault(predicate2);
         }
 
@@ -258,6 +258,62 @@ namespace MSSQL.Reflection
         public static PropertyInfo[] GetProperties<T>(Func<CustomAttribute, bool> predicate)
         {
             return GetProperties<T>(p => p.CustomAttributes.Any(predicate));
+        }
+
+        public static PropertyInfo GetProperty(object obj, string propertyName)
+        {
+            return ModelObject.GetProperty(obj, p => p.Name == propertyName);
+        }
+
+        public static PropertyInfo GetProperty<T>(string propertyName)
+        {
+            return ModelObject.GetProperty<T>(p => p.Name == propertyName);
+        }
+
+        public static PropertyInfo[] GetProperties(object obj, string customAttributeName)
+        {
+            return ModelObject.GetProperties(obj, c => c.AttributeType.Name == customAttributeName);
+        }
+
+        public static PropertyInfo[] GetProperties<T>(string customAttributeName)
+        {
+            return ModelObject.GetProperties<T>(c => c.AttributeType.Name == customAttributeName);
+        }
+
+        public static CustomAttributeData GetCustomAttribute(object obj, string customAttributeName)
+        {
+            return ModelObject.GetCustomAttribute(obj, c => c.AttributeType.Name == customAttributeName);
+        }
+
+        public static CustomAttributeData GetCustomAttribute<T>(string customAttributeName)
+        {
+            return ModelObject.GetCustomAttribute<T>(c => c.AttributeType.Name == customAttributeName);
+        }
+
+        public static CustomAttributeNamedArgument GetNamedArgument(PropertyInfo propertyInfo, string memberName)
+        {
+            CustomAttributeData customAttributeData = propertyInfo.CustomAttributes
+                    .SingleOrDefault(c => c.AttributeType.Name == "Column" || c.AttributeType.Name == "PrimaryKey");
+            if (customAttributeData != null)
+                throw new Exception("");
+
+            return customAttributeData.NamedArguments.SingleOrDefault(n => n.MemberName == memberName);
+        }
+
+        public static object SetValuesForPropertiesOfModelObject(object model, Dictionary<string, object> pairs)
+        {
+            Type type = model.GetType();
+            if (type.IsValueType || type.Name == "String")
+                return null;
+            Dictionary<string, object> properties = pairs.Where(p => Regex.IsMatch(p.Key, "(^.)[a-zA-Z0-9]{1,}$"))
+                .ToDictionary(p => p.Key, p => p.Value);
+            foreach (KeyValuePair<string, object> property in properties)
+            {
+                PropertyInfo propertyInfo = ModelObject.GetProperty(model, property.Key);
+                if (propertyInfo != null)
+                    propertyInfo.SetValue(model, property.Value);
+            }
+            return model;
         }
     }
 }

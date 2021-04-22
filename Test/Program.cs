@@ -57,9 +57,7 @@ namespace Test
 
             //SqlTable table = SqlMapping.GetTable<User>();
 
-            CustomAttributeNamedArgument cus1 = default(CustomAttributeNamedArgument);
-            CustomAttributeNamedArgument cus2 = default(CustomAttributeNamedArgument);
-            bool i = cus1.Equals(cus2);
+      
 
             UserInfo userInfo = new UserInfo
             {
