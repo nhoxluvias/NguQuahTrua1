@@ -6,6 +6,7 @@ using MSSQL.Sql;
 using MSSQL.Sql.Access;
 using MSSQL.Sql.Connection;
 using MSSQL.Sql.Execution;
+using MSSQL.Sql.Query;
 using MSSQL.Sql.Tables;
 using MSSQL.String;
 using System;
@@ -16,6 +17,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Test.Model;
@@ -30,7 +32,7 @@ namespace Test
             //ModelError.IfInvalidType(obj, new string[] { "string", "float" });
 
             SqlConnectInfo.DataSource = @"LAPTOP-B78E1G5S\MSSQLSERVER2019";
-            SqlConnectInfo.InitialCatalog = "AddressTest";
+            SqlConnectInfo.InitialCatalog = "Movie";
             SqlConnectInfo.UserID = "sa";
             SqlConnectInfo.Password = "123456789";
 
@@ -43,17 +45,38 @@ namespace Test
 
         static async Task Run()
         {
-            string str = "Phường Trúc Bạch";
-            SqlData sqlData = await SqlData.ExecuteReaderAsync($"Select * from Commune");
-            List<District> districts = sqlData.ToList<District>();
-            ////var item = sqlData.ToDictionaryList();
-            Console.OutputEncoding = Encoding.UTF8;
-            foreach (District d in districts)
-            {
-                Console.WriteLine($"ID {d.ID} -- Tên xã: {d.name}");
-            }
+            //string str = "Phường Trúc Bạch";
+            //SqlData sqlData = await SqlData.ExecuteReaderAsync($"Select * from Commune");
+            //List<District> districts = sqlData.ToList<District>();
+            //////var item = sqlData.ToDictionaryList();
+            //Console.OutputEncoding = Encoding.UTF8;
+            //foreach (District d in districts)
+            //{
+            //    Console.WriteLine($"ID {d.ID} -- Tên xã: {d.name}");
+            //}
 
-            SqlTable table = SqlMapping.GetTable<User>();
+            //SqlTable table = SqlMapping.GetTable<User>();
+
+            CustomAttributeNamedArgument cus1 = default(CustomAttributeNamedArgument);
+            CustomAttributeNamedArgument cus2 = default(CustomAttributeNamedArgument);
+            bool i = cus1.Equals(cus2);
+
+            UserInfo userInfo = new UserInfo
+            {
+                ID = "JFKSDJFLKS",
+                userName = "phanxuanchanh",
+                surName = "Phan",
+                middleName = "Xuân",
+                name = "Chánh",
+                email = "phanxuanchanh77@gmail.com",
+                phoneNumber = "0343583276",
+                description = "...",
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now
+            };
+
+            string str = SqlQuery.Insert<UserInfo>(userInfo);
+            Console.WriteLine(str);
 
         }
     }

@@ -1,9 +1,12 @@
-﻿using System;
+﻿using MSSQL.Sql.Connection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Web.Model;
 using Web.Validation;
 
 namespace Web.Account
@@ -31,6 +34,18 @@ namespace Web.Account
                 .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CustomValidation.ValidateUsername);
             CustomValidation
                 .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CustomValidation.ValidatePassword);
+        }
+
+        private async Task<bool> LoginToAccount(string username, string password)
+        {
+            SqlConnectInfo.DataSource = @"LAPTOP-B78E1G5S\MSSQLSERVER2019";
+            SqlConnectInfo.InitialCatalog = "AddressTest";
+            SqlConnectInfo.UserID = "sa";
+            SqlConnectInfo.Password = "123456789";
+
+            DBContext db = new DBContext();
+            Model.User user = await db.Users.SingleOrDefaultAsync(u => u.userName == username && u.password == password);
+            return false;
         }
     }
 }

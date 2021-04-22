@@ -15,6 +15,7 @@ namespace Web
         protected void Application_Start(object sender, EventArgs e)
         {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+            Model.Test2.Value = "Chánh đang thử biến static: ";
         }
 
         protected void Session_Start(object sender, EventArgs e)

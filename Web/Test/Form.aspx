@@ -9,6 +9,8 @@
 <body>
     <form id="form1" runat="server">
         <div>
+            <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
+            <asp:Button ID="Button1" runat="server" Text="Button" OnClick="Button1_Click" />
             <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
             <asp:CustomValidator ID="CustomValidator1" runat="server" ErrorMessage="CustomValidator" OnServerValidate="TxtInputValidator"></asp:CustomValidator>
         </div>

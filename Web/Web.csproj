@@ -159,6 +159,7 @@
     <Compile Include="Model\Role.cs" />
     <Compile Include="Model\Tag.cs" />
     <Compile Include="Model\Test.cs" />
+    <Compile Include="Model\Test2.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\Video.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

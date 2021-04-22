@@ -17,5 +17,7 @@ namespace Web.Model
         }
 
         public SqlAccess<Test> Tests { get { return new SqlAccess<Test>(); } }
+
+        public SqlAccess<User> Users { get { return new SqlAccess<User>(); } }
     }
 }

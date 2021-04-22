@@ -11,7 +11,7 @@ namespace Web.Test
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            Label1.Text = Model.Test2.Value;
         }
 
 
@@ -22,6 +22,11 @@ namespace Web.Test
                 args.IsValid = false;
             else
                 args.IsValid = true;
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            Model.Test2.Value = "giá trị ngẫu nhiên: " + new Random().Next();
         }
     }
 }
