@@ -22,11 +22,6 @@ namespace MSSQL_Lite.Query
             return "Create database " + databaseName;
         }
 
-        public static string CreateTable<T>()
-        {
-            return "";
-        }
-
         public static string UseDatabase(string databaseName)
         {
             return "Use " + databaseName;
@@ -45,22 +40,48 @@ namespace MSSQL_Lite.Query
         public static string Select<T>(Expression<Func<T, bool>> where)
         {
             string whereExpression = SqlQuery.GetWhereStatement<T>(where);
-            return /*SqlMapping.ConvertToStandardQuery(*/"Select * from " + SqlMapping.GetTableName<T>() + " " + whereExpression/*)*/;
+            return "Select * from " + SqlMapping.GetTableName<T>() + " " + whereExpression;
+        }
+
+        public static string Select<T>(Expression<Func<T, bool>> where, int recordNumber)
+        {
+            string whereExpression = SqlQuery.GetWhereStatement<T>(where);
+            return "Select " + recordNumber + " * from " + SqlMapping.GetTableName<T>() + " " + whereExpression;
+        }
+
+        public static string Select<T>(Expression<Func<T, object>> select)
+        {
+            return null;
+        }
+
+        public static string Select<T>(Expression<Func<T, object>> select, int recordNumber)
+        {
+            return null;
+        }
+
+        public static string Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where)
+        {
+            return null;
+        }
+
+        public static string Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int recordNumber)
+        {
+            return null;
         }
 
         public static string Insert<T>(T model)
         {
-            string query = "Insert into " + SqlMapping.GetTableName(typeof(T)) + "(";
+            string query = "Insert into " + SqlMapping.GetTableName<T>(true) + "(";
             PropertyInfo[] props = Obj.GetProperties(model);
             string into = null;
             string values = null;
             foreach (PropertyInfo prop in props)
             {
-                into += SqlMapping.GetPropertyName(prop) + ", ";
-                //values += SqlMapping.ConvertToStandardDataInSql<T>(prop.GetValue(model), prop.Name) + ", ";
+                into += SqlMapping.GetPropertyName(prop, true) + ", ";
+                values += SqlMapping.ConvertToStandardDataInSql(prop.GetValue(model)) + ", ";
             }
             into = into.TrimEnd(' ').TrimEnd(',');
-            values = into.TrimEnd(' ').TrimEnd(',');
+            values = values.TrimEnd(' ').TrimEnd(',');
             return query + into + ") values (" + values + ")";
         }
 

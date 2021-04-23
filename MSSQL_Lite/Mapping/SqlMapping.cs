@@ -1,4 +1,5 @@
 ﻿using MSSQL_Lite.Reflection;
+using MSSQL_Lite.String;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,37 +12,40 @@ namespace MSSQL_Lite.Mapping
     using CustomAttribute = CustomAttributeData;
     public class SqlMapping
     {
-        public static string GetTableName<T>()
+        public static string GetTableName<T>(bool enclosedInSquareBrackets = false)
         {
-            return Obj.GetModelName<T>();
+            string objectName = Obj.GetObjectName<T>();
+            return (enclosedInSquareBrackets) ? "[" + objectName + "]" : objectName;
         }
 
-        public static string GetTableName(object obj)
+        public static string GetTableName(object obj, bool enclosedInSquareBrackets = false)
         {
-            return Obj.GetModelName(obj);
+            string objectName = Obj.GetObjectName(obj);
+            return (enclosedInSquareBrackets) ? "[" + objectName + "]" : objectName;
         }
 
-        public static string GetTableName(PropertyInfo propertyInfo)
+        public static string GetTableName(PropertyInfo propertyInfo, bool enclosedInSquareBrackets = false)
         {
             Type type = propertyInfo.PropertyType;
             object obj = Activator.CreateInstance(type);
-            return GetTableName(obj);
+            string objectName = GetTableName(obj);
+            return (enclosedInSquareBrackets) ? "[" + objectName + "]" : objectName;
         }
 
-        public static string GetPropertyName(PropertyInfo propertyInfo)
+        public static string GetPropertyName(PropertyInfo propertyInfo, bool enclosedInSquareBrackets = false)
         {
-            return propertyInfo.Name;
+
+            return (enclosedInSquareBrackets) ? "[" + propertyInfo.Name + "]" : propertyInfo.Name;
         }
 
-        public static string ConvertToStandardDataInSql<T>(object value)
+        public static string ConvertToStandardDataInSql(object value)
         {
             if (value == null)
                 return "NULL";
             if (value is string)
-                return (string)value;
+                return (StringExtension.IsUnicode((string)value)) ? "N'" + (string)value + "'" : "'" + (string)value + "'";
             if (value is bool)
                 return ((bool)value) ? "1" : "0";
-
             if(value is DateTime)
             {
                 return null;

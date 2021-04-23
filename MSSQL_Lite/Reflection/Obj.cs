@@ -15,12 +15,12 @@ namespace MSSQL_Lite.Reflection
             return (T)Activator.CreateInstance(typeof(T));
         }
 
-        public static string GetModelName(object obj)
+        public static string GetObjectName(object obj)
         {
             return obj.GetType().Name;
         }
 
-        public static string GetModelName<T>()
+        public static string GetObjectName<T>()
         {
             return typeof(T).Name;
         }

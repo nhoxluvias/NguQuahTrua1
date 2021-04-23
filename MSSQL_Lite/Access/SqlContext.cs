@@ -9,8 +9,6 @@ namespace MSSQL_Lite.Access
 {
     public class SqlContext
     {
-        public enum ConvertTo { Dictionary };
-
         public SqlContext()
         {
 
@@ -41,13 +39,13 @@ namespace MSSQL_Lite.Access
             ThrowExceptionOfQueryString(queryString);
             SqlData sqlData = await SqlData.ExecuteReaderAsync(queryString);
             if (type == null)
-                throw new Exception("@'type' is not valid");
+                throw new Exception("@'type' must be not null");
             if (type.Equals(typeof(Dictionary<string, object>)))
                 return sqlData.ToDictionary();
             else if (type.Equals(typeof(List<Dictionary<string, object>>)))
                 return sqlData.ToDictionaryList();
             else
-                return null;
+                throw new Exception("@'type' is not valid");
         }
 
         public async Task<object> ExecutScalarAsync(string queryString)

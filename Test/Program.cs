@@ -43,25 +43,26 @@ namespace Test
 
             ////SqlTable table = SqlMapping.GetTable<User>();
 
-            object obj = await db.ExecuteReaderAsync("Select * from Commune", typeof(List<Dictionary<string, object>>));
+            //object obj = await db.ExecuteReaderAsync("Select * from Commune", typeof(List<Dictionary<string, object>>));
 
-            Dictionary<string, object> dict = (Dictionary<string, object>)obj;
-            //UserInfo userInfo = new UserInfo
-            //{
-            //    ID = "JFKSDJFLKS",
-            //    userName = "phanxuanchanh",
-            //    surName = "Phan",
-            //    middleName = "Xuân",
-            //    name = "Chánh",
-            //    email = "phanxuanchanh77@gmail.com",
-            //    phoneNumber = "0343583276",
-            //    description = "...",
-            //    createAt = DateTime.Now,
-            //    updateAt = DateTime.Now
-            //};
+            //Dictionary<string, object> dict = (Dictionary<string, object>)obj;
 
-            //string str = SqlQuery.Insert<UserInfo>(userInfo);
-            //Console.WriteLine(str);
+            UserInfo userInfo = new UserInfo
+            {
+                ID = "JFKSDJFLKS",
+                userName = "phanxuanchanh",
+                surName = "Phan",
+                middleName = "Xuân",
+                name = "Chánh",
+                email = "phanxuanchanh77@gmail.com",
+                phoneNumber = "0343583276",
+                description = "...",
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now
+            };
+
+            string str = SqlQuery.Insert<UserInfo>(userInfo);
+            Console.WriteLine(str);
 
         }
     }
