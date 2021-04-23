@@ -33,15 +33,15 @@ namespace Test
         {
             DBContext db = new DBContext();
 
-            List<District> districts = await db.Districts.ToListAsync();
-            //////var item = sqlData.ToDictionaryList();
-            Console.OutputEncoding = Encoding.UTF8;
-            foreach (District d in districts)
-            {
-                Console.WriteLine($"ID {d.ID} -- Tên xã: {d.name}");
-            }
+            //List<District> districts = await db.Districts.ToListAsync();
+            ////////var item = sqlData.ToDictionaryList();
+            //Console.OutputEncoding = Encoding.UTF8;
+            //foreach (District d in districts)
+            //{
+            //    Console.WriteLine($"ID {d.ID} -- Tên xã: {d.name}");
+            //}
 
-            //SqlTable table = SqlMapping.GetTable<User>();
+            ////SqlTable table = SqlMapping.GetTable<User>();
 
 
 
@@ -59,8 +59,8 @@ namespace Test
                 updateAt = DateTime.Now
             };
 
-            //string str = SqlQuery.Insert<UserInfo>(userInfo);
-            //Console.WriteLine(str);
+            string str = SqlQuery.Insert<UserInfo>(userInfo);
+            Console.WriteLine(str);
 
         }
     }
