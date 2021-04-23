@@ -47,6 +47,12 @@ namespace Test
 
             //Dictionary<string, object> dict = (Dictionary<string, object>)obj;
 
+            SqlQuery.GetWhereStatement<UserInfo>(u => u.phoneNumber == "0343583276");
+
+            string str1 = "chanh";
+            int i = 32767;
+            SqlQuery.Exp<UserInfo>(u => u.password == i.ToString() && u.phoneNumber == "0343583276" && u.userName == "phanxuanchanh");
+
             UserInfo userInfo = new UserInfo
             {
                 ID = "JFKSDJFLKS",

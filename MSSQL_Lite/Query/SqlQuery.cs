@@ -14,8 +14,41 @@ namespace MSSQL_Lite.Query
     {
         public static string GetWhereStatement<T>(Expression<Func<T, bool>> where)
         {
+            string expression = where.Body.ToString();
             return null;
         }
+
+        public static void Exp<T>(Expression<Func<T, bool>> where)
+        {
+            BinaryExpression binaryExpression = (BinaryExpression)where.Body;
+            GetPairOfExpression((BinaryExpression)binaryExpression.Left);
+        }
+
+        public static KeyValuePair<string, object> GetPairOfExpression(BinaryExpression binaryExpression)
+        {
+            if (binaryExpression == null)
+                throw new Exception("@'binaryExpression' must be not null");
+            if(
+                binaryExpression.NodeType == ExpressionType.Equal 
+                || binaryExpression.NodeType == ExpressionType.NotEqual 
+                || binaryExpression.NodeType == ExpressionType.GreaterThan 
+                || binaryExpression.NodeType == ExpressionType.LessThan
+                || binaryExpression.NodeType == ExpressionType.GreaterThanOrEqual
+                || binaryExpression.NodeType == ExpressionType.LessThanOrEqual
+                || binaryExpression.NodeType == ExpressionType.Call
+            )
+            {
+
+                return default(KeyValuePair<string, object>);
+            }
+            return default(KeyValuePair<string, object>);
+        }
+
+
+
+
+
+
 
         public static string CreateDatabase(string databaseName)
         {
@@ -39,14 +72,14 @@ namespace MSSQL_Lite.Query
 
         public static string Select<T>(Expression<Func<T, bool>> where)
         {
-            string whereExpression = SqlQuery.GetWhereStatement<T>(where);
-            return "Select * from " + SqlMapping.GetTableName<T>() + " " + whereExpression;
+            string whereExpression = GetWhereStatement<T>(where);
+            return "Select * from " + SqlMapping.GetTableName<T>(true) + " " + whereExpression;
         }
 
         public static string Select<T>(Expression<Func<T, bool>> where, int recordNumber)
         {
-            string whereExpression = SqlQuery.GetWhereStatement<T>(where);
-            return "Select " + recordNumber + " * from " + SqlMapping.GetTableName<T>() + " " + whereExpression;
+            string whereExpression = GetWhereStatement<T>(where);
+            return "Select " + recordNumber + " * from " + SqlMapping.GetTableName<T>(true) + " " + whereExpression;
         }
 
         public static string Select<T>(Expression<Func<T, object>> select)
@@ -85,9 +118,24 @@ namespace MSSQL_Lite.Query
             return query + into + ") values (" + values + ")";
         }
 
+        public static string Update<T>(T model, Expression<Func<T, object>> set)
+        {
+            return null;
+        }
+
+        public static string Update<T>(T model, Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
+        {
+            return null;
+        }
+
         public static string Delete<T>()
         {
             return "Delete from " + SqlMapping.GetTableName<T>();
+        }
+
+        public static string Delete<T>(Expression<Func<T, bool>> where)
+        {
+            return null;
         }
     }
 }
