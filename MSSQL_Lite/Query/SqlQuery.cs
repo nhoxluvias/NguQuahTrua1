@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Mapping;
+﻿using MSSQL_Lite.LambdaExpression;
+using MSSQL_Lite.Mapping;
 using MSSQL_Lite.Reflection;
 using System;
 using System.Collections.Generic;
@@ -14,37 +15,88 @@ namespace MSSQL_Lite.Query
     {
         public static string GetWhereStatement<T>(Expression<Func<T, bool>> where)
         {
-            string expression = where.Body.ToString();
-            return null;
+            return GetWhereStatement((BinaryExpression)where.Body);
         }
 
-        public static void Exp<T>(Expression<Func<T, bool>> where)
-        {
-            BinaryExpression binaryExpression = (BinaryExpression)where.Body;
-            GetPairOfExpression((BinaryExpression)binaryExpression.Left);
-        }
-
-        public static KeyValuePair<string, object> GetPairOfExpression(BinaryExpression binaryExpression)
+        public static string GetWhereStatement(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
                 throw new Exception("@'binaryExpression' must be not null");
+            string exp = null;
             if(
-                binaryExpression.NodeType == ExpressionType.Equal 
-                || binaryExpression.NodeType == ExpressionType.NotEqual 
-                || binaryExpression.NodeType == ExpressionType.GreaterThan 
+                binaryExpression.NodeType == ExpressionType.AndAlso
+                || binaryExpression.NodeType == ExpressionType.OrElse
+                || binaryExpression.NodeType == ExpressionType.Not
+                || binaryExpression.NodeType == ExpressionType.And
+                || binaryExpression.NodeType == ExpressionType.Or
+            )
+            {
+                string expLeft = GetWhereStatement((BinaryExpression)binaryExpression.Left);
+                string expRight = GetWhereStatement((BinaryExpression)binaryExpression.Right);
+                exp += "(" + expLeft + " " 
+                    + ExpresstionExtension.ConvertExpressionTypeToString(binaryExpression.NodeType) 
+                    + " " + expRight + ")";
+                return exp;
+            }else if(
+                binaryExpression.NodeType == ExpressionType.Equal
+                || binaryExpression.NodeType == ExpressionType.NotEqual
+                || binaryExpression.NodeType == ExpressionType.GreaterThan
                 || binaryExpression.NodeType == ExpressionType.LessThan
                 || binaryExpression.NodeType == ExpressionType.GreaterThanOrEqual
                 || binaryExpression.NodeType == ExpressionType.LessThanOrEqual
                 || binaryExpression.NodeType == ExpressionType.Call
             )
             {
-
-                return default(KeyValuePair<string, object>);
+                ExpressionData expressionData = GetPairOfExpression(binaryExpression, true);
+                return "(" + expressionData.Key + " " 
+                    + ExpresstionExtension.ConvertExpressionTypeToString(binaryExpression.NodeType) + " " 
+                    + expressionData.Value + ")";
             }
-            return default(KeyValuePair<string, object>);
+            return null;
         }
 
+        public static ExpressionData GetPairOfExpression(BinaryExpression binaryExpression, bool enclosedInSquareBrackets = false)
+        {
+            if (binaryExpression == null)
+                throw new Exception("@'binaryExpression' must be not null");
 
+            Expression expressionLeft = binaryExpression.Left;
+            Expression expressionRight = binaryExpression.Right;
+
+            if (!(expressionLeft is MemberExpression))
+                throw new Exception("");
+
+            string key = (expressionLeft as MemberExpression).Member.Name;
+            UnaryExpression unaryExpression = Expression.Convert(expressionRight, typeof(object));
+            Func<object> func = Expression.Lambda<Func<object>>(unaryExpression).Compile();
+            object value = func();
+
+
+            return new ExpressionData {
+                Key = (enclosedInSquareBrackets) ? "[" + key + "]" : key,
+                NodeType = binaryExpression.NodeType,
+                Value = SqlMapping.ConvertToStandardDataInSql(value)
+            };
+            
+        }
+
+        public static string GetSetStatement<T>(Expression<Func<T, object>> set)
+        {
+            string setStatement = "set ";
+            Func<T, object> func = set.Compile();
+            T model = Obj.CreateInstance<T>();
+            object obj = func(model);
+            if (obj.GetType().Name.Contains("<>f__AnonymousType")){
+                PropertyInfo[] properties = Obj.GetProperties(obj);
+                foreach(PropertyInfo property in properties)
+                {
+                    setStatement += property.Name + ", ";
+                }
+                setStatement = setStatement.TrimEnd(' ').TrimEnd(',');
+            }
+            return setStatement;
+            //return GetSetStatement(set.Body);
+        }
 
 
 
@@ -72,14 +124,12 @@ namespace MSSQL_Lite.Query
 
         public static string Select<T>(Expression<Func<T, bool>> where)
         {
-            string whereExpression = GetWhereStatement<T>(where);
-            return "Select * from " + SqlMapping.GetTableName<T>(true) + " " + whereExpression;
+            return "Select * from " + SqlMapping.GetTableName<T>(true) + " " + GetWhereStatement<T>(where);
         }
 
         public static string Select<T>(Expression<Func<T, bool>> where, int recordNumber)
         {
-            string whereExpression = GetWhereStatement<T>(where);
-            return "Select " + recordNumber + " * from " + SqlMapping.GetTableName<T>(true) + " " + whereExpression;
+            return "Select " + recordNumber + " * from " + SqlMapping.GetTableName<T>(true) + " " + GetWhereStatement<T>(where);
         }
 
         public static string Select<T>(Expression<Func<T, object>> select)
@@ -135,7 +185,7 @@ namespace MSSQL_Lite.Query
 
         public static string Delete<T>(Expression<Func<T, bool>> where)
         {
-            return null;
+            return "Delete from " + SqlMapping.GetTableName<T>() + " where " + GetWhereStatement(where);
         }
     }
 }

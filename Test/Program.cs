@@ -51,7 +51,9 @@ namespace Test
 
             string str1 = "chanh";
             int i = 32767;
-            SqlQuery.Exp<UserInfo>(u => u.password == i.ToString() && u.phoneNumber == "0343583276" && u.userName == "phanxuanchanh");
+            SqlQuery.GetWhereStatement<UserInfo>(u => u.password == "32767" && u.phoneNumber == "0343583276" && u.userName == "phanxuanchanh");
+
+            SqlQuery.GetSetStatement<UserInfo>(u => new { u.email });
 
             UserInfo userInfo = new UserInfo
             {

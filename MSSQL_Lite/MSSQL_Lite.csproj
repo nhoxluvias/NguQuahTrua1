@@ -49,6 +49,8 @@
     <Compile Include="Connection\SqlConnection.cs" />
     <Compile Include="Connection\SqlConnectInfo.cs" />
     <Compile Include="Execution\SqlExecution.cs" />
+    <Compile Include="LambdaExpression\ExpressionData.cs" />
+    <Compile Include="LambdaExpression\ExpresstionExtension.cs" />
     <Compile Include="Mapping\SqlConvert.cs" />
     <Compile Include="Mapping\SqlMapping.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
