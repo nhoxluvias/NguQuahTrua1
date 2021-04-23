@@ -15,6 +15,8 @@ namespace MSSQL_Lite.Access
     {
         private object data;
         private static SqlExecution sqlExecution = null;
+        public static ObjectReceivingData objectReceivingData = ObjectReceivingData.SqlDataReader;
+
         internal SqlData(object data)
         {
             this.data = data;
@@ -22,50 +24,51 @@ namespace MSSQL_Lite.Access
 
         private static void InitSqlExecution()
         {
-            SqlData.sqlExecution = new SqlExecution(SqlConnectInfo.GetConnectionString());
+           sqlExecution = new SqlExecution(SqlConnectInfo.GetConnectionString());
         }
 
         private static void DestroySqlExecution()
         {
-            SqlData.sqlExecution.Dispose();
-            SqlData.sqlExecution = null;
+            sqlExecution.Dispose();
+            sqlExecution = null;
         }
 
         public static async Task<SqlData> ExecuteReaderAsync(string queryString, bool newConnection = false)
         {
             if (newConnection)
             {
-                SqlData.DestroySqlExecution();
-                SqlData.InitSqlExecution();
+                DestroySqlExecution();
+                InitSqlExecution();
             }
-            if (SqlData.sqlExecution == null)
-                SqlData.InitSqlExecution();
-            SqlDataReader reader = await SqlData.sqlExecution.ExecuteReaderAsync<SqlDataReader>(queryString);
-            return new SqlData(reader);
+            if (sqlExecution == null)
+                InitSqlExecution();
+            if (objectReceivingData == ObjectReceivingData.SqlDataReader)
+                return new SqlData(await sqlExecution.ExecuteReaderAsync<SqlDataReader>(queryString));
+            return new SqlData(await sqlExecution.ExecuteReaderAsync<DataSet>(queryString));
         }
 
         public static async Task<int> ExecuteNonQueryAsync(string queryString, bool newConnection = false)
         {
             if (newConnection)
             {
-                SqlData.DestroySqlExecution();
-                SqlData.InitSqlExecution();
+                DestroySqlExecution();
+                InitSqlExecution();
             }
-            if (SqlData.sqlExecution == null)
-                SqlData.InitSqlExecution();
-            return await SqlData.sqlExecution.ExecuteNonQueryAsync(queryString);
+            if (sqlExecution == null)
+                InitSqlExecution();
+            return await sqlExecution.ExecuteNonQueryAsync(queryString);
         }
 
         public static async Task<object> ExecuteScalarAsync(string queryString, bool newConnection = false)
         {
             if (newConnection)
             {
-                SqlData.DestroySqlExecution();
-                SqlData.InitSqlExecution();
+                DestroySqlExecution();
+                InitSqlExecution();
             }
-            if (SqlData.sqlExecution == null)
-                SqlData.InitSqlExecution();
-            return await SqlData.sqlExecution.ExecuteScalarAsync(queryString);
+            if (sqlExecution == null)
+                InitSqlExecution();
+            return await sqlExecution.ExecuteScalarAsync(queryString);
         }
 
         public Dictionary<string, object> ToDictionary()

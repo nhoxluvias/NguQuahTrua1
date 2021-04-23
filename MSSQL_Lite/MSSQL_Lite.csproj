@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Access\ObjectReceivingData.cs" />
     <Compile Include="Access\SqlAccess.cs" />
     <Compile Include="Access\SqlContext.cs" />
     <Compile Include="Access\SqlData.cs" />

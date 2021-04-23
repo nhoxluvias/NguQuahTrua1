@@ -9,20 +9,51 @@ namespace MSSQL_Lite.Access
 {
     public class SqlContext
     {
-        public enum ObjectReceivingData { DataSet, SqlDataReader, Dictionary };
+        public enum ConvertTo { Dictionary };
+
         public SqlContext()
         {
 
         }
 
-        public async Task<int> QueryAsync(string query)
+        private void ThrowExceptionOfQueryString(string queryString)
         {
-            return await SqlData.ExecuteNonQueryAsync(query);
+            if (queryString == null)
+                throw new Exception("@'queryString' must be not null");
+            if (queryString == "")
+                throw new Exception("@'queryString' must be not empty");
         }
 
-        public void Query(string query, ObjectReceivingData objectReceivingData)
+        public async Task<int> ExecuteNonQueryAsync(string queryString)
         {
+            ThrowExceptionOfQueryString(queryString);
+            return await SqlData.ExecuteNonQueryAsync(queryString);
+        }
 
+        public async Task<object> ExecuteReaderAsync(string queryString)
+        {
+            ThrowExceptionOfQueryString(queryString);
+            return await SqlData.ExecuteReaderAsync(queryString);
+        }
+
+        public async Task<object> ExecuteReaderAsync(string queryString, Type type)
+        {
+            ThrowExceptionOfQueryString(queryString);
+            SqlData sqlData = await SqlData.ExecuteReaderAsync(queryString);
+            if (type == null)
+                throw new Exception("@'type' is not valid");
+            if (type.Equals(typeof(Dictionary<string, object>)))
+                return sqlData.ToDictionary();
+            else if (type.Equals(typeof(List<Dictionary<string, object>>)))
+                return sqlData.ToDictionaryList();
+            else
+                return null;
+        }
+
+        public async Task<object> ExecutScalarAsync(string queryString)
+        {
+            ThrowExceptionOfQueryString(queryString);
+            return await SqlData.ExecuteScalarAsync(queryString);
         }
     }
 }

@@ -57,7 +57,7 @@ namespace MSSQL_Lite.Query
             foreach (PropertyInfo prop in props)
             {
                 into += SqlMapping.GetPropertyName(prop) + ", ";
-                values += SqlMapping.ConvertToStandardDataInSql<T>(prop.GetValue(model), prop.Name) + ", ";
+                //values += SqlMapping.ConvertToStandardDataInSql<T>(prop.GetValue(model), prop.Name) + ", ";
             }
             into = into.TrimEnd(' ').TrimEnd(',');
             values = into.TrimEnd(' ').TrimEnd(',');
