@@ -15,12 +15,12 @@ namespace MSSQL_Lite.Query
     {
         public static bool EnclosedInSquareBrackets = true;
 
-        public static string GetWhereStatement<T>(Expression<Func<T, bool>> where)
+        private static string GetWhereStatement<T>(Expression<Func<T, bool>> where)
         {
             return "where " + GetWhereStatement((BinaryExpression)where.Body);
         }
 
-        public static string GetWhereStatement(BinaryExpression binaryExpression)
+        private static string GetWhereStatement(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
                 throw new Exception("@'binaryExpression' must be not null");
@@ -57,7 +57,7 @@ namespace MSSQL_Lite.Query
             return null;
         }
 
-        public static ExpressionData GetPairOfExpression(BinaryExpression binaryExpression)
+        private static ExpressionData GetPairOfExpression(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
                 throw new Exception("@'binaryExpression' must be not null");
@@ -81,7 +81,7 @@ namespace MSSQL_Lite.Query
             };
         }
 
-        public static string GetSelectStatement<T>(Expression<Func<T, object>> select)
+        private static string GetSelectStatement<T>(Expression<Func<T, object>> select)
         {
             string selectStatement = "Select ";
             if (select.ToString().Contains("<>f__AnonymousType"))
@@ -106,7 +106,7 @@ namespace MSSQL_Lite.Query
             return selectStatement;
         }
 
-        public static string GetSetStatement<T>(T model, Expression<Func<T, object>> set)
+        private static string GetSetStatement<T>(T model, Expression<Func<T, object>> set)
         {
             string setStatement = "set ";
             Func<T, object> func = set.Compile();
@@ -185,6 +185,23 @@ namespace MSSQL_Lite.Query
             string selectStatement = GetSelectStatement<T>(select).Replace("Select ", "Select top " + recordNumber + " ");
             return selectStatement + " from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets)
                 + " " + GetWhereStatement<T>(where);
+        }
+
+        public static string Count<T>()
+        {
+            return "Select count(*) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+        }
+
+        public static string Count<T>(Expression<Func<T, bool>> where)
+        {
+            return "Select count(*) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
+                + GetWhereStatement<T>(where);
+        }
+
+        public static string Count<T>(string propertyName, Expression<Func<T, bool>> where)
+        {
+            return "Select count(" + propertyName + ") from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
+                + GetWhereStatement<T>(where);
         }
 
         public static string Insert<T>(T model)
