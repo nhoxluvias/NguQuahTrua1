@@ -34,7 +34,6 @@ namespace MSSQL_Lite.Mapping
 
         public static string GetPropertyName(PropertyInfo propertyInfo, bool enclosedInSquareBrackets = false)
         {
-
             return (enclosedInSquareBrackets) ? "[" + propertyInfo.Name + "]" : propertyInfo.Name;
         }
 
