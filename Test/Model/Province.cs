@@ -10,7 +10,7 @@ namespace Test.Model
     {
         public long ID { get; set; }
         public string name { get; set; }
-        public long districtId { get; set; }
+        public long countryId { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
     }

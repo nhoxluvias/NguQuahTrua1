@@ -15,6 +15,8 @@ namespace Test.Model
 
         }
 
+        public SqlAccess<Province> Provinces { get { return new SqlAccess<Province>(); } }
         public SqlAccess<District> Districts { get { return new SqlAccess<District>(); } }
+
     }
 }

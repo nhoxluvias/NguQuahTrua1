@@ -33,7 +33,6 @@ namespace Test
 
         static async Task Run()
         {
-            DBContext db = new DBContext();
 
             //List<District> districts = await db.Districts.ToListAsync();
             ////////var item = sqlData.ToDictionaryList();
@@ -80,69 +79,83 @@ namespace Test
             //string str = SqlQuery.Insert<UserInfo>(userInfo);
             //Console.WriteLine(str);
 
-            SqlQuery.EnclosedInSquareBrackets = true;
+            //SqlQuery.EnclosedInSquareBrackets = true;
 
-            string select1 = SqlQuery.Select<UserInfo>();
-            string select2 = SqlQuery.Select<UserInfo>(5);
-            string select3 = SqlQuery.Select<UserInfo>(u => u.userName == "phanxuanchanh");
-            string select4 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email });
-            string select5 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email }, 5);
-            string select6 = SqlQuery.Select<UserInfo>(u => u.roleId == "kdi300823jjds", 5);
-            string select7 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email }, u => u.userName == "phanxuanchanh");
-            string select8 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email }, u => u.roleId == "kdi300823jjds", 5);
+            //string select1 = SqlQuery.Select<UserInfo>();
+            //string select2 = SqlQuery.Select<UserInfo>(5);
+            //string select3 = SqlQuery.Select<UserInfo>(u => u.userName == "phanxuanchanh");
+            //string select4 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email });
+            //string select5 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email }, 5);
+            //string select6 = SqlQuery.Select<UserInfo>(u => u.roleId == "kdi300823jjds", 5);
+            //string select7 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email }, u => u.userName == "phanxuanchanh");
+            //string select8 = SqlQuery.Select<UserInfo>(u => new { u.userName, u.email }, u => u.roleId == "kdi300823jjds", 5);
 
-            string select9 = SqlQuery.Select<UserInfo>(u => u.userName == "phanxuanchanh" && (u.roleId == "jsahf" || u.roleId == "342d"));
+            //string select9 = SqlQuery.Select<UserInfo>(u => u.userName == "phanxuanchanh" && (u.roleId == "jsahf" || u.roleId == "342d"));
 
-            Console.WriteLine(select1);
-            Console.WriteLine(select2);
-            Console.WriteLine(select3);
-            Console.WriteLine(select4);
-            Console.WriteLine(select5);
-            Console.WriteLine(select6);
-            Console.WriteLine(select7);
-            Console.WriteLine(select8);
+            //Console.WriteLine(select1);
+            //Console.WriteLine(select2);
+            //Console.WriteLine(select3);
+            //Console.WriteLine(select4);
+            //Console.WriteLine(select5);
+            //Console.WriteLine(select6);
+            //Console.WriteLine(select7);
+            //Console.WriteLine(select8);
 
-            Console.WriteLine("\n\n");
+            //Console.WriteLine("\n\n");
 
-            Console.WriteLine(select9);
+            //Console.WriteLine(select9);
 
-            UserInfo userInfo = new UserInfo
-            {
-                ID = "JFKSDJFLKS",
-                userName = "phanxuanchanh",
-                surName = "Phan",
-                middleName = "Xuân",
-                name = "Chánh",
-                email = "phanxuanchanh77@gmail.com",
-                phoneNumber = "0343583276",
-                description = "...",
-                createAt = DateTime.Now,
-                updateAt = DateTime.Now
-            };
+            //UserInfo userInfo = new UserInfo
+            //{
+            //    ID = "JFKSDJFLKS",
+            //    userName = "phanxuanchanh",
+            //    surName = "Phan",
+            //    middleName = "Xuân",
+            //    name = "Chánh",
+            //    email = "phanxuanchanh77@gmail.com",
+            //    phoneNumber = "0343583276",
+            //    description = "...",
+            //    createAt = DateTime.Now,
+            //    updateAt = DateTime.Now
+            //};
 
-            string insert = SqlQuery.Insert<UserInfo>(userInfo);
+            //string insert = SqlQuery.Insert<UserInfo>(userInfo);
 
-            Console.WriteLine("\n\n");
+            //Console.WriteLine("\n\n");
 
-            Console.WriteLine(insert);
+            //Console.WriteLine(insert);
 
-            string delete1 = SqlQuery.Delete<UserInfo>();
-            string delete2 = SqlQuery.Delete<UserInfo>(u => u.userName == "phanxuanchanh");
+            //string delete1 = SqlQuery.Delete<UserInfo>();
+            //string delete2 = SqlQuery.Delete<UserInfo>(u => u.userName == "phanxuanchanh");
 
-            Console.WriteLine("\n\n");
+            //Console.WriteLine("\n\n");
 
-            Console.WriteLine(delete1);
-            Console.WriteLine(delete2);
+            //Console.WriteLine(delete1);
+            //Console.WriteLine(delete2);
 
 
-            string update1 = SqlQuery.Update<UserInfo>(userInfo, u => new { u.phoneNumber, u.email });
-            string update2 = SqlQuery.Update<UserInfo>(userInfo, u => new { u.phoneNumber, u.email }, u => u.userName == "phanxuanchanh");
+            //string update1 = SqlQuery.Update<UserInfo>(userInfo, u => new { u.phoneNumber, u.email });
+            //string update2 = SqlQuery.Update<UserInfo>(userInfo, u => new { u.phoneNumber, u.email }, u => u.userName == "phanxuanchanh");
 
-            Console.WriteLine("\n\n");
+            //Console.WriteLine("\n\n");
 
-            Console.WriteLine(update1);
-            Console.WriteLine(update2);
+            //Console.WriteLine(update1);
+            //Console.WriteLine(update2);
 
+            Console.OutputEncoding = Encoding.UTF8;
+
+            DBContext db = new DBContext();
+
+            Console.WriteLine();
+
+            SqlData sqlData = await SqlData.ExecuteReaderAsync(SqlQuery.Select<Province>(p => p.name == "Thành phố Hà Nội"));
+
+            Province province = await db.Provinces.SingleOrDefaultAsync(p => p.name == "Thành phố Hà Nội");
+
+            long districtNumber = await db.Districts.CountAsync();
+            //long districtNumber = await db.Districts.CountAsync(d => d.name == "")
+
+            Console.WriteLine("Số bản ghi District: " + districtNumber);
         }
     }
 }

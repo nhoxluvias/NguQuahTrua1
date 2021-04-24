@@ -159,7 +159,7 @@ namespace MSSQL_Lite.Query
 
         public static string Select<T>(Expression<Func<T, bool>> where, int recordNumber)
         {
-            return "Select " + recordNumber + " * from " 
+            return "Select top " + recordNumber + " * from " 
                 + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " " + GetWhereStatement<T>(where);
         }
 
@@ -189,18 +189,18 @@ namespace MSSQL_Lite.Query
 
         public static string Count<T>()
         {
-            return "Select count(*) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+            return "Select cast(count(*) as varchar(20)) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
         }
 
         public static string Count<T>(Expression<Func<T, bool>> where)
         {
-            return "Select count(*) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
+            return "Select cast(count(*) as varchar(20)) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
                 + GetWhereStatement<T>(where);
         }
 
         public static string Count<T>(string propertyName, Expression<Func<T, bool>> where)
         {
-            return "Select count(" + propertyName + ") from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
+            return "Select cast(count(" + propertyName + ") as varchar(20)) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
                 + GetWhereStatement<T>(where);
         }
 
