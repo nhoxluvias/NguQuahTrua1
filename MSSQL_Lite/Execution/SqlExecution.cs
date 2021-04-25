@@ -8,53 +8,48 @@ namespace MSSQL_Lite.Execution
 {
     public class SqlExecution : Connection.SqlConnection, IDisposable
     {
-        private SqlCommand command;
         public SqlExecution(string connectionString)
             : base(connectionString)
         {
-            command = new SqlCommand();
+
         }
 
-        private async Task InitSqlCommandAsync(string commandText = null)
+        private async Task InitSqlCommandAsync(SqlCommand sqlCommand)
         {
             await base.ConnectAsync();
-            command.Connection = base.connection;
-            if (commandText != null)
-                command.CommandText = commandText;
+            sqlCommand.Connection = base.connection;
         }
 
-        public async Task<int> ExecuteNonQueryAsync(string query)
+        public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
-            await this.InitSqlCommandAsync(query);
-            return await command.ExecuteNonQueryAsync();
+            await this.InitSqlCommandAsync(sqlCommand);
+            return await sqlCommand.ExecuteNonQueryAsync();
         }
 
-        public async Task<T> ExecuteReaderAsync<T>(string query)
+        public async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)
         {
             Type type = typeof(T);
             if (type.Name != "SqlDataReader" && type.Name != "DataSet")
                 throw new Exception("Invalid type, must be @'SqlDataReader' or @'DataSet'");
-            await this.InitSqlCommandAsync(query);
+            await this.InitSqlCommandAsync(sqlCommand);
             if (type.Name == "SqlDataReader")
             {
-                SqlDataReader reader = await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+                SqlDataReader reader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                 return (T)Convert.ChangeType(reader, type);
             }
-            DataSet dataSet = SqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(command));
+            DataSet dataSet = SqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
             return (T)Convert.ChangeType(dataSet, type);
         }
 
-        public async Task<object> ExecuteScalarAsync(string query)
+        public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
-            await this.InitSqlCommandAsync(query);
-            return await command.ExecuteScalarAsync();
+            await this.InitSqlCommandAsync(sqlCommand);
+            return await sqlCommand.ExecuteScalarAsync();
         }
 
         public override void Dispose()
         {
             base.Dispose();
-            this.command.Dispose();
-            this.command = null;
             GC.SuppressFinalize(this);
         }
     }

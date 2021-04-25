@@ -3,6 +3,7 @@ using MSSQL_Lite.Mapping;
 using MSSQL_Lite.Reflection;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -11,200 +12,134 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Query
 {
-    public class SqlQuery
+    public class SqlQuery : SqlQueryBase
     {
         public static bool EnclosedInSquareBrackets = true;
 
-        private static string GetWhereStatement<T>(Expression<Func<T, bool>> where)
+        public static SqlCommand CreateDatabase(string databaseName)
         {
-            return "where " + GetWhereStatement((BinaryExpression)where.Body);
+            string query = string.Format("Create database {0}", databaseName);
+            return InitSqlCommand(query);
         }
 
-        private static string GetWhereStatement(BinaryExpression binaryExpression)
+        public static SqlCommand UseDatabase(string databaseName)
         {
-            if (binaryExpression == null)
-                throw new Exception("@'binaryExpression' must be not null");
-            string exp = null;
-            if(
-                binaryExpression.NodeType == ExpressionType.AndAlso
-                || binaryExpression.NodeType == ExpressionType.OrElse
-                || binaryExpression.NodeType == ExpressionType.Not
-                || binaryExpression.NodeType == ExpressionType.And
-                || binaryExpression.NodeType == ExpressionType.Or
-            )
-            {
-                string expLeft = GetWhereStatement((BinaryExpression)binaryExpression.Left);
-                string expRight = GetWhereStatement((BinaryExpression)binaryExpression.Right);
-                exp += "(" + expLeft + " " 
-                    + ExpresstionExtension.ConvertExpressionTypeToString(binaryExpression.NodeType) 
-                    + " " + expRight + ")";
-                return exp;
-            }else if(
-                binaryExpression.NodeType == ExpressionType.Equal
-                || binaryExpression.NodeType == ExpressionType.NotEqual
-                || binaryExpression.NodeType == ExpressionType.GreaterThan
-                || binaryExpression.NodeType == ExpressionType.LessThan
-                || binaryExpression.NodeType == ExpressionType.GreaterThanOrEqual
-                || binaryExpression.NodeType == ExpressionType.LessThanOrEqual
-                || binaryExpression.NodeType == ExpressionType.Call
-            )
-            {
-                ExpressionData expressionData = GetPairOfExpression(binaryExpression);
-                return "(" + expressionData.Key + " " 
-                    + ExpresstionExtension.ConvertExpressionTypeToString(binaryExpression.NodeType) + " " 
-                    + expressionData.Value + ")";
-            }
-            return null;
+            string query = string.Format("Use {0}", databaseName);
+            return InitSqlCommand(query); 
         }
 
-        private static ExpressionData GetPairOfExpression(BinaryExpression binaryExpression)
+        public static SqlCommand Select<T>()
         {
-            if (binaryExpression == null)
-                throw new Exception("@'binaryExpression' must be not null");
-
-            Expression expressionLeft = binaryExpression.Left;
-            Expression expressionRight = binaryExpression.Right;
-
-            if (!(expressionLeft is MemberExpression))
-                throw new Exception("");
-
-            string key = (expressionLeft as MemberExpression).Member.Name;
-            UnaryExpression unaryExpression = Expression.Convert(expressionRight, typeof(object));
-            Func<object> func = Expression.Lambda<Func<object>>(unaryExpression).Compile();
-            object value = func();
-
-
-            return new ExpressionData {
-                Key = (EnclosedInSquareBrackets) ? "[" + key + "]" : key,
-                NodeType = binaryExpression.NodeType,
-                Value = SqlMapping.ConvertToStandardDataInSql(value)
-            };
+            string query = string.Format("Select * from {0}", SqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
         }
 
-        private static string GetSelectStatement<T>(Expression<Func<T, object>> select)
+        public static SqlCommand Select<T>(int recordNumber)
         {
-            string selectStatement = "Select ";
-            if (select.ToString().Contains("<>f__AnonymousType"))
-            {
-                Func<T, object> func = select.Compile();
-                T model = Obj.CreateInstance<T>();
-                object obj = func(model);
-                PropertyInfo[] properties = Obj.GetProperties(obj);
-                foreach (PropertyInfo property in properties)
-                {
-                    selectStatement += SqlMapping.GetPropertyName(property, EnclosedInSquareBrackets) + ", ";
-                }
-                selectStatement = selectStatement.TrimEnd(' ').TrimEnd(',');
-            }
-            else
-            {
-                if (!(select.Body is MemberExpression))
-                    throw new Exception("");
-                string propName = (select.Body as MemberExpression).Member.Name;
-                selectStatement += ((EnclosedInSquareBrackets) ? "[" + propName + "]" : propName);
-            }
-            return selectStatement;
+            string query = string
+                .Format("Select top {0} * from {1}", recordNumber, SqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
         }
 
-        private static string GetSetStatement<T>(T model, Expression<Func<T, object>> set)
+        public static SqlCommand Select<T>(Expression<Func<T, bool>> where)
         {
-            string setStatement = "set ";
-            Func<T, object> func = set.Compile();
-            object obj = func(model);
-            if (set.ToString().Contains("<>f__AnonymousType"))
-            {
-                PropertyInfo[] properties = Obj.GetProperties(obj);
-                foreach (PropertyInfo property in properties)
-                {
-                    setStatement += SqlMapping.GetPropertyName(property, EnclosedInSquareBrackets) 
-                        + " = " + SqlMapping.ConvertToStandardDataInSql(property.GetValue(obj)) + ", ";
-                }
-                setStatement = setStatement.TrimEnd(' ').TrimEnd(',');
-            }
-            else
-            {
-                if (!(set.Body is MemberExpression))
-                    throw new Exception("");
-                string propName = (set.Body as MemberExpression).Member.Name;
-                setStatement += ((EnclosedInSquareBrackets) ? "[" + propName + "]" : propName) + " = "
-                    + SqlMapping.ConvertToStandardDataInSql(obj);
-            }
-            return setStatement;
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format("Select * from {0} {1}", SqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement);
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string CreateDatabase(string databaseName)
+        public static SqlCommand Select<T>(Expression<Func<T, bool>> where, int recordNumber)
         {
-            return "Create database " + databaseName;
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "Select top {0} * from {1} {2}",
+                    recordNumber, SqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string UseDatabase(string databaseName)
+        public static SqlCommand Select<T>(Expression<Func<T, object>> select)
         {
-            return "Use " + databaseName;
+            string query = string
+                .Format(
+                    "{0} from {1}", 
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets), 
+                    SqlMapping.GetTableName<T>(EnclosedInSquareBrackets)
+                );
+            return InitSqlCommand(query);
         }
 
-        public static string Select<T>()
+        public static SqlCommand Select<T>(Expression<Func<T, object>> select, int recordNumber)
         {
-            return "Select * from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+            string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
+                .Replace("Select ", string.Format("Select top {0} ", recordNumber));
+            string query = string.Format("{0} from {1}", selectStatement, SqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
         }
 
-        public static string Select<T>(int recordNumber)
+        public static SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where)
         {
-            return "Select top " + recordNumber + " * from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "{0} from {1} {2}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    SqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string Select<T>(Expression<Func<T, bool>> where)
+        public static SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int recordNumber)
         {
-            return "Select * from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " " + GetWhereStatement<T>(where);
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
+                .Replace("Select ", string.Format("Select top {0} ", recordNumber));
+            string query = string
+                .Format(
+                    "{0} from {1} {2}",
+                    selectStatement,
+                    SqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string Select<T>(Expression<Func<T, bool>> where, int recordNumber)
+        public static SqlCommand Count<T>()
         {
-            return "Select top " + recordNumber + " * from " 
-                + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " " + GetWhereStatement<T>(where);
+            string query = string
+                .Format("Select cast(count(*) as varchar(20) from {0}", SqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
         }
 
-        public static string Select<T>(Expression<Func<T, object>> select)
+        public static SqlCommand Count<T>(Expression<Func<T, bool>> where)
         {
-            return GetSelectStatement<T>(select) + " from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "Select cast(count(*) as varchar(20)) from {0} {1}",
+                    SqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string Select<T>(Expression<Func<T, object>> select, int recordNumber)
+        public static SqlCommand Count<T>(string propertyName, Expression<Func<T, bool>> where)
         {
-            string selectStatement = GetSelectStatement<T>(select).Replace("Select ", "Select top " + recordNumber + " ");
-            return selectStatement + " from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "Select cast(count({0}) as varchar(20)) from {1} {2}",
+                    (EnclosedInSquareBrackets) ? string.Format("[{0}]", propertyName) : propertyName,
+                    SqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where)
-        {
-            return GetSelectStatement<T>(select) + " from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) 
-                + " " + GetWhereStatement<T>(where);
-        }
-
-        public static string Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int recordNumber)
-        {
-            string selectStatement = GetSelectStatement<T>(select).Replace("Select ", "Select top " + recordNumber + " ");
-            return selectStatement + " from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets)
-                + " " + GetWhereStatement<T>(where);
-        }
-
-        public static string Count<T>()
-        {
-            return "Select cast(count(*) as varchar(20)) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
-        }
-
-        public static string Count<T>(Expression<Func<T, bool>> where)
-        {
-            return "Select cast(count(*) as varchar(20)) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
-                + GetWhereStatement<T>(where);
-        }
-
-        public static string Count<T>(string propertyName, Expression<Func<T, bool>> where)
-        {
-            return "Select cast(count(" + propertyName + ") as varchar(20)) from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " "
-                + GetWhereStatement<T>(where);
-        }
-
-        public static string Insert<T>(T model)
+        public static SqlCommand Insert<T>(T model)
         {
             string query = "Insert into " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + "(";
             PropertyInfo[] props = Obj.GetProperties(model);
@@ -217,28 +152,47 @@ namespace MSSQL_Lite.Query
             }
             into = into.TrimEnd(' ').TrimEnd(',');
             values = values.TrimEnd(' ').TrimEnd(',');
-            return query + into + ") values (" + values + ")";
+            //return query + into + ") values (" + values + ")";
+            return InitSqlCommand(query);
         }
 
-        public static string Update<T>(T model, Expression<Func<T, object>> set)
+        public static SqlCommand Update<T>(T model, Expression<Func<T, object>> set)
         {
-            return "Update " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " " + GetSetStatement<T>(model, set);
+            SqlQueryData sqlQueryData = GetSetStatement<T>(model, set, EnclosedInSquareBrackets);
+            string query = string
+                .Format("Update {0} {1}", SqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement);
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public static string Update<T>(T model, Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
+        public static SqlCommand Update<T>(T model, Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
         {
-            return "Update " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " " + GetSetStatement<T>(model, set)
-                + " " + GetWhereStatement<T>(where);
+            SqlQueryData sqlQueryData1 = GetSetStatement<T>(model, set, EnclosedInSquareBrackets);
+            SqlQueryData sqlQueryData2 = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "Update {0} {1} {2}",
+                    SqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData1.Statement,
+                    sqlQueryData2.Statement
+                );
+            List<SqlQueryParameter> sqlQueryParameters = sqlQueryData1.SqlQueryParameters
+                .Concat(sqlQueryData2.SqlQueryParameters).ToList();
+
+            return InitSqlCommand(query, sqlQueryParameters);
         }
 
-        public static string Delete<T>()
+        public static SqlCommand Delete<T>()
         {
-            return "Delete from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets);
+            string query = string.Format("Delete from {0}", SqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
         }
 
-        public static string Delete<T>(Expression<Func<T, bool>> where)
+        public static SqlCommand Delete<T>(Expression<Func<T, bool>> where)
         {
-            return "Delete from " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + " where " + GetWhereStatement(where);
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format("Delete from {0} {1}", SqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement);
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace MSSQL_Lite.Access
             sqlExecution = null;
         }
 
-        public static async Task<SqlData> ExecuteReaderAsync(string queryString, bool newConnection = false)
+        public static async Task<SqlData> ExecuteReaderAsync(SqlCommand sqlCommand, bool newConnection = false)
         {
             if (newConnection)
             {
@@ -41,11 +41,11 @@ namespace MSSQL_Lite.Access
             if (sqlExecution == null)
                 InitSqlExecution();
             if (objectReceivingData == ObjectReceivingData.SqlDataReader)
-                return new SqlData(await sqlExecution.ExecuteReaderAsync<SqlDataReader>(queryString));
-            return new SqlData(await sqlExecution.ExecuteReaderAsync<DataSet>(queryString));
+                return new SqlData(await sqlExecution.ExecuteReaderAsync<SqlDataReader>(sqlCommand));
+            return new SqlData(await sqlExecution.ExecuteReaderAsync<DataSet>(sqlCommand));
         }
 
-        public static async Task<int> ExecuteNonQueryAsync(string queryString, bool newConnection = false)
+        public static async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand, bool newConnection = false)
         {
             if (newConnection)
             {
@@ -54,10 +54,10 @@ namespace MSSQL_Lite.Access
             }
             if (sqlExecution == null)
                 InitSqlExecution();
-            return await sqlExecution.ExecuteNonQueryAsync(queryString);
+            return await sqlExecution.ExecuteNonQueryAsync(sqlCommand);
         }
 
-        public static async Task<object> ExecuteScalarAsync(string queryString, bool newConnection = false)
+        public static async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand, bool newConnection = false)
         {
             if (newConnection)
             {
@@ -66,7 +66,7 @@ namespace MSSQL_Lite.Access
             }
             if (sqlExecution == null)
                 InitSqlExecution();
-            return await sqlExecution.ExecuteScalarAsync(queryString);
+            return await sqlExecution.ExecuteScalarAsync(sqlCommand);
         }
 
         public Dictionary<string, object> ToDictionary()

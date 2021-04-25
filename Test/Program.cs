@@ -1,6 +1,8 @@
 ﻿
 using MSSQL_Lite.Access;
 using MSSQL_Lite.Connection;
+using MSSQL_Lite.LambdaExpression;
+using MSSQL_Lite.Mapping;
 using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
@@ -33,6 +35,68 @@ namespace Test
 
         static async Task Run()
         {
+            SqlData sqlData = await SqlData.ExecuteReaderAsync(SqlQuery.Select<Province>(p => p.name == "Thành phố Hồ Chí Minh"));
+
+            //Console.WriteLine(str);
+
+            string t1 = SqlDataTypeMapping.Map(typeof(int));
+            string t2 = SqlDataTypeMapping.Map(typeof(long));
+            string t3 = SqlDataTypeMapping.Map(typeof(string));
+            string t4 = SqlDataTypeMapping.Map(typeof(short));
+            string t5 = SqlDataTypeMapping.Map(typeof(char));
+            string t6 = SqlDataTypeMapping.Map(typeof(bool));
+            string t7 = SqlDataTypeMapping.Map(typeof(DateTime));
+            string t8 = SqlDataTypeMapping.Map(typeof(DateTimeOffset));
+            string t9 = SqlDataTypeMapping.Map(typeof(decimal));
+            string t10 = SqlDataTypeMapping.Map(typeof(TimeSpan));
+
+            Console.WriteLine(t1);
+            Console.WriteLine(t2);
+            Console.WriteLine(t3);
+            Console.WriteLine(t4);
+            Console.WriteLine(t5);
+            Console.WriteLine(t6);
+            Console.WriteLine(t7);
+            Console.WriteLine(t8); 
+            Console.WriteLine(t9);
+            Console.WriteLine(t10);
+
+
+            Console.ReadKey();
+
+            //Console.WriteLine(SqlQuery.Select<Province>(p => p.name == "' or 1=1)--"));
+
+            //UserInfo userInfo = new UserInfo
+            //{
+            //    ID = "JFKSDJFLKS",
+            //    userName = "phanxuanchanh",
+            //    surName = "Phan",
+            //    middleName = "Xuân",
+            //    name = "Chánh",
+            //    email = "phanxuanchanh77@gmail.com",
+            //    phoneNumber = "0343583276",
+            //    description = "...",
+            //    createAt = DateTime.Now,
+            //    updateAt = DateTime.Now
+            //};
+
+            //Console.WriteLine(SqlQuery.GetSetStatement<UserInfo>(userInfo, p => p.name, true));
+
+            //Console.OutputEncoding = Encoding.UTF8;
+
+            //DBContext db = new DBContext();
+
+            //Console.WriteLine();
+
+            //SqlData sqlData = await SqlData.ExecuteReaderAsync(SqlQuery.Select<Province>(p => p.name == "Thành phố Hà Nội"));
+
+            //Province province = await db.Provinces.SingleOrDefaultAsync(p => p.name == "Thành phố Hà Nội");
+
+            //long districtNumber = await db.Districts.CountAsync();
+            ////long districtNumber = await db.Districts.CountAsync(d => d.name == "")
+
+            //Console.WriteLine("Số bản ghi District: " + districtNumber);
+
 
             //List<District> districts = await db.Districts.ToListAsync();
             ////////var item = sqlData.ToDictionaryList();
@@ -141,21 +205,6 @@ namespace Test
 
             //Console.WriteLine(update1);
             //Console.WriteLine(update2);
-
-            Console.OutputEncoding = Encoding.UTF8;
-
-            DBContext db = new DBContext();
-
-            Console.WriteLine();
-
-            SqlData sqlData = await SqlData.ExecuteReaderAsync(SqlQuery.Select<Province>(p => p.name == "Thành phố Hà Nội"));
-
-            Province province = await db.Provinces.SingleOrDefaultAsync(p => p.name == "Thành phố Hà Nội");
-
-            long districtNumber = await db.Districts.CountAsync();
-            //long districtNumber = await db.Districts.CountAsync(d => d.name == "")
-
-            Console.WriteLine("Số bản ghi District: " + districtNumber);
         }
     }
 }

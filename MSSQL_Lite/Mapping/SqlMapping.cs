@@ -36,20 +36,5 @@ namespace MSSQL_Lite.Mapping
         {
             return (enclosedInSquareBrackets) ? "[" + propertyInfo.Name + "]" : propertyInfo.Name;
         }
-
-        public static string ConvertToStandardDataInSql(object value)
-        {
-            if (value == null)
-                return "NULL";
-            if (value is string)
-                return (StringExtension.IsUnicode((string)value)) ? "N'" + (string)value + "'" : "'" + (string)value + "'";
-            if (value is bool)
-                return ((bool)value) ? "1" : "0";
-            if(value is DateTime)
-            {
-                return null;
-            }
-            return null;
-        }
     }
 }

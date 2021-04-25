@@ -1,6 +1,7 @@
 ﻿using MSSQL_Lite.Execution;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,22 +23,22 @@ namespace MSSQL_Lite.Access
                 throw new Exception("@'queryString' must be not empty");
         }
 
-        public async Task<int> ExecuteNonQueryAsync(string queryString)
+        public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(queryString);
-            return await SqlData.ExecuteNonQueryAsync(queryString);
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            return await SqlData.ExecuteNonQueryAsync(sqlCommand);
         }
 
-        public async Task<object> ExecuteReaderAsync(string queryString)
+        public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(queryString);
-            return await SqlData.ExecuteReaderAsync(queryString);
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            return await SqlData.ExecuteReaderAsync(sqlCommand);
         }
 
-        public async Task<object> ExecuteReaderAsync(string queryString, Type type)
+        public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand, Type type)
         {
-            ThrowExceptionOfQueryString(queryString);
-            SqlData sqlData = await SqlData.ExecuteReaderAsync(queryString);
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            SqlData sqlData = await SqlData.ExecuteReaderAsync(sqlCommand);
             if (type == null)
                 throw new Exception("@'type' must be not null");
             if (type.Equals(typeof(Dictionary<string, object>)))
@@ -48,10 +49,10 @@ namespace MSSQL_Lite.Access
                 throw new Exception("@'type' is not valid");
         }
 
-        public async Task<object> ExecutScalarAsync(string queryString)
+        public async Task<object> ExecutScalarAsync(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(queryString);
-            return await SqlData.ExecuteScalarAsync(queryString);
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            return await SqlData.ExecuteScalarAsync(sqlCommand);
         }
     }
 }
