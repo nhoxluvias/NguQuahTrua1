@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSSQL_Lite.Connection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -15,7 +16,11 @@ namespace Web
         protected void Application_Start(object sender, EventArgs e)
         {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            Model.Test2.Value = "Chánh đang thử biến static: ";
+
+            SqlConnectInfo.DataSource = @"LAPTOP-B78E1G5S\MSSQLSERVER2019";
+            SqlConnectInfo.InitialCatalog = "Movie";
+            SqlConnectInfo.UserID = "sa";
+            SqlConnectInfo.Password = "123456789";
         }
 
         protected void Session_Start(object sender, EventArgs e)

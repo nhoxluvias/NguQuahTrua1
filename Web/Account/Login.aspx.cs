@@ -39,11 +39,6 @@ namespace Web.Account
 
         private async Task<bool> LoginToAccount(string username, string password)
         {
-            SqlConnectInfo.DataSource = @"LAPTOP-B78E1G5S\MSSQLSERVER2019";
-            SqlConnectInfo.InitialCatalog = "AddressTest";
-            SqlConnectInfo.UserID = "sa";
-            SqlConnectInfo.Password = "123456789";
-
             DBContext db = new DBContext();
             Model.User user = await db.Users.SingleOrDefaultAsync(u => u.userName == username && u.password == password);
             return false;

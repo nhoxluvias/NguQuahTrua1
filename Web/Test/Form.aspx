@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Form.aspx.cs" Inherits="Web.Test.Form" %>
+﻿<%@ Page Async="true" Language="C#" AutoEventWireup="true" CodeBehind="Form.aspx.cs" Inherits="Web.Test.Form" %>
 
 <!DOCTYPE html>
 

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common.Hash
 {
-    public class PBKDF2
+    public class PBKDF2_Hash
     {
         public static string Hash(string input, string salt, int length)
         {

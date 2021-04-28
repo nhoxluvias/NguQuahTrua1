@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Web.Migrations;
 
 namespace Web.Test
 {
@@ -12,8 +14,14 @@ namespace Web.Test
         protected void Page_Load(object sender, EventArgs e)
         {
             Label1.Text = Model.Test2.Value;
+            RunMigration();
         }
 
+        public async void RunMigration()
+        {
+            RoleMigration roleMigration = new RoleMigration();
+            await roleMigration.AddDataAndRunAsync();
+        }
 
         protected void TxtInputValidator(object source, ServerValidateEventArgs args)
         {
