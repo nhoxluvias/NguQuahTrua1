@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Mapping
 {
-    using CustomAttribute = CustomAttributeData;
     public class SqlMapping
     {
         public static string GetTableName<T>(bool enclosedInSquareBrackets = false)

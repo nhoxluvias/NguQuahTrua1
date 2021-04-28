@@ -164,6 +164,98 @@ namespace MSSQL_Lite.Query
             return new SqlQueryData { Statement = string.Format("where {0}", whereStatement), SqlQueryParameters = sqlParameters };
         }
 
+        protected static string GetInsertPattern<T>(T model, bool enclosedInSquareBrackets)
+        {
+            string query = string.Format("Insert into {0}(", SqlMapping.GetTableName<T>(enclosedInSquareBrackets));
+            PropertyInfo[] props = Obj.GetProperties(model);
+            string into = null;
+            string values = null;
+            foreach (PropertyInfo prop in props)
+            {
+                into += string.Format("{0}, ", SqlMapping.GetPropertyName(prop, enclosedInSquareBrackets));
+                values += string.Format("{0}, ", "@" + SqlMapping.GetPropertyName(prop, false));
+            }
+            into = into.TrimEnd(' ').TrimEnd(',');
+            values = values.TrimEnd(' ').TrimEnd(',');
+            return string.Format("{0} {1}) values ({2})", query, into, values);
+        }
+
+        protected static string GetInsertPattern<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
+        {
+            if (excludeProperties == null)
+                throw new Exception("");
+            if (excludeProperties.Count == 0)
+                throw new Exception("");
+            string query = string.Format("Insert into {0}(", SqlMapping.GetTableName<T>(enclosedInSquareBrackets));
+            PropertyInfo[] props = Obj.GetProperties(model);
+            string into = null;
+            string values = null;
+            foreach (PropertyInfo prop in props)
+            {
+                if (excludeProperties.Any(e => e.Equals(prop.Name)))
+                    continue;
+                into += string.Format("{0}, ", SqlMapping.GetPropertyName(prop, enclosedInSquareBrackets));
+                values += string.Format("{0}, ", "@" + SqlMapping.GetPropertyName(prop, false));
+            }
+            into = into.TrimEnd(' ').TrimEnd(',');
+            values = values.TrimEnd(' ').TrimEnd(',');
+            return string.Format("{0} {1}) values ({2})", query, into, values);
+        }
+
+        protected static List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, bool enclosedInSquareBracket)
+        {
+            PropertyInfo[] props = Obj.GetProperties(model);
+            List<SqlQueryParameter> sqlQueryParameters = new List<SqlQueryParameter>();
+            foreach(PropertyInfo prop in props)
+            {
+                sqlQueryParameters.Add(new SqlQueryParameter
+                {
+                    Name = "@" + prop.Name,
+                    Value = prop.GetValue(model)
+                });
+            }
+            return sqlQueryParameters;
+        }
+
+        protected static List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, List<string> excludeProperties, bool enclosedInSquareBracket)
+        {
+            if (excludeProperties == null)
+                throw new Exception("");
+            if (excludeProperties.Count == 0)
+                throw new Exception("");
+            PropertyInfo[] props = Obj.GetProperties(model);
+            List<SqlQueryParameter> sqlQueryParameters = new List<SqlQueryParameter>();
+            foreach (PropertyInfo prop in props)
+            {
+                if (excludeProperties.Any(e => e.Equals(prop.Name)))
+                    continue;
+                sqlQueryParameters.Add(new SqlQueryParameter
+                {
+                    Name = "@" + prop.Name,
+                    Value = prop.GetValue(model)
+                });
+            }
+            return sqlQueryParameters;
+        }
+
+        protected static SqlQueryData GetInsertQueryData<T>(T model, bool enclosedInSquareBrackets)
+        {
+            return new SqlQueryData
+            {
+                Statement = GetInsertPattern<T>(model, enclosedInSquareBrackets),
+                SqlQueryParameters = GetParameterOfInsertQuery<T>(model, enclosedInSquareBrackets)
+            };
+        }
+
+        protected static SqlQueryData GetInsertQueryData<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
+        {
+            return new SqlQueryData
+            {
+                Statement = GetInsertPattern<T>(model, excludeProperties, enclosedInSquareBrackets),
+                SqlQueryParameters = GetParameterOfInsertQuery<T>(model, excludeProperties, enclosedInSquareBrackets)
+            };
+        }
+
         protected static string GetSelectStatement<T>(Expression<Func<T, object>> select, bool enclosedInSquareBrackets)
         {
             string selectStatement = "Select ";

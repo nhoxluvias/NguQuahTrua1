@@ -141,21 +141,19 @@ namespace MSSQL_Lite.Query
 
         public static SqlCommand Insert<T>(T model)
         {
-            string query = "Insert into " + SqlMapping.GetTableName<T>(EnclosedInSquareBrackets) + "(";
-            PropertyInfo[] props = Obj.GetProperties(model);
-            string into = null;
-            string values = null;
-            foreach (PropertyInfo prop in props)
-            {
-                into += SqlMapping.GetPropertyName(prop, EnclosedInSquareBrackets) + ", ";
-                values += SqlMapping.ConvertToStandardDataInSql(prop.GetValue(model)) + ", ";
-            }
-            into = into.TrimEnd(' ').TrimEnd(',');
-            values = values.TrimEnd(' ').TrimEnd(',');
-            //return query + into + ") values (" + values + ")";
-            return InitSqlCommand(query);
+            SqlQueryData sqlQueryData = GetInsertQueryData<T>(model, EnclosedInSquareBrackets);
+            return InitSqlCommand(sqlQueryData.Statement, sqlQueryData.SqlQueryParameters);
         }
 
+        public static SqlCommand Insert<T>(T model, List<string> excludeProperties)
+        {
+            if (excludeProperties == null)
+                return Insert<T>(model);
+            if (excludeProperties.Count == 0)
+                return Insert<T>(model);
+            SqlQueryData sqlQueryData = GetInsertQueryData<T>(model, excludeProperties, EnclosedInSquareBrackets);
+            return InitSqlCommand(sqlQueryData.Statement, sqlQueryData.SqlQueryParameters);
+        }
         public static SqlCommand Update<T>(T model, Expression<Func<T, object>> set)
         {
             SqlQueryData sqlQueryData = GetSetStatement<T>(model, set, EnclosedInSquareBrackets);

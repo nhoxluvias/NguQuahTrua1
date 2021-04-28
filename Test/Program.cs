@@ -6,6 +6,7 @@ using MSSQL_Lite.Mapping;
 using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Text;
 using System.Threading.Tasks;
 using Test.Model;
@@ -20,7 +21,7 @@ namespace Test
             //ModelError.IfInvalidType(obj, new string[] { "string", "float" });
 
             SqlConnectInfo.DataSource = @"LAPTOP-B78E1G5S\MSSQLSERVER2019";
-            SqlConnectInfo.InitialCatalog = "AddressTest";
+            SqlConnectInfo.InitialCatalog = "DoAn_Test";
             SqlConnectInfo.UserID = "sa";
             SqlConnectInfo.Password = "123456789";
 
@@ -35,32 +36,26 @@ namespace Test
 
         static async Task Run()
         {
-            SqlData sqlData = await SqlData.ExecuteReaderAsync(SqlQuery.Select<Province>(p => p.name == "Thành phố Hồ Chí Minh"));
+            //SqlData sqlData = await SqlData.ExecuteReaderAsync(SqlQuery.Select<Model.Test>(t => t.name));
+            //List<Model.Test> tests = sqlData.ToList<Model.Test>();
+
+            Model.Test t = new Model.Test
+            {
+                name = "THU NGHIEM",
+                createAt = DateTime.Now
+            };
+            await SqlData.ExecuteNonQueryAsync(SqlQuery.Update<Model.Test>(t, te => new { te.createAt }, te => te.ID == 5));
+
+            SqlCommand sqlCommand = SqlQuery.Insert<Model.Test>(new Model.Test
+            {
+                ID = 12,
+                name = "PHAN XUAN CHANH",
+                createAt = DateTime.Now
+            });
+
+            //int affected = await SqlData.ExecuteNonQueryAsync(sqlCommand);
 
             //Console.WriteLine(str);
-
-            string t1 = SqlDataTypeMapping.Map(typeof(int));
-            string t2 = SqlDataTypeMapping.Map(typeof(long));
-            string t3 = SqlDataTypeMapping.Map(typeof(string));
-            string t4 = SqlDataTypeMapping.Map(typeof(short));
-            string t5 = SqlDataTypeMapping.Map(typeof(char));
-            string t6 = SqlDataTypeMapping.Map(typeof(bool));
-            string t7 = SqlDataTypeMapping.Map(typeof(DateTime));
-            string t8 = SqlDataTypeMapping.Map(typeof(DateTimeOffset));
-            string t9 = SqlDataTypeMapping.Map(typeof(decimal));
-            string t10 = SqlDataTypeMapping.Map(typeof(TimeSpan));
-
-            Console.WriteLine(t1);
-            Console.WriteLine(t2);
-            Console.WriteLine(t3);
-            Console.WriteLine(t4);
-            Console.WriteLine(t5);
-            Console.WriteLine(t6);
-            Console.WriteLine(t7);
-            Console.WriteLine(t8); 
-            Console.WriteLine(t9);
-            Console.WriteLine(t10);
-
 
             Console.ReadKey();
 

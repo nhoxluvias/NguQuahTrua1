@@ -48,6 +48,7 @@
     <Compile Include="Model\District.cs" />
     <Compile Include="Model\Gender.cs" />
     <Compile Include="Model\Province.cs" />
+    <Compile Include="Model\Test.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="Program.cs" />
