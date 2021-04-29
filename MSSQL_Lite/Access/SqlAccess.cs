@@ -35,6 +35,11 @@ namespace MSSQL_Lite.Access
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(where, 1))).To<T>();
         }
 
+        public async Task<T> SingleOrDefaultAsync(Expression<Func<T, object>> set ,Expression<Func<T, bool>> where)
+        {
+            return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set, where, 1))).To<T>();
+        }
+
         public async Task<T> FirstOrDefaultAsync()
         {
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(1))).To<T>();
@@ -45,6 +50,10 @@ namespace MSSQL_Lite.Access
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(where, 1))).To<T>();
         }
 
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
+        {
+            return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set, where, 1))).To<T>();
+        }
         public async Task<int> DeleteAsync()
         {
             return (await SqlData.ExecuteNonQueryAsync(SqlQuery.Delete<T>()));
@@ -68,6 +77,11 @@ namespace MSSQL_Lite.Access
         public async Task<int> InsertAsync(T model)
         {
             return (await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(model)));
+        }
+
+        public async Task<int> InsertAsync(T model, List<string> excludeProperties)
+        {
+            return (await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(model, excludeProperties)));
         }
 
         public async Task<long> CountAsync()

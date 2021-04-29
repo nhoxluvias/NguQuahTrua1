@@ -6,7 +6,7 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 
-namespace Web.Model
+namespace Web.Models
 {
     public class DBContext:SqlContext
     {
@@ -15,8 +15,6 @@ namespace Web.Model
         {
 
         }
-
-        public SqlAccess<Test> Tests { get { return new SqlAccess<Test>(); } }
 
         public SqlAccess<User> Users { get { return new SqlAccess<User>(); } }
     }

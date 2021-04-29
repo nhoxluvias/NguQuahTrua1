@@ -15,13 +15,13 @@ namespace Web.Account
     {
 
         /// <summary>
-        /// form1 control.
+        /// frmRegister control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.HtmlControls.HtmlForm frmRegister;
 
         /// <summary>
         /// txtUsername control.
@@ -184,6 +184,15 @@ namespace Web.Account
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvEpirationDate;
+
+        /// <summary>
+        /// drdlPaymentMethod control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList drdlPaymentMethod;
 
         /// <summary>
         /// btnSubmit control.

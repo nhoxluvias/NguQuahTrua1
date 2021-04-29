@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="Web.Account.Login" %>
+﻿<%@ Page Async="true" Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="Web.Account.Login" EnableEventValidation="false" %>
 
 <!DOCTYPE html>
 
@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="frmLogin" method="post" runat="server">
         <video id="backgroundVideo" class="background-video" autoplay>
             <source src="<%--https://www.phanxuanchanh.com/trailer.mp4--%>" type='video/mp4'>
             <p>Không thể phát video</p>
@@ -43,7 +43,7 @@
                 <% for (int i = 0; i < 5; i++) { %>
                     <div class="notify-item">
                         <h5>Phim <%= i %></h5>
-                        <p class="cc">Mô tả phim <%= i %></p>
+                        <p>Mô tả phim <%= i %></p>
                     </div>
                 <% } %>
             </div>

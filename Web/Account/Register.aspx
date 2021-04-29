@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="frmRegister" method="post" runat="server">
         <div class="register-form">
             <div class="register-form-title">
                 <h3>Đăng ký tài khoản</h3>
@@ -54,28 +54,25 @@
                         <asp:CustomValidator ID="cvCardNumber" runat="server"></asp:CustomValidator>
                     </div>
                     <p>CVV</p>
-                    <input type="text" name="cvv" value="" placeholder="Nhập vào số CVV">
                     <asp:TextBox ID="txtCvv" Placeholder="Nhập vào số CVV" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <asp:CustomValidator ID="cvCvv" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Tên chủ tài khoản</p>
-                    <input type="text" name="accountName" value="" placeholder="Nhập vào tên tài khoản">
                     <asp:TextBox ID="txtAccountName" Placeholder="Nhập vào tên tài khoản" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <asp:CustomValidator ID="cvAccountName" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Ngày hết hạn</p>
-                    <input type="text" name="expirationDate" value="" placeholder="Nhập vào ngày hết hạn">
                     <asp:TextBox ID="txtExprationDate" Placeholder="Nhập vào ngày hết hạn" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <asp:CustomValidator ID="cvEpirationDate" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Phương thức thanh toán</p>
-                    <select name="paymentMethod" id="cars">
-                        <option value="visa">Thẻ Visa</option>
-                        <option value="mastercard">Thẻ Mastercard</option>
-                    </select>
+                    <asp:DropDownList ID="drdlPaymentMethod" runat="server">
+                        <asp:ListItem Value="Visa"></asp:ListItem>
+                        <asp:ListItem Value="Mastercard"></asp:ListItem>
+                    </asp:DropDownList>
                 </div>
             </div>
             <div class="register-form-submit">
