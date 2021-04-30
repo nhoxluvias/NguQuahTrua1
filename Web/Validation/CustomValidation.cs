@@ -21,7 +21,7 @@ namespace Web.Validation
         public static void ValidateEmail(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(
-                args.Value, 
+                args.Value,
                 @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" + @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                     @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"
             );
@@ -50,7 +50,7 @@ namespace Web.Validation
         public static void ValidateCardNumber(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{16,19}$");
-        } 
+        }
 
         public static void ValidateCVV(object source, ServerValidateEventArgs args)
         {

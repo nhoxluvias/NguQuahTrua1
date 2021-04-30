@@ -15,7 +15,8 @@ namespace Web.Account
 {
     public partial class Login : System.Web.UI.Page
     {
-        DBContext db;
+        private DBContext db;
+
         protected async void Page_Load(object sender, EventArgs e)
         {
             db = new DBContext();
@@ -46,22 +47,27 @@ namespace Web.Account
 
         private async Task LoginToAccount()
         {
-            string username = Request.Form["txtUsername"];
-            string password = Request.Form["txtPassword"];
+            cvUsername.Validate();
+            cvPassword.Validate();
+            if(cvUsername.IsValid && cvPassword.IsValid)
+            {
+                string username = Request.Form["txtUsername"];
+                string password = Request.Form["txtPassword"];
 
-            Models.User user = await db.Users
-                .SingleOrDefaultAsync(u => new { u.password, u.salt }, u => u.userName == username);
-            if (user == null)
-            {
-                Response.RedirectToRoute("register");
-            }
-            else
-            {
-                string passwordHashed = PBKDF2_Hash.Hash(password, user.salt, 10);
-                if (user.password == passwordHashed)
+                Models.User user = await db.Users
+                    .SingleOrDefaultAsync(u => new { u.password, u.salt }, u => u.userName == username);
+                if (user == null)
                 {
-                    Session["username"] = username;
-                    Response.RedirectToRoute("login");
+                    Response.RedirectToRoute("register");
+                }
+                else
+                {
+                    string passwordHashed = PBKDF2_Hash.Hash(password, user.salt, 10);
+                    if (user.password == passwordHashed)
+                    {
+                        Session["username"] = username;
+                        Response.RedirectToRoute("login");
+                    }
                 }
             }
         }

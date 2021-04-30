@@ -25,6 +25,16 @@ namespace MSSQL_Lite.Access
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(where))).ToList<T>();
         }
 
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set)
+        {
+            return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set))).ToList<T>();
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
+        {
+            return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set, where))).ToList<T>();
+        }
+
         public async Task<T> SingleOrDefaultAsync()
         {
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(1))).To<T>();
@@ -33,6 +43,11 @@ namespace MSSQL_Lite.Access
         public async Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> where)
         {
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(where, 1))).To<T>();
+        }
+
+        public async Task<T> SingleOrDefaultAsync(Expression<Func<T, object>> set)
+        {
+            return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set, 1))).To<T>();
         }
 
         public async Task<T> SingleOrDefaultAsync(Expression<Func<T, object>> set ,Expression<Func<T, bool>> where)
@@ -50,10 +65,16 @@ namespace MSSQL_Lite.Access
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(where, 1))).To<T>();
         }
 
+        public async Task<T> FirstOrDefaultAsync(Expression<Func<T, object>> set)
+        {
+            return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set, 1))).To<T>();
+        }
+
         public async Task<T> FirstOrDefaultAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
         {
             return (await SqlData.ExecuteReaderAsync(SqlQuery.Select<T>(set, where, 1))).To<T>();
         }
+
         public async Task<int> DeleteAsync()
         {
             return (await SqlData.ExecuteNonQueryAsync(SqlQuery.Delete<T>()));

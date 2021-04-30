@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="Web.Account.Register" %>
+﻿<%@ Page Async="true" Language="C#" AutoEventWireup="true" CodeBehind="Register.aspx.cs" Inherits="Web.Account.Register" %>
 
 <!DOCTYPE html>
 
@@ -33,7 +33,7 @@
                     <p>Số điện thoại</p>
                     <asp:TextBox ID="txtPhoneNumber" Placeholder="Nhập vào số điện thoại" Text="" TextMode="Email" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <<asp:CustomValidator ID="cvPhoneNumber" runat="server"></asp:CustomValidator>
+                        <asp:CustomValidator ID="cvPhoneNumber" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Mật khẩu</p>
                     <asp:TextBox ID="txtPassword" Placeholder="Nhập vào mật khẩu" Text="" TextMode="Password" runat="server"></asp:TextBox>
@@ -43,7 +43,7 @@
                     <p>Xác nhận mật khẩu</p>
                     <asp:TextBox ID="txtRePassword" Placeholder="Nhập vào xác nhận mật khẩu" Text="" TextMode="Password" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <asp:CustomValidator ID="cvRePassword" runat="server"></asp:CustomValidator>
+                        <asp:CompareValidator ID="cmpRePassword" runat="server"></asp:CompareValidator>
                     </div>
                 </div>
                 <div class="register-form-group register-form-group-right">
