@@ -53,7 +53,6 @@
     <Compile Include="LambdaExpression\ExpressionTree.cs" />
     <Compile Include="LambdaExpression\ExpresstionExtension.cs" />
     <Compile Include="Mapping\SqlConvert.cs" />
-    <Compile Include="Mapping\SqlDataTypeMapping.cs" />
     <Compile Include="Mapping\SqlMapping.cs" />
     <Compile Include="Migration\ISqlMigration.cs" />
     <Compile Include="Migration\SqlMigration.cs" />

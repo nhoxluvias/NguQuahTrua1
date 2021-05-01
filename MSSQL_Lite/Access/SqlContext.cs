@@ -29,10 +29,22 @@ namespace MSSQL_Lite.Access
             return await SqlData.ExecuteNonQueryAsync(sqlCommand);
         }
 
+        public int ExecuteNonQuery(SqlCommand sqlCommand)
+        {
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            return SqlData.ExecuteNonQuery(sqlCommand);
+        }
+
         public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
             return await SqlData.ExecuteReaderAsync(sqlCommand);
+        }
+
+        public object ExecuteReader(SqlCommand sqlCommand)
+        {
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            return SqlData.ExecuteReader(sqlCommand);
         }
 
         public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand, Type type)
@@ -49,10 +61,30 @@ namespace MSSQL_Lite.Access
                 throw new Exception("@'type' is not valid");
         }
 
-        public async Task<object> ExecutScalarAsync(SqlCommand sqlCommand)
+        public object ExecuteReader(SqlCommand sqlCommand, Type type)
+        {
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            SqlData sqlData = SqlData.ExecuteReader(sqlCommand);
+            if (type == null)
+                throw new Exception("@'type' must be not null");
+            if (type.Equals(typeof(Dictionary<string, object>)))
+                return sqlData.ToDictionary();
+            else if (type.Equals(typeof(List<Dictionary<string, object>>)))
+                return sqlData.ToDictionaryList();
+            else
+                throw new Exception("@'type' is not valid");
+        }
+
+        public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
             return await SqlData.ExecuteScalarAsync(sqlCommand);
+        }
+
+        public object ExecuteScalar(SqlCommand sqlCommand)
+        {
+            ThrowExceptionOfQueryString(sqlCommand.CommandText);
+            return SqlData.ExecuteScalar(sqlCommand);
         }
     }
 }

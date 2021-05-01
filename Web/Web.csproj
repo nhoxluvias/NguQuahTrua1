@@ -103,6 +103,7 @@
     <Content Include="libraries\video-js\video.js" />
     <Content Include="libraries\video-js\video.novtt.dev.js" />
     <Content Include="libraries\video-js\video.novtt.js" />
+    <Content Include="Notification\Error.aspx" />
     <Content Include="Test\Form.aspx" />
     <Content Include="User\Article.aspx" />
     <Content Include="User\Category.aspx" />
@@ -163,6 +164,13 @@
     <Compile Include="Models\Test2.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Video.cs" />
+    <Compile Include="Notification\Error.aspx.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Notification\Error.aspx.designer.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test\Form.aspx.cs">
       <DependentUpon>Form.aspx</DependentUpon>

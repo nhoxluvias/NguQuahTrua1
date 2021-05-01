@@ -45,6 +45,20 @@ namespace MSSQL_Lite.Access
             return new SqlData(await sqlExecution.ExecuteReaderAsync<DataSet>(sqlCommand));
         }
 
+        public static SqlData ExecuteReader(SqlCommand sqlCommand, bool newConnection = false)
+        {
+            if (newConnection)
+            {
+                DestroySqlExecution();
+                InitSqlExecution();
+            }
+            if (sqlExecution == null)
+                InitSqlExecution();
+            if (objectReceivingData == ObjectReceivingData.SqlDataReader)
+                return new SqlData(sqlExecution.ExecuteReader<SqlDataReader>(sqlCommand));
+            return new SqlData(sqlExecution.ExecuteReader<DataSet>(sqlCommand));
+        }
+
         public static async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand, bool newConnection = false)
         {
             if (newConnection)
@@ -57,6 +71,18 @@ namespace MSSQL_Lite.Access
             return await sqlExecution.ExecuteNonQueryAsync(sqlCommand);
         }
 
+        public static int ExecuteNonQuery(SqlCommand sqlCommand, bool newConnection = false)
+        {
+            if (newConnection)
+            {
+                DestroySqlExecution();
+                InitSqlExecution();
+            }
+            if (sqlExecution == null)
+                InitSqlExecution();
+            return sqlExecution.ExecuteNonQuery(sqlCommand);
+        }
+
         public static async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand, bool newConnection = false)
         {
             if (newConnection)
@@ -67,6 +93,18 @@ namespace MSSQL_Lite.Access
             if (sqlExecution == null)
                 InitSqlExecution();
             return await sqlExecution.ExecuteScalarAsync(sqlCommand);
+        }
+
+        public static object ExecuteScalar(SqlCommand sqlCommand, bool newConnection = false)
+        {
+            if (newConnection)
+            {
+                DestroySqlExecution();
+                InitSqlExecution();
+            }
+            if (sqlExecution == null)
+                InitSqlExecution();
+            return sqlExecution.ExecuteScalar(sqlCommand);
         }
 
         public Dictionary<string, object> ToDictionary()

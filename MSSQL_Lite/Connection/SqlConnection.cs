@@ -17,6 +17,12 @@ namespace MSSQL_Lite.Connection
                 await this.connection.OpenAsync();
         }
 
+        public void Connect()
+        {
+            if (this.connection.State == System.Data.ConnectionState.Closed)
+                this.connection.Open();
+        }
+
         public void Disconnect()
         {
             if (this.connection.State == System.Data.ConnectionState.Open)

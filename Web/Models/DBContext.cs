@@ -16,6 +16,7 @@ namespace Web.Models
 
         }
 
+        public SqlAccess<Role> Roles { get { return new SqlAccess<Role>(); } }
         public SqlAccess<User> Users { get { return new SqlAccess<User>(); } }
     }
 }

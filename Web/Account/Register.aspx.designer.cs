@@ -168,22 +168,22 @@ namespace Web.Account
         protected global::System.Web.UI.WebControls.CustomValidator cvAccountName;
 
         /// <summary>
-        /// txtExprationDate control.
+        /// txtExpirationDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtExprationDate;
+        protected global::System.Web.UI.WebControls.TextBox txtExpirationDate;
 
         /// <summary>
-        /// cvEpirationDate control.
+        /// cvExpirationDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvEpirationDate;
+        protected global::System.Web.UI.WebControls.CustomValidator cvExpirationDate;
 
         /// <summary>
         /// drdlPaymentMethod control.

@@ -36,18 +36,54 @@ namespace Web.Account
             CustomValidation
                 .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CustomValidation.ValidateUsername);
             CustomValidation
+                .Init(cvEmail, "txtEmail", "Không được để trống và phải hợp lệ", true, null, CustomValidation.ValidateEmail);
+            CustomValidation
+                .Init(cvPhoneNumber, "txtPhoneNumber", "Số điện thoại không hợp lệ", false, null, CustomValidation.ValidatePhoneNumber);
+            CustomValidation
                 .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CustomValidation.ValidatePassword);
             cmpRePassword.ControlToValidate = "txtPassword";
             cmpRePassword.ControlToCompare = "txtRePassword";
             cmpRePassword.ErrorMessage = "Không khớp với mật khẩu mà bạn đã nhập";
+            CustomValidation
+                .Init(cvCardNumber, "txtCardNumber", "Số thẻ không hợp lệ", false, null, CustomValidation.ValidateCardNumber);
+            CustomValidation
+                .Init(cvCvv, "txtCvv", "Số CVV không hợp lệ", false, null, CustomValidation.ValidateCVV);
+            CustomValidation
+                .Init(cvAccountName, "txtAccountName", "Tên chủ tài khoản không hợp lệ", false, null, CustomValidation.ValidateAccountName);
+            CustomValidation
+                .Init(cvExpirationDate, "txtExpirationDate", "Ngày hết hạn không hợp lệ", false, null, CustomValidation.ValidateExpirationDate);
+        }
+
+        private void ValidateData()
+        {
+            cvUsername.Validate();
+            cvEmail.Validate();
+            cvPhoneNumber.Validate();
+            cvPassword.Validate();
+            cmpRePassword.Validate();
+            cvCardNumber.Validate();
+            cvCvv.Validate();
+            cvAccountName.Validate();
+            cvExpirationDate.Validate();
+        }
+
+        private bool IsValidData()
+        {
+            if(
+                cvUsername.IsValid && cvEmail.IsValid && cvPhoneNumber.IsValid && cvPassword.IsValid
+                && cmpRePassword.IsValid && cvCardNumber.IsValid && cvCvv.IsValid && cvAccountName.IsValid
+                && cvExpirationDate.IsValid
+            )
+            {
+                return true;
+            }
+            return false;
         }
 
         private async Task RegisterAccount()
         {
-            cvUsername.Validate();
-            cvPassword.Validate();
-            cmpRePassword.Validate();
-            if(cvUsername.IsValid && cvPassword.IsValid && cmpRePassword.IsValid)
+            ValidateData();
+            if(IsValidData())
             {
                 string username = Request.Form["txtUsername"];
                 string email = Request.Form["txtEmail"];
@@ -73,7 +109,17 @@ namespace Web.Account
                     updateAt = DateTime.Now
                 };
 
-                await db.Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
+                Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
+                if (role == null)
+                {
+                    Response.RedirectToRoute("error");
+                }
+                else
+                {
+                    user.roleId = role.ID;
+                    await db.Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
+                }
+                    
             }
             
         }

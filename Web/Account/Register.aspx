@@ -31,7 +31,7 @@
                         <asp:CustomValidator ID="cvEmail" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Số điện thoại</p>
-                    <asp:TextBox ID="txtPhoneNumber" Placeholder="Nhập vào số điện thoại" Text="" TextMode="Email" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="txtPhoneNumber" Placeholder="Nhập vào số điện thoại" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <asp:CustomValidator ID="cvPhoneNumber" runat="server"></asp:CustomValidator>
                     </div>
@@ -64,9 +64,9 @@
                         <asp:CustomValidator ID="cvAccountName" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Ngày hết hạn</p>
-                    <asp:TextBox ID="txtExprationDate" Placeholder="Nhập vào ngày hết hạn" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="txtExpirationDate" Placeholder="Nhập vào ngày hết hạn" Text="" TextMode="SingleLine" runat="server"></asp:TextBox>
                     <div class="show-error">
-                        <asp:CustomValidator ID="cvEpirationDate" runat="server"></asp:CustomValidator>
+                        <asp:CustomValidator ID="cvExpirationDate" runat="server"></asp:CustomValidator>
                     </div>
                     <p>Phương thức thanh toán</p>
                     <asp:DropDownList ID="drdlPaymentMethod" runat="server">
@@ -76,7 +76,7 @@
                 </div>
             </div>
             <div class="register-form-submit">
-                <asp:Button ID="btnSubmit" CssClass="button button-red button-register" runat="server" Text="Button" />
+                <asp:Button ID="btnSubmit" CssClass="button button-red button-register" runat="server" Text="Đăng ký" />
             </div>
         </div>
     </form>

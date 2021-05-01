@@ -38,7 +38,7 @@ namespace Web.Migrations
                 createAt = DateTime.Now, 
                 updateAt = DateTime.Now 
             });
-            
+
             await Run();
         }
     }

@@ -57,9 +57,14 @@ namespace Web.Validation
             args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
         }
 
+        public static void ValidateAccountName(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, "^[A-Za-z0-9 ]{2,}$");
+        }
+
         public static void ValidateExpirationDate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = Regex.IsMatch(args.Value, "^[0-9]{3}$");
+            args.IsValid = Regex.IsMatch(args.Value, @"(?:0[1-9]|1[0-2])\/[0-9]{2}$");
         }
     }
 }

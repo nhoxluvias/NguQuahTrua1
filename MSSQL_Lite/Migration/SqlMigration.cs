@@ -10,11 +10,19 @@ namespace MSSQL_Lite.Migration
 {
     public class SqlMigration<T>
     {
-        public static async Task MigrateAsync(List<T> items)
+        public static void Migrate(List<T> items)
         {
             foreach(T item in items){
-                await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item));
+                //Task<int> task = SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item));
+
+                Task task = Task.Run(async () => { await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item)); });
+                task.Wait();
             }
+
+            //foreach(Task<int> t in tasks)
+            //{
+            //    t.R
+            //}
         }
 
         public static async Task MigrateAsync(List<T> items, List<string> excludeProperties)
@@ -47,7 +55,7 @@ namespace MSSQL_Lite.Migration
         public async Task Run()
         {
             if (excludeProperties.Count == 0)
-                await MigrateAsync(items);
+                Migrate(items);
             else
                 await MigrateAsync(items, excludeProperties);
         }
