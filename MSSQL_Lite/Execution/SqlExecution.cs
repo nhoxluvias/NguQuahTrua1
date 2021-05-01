@@ -29,13 +29,17 @@ namespace MSSQL_Lite.Execution
         public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
             await this.InitSqlCommandAsync(sqlCommand);
-            return await sqlCommand.ExecuteNonQueryAsync();
+            int affected = await sqlCommand.ExecuteNonQueryAsync();
+            this.Disconnect();
+            return affected;
         }
 
         public int ExecuteNonQuery(SqlCommand sqlCommand)
         {
             this.InitSqlCommand(sqlCommand);
-            return sqlCommand.ExecuteNonQuery();
+            int affected = sqlCommand.ExecuteNonQuery();
+            this.Disconnect();
+            return affected;
         }
 
         public async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)

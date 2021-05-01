@@ -7,14 +7,21 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Query
 {
-    public class SqlQueryBase
+    public class SqlQueryBase : IDisposable
     {
-        protected static bool IsComparisonOperator(ExpressionType expressionType)
+        private ExpresstionExtension expresstionExtension;
+        private SqlMapping sqlMapping;
+
+        public SqlQueryBase()
+        {
+            expresstionExtension = new ExpresstionExtension();
+            sqlMapping = new SqlMapping();
+        }
+
+        protected bool IsComparisonOperator(ExpressionType expressionType)
         {
             if (
                 expressionType == ExpressionType.Equal
@@ -30,7 +37,7 @@ namespace MSSQL_Lite.Query
             return false;
         }
 
-        protected static bool IsLogicalOperator(ExpressionType expressionType)
+        protected bool IsLogicalOperator(ExpressionType expressionType)
         {
             if (
                 expressionType == ExpressionType.AndAlso
@@ -45,12 +52,12 @@ namespace MSSQL_Lite.Query
             return false;
         }
 
-        protected static ExpressionTree GetExpressionTree<T>(Expression<Func<T, bool>> expression)
+        protected ExpressionTree GetExpressionTree<T>(Expression<Func<T, bool>> expression)
         {
             return GetExpressionTree(expression.Body as BinaryExpression);
         }
 
-        protected static ExpressionTree GetExpressionTree(BinaryExpression binaryExpression)
+        protected ExpressionTree GetExpressionTree(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
                 throw new Exception("@'binaryExpression' must be not null");
@@ -78,7 +85,7 @@ namespace MSSQL_Lite.Query
             return null;
         }
 
-        protected static ExpressionData GetExpressionData(BinaryExpression binaryExpression)
+        protected ExpressionData GetExpressionData(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
                 throw new Exception("@'binaryExpression' must be not null");
@@ -102,7 +109,7 @@ namespace MSSQL_Lite.Query
             };
         }
 
-        protected static string GetWherePatternStatement(ExpressionTree expressionTree, bool enclosedInSquareBrackets)
+        protected string GetWherePatternStatement(ExpressionTree expressionTree, bool enclosedInSquareBrackets)
         {
             if (expressionTree == null)
                 return null;
@@ -113,7 +120,7 @@ namespace MSSQL_Lite.Query
             {
                 string left = GetWherePatternStatement(expressionTree.Left, enclosedInSquareBrackets);
                 string right = GetWherePatternStatement(expressionTree.Right, enclosedInSquareBrackets);
-                string nodeType = ExpresstionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
+                string nodeType = expresstionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
                 return string.Format("({0} {1} {2})", left, nodeType, right);
             }
             else if (IsComparisonOperator(expressionData.NodeType))
@@ -121,13 +128,13 @@ namespace MSSQL_Lite.Query
                 if (expressionData.Key == null)
                     throw new Exception("");
                 string propName = (enclosedInSquareBrackets) ? string.Format("[{0}]", expressionData.Key) : expressionData.Key;
-                string nodeType = ExpresstionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
+                string nodeType = expresstionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
                 return string.Format("({0} {1} {2})", propName, nodeType, string.Format("@{0}_where", expressionData.Key));
             }
             return null;
         }
 
-        protected static List<SqlQueryParameter> GetKeyAndValueOfExpressionTree(ExpressionTree expressionTree)
+        protected List<SqlQueryParameter> GetKeyAndValueOfExpressionTree(ExpressionTree expressionTree)
         {
             if (expressionTree == null)
                 return null;
@@ -156,7 +163,7 @@ namespace MSSQL_Lite.Query
             return null;
         }
 
-        protected static SqlQueryData GetWhereStatement<T>(Expression<Func<T, bool>> where, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetWhereStatement<T>(Expression<Func<T, bool>> where, bool enclosedInSquareBrackets)
         {
             ExpressionTree expressionTree = GetExpressionTree<T>(where);
             string whereStatement = GetWherePatternStatement(expressionTree, enclosedInSquareBrackets);
@@ -164,29 +171,29 @@ namespace MSSQL_Lite.Query
             return new SqlQueryData { Statement = string.Format("where {0}", whereStatement), SqlQueryParameters = sqlParameters };
         }
 
-        protected static string GetInsertPattern<T>(T model, bool enclosedInSquareBrackets)
+        protected string GetInsertPattern<T>(T model, bool enclosedInSquareBrackets)
         {
-            string query = string.Format("Insert into {0}(", SqlMapping.GetTableName<T>(enclosedInSquareBrackets));
+            string query = string.Format("Insert into {0}(", sqlMapping.GetTableName<T>(enclosedInSquareBrackets));
             PropertyInfo[] props = Obj.GetProperties(model);
             string into = null;
             string values = null;
             foreach (PropertyInfo prop in props)
             {
-                into += string.Format("{0}, ", SqlMapping.GetPropertyName(prop, enclosedInSquareBrackets));
-                values += string.Format("{0}, ", "@" + SqlMapping.GetPropertyName(prop, false));
+                into += string.Format("{0}, ", sqlMapping.GetPropertyName(prop, enclosedInSquareBrackets));
+                values += string.Format("{0}, ", "@" + sqlMapping.GetPropertyName(prop, false));
             }
             into = into.TrimEnd(' ').TrimEnd(',');
             values = values.TrimEnd(' ').TrimEnd(',');
             return string.Format("{0} {1}) values ({2})", query, into, values);
         }
 
-        protected static string GetInsertPattern<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
+        protected string GetInsertPattern<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
         {
             if (excludeProperties == null)
                 throw new Exception("");
             if (excludeProperties.Count == 0)
                 throw new Exception("");
-            string query = string.Format("Insert into {0}(", SqlMapping.GetTableName<T>(enclosedInSquareBrackets));
+            string query = string.Format("Insert into {0}(", sqlMapping.GetTableName<T>(enclosedInSquareBrackets));
             PropertyInfo[] props = Obj.GetProperties(model);
             string into = null;
             string values = null;
@@ -194,15 +201,15 @@ namespace MSSQL_Lite.Query
             {
                 if (excludeProperties.Any(e => e.Equals(prop.Name)))
                     continue;
-                into += string.Format("{0}, ", SqlMapping.GetPropertyName(prop, enclosedInSquareBrackets));
-                values += string.Format("{0}, ", "@" + SqlMapping.GetPropertyName(prop, false));
+                into += string.Format("{0}, ", sqlMapping.GetPropertyName(prop, enclosedInSquareBrackets));
+                values += string.Format("{0}, ", "@" + sqlMapping.GetPropertyName(prop, false));
             }
             into = into.TrimEnd(' ').TrimEnd(',');
             values = values.TrimEnd(' ').TrimEnd(',');
             return string.Format("{0} {1}) values ({2})", query, into, values);
         }
 
-        protected static List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, bool enclosedInSquareBracket)
+        protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, bool enclosedInSquareBracket)
         {
             PropertyInfo[] props = Obj.GetProperties(model);
             List<SqlQueryParameter> sqlQueryParameters = new List<SqlQueryParameter>();
@@ -217,7 +224,7 @@ namespace MSSQL_Lite.Query
             return sqlQueryParameters;
         }
 
-        protected static List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, List<string> excludeProperties, bool enclosedInSquareBracket)
+        protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, List<string> excludeProperties, bool enclosedInSquareBracket)
         {
             if (excludeProperties == null)
                 throw new Exception("");
@@ -238,7 +245,7 @@ namespace MSSQL_Lite.Query
             return sqlQueryParameters;
         }
 
-        protected static SqlQueryData GetInsertQueryData<T>(T model, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetInsertQueryData<T>(T model, bool enclosedInSquareBrackets)
         {
             return new SqlQueryData
             {
@@ -247,7 +254,7 @@ namespace MSSQL_Lite.Query
             };
         }
 
-        protected static SqlQueryData GetInsertQueryData<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetInsertQueryData<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
         {
             return new SqlQueryData
             {
@@ -256,7 +263,7 @@ namespace MSSQL_Lite.Query
             };
         }
 
-        protected static string GetSelectStatement<T>(Expression<Func<T, object>> select, bool enclosedInSquareBrackets)
+        protected string GetSelectStatement<T>(Expression<Func<T, object>> select, bool enclosedInSquareBrackets)
         {
             string selectStatement = "Select ";
             if (select.ToString().Contains("<>f__AnonymousType"))
@@ -267,7 +274,7 @@ namespace MSSQL_Lite.Query
                 PropertyInfo[] properties = Obj.GetProperties(obj);
                 foreach (PropertyInfo property in properties)
                 {
-                    selectStatement += SqlMapping.GetPropertyName(property, enclosedInSquareBrackets) + ", ";
+                    selectStatement += sqlMapping.GetPropertyName(property, enclosedInSquareBrackets) + ", ";
                 }
                 selectStatement = selectStatement.TrimEnd(' ').TrimEnd(',');
             }
@@ -281,7 +288,7 @@ namespace MSSQL_Lite.Query
             return selectStatement;
         }
 
-        protected static SqlQueryData GetSetStatement<T>(T model, Expression<Func<T, object>> set, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetSetStatement<T>(T model, Expression<Func<T, object>> set, bool enclosedInSquareBrackets)
         {
             string setStatement = "set ";
             Func<T, object> func = set.Compile();
@@ -293,10 +300,10 @@ namespace MSSQL_Lite.Query
                 PropertyInfo[] properties = Obj.GetProperties(obj);
                 foreach (PropertyInfo property in properties)
                 {
-                    paramName = string.Format("@{0}_set", SqlMapping.GetPropertyName(property, false));
+                    paramName = string.Format("@{0}_set", sqlMapping.GetPropertyName(property, false));
                     setStatement += string.Format(
                         "{0} = {1}, ",
-                        SqlMapping.GetPropertyName(property, enclosedInSquareBrackets),
+                        sqlMapping.GetPropertyName(property, enclosedInSquareBrackets),
                         paramName
                     );
                     sqlQueryParameters.Add(new SqlQueryParameter
@@ -327,7 +334,7 @@ namespace MSSQL_Lite.Query
             return new SqlQueryData { Statement = setStatement, SqlQueryParameters = sqlQueryParameters };
         }
 
-        protected static SqlCommand InitSqlCommand(string commandText, List<SqlQueryParameter> sqlQueryParameters)
+        protected SqlCommand InitSqlCommand(string commandText, List<SqlQueryParameter> sqlQueryParameters)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandText = commandText;
@@ -339,11 +346,21 @@ namespace MSSQL_Lite.Query
             return sqlCommand;
         }
 
-        protected static SqlCommand InitSqlCommand(string commandText)
+        protected SqlCommand InitSqlCommand(string commandText)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandText = commandText;
             return sqlCommand;
+        }
+
+        public void Dispose()
+        {
+            expresstionExtension.Dispose();
+            expresstionExtension = null;
+            sqlMapping.Dispose();
+            sqlMapping = null;
+            GC.SuppressFinalize(this);
+            throw new NotImplementedException();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Web.Migrations
 
         }
 
-        public async Task AddDataAndRunAsync()
+        public void AddDataAndRun()
         {
             AddItem(new Role {
                 ID = MD5_Hash.Hash(new Random().NextString(10)), 
@@ -39,7 +39,7 @@ namespace Web.Migrations
                 updateAt = DateTime.Now 
             });
 
-            await Run();
+            Run();
         }
     }
 }

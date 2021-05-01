@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSSQL_Lite.LambdaExpression
 {
-    public class ExpresstionExtension
+    public class ExpresstionExtension : IDisposable
     {
-        public static string ConvertExpressionTypeToString(ExpressionType expressionType)
+        public string ConvertExpressionTypeToString(ExpressionType expressionType)
         {
             switch (expressionType)
             {
@@ -26,6 +22,11 @@ namespace MSSQL_Lite.LambdaExpression
                 case ExpressionType.Not: return "not";
                 default: return null;
             }
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }

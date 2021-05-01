@@ -1,22 +1,22 @@
 ﻿using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Migration
 {
     public class SqlMigration<T>
     {
-        public static void Migrate(List<T> items)
+        private SqlQuery sqlQuery;
+
+        public void Migrate(List<T> items)
         {
             foreach(T item in items){
-                //Task<int> task = SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item));
+                ////Task<int> task = SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item));
 
-                Task task = Task.Run(async () => { await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item)); });
-                task.Wait();
+                //Task task = Task.Run(async () => { await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item)); });
+                //task.Wait();
+
+                SqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
             }
 
             //foreach(Task<int> t in tasks)
@@ -25,11 +25,11 @@ namespace MSSQL_Lite.Migration
             //}
         }
 
-        public static async Task MigrateAsync(List<T> items, List<string> excludeProperties)
+        public void Migrate(List<T> items, List<string> excludeProperties)
         {
             foreach (T item in items)
             {
-                await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item, excludeProperties));
+                SqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item, excludeProperties));
             }
         }
 
@@ -38,6 +38,7 @@ namespace MSSQL_Lite.Migration
 
         public SqlMigration()
         {
+            sqlQuery = new SqlQuery();
             items = new List<T>();
             excludeProperties = new List<string>();
         }
@@ -52,12 +53,12 @@ namespace MSSQL_Lite.Migration
             excludeProperties.Add(excludeProperty);
         }
 
-        public async Task Run()
+        public void Run()
         {
             if (excludeProperties.Count == 0)
                 Migrate(items);
             else
-                await MigrateAsync(items, excludeProperties);
+                Migrate(items, excludeProperties);
         }
     }
 }
