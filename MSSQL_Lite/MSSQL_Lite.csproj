@@ -46,6 +46,7 @@
     <Compile Include="Access\SqlAccess.cs" />
     <Compile Include="Access\SqlContext.cs" />
     <Compile Include="Access\SqlData.cs" />
+    <Compile Include="Access\SqlExecutionType.cs" />
     <Compile Include="Connection\SqlConnection.cs" />
     <Compile Include="Connection\SqlConnectInfo.cs" />
     <Compile Include="Execution\SqlExecution.cs" />

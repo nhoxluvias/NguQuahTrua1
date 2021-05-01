@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Connection
 {
-    public class SqlConnection
+    internal class SqlConnection
     {
         protected System.Data.SqlClient.SqlConnection connection;
         public SqlConnection(string connectionString)

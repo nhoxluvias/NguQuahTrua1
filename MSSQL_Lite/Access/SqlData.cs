@@ -12,98 +12,63 @@ namespace MSSQL_Lite.Access
     public class SqlData : IDisposable
     {
         private object data;
-        private static SqlExecution sqlExecution = null;
+        private SqlExecution sqlExecution = null;
         public static ObjectReceivingData objectReceivingData = ObjectReceivingData.SqlDataReader;
 
-        internal SqlData(object data)
+        public SqlData()
         {
-            this.data = data;
+            data = null;
+            sqlExecution = new SqlExecution(SqlConnectInfo.GetConnectionString());
         }
 
-        private static void InitSqlExecution()
+        public void Connect()
         {
-           sqlExecution = new SqlExecution(SqlConnectInfo.GetConnectionString());
+            sqlExecution.Connect();
         }
 
-        private static void DestroySqlExecution()
+        public async Task ConnectAsync()
         {
-            sqlExecution.Dispose();
-            sqlExecution = null;
+            await sqlExecution.ConnectAsync();
         }
 
-        public static async Task<SqlData> ExecuteReaderAsync(SqlCommand sqlCommand, bool newConnection = false)
+        public void Disconnect()
         {
-            if (newConnection)
-            {
-                DestroySqlExecution();
-                InitSqlExecution();
-            }
-            if (sqlExecution == null)
-                InitSqlExecution();
+            sqlExecution.Disconnect();
+        }
+
+        public async Task ExecuteReaderAsync(SqlCommand sqlCommand)
+        {
             if (objectReceivingData == ObjectReceivingData.SqlDataReader)
-                return new SqlData(await sqlExecution.ExecuteReaderAsync<SqlDataReader>(sqlCommand));
-            return new SqlData(await sqlExecution.ExecuteReaderAsync<DataSet>(sqlCommand));
+                data = await sqlExecution.ExecuteReaderAsync<SqlDataReader>(sqlCommand);
+            else
+                data = await sqlExecution.ExecuteReaderAsync<DataSet>(sqlCommand);
         }
 
-        public static SqlData ExecuteReader(SqlCommand sqlCommand, bool newConnection = false)
+        public void ExecuteReader(SqlCommand sqlCommand)
         {
-            if (newConnection)
-            {
-                DestroySqlExecution();
-                InitSqlExecution();
-            }
-            if (sqlExecution == null)
-                InitSqlExecution();
             if (objectReceivingData == ObjectReceivingData.SqlDataReader)
-                return new SqlData(sqlExecution.ExecuteReader<SqlDataReader>(sqlCommand));
-            return new SqlData(sqlExecution.ExecuteReader<DataSet>(sqlCommand));
+                data = sqlExecution.ExecuteReader<SqlDataReader>(sqlCommand);
+            else
+                data = sqlExecution.ExecuteReader<DataSet>(sqlCommand);
         }
 
-        public static async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand, bool newConnection = false)
+        public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
-            if (newConnection)
-            {
-                DestroySqlExecution();
-                InitSqlExecution();
-            }
-            if (sqlExecution == null)
-                InitSqlExecution();
             return await sqlExecution.ExecuteNonQueryAsync(sqlCommand);
         }
 
-        public static int ExecuteNonQuery(SqlCommand sqlCommand, bool newConnection = false)
+        public int ExecuteNonQuery(SqlCommand sqlCommand)
         {
-            if (newConnection)
-            {
-                DestroySqlExecution();
-                InitSqlExecution();
-            }
-            if (sqlExecution == null)
-                InitSqlExecution();
             return sqlExecution.ExecuteNonQuery(sqlCommand);
         }
 
-        public static async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand, bool newConnection = false)
+        public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
-            if (newConnection)
-            {
-                DestroySqlExecution();
-                InitSqlExecution();
-            }
-            if (sqlExecution == null)
-                InitSqlExecution();
             return await sqlExecution.ExecuteScalarAsync(sqlCommand);
         }
 
-        public static object ExecuteScalar(SqlCommand sqlCommand, bool newConnection = false)
+        public object ExecuteScalar(SqlCommand sqlCommand)
         {
-            if (newConnection)
-            {
-                DestroySqlExecution();
-                InitSqlExecution();
-            }
-            if (sqlExecution == null)
-                InitSqlExecution();
             return sqlExecution.ExecuteScalar(sqlCommand);
         }
 
@@ -146,6 +111,8 @@ namespace MSSQL_Lite.Access
         public void Dispose()
         {
             this.data = null;
+            this.sqlExecution.Dispose();
+            this.sqlExecution = null;
             GC.SuppressFinalize(this);
         }
     }

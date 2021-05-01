@@ -17,6 +17,7 @@ namespace MSSQL_Lite.Migration
                 //task.Wait();
 
                 SqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
+                
             }
 
             //foreach(Task<int> t in tasks)

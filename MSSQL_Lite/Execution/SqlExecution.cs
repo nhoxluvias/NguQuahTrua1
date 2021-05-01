@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Execution
 {
-    public class SqlExecution : Connection.SqlConnection, IDisposable
+    internal class SqlExecution : Connection.SqlConnection, IDisposable
     {
         public SqlExecution(string connectionString)
             : base(connectionString)
@@ -14,32 +14,21 @@ namespace MSSQL_Lite.Execution
 
         }
 
-        private async Task InitSqlCommandAsync(SqlCommand sqlCommand)
-        {
-            await base.ConnectAsync();
-            sqlCommand.Connection = base.connection;
-        }
-
         public void InitSqlCommand(SqlCommand sqlCommand)
         {
-            base.Connect();
             sqlCommand.Connection = base.connection;
         }
 
         public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
-            await this.InitSqlCommandAsync(sqlCommand);
-            int affected = await sqlCommand.ExecuteNonQueryAsync();
-            this.Disconnect();
-            return affected;
+            this.InitSqlCommand(sqlCommand);
+            return await sqlCommand.ExecuteNonQueryAsync();
         }
 
         public int ExecuteNonQuery(SqlCommand sqlCommand)
         {
             this.InitSqlCommand(sqlCommand);
-            int affected = sqlCommand.ExecuteNonQuery();
-            this.Disconnect();
-            return affected;
+            return sqlCommand.ExecuteNonQuery();
         }
 
         public async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)
@@ -47,7 +36,7 @@ namespace MSSQL_Lite.Execution
             Type type = typeof(T);
             if (type.Name != "SqlDataReader" && type.Name != "DataSet")
                 throw new Exception("Invalid type, must be @'SqlDataReader' or @'DataSet'");
-            await this.InitSqlCommandAsync(sqlCommand);
+            this.InitSqlCommand(sqlCommand);
             if (type.Name == "SqlDataReader")
             {
                 SqlDataReader reader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection);
@@ -74,7 +63,7 @@ namespace MSSQL_Lite.Execution
 
         public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
-            await this.InitSqlCommandAsync(sqlCommand);
+            this.InitSqlCommand(sqlCommand);
             return await sqlCommand.ExecuteScalarAsync();
         }
 

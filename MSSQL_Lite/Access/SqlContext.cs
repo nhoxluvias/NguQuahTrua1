@@ -1,9 +1,6 @@
-﻿using MSSQL_Lite.Execution;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Access
@@ -26,31 +23,50 @@ namespace MSSQL_Lite.Access
         public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            return await SqlData.ExecuteNonQueryAsync(sqlCommand);
+            SqlData sqlData = new SqlData();
+            await sqlData.ConnectAsync();
+            int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
+            sqlData.Disconnect();
+            return affected;
         }
 
         public int ExecuteNonQuery(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            return SqlData.ExecuteNonQuery(sqlCommand);
+            SqlData sqlData = new SqlData();
+            sqlData.Connect();
+            int affected = sqlData.ExecuteNonQuery(sqlCommand);
+            sqlData.Disconnect();
+            return affected;
         }
 
         public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            return await SqlData.ExecuteReaderAsync(sqlCommand);
+            SqlData sqlData = new SqlData();
+            await sqlData.ConnectAsync();
+            await sqlData.ExecuteReaderAsync(sqlCommand);
+            object obj = null;
+            sqlData.Disconnect();
+            return obj;
         }
 
         public object ExecuteReader(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            return SqlData.ExecuteReader(sqlCommand);
+            SqlData sqlData = new SqlData();
+            sqlData.Connect();
+            sqlData.ExecuteReader(sqlCommand);
+            object obj = null;
+            sqlData.Disconnect();
+            return obj;
         }
 
         public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand, Type type)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            SqlData sqlData = await SqlData.ExecuteReaderAsync(sqlCommand);
+            SqlData sqlData = new SqlData();
+            await sqlData.ExecuteReaderAsync(sqlCommand);
             if (type == null)
                 throw new Exception("@'type' must be not null");
             if (type.Equals(typeof(Dictionary<string, object>)))
@@ -64,7 +80,8 @@ namespace MSSQL_Lite.Access
         public object ExecuteReader(SqlCommand sqlCommand, Type type)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            SqlData sqlData = SqlData.ExecuteReader(sqlCommand);
+            SqlData sqlData = new SqlData();
+            sqlData.ExecuteReader(sqlCommand);
             if (type == null)
                 throw new Exception("@'type' must be not null");
             if (type.Equals(typeof(Dictionary<string, object>)))
@@ -78,13 +95,21 @@ namespace MSSQL_Lite.Access
         public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            return await SqlData.ExecuteScalarAsync(sqlCommand);
+            SqlData sqlData = new SqlData();
+            await sqlData.ConnectAsync();
+            object obj = await sqlData.ExecuteScalarAsync(sqlCommand);
+            sqlData.Disconnect();
+            return obj;
         }
 
         public object ExecuteScalar(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            return SqlData.ExecuteScalar(sqlCommand);
+            SqlData sqlData = new SqlData();
+            sqlData.Connect();
+            object obj = sqlData.ExecuteScalar(sqlCommand);
+            sqlData.Disconnect();
+            return obj;
         }
     }
 }
