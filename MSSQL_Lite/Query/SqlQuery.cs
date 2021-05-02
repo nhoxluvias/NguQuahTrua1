@@ -114,7 +114,7 @@ namespace MSSQL_Lite.Query
         public SqlCommand Count<T>()
         {
             string query = string
-                .Format("Select cast(count(*) as varchar(20) from {0}", sqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+                .Format("Select cast(count(*) as varchar(20)) from {0}", sqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
             return InitSqlCommand(query);
         }
 

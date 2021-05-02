@@ -17,10 +17,10 @@ namespace Web.Test
             RunMigration();
         }
 
-        public void RunMigration()
+        public async void RunMigration()
         {
             RoleMigration roleMigration = new RoleMigration();
-            roleMigration.AddDataAndRun();
+            await roleMigration.AddDataAndRunAsync();
         }
 
         protected void TxtInputValidator(object source, ServerValidateEventArgs args)

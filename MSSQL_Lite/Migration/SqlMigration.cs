@@ -2,68 +2,101 @@
 using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Migration
 {
     public class SqlMigration<T> : IDisposable
     {
-        private SqlQuery sqlQuery;
         private SqlData sqlData;
-
-        public void Migrate(List<T> items)
-        {
-            foreach(T item in items){
-                ////Task<int> task = SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item));
-
-                //Task task = Task.Run(async () => { await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item)); });
-                //task.Wait();
-
-                sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
-                
-            }
-
-            //foreach(Task<int> t in tasks)
-            //{
-            //    t.R
-            //}
-        }
-
-        public void Migrate(List<T> items, List<string> excludeProperties)
-        {
-            foreach (T item in items)
-            {
-                sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item, excludeProperties));
-            }
-        }
-
         private List<T> items;
         private List<string> excludeProperties;
         private bool disposedValue;
 
         public SqlMigration()
         {
-            sqlQuery = new SqlQuery();
+            sqlData = new SqlData();
             items = new List<T>();
             excludeProperties = new List<string>();
             disposedValue = false;
         }
+        private void Migrate(List<T> items)
+        {
+            sqlData.Connect();
+            foreach (T item in items)
+            {
+                SqlQuery sqlQuery = new SqlQuery();
+                sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
+                sqlQuery.Dispose();
+                sqlQuery = null;
+            }
+            sqlData.Disconnect();
+        }
 
-        public void AddItem(T item)
+        private async Task MigrateAsync(List<T> items)
+        {
+            await sqlData.ConnectAsync();
+            foreach (T item in items)
+            {
+                SqlQuery sqlQuery = new SqlQuery();
+                await sqlData.ExecuteNonQueryAsync(sqlQuery.Insert<T>(item));
+                sqlQuery.Dispose();
+                sqlQuery = null;
+            }
+            sqlData.Disconnect();
+        }
+
+        private void Migrate(List<T> items, List<string> excludeProperties)
+        {
+            sqlData.Connect();
+            foreach (T item in items)
+            {
+                SqlQuery sqlQuery = new SqlQuery();
+                sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item, excludeProperties));
+                sqlQuery.Dispose();
+                sqlQuery = null;
+            }
+            sqlData.Disconnect();
+        }
+
+        private async Task MigrateAsync(List<T> items, List<string> excludeProperties)
+        {
+            await sqlData.ConnectAsync();
+            foreach (T item in items)
+            {
+                SqlQuery sqlQuery = new SqlQuery();
+                await sqlData.ExecuteNonQueryAsync(sqlQuery.Insert<T>(item, excludeProperties));
+                sqlQuery.Dispose();
+                sqlQuery = null;
+            }
+            sqlData.Disconnect();
+        }
+
+        protected void AddItem(T item)
         {
             items.Add(item);
         }
 
-        public void AddExcludeProperty(string excludeProperty)
+        protected void AddExcludeProperty(string excludeProperty)
         {
             excludeProperties.Add(excludeProperty);
         }
 
-        public void Run()
+        protected void Run()
         {
             if (excludeProperties.Count == 0)
                 Migrate(items);
             else
                 Migrate(items, excludeProperties);
+        }
+
+        protected async Task RunAsync()
+        {
+            if (excludeProperties.Count == 0)
+                await MigrateAsync(items);
+            else
+                await MigrateAsync(items, excludeProperties);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -72,7 +105,12 @@ namespace MSSQL_Lite.Migration
             {
                 if (disposing)
                 {
-
+                    sqlData.Dispose();
+                    sqlData = null;
+                    items.Clear();
+                    items = null;
+                    excludeProperties.Clear();
+                    excludeProperties = null;
                 }
                 disposedValue = true;
             }

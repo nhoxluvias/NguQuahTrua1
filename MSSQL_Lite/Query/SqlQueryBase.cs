@@ -340,7 +340,8 @@ namespace MSSQL_Lite.Query
 
         protected SqlCommand InitSqlCommand(string commandText, List<SqlQueryParameter> sqlQueryParameters)
         {
-            SqlCommand sqlCommand = new SqlCommand();
+            SqlCommand sqlCommand = null;
+            sqlCommand = new SqlCommand();
             sqlCommand.CommandText = commandText;
 
             foreach (SqlQueryParameter sqlQueryParameter in sqlQueryParameters)
@@ -352,7 +353,8 @@ namespace MSSQL_Lite.Query
 
         protected SqlCommand InitSqlCommand(string commandText)
         {
-            SqlCommand sqlCommand = new SqlCommand();
+            SqlCommand sqlCommand = null;
+            sqlCommand = new SqlCommand();
             sqlCommand.CommandText = commandText;
             return sqlCommand;
         }

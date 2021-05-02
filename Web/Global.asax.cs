@@ -1,13 +1,9 @@
 ﻿using MSSQL_Lite.Access;
 using MSSQL_Lite.Connection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Routing;
-using System.Web.Security;
-using System.Web.SessionState;
 using Web.App_Start;
+using Web.Migrations;
 
 namespace Web
 {
@@ -23,6 +19,9 @@ namespace Web
             SqlConnectInfo.UserID = "sa";
             SqlConnectInfo.Password = "123456789";
             SqlData.objectReceivingData = ObjectReceivingData.DataSet;
+
+            RoleMigration roleMigration = new RoleMigration();
+            roleMigration.AddDataAndRun();
         }
 
         protected void Session_Start(object sender, EventArgs e)
