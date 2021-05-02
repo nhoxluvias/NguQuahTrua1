@@ -46,7 +46,8 @@ namespace MSSQL_Lite.Mapping
             dict = new Dictionary<string, object>();
             foreach (DataColumn column in row.Table.Columns)
             {
-                dict.Add(column.Caption, row[column.Caption]);
+                object value = row[column.Caption];
+                dict.Add(column.Caption, (value is System.DBNull) ? null : value);
             }
             return dict;
         }
@@ -60,7 +61,8 @@ namespace MSSQL_Lite.Mapping
                 Dictionary<string, object> dict = new Dictionary<string, object>();
                 foreach (DataColumn column in row.Table.Columns)
                 {
-                    dict.Add(column.Caption, row[column.Caption]);
+                    object value = row[column.Caption];
+                    dict.Add(column.Caption, (value is System.DBNull) ? null : value);
                 }
                 list.Add(dict);
             }
@@ -75,7 +77,8 @@ namespace MSSQL_Lite.Mapping
                 dict = new Dictionary<string, object>();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    dict.Add(reader.GetName(i), reader.GetValue(i));
+                    object value = reader.GetValue(i);
+                    dict.Add(reader.GetName(i), (value is System.DBNull) ? null : value);
                 }
             }
             reader.Close();
@@ -90,7 +93,8 @@ namespace MSSQL_Lite.Mapping
                 Dictionary<string, object> dict = new Dictionary<string, object>();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    dict.Add(reader.GetName(i), reader.GetValue(i));
+                    object value = reader.GetValue(i);
+                    dict.Add(reader.GetName(i), (value is System.DBNull) ? null : value);
                 }
                 list.Add(dict);
             }

@@ -22,6 +22,9 @@ namespace Web
 
             RoleMigration roleMigration = new RoleMigration();
             roleMigration.AddDataAndRun();
+
+            PaymentMethodMigration paymentMethodMigration = new PaymentMethodMigration();
+            paymentMethodMigration.AddDataAndRun();
         }
 
         protected void Session_Start(object sender, EventArgs e)

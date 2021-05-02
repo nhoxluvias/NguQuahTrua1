@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace Web.Model
+namespace Web.Models
 {
     public class PaymentMethod
     {
+        public int ID { get; set; }
+        public string name { get; set; }
+        public DateTime createAt { get; set; }
+        public DateTime updateAt { get; set; }
     }
 }

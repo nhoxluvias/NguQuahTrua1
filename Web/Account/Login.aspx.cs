@@ -85,7 +85,7 @@ namespace Web.Account
                 }
                 else
                 {
-                    string passwordHashed = PBKDF2_Hash.Hash(password, user.salt, 10);
+                    string passwordHashed = PBKDF2_Hash.Hash(password, user.salt, 30);
                     if (user.password == passwordHashed)
                     {
                         Session["username"] = username;

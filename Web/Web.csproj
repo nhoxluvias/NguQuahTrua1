@@ -105,7 +105,6 @@
     <Content Include="libraries\video-js\video.novtt.dev.js" />
     <Content Include="libraries\video-js\video.novtt.js" />
     <Content Include="Notification\Error.aspx" />
-    <Content Include="Test\Form.aspx" />
     <Content Include="User\Article.aspx" />
     <Content Include="User\Category.aspx" />
     <Content Include="User\Index.aspx" />
@@ -153,6 +152,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\PaymentMethodMigration.cs" />
     <Compile Include="Migrations\RoleMigration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\DBContext.cs" />
@@ -161,8 +161,6 @@
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\Role.cs" />
     <Compile Include="Models\Tag.cs" />
-    <Compile Include="Models\Test.cs" />
-    <Compile Include="Models\Test2.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Video.cs" />
     <Compile Include="Notification\Error.aspx.cs">
@@ -173,13 +171,6 @@
       <DependentUpon>Error.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test\Form.aspx.cs">
-      <DependentUpon>Form.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Test\Form.aspx.designer.cs">
-      <DependentUpon>Form.aspx</DependentUpon>
-    </Compile>
     <Compile Include="User\Article.aspx.cs">
       <DependentUpon>Article.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

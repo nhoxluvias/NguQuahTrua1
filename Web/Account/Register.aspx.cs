@@ -1,4 +1,5 @@
 ﻿using Common.Hash;
+using Common.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +70,7 @@ namespace Web.Account
 
         private bool IsValidData()
         {
-            if(
+            if (
                 cvUsername.IsValid && cvEmail.IsValid && cvPhoneNumber.IsValid && cvPassword.IsValid
                 && cmpRePassword.IsValid && cvCardNumber.IsValid && cvCvv.IsValid && cvAccountName.IsValid
                 && cvExpirationDate.IsValid
@@ -80,57 +81,131 @@ namespace Web.Account
             return false;
         }
 
-        private async Task RegisterAccount()
+        private async Task<Models.User> GetUserModel()
         {
-            ValidateData();
-            if(IsValidData())
+            string username = Request.Form["txtUsername"];
+            string email = Request.Form["txtEmail"];
+            string phoneNumber = Request.Form["txtPhoneNumber"];
+            string password = Request.Form["txtPassword"];
+
+            string salt = MD5_Hash.Hash(new Random().NextString(25));
+
+            Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
+            if (role == null)
             {
-                string username = Request.Form["txtUsername"];
-                string email = Request.Form["txtEmail"];
-                string phoneNumber = Request.Form["txtPhoneNumber"];
-                string password = Request.Form["txtPassword"];
-                string cardNumber = Request.Form["txtCardNumber"];
-                string cvv = Request.Form["txtCvv"];
-                string accountName = Request.Form["txtAccountName"];
-                string expirationDate = Request.Form["txtExpirationDate"];
-                string paymentMethod = Request.Form["drdlPaymentMethod"];
-
-                string salt = MD5_Hash.Hash(new Random().NextString(10));
-
+                return null;
+            }
+            else
+            {
                 Models.User user = new Models.User
                 {
                     ID = MD5_Hash.Hash(new Random().NextString(10)),
                     userName = username,
                     email = email,
                     phoneNumber = phoneNumber,
-                    password = PBKDF2_Hash.Hash(password, salt, 10),
+                    password = PBKDF2_Hash.Hash(password, salt, 30),
                     salt = salt,
+                    roleId = role.ID,
                     createAt = DateTime.Now,
                     updateAt = DateTime.Now
                 };
+                return user;
+            }
+        }
 
-                Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
-                if (role == null)
+        private async Task RegisterAccount()
+        {
+            ValidateData();
+            if (IsValidData())
+            {
+                Models.User user = await GetUserModel();
+                if (user == null)
                 {
                     Response.RedirectToRoute("error");
                 }
                 else
                 {
-                    user.roleId = role.ID;
-                    int affected = await db
-                        .Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
-                    if(affected == 0)
+                    Models.User usr = await db.Users.SingleOrDefaultAsync(u => u.userName == user.userName);
+                    if(usr != null)
                     {
-                        Response.RedirectToRoute("Register_WithParam", new { registerStatus = "failed" });
+                        Response.RedirectToRoute("Register_WithParam", new { registerStatus = "already-exist" });
                     }
                     else
                     {
-                        Response.RedirectToRoute("Register_WithParam", new { registerStatus = "success" });
+                        int affected = await db
+                        .Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
+
+                        if (affected == 0)
+                        {
+                            Response.RedirectToRoute("Register_WithParam", new { registerStatus = "failed" });
+                        }
+                        else
+                        {
+                            string confirmCode = new Random().NextStringOnlyNumericCharacter(8);
+                            Session["confirmCode"] = confirmCode;
+                            new EMail().Send("phanxuanchanh77@gmail.com", user.email, "Mã xác nhận tài khoản", confirmCode);
+                            bool status = await AddPaymentInfo(user.ID);
+                            if (status)
+                                Response.RedirectToRoute("Register_WithParam", new { registerStatus = "success" });
+                            else
+                                Response.RedirectToRoute("Register_WithParam", new { registerStatus = "success_no-payment-info" });
+                        }
                     }
                 }
-                    
             }
-            
+        }
+
+        private async Task<PaymentInfo> GetPaymentInfoModel()
+        {
+            string cardNumber = Request.Form["txtCardNumber"];
+            string cvv = Request.Form["txtCvv"];
+            string accountName = Request.Form["txtAccountName"];
+            string expirationDate = Request.Form["txtExpirationDate"];
+            string paymentMethod = Request.Form["drdlPaymentMethod"];
+            if (
+                (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(cvv) || string.IsNullOrEmpty(accountName)
+                || string.IsNullOrEmpty(expirationDate) || string.IsNullOrEmpty(paymentMethod)) == false
+            )
+            {
+                Models.PaymentMethod paymntMethod = await db
+                    .PaymentMethods.SingleOrDefaultAsync(p => new { p.ID }, p => p.name == paymentMethod);
+                if (paymntMethod == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    Models.PaymentInfo paymentInfo = new Models.PaymentInfo
+                    {
+                        cardNumber = cardNumber,
+                        cvv = cvv,
+                        owner = accountName,
+                        expirationDate = expirationDate,
+                        paymentMethodId = paymntMethod.ID,
+                        createAt = DateTime.Now,
+                        updateAt = DateTime.Now
+                    };
+                    return paymentInfo;
+                }
+            }
+            return null;
+        }
+
+        public async Task<bool> AddPaymentInfo(string userId)
+        {
+            Models.PaymentInfo paymentInfo = await GetPaymentInfoModel();
+            paymentInfo.userId = userId;
+            if(paymentInfo == null)
+            {
+                return false;
+            }
+            else
+            {
+                int affected = await db.PaymentInfos.InsertAsync(paymentInfo);
+                if (affected == 0)
+                    return false;
+                return true;
+            }
         }
     }
 }

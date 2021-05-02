@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
+﻿using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 
 namespace Web.Validation
@@ -64,7 +60,7 @@ namespace Web.Validation
 
         public static void ValidateExpirationDate(object source, ServerValidateEventArgs args)
         {
-            args.IsValid = Regex.IsMatch(args.Value, @"(?:0[1-9]|1[0-2])\/[0-9]{2}$");
+            args.IsValid = Regex.IsMatch(args.Value, @"^(0[1-9]|1[0-2])\/?(([0-9]{4}|[0-9]{2})$)");
         }
     }
 }
