@@ -80,5 +80,6 @@
             </div>
         </div>
     </form>
+    <script src="<%= ResolveUrl("~/js/account/register.js") %>"></script>
 </body>
 </html>

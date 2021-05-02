@@ -18,7 +18,7 @@ namespace Web.Account
         {
             db = new DBContext();
             if (CheckLoggedIn())
-                Response.RedirectToRoute("home");
+                Response.RedirectToRoute("Home");
             InitValidation();
             if (IsPostBack)
             {
@@ -117,7 +117,16 @@ namespace Web.Account
                 else
                 {
                     user.roleId = role.ID;
-                    await db.Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
+                    int affected = await db
+                        .Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
+                    if(affected == 0)
+                    {
+                        Response.RedirectToRoute("Register_WithParam", new { registerStatus = "failed" });
+                    }
+                    else
+                    {
+                        Response.RedirectToRoute("Register_WithParam", new { registerStatus = "success" });
+                    }
                 }
                     
             }

@@ -26,7 +26,7 @@
         <div class="login-status">
             <div class="login-status-space"></div>
             <div class="login-status-message">
-                <h3>Chào mừng bạn quay trở lại</h3>
+                <h3 id="txtLoginStatus" runat="server"></h3>
             </div>
         </div>
         <div class="video-info">
@@ -81,9 +81,7 @@
                     <asp:HyperLink ID="hylnkTermOfUse" runat="server">Điều khoản sử dụng dịch vụ</asp:HyperLink></span>
             </div>
         </div>
-        <script src="<%= ResolveUrl("~/js/account/account.js") %>">
-           
-        </script>
+        <script src="<%= ResolveUrl("~/js/account/login.js") %>"> </script>
     </form>
 </body>
 </html>

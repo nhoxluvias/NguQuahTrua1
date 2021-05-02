@@ -72,7 +72,8 @@
     <Content Include="css\account\register.css" />
     <Content Include="css\account\reset-password.css" />
     <Content Include="Global.asax" />
-    <Content Include="js\account\account.js" />
+    <Content Include="js\account\login.js" />
+    <Content Include="js\account\register.js" />
     <Content Include="libraries\css\styles.css" />
     <Content Include="libraries\js\video.js" />
     <Content Include="libraries\video-js\demo.html" />
