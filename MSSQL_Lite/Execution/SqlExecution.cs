@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Execution
 {
-    internal class SqlExecution : Connection.SqlConnection, IDisposable
+    internal class SqlExecution : Connection.SqlConnection
     {
+        private SqlConvert sqlConvert;
+        private bool disposed;
+
         public SqlExecution(string connectionString)
             : base(connectionString)
         {
-
+            sqlConvert = new SqlConvert();
+            disposed = false;
         }
 
         public void InitSqlCommand(SqlCommand sqlCommand)
@@ -42,7 +46,7 @@ namespace MSSQL_Lite.Execution
                 SqlDataReader reader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                 return (T)Convert.ChangeType(reader, type);
             }
-            DataSet dataSet = SqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
+            DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
             return (T)Convert.ChangeType(dataSet, type);
         }
 
@@ -57,7 +61,7 @@ namespace MSSQL_Lite.Execution
                 SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 return (T)Convert.ChangeType(reader, type);
             }
-            DataSet dataSet = SqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
+            DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
             return (T)Convert.ChangeType(dataSet, type);
         }
 
@@ -72,11 +76,22 @@ namespace MSSQL_Lite.Execution
             this.InitSqlCommand(sqlCommand);
             return sqlCommand.ExecuteScalar();
         }
-
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            GC.SuppressFinalize(this);
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

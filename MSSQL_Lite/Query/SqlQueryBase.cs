@@ -14,11 +14,15 @@ namespace MSSQL_Lite.Query
     {
         private ExpresstionExtension expresstionExtension;
         private SqlMapping sqlMapping;
+        private Obj objReflection;
+        private bool disposedValue;
 
         public SqlQueryBase()
         {
             expresstionExtension = new ExpresstionExtension();
             sqlMapping = new SqlMapping();
+            objReflection = new Obj();
+            disposedValue = false;
         }
 
         protected bool IsComparisonOperator(ExpressionType expressionType)
@@ -174,7 +178,7 @@ namespace MSSQL_Lite.Query
         protected string GetInsertPattern<T>(T model, bool enclosedInSquareBrackets)
         {
             string query = string.Format("Insert into {0}(", sqlMapping.GetTableName<T>(enclosedInSquareBrackets));
-            PropertyInfo[] props = Obj.GetProperties(model);
+            PropertyInfo[] props = objReflection.GetProperties(model);
             string into = null;
             string values = null;
             foreach (PropertyInfo prop in props)
@@ -194,7 +198,7 @@ namespace MSSQL_Lite.Query
             if (excludeProperties.Count == 0)
                 throw new Exception("");
             string query = string.Format("Insert into {0}(", sqlMapping.GetTableName<T>(enclosedInSquareBrackets));
-            PropertyInfo[] props = Obj.GetProperties(model);
+            PropertyInfo[] props = objReflection.GetProperties(model);
             string into = null;
             string values = null;
             foreach (PropertyInfo prop in props)
@@ -211,7 +215,7 @@ namespace MSSQL_Lite.Query
 
         protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, bool enclosedInSquareBracket)
         {
-            PropertyInfo[] props = Obj.GetProperties(model);
+            PropertyInfo[] props = objReflection.GetProperties(model);
             List<SqlQueryParameter> sqlQueryParameters = new List<SqlQueryParameter>();
             foreach(PropertyInfo prop in props)
             {
@@ -230,7 +234,7 @@ namespace MSSQL_Lite.Query
                 throw new Exception("");
             if (excludeProperties.Count == 0)
                 throw new Exception("");
-            PropertyInfo[] props = Obj.GetProperties(model);
+            PropertyInfo[] props = objReflection.GetProperties(model);
             List<SqlQueryParameter> sqlQueryParameters = new List<SqlQueryParameter>();
             foreach (PropertyInfo prop in props)
             {
@@ -269,9 +273,9 @@ namespace MSSQL_Lite.Query
             if (select.ToString().Contains("<>f__AnonymousType"))
             {
                 Func<T, object> func = select.Compile();
-                T model = Obj.CreateInstance<T>();
+                T model = objReflection.CreateInstance<T>();
                 object obj = func(model);
-                PropertyInfo[] properties = Obj.GetProperties(obj);
+                PropertyInfo[] properties = objReflection.GetProperties(obj);
                 foreach (PropertyInfo property in properties)
                 {
                     selectStatement += sqlMapping.GetPropertyName(property, enclosedInSquareBrackets) + ", ";
@@ -297,7 +301,7 @@ namespace MSSQL_Lite.Query
             string paramName;
             if (set.ToString().Contains("<>f__AnonymousType"))
             {
-                PropertyInfo[] properties = Obj.GetProperties(obj);
+                PropertyInfo[] properties = objReflection.GetProperties(obj);
                 foreach (PropertyInfo property in properties)
                 {
                     paramName = string.Format("@{0}_set", sqlMapping.GetPropertyName(property, false));
@@ -353,14 +357,32 @@ namespace MSSQL_Lite.Query
             return sqlCommand;
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    expresstionExtension.Dispose();
+                    expresstionExtension = null;
+                    sqlMapping.Dispose();
+                    sqlMapping = null;
+                    objReflection.Dispose();
+                    objReflection = null;
+                }
+                disposedValue = true;
+            }
+        }
+
+        ~SqlQueryBase()
+        {
+            Dispose(disposing: false);
+        }
+
         public void Dispose()
         {
-            expresstionExtension.Dispose();
-            expresstionExtension = null;
-            sqlMapping.Dispose();
-            sqlMapping = null;
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
-            throw new NotImplementedException();
         }
     }
 }

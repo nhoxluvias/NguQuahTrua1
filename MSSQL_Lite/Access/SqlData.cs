@@ -12,13 +12,17 @@ namespace MSSQL_Lite.Access
     public class SqlData : IDisposable
     {
         private object data;
-        private SqlExecution sqlExecution = null;
+        private SqlExecution sqlExecution;
+        private SqlConvert sqlConvert;
         public static ObjectReceivingData objectReceivingData = ObjectReceivingData.SqlDataReader;
+        private bool disposedValue;
 
         public SqlData()
         {
             data = null;
             sqlExecution = new SqlExecution(SqlConnectInfo.GetConnectionString());
+            sqlConvert = new SqlConvert();
+            disposedValue = false;
         }
 
         public void Connect()
@@ -77,8 +81,8 @@ namespace MSSQL_Lite.Access
             if (!(data is DataSet) && !(data is SqlDataReader))
                 throw new Exception("@'data' must be DataSet or SqlDataReader");
             if (data is DataSet)
-                return SqlConvert.ToDictionary((DataSet)data);
-            return SqlConvert.ToDictionary((SqlDataReader)data);
+                return sqlConvert.ToDictionary((DataSet)data);
+            return sqlConvert.ToDictionary((SqlDataReader)data);
         }
 
         public List<Dictionary<string, object>> ToDictionaryList()
@@ -86,8 +90,8 @@ namespace MSSQL_Lite.Access
             if (!(data is DataSet) && !(data is SqlDataReader))
                 throw new Exception("@'data' must be DataSet or SqlDataReader");
             if (data is DataSet)
-                return SqlConvert.ToDictionaryList((DataSet)data);
-            return SqlConvert.ToDictionaryList((SqlDataReader)data);
+                return sqlConvert.ToDictionaryList((DataSet)data);
+            return sqlConvert.ToDictionaryList((SqlDataReader)data);
         }
 
         public T To<T>()
@@ -95,8 +99,8 @@ namespace MSSQL_Lite.Access
             if (!(data is DataSet) && !(data is SqlDataReader))
                 throw new Exception("@'data' must be DataSet or SqlDataReader");
             if (data is DataSet)
-                return SqlConvert.To<T>((DataSet)data);
-            return SqlConvert.To<T>((SqlDataReader)data);
+                return sqlConvert.To<T>((DataSet)data);
+            return sqlConvert.To<T>((SqlDataReader)data);
         }
 
         public List<T> ToList<T>()
@@ -104,15 +108,33 @@ namespace MSSQL_Lite.Access
             if (!(data is DataSet) && !(data is SqlDataReader))
                 throw new Exception("@'data' must be DataSet or SqlDataReader");
             if (data is DataSet)
-                return SqlConvert.ToList<T>((DataSet)data);
-            return SqlConvert.ToList<T>((SqlDataReader)data);
+                return sqlConvert.ToList<T>((DataSet)data);
+            return sqlConvert.ToList<T>((SqlDataReader)data);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    sqlConvert.Dispose();
+                    sqlConvert = null;
+                    sqlExecution.Dispose();
+                    sqlExecution = null;
+                    data = null;
+                }
+                disposedValue = true;
+            }
+        }
+        ~SqlData()
+        {
+            Dispose(disposing: false);
         }
 
         public void Dispose()
         {
-            this.data = null;
-            this.sqlExecution.Dispose();
-            this.sqlExecution = null;
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

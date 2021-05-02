@@ -1,12 +1,14 @@
 ﻿using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
+using System;
 using System.Collections.Generic;
 
 namespace MSSQL_Lite.Migration
 {
-    public class SqlMigration<T>
+    public class SqlMigration<T> : IDisposable
     {
         private SqlQuery sqlQuery;
+        private SqlData sqlData;
 
         public void Migrate(List<T> items)
         {
@@ -16,7 +18,7 @@ namespace MSSQL_Lite.Migration
                 //Task task = Task.Run(async () => { await SqlData.ExecuteNonQueryAsync(SqlQuery.Insert<T>(item)); });
                 //task.Wait();
 
-                SqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
+                sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
                 
             }
 
@@ -30,18 +32,20 @@ namespace MSSQL_Lite.Migration
         {
             foreach (T item in items)
             {
-                SqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item, excludeProperties));
+                sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item, excludeProperties));
             }
         }
 
         private List<T> items;
         private List<string> excludeProperties;
+        private bool disposedValue;
 
         public SqlMigration()
         {
             sqlQuery = new SqlQuery();
             items = new List<T>();
             excludeProperties = new List<string>();
+            disposedValue = false;
         }
 
         public void AddItem(T item)
@@ -60,6 +64,28 @@ namespace MSSQL_Lite.Migration
                 Migrate(items);
             else
                 Migrate(items, excludeProperties);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+                disposedValue = true;
+            }
+        }
+        ~SqlMigration()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

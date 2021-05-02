@@ -8,54 +8,61 @@ namespace MSSQL_Lite.Reflection
 {
     using CustomAttribute = CustomAttributeData;
     using NamedArgument = CustomAttributeNamedArgument;
-    public class Obj
+    public class Obj : IDisposable
     {
-        public static T CreateInstance<T>()
+        private bool disposedValue;
+
+        public Obj()
+        {
+            disposedValue = false;
+        }
+
+        public T CreateInstance<T>()
         {
             return (T)Activator.CreateInstance(typeof(T));
         }
 
-        public static string GetObjectName(object obj)
+        public string GetObjectName(object obj)
         {
             return obj.GetType().Name;
         }
 
-        public static string GetObjectName<T>()
+        public string GetObjectName<T>()
         {
             return typeof(T).Name;
         }
 
-        public static CustomAttribute[] GetCustomAttributes(object obj)
+        public CustomAttribute[] GetCustomAttributes(object obj)
         {
             return obj.GetType().CustomAttributes.ToArray();
         }
 
-        public static CustomAttribute[] GetCustomAttributes<T>()
+        public CustomAttribute[] GetCustomAttributes<T>()
         {
             return typeof(T).CustomAttributes.ToArray();
         }
 
-        public static CustomAttribute GetCustomAttribute(object obj, Func<CustomAttribute, bool> predicate)
+        public CustomAttribute GetCustomAttribute(object obj, Func<CustomAttribute, bool> predicate)
         {
             return GetCustomAttributes(obj).SingleOrDefault(predicate);
         }
 
-        public static CustomAttribute[] GetCustomAttributes(object obj, Func<CustomAttribute, bool> predicate)
+        public CustomAttribute[] GetCustomAttributes(object obj, Func<CustomAttribute, bool> predicate)
         {
             return GetCustomAttributes(obj).Where(predicate).ToArray();
         }
 
-        public static CustomAttribute GetCustomAttribute<T>(Func<CustomAttribute, bool> predicate)
+        public CustomAttribute GetCustomAttribute<T>(Func<CustomAttribute, bool> predicate)
         {
             return GetCustomAttributes<T>().SingleOrDefault(predicate);
         }
 
-        public static CustomAttribute[] GetCustomAttributes<T>(Func<CustomAttribute, bool> predicate)
+        public CustomAttribute[] GetCustomAttributes<T>(Func<CustomAttribute, bool> predicate)
         {
             return GetCustomAttributes<T>().Where(predicate).ToArray();
         }
 
-        public static CustomAttribute[] GetCustomAttributes
+        public CustomAttribute[] GetCustomAttributes
             (PropertyInfo propertyInfo, Func<CustomAttribute, bool> predicate, bool throwExceptionIfNull = true)
         {
             if (propertyInfo == null)
@@ -67,7 +74,7 @@ namespace MSSQL_Lite.Reflection
             return propertyInfo.CustomAttributes.Where(predicate).ToArray();
         }
 
-        public static CustomAttribute[] GetCustomAttributes(PropertyInfo propertyInfo, bool throwExceptionIfNull = true)
+        public CustomAttribute[] GetCustomAttributes(PropertyInfo propertyInfo, bool throwExceptionIfNull = true)
         {
             if (propertyInfo == null)
             {
@@ -78,7 +85,7 @@ namespace MSSQL_Lite.Reflection
             return propertyInfo.CustomAttributes.ToArray();
         }
 
-        public static CustomAttribute GetCustomAttribute
+        public CustomAttribute GetCustomAttribute
             (PropertyInfo propertyInfo, Func<CustomAttribute, bool> predicate, bool throwExceptionIfNull = true)
         {
             if (propertyInfo == null)
@@ -90,7 +97,7 @@ namespace MSSQL_Lite.Reflection
             return propertyInfo.CustomAttributes.SingleOrDefault(predicate);
         }
 
-        public static NamedArgument[] GetNamedArguments
+        public NamedArgument[] GetNamedArguments
             (object obj, Func<CustomAttribute, bool> predicate, bool throwExceptionIfNull = true)
         {
             CustomAttribute customAttributeData = GetCustomAttribute(obj, predicate);
@@ -103,7 +110,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.ToArray();
         }
 
-        public static NamedArgument[] GetNamedArguments
+        public NamedArgument[] GetNamedArguments
             (object obj, Func<CustomAttribute, bool> predicate1, Func<CustomAttributeNamedArgument, bool> predicate2, bool throwExceptionIfNull = true)
         {
             CustomAttribute customAttributeData = GetCustomAttribute(obj, predicate1);
@@ -116,7 +123,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.Where(predicate2).ToArray();
         }
 
-        public static NamedArgument[] GetNamedArguments<T>
+        public NamedArgument[] GetNamedArguments<T>
             (Func<CustomAttribute, bool> predicate, bool throwExceptionIfNull = true)
         {
             CustomAttribute customAttributeData = GetCustomAttribute<T>(predicate);
@@ -129,7 +136,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.ToArray();
         }
 
-        public static NamedArgument[] GetNamedArguments<T>
+        public NamedArgument[] GetNamedArguments<T>
             (Func<CustomAttribute, bool> predicate1, Func<NamedArgument, bool> predicate2, bool throwExceptionIfNull = true)
         {
             CustomAttribute customAttributeData = GetCustomAttribute<T>(predicate1);
@@ -142,7 +149,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.Where(predicate2).ToArray();
         }
 
-        public static NamedArgument GetNamedArgument
+        public NamedArgument GetNamedArgument
             (object obj, Func<CustomAttribute, bool> predicate1, Func<NamedArgument, bool> predicate2, bool throwExceptionIfNull = true)
         {
             CustomAttribute customAttributeData = GetCustomAttribute(obj, predicate1);
@@ -155,7 +162,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.SingleOrDefault(predicate2);
         }
 
-        public static NamedArgument GetNamedArgument<T>
+        public NamedArgument GetNamedArgument<T>
             (Func<CustomAttribute, bool> predicate1, Func<NamedArgument, bool> predicate2)
         {
             CustomAttribute customAttributeData = GetCustomAttribute<T>(predicate1);
@@ -164,7 +171,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.SingleOrDefault(predicate2);
         }
 
-        public static NamedArgument[] GetNamedArguments
+        public NamedArgument[] GetNamedArguments
             (CustomAttribute customAttributeData)
         {
             if (customAttributeData == null)
@@ -172,7 +179,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.ToArray();
         }
 
-        public static NamedArgument[] GetNamedArguments
+        public NamedArgument[] GetNamedArguments
             (CustomAttribute customAttributeData, Func<NamedArgument, bool> predicate)
         {
             if (customAttributeData == null)
@@ -180,7 +187,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.Where(predicate).ToArray();
         }
 
-        public static NamedArgument GetNamedArgument
+        public NamedArgument GetNamedArgument
             (CustomAttribute customAttributeData, Func<NamedArgument, bool> predicate)
         {
             if (customAttributeData == null)
@@ -188,7 +195,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.SingleOrDefault(predicate);
         }
 
-        public static NamedArgument[] GetNamedArguments
+        public NamedArgument[] GetNamedArguments
             (PropertyInfo propertyInfo, Func<CustomAttribute, bool> predicate)
         {
             CustomAttribute customAttributeData = GetCustomAttribute(propertyInfo, predicate);
@@ -197,7 +204,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.ToArray();
         }
 
-        public static NamedArgument[] GetNamedArguments
+        public NamedArgument[] GetNamedArguments
             (PropertyInfo propertyInfo, Func<CustomAttribute, bool> predicate1, Func<NamedArgument, bool> predicate2)
         {
             CustomAttribute customAttributeData = GetCustomAttribute(propertyInfo, predicate1);
@@ -206,7 +213,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.Where(predicate2).ToArray();
         }
 
-        public static NamedArgument GetNamedArgument
+        public NamedArgument GetNamedArgument
             (PropertyInfo propertyInfo, Func<CustomAttribute, bool> predicate1, Func<NamedArgument, bool> predicate2, bool throwExceptionIfNull = true)
         {
             CustomAttribute customAttribute = GetCustomAttribute(propertyInfo, predicate1);
@@ -219,77 +226,77 @@ namespace MSSQL_Lite.Reflection
             return customAttribute.NamedArguments.SingleOrDefault(predicate2);
         }
 
-        public static PropertyInfo[] GetProperties(object obj)
+        public PropertyInfo[] GetProperties(object obj)
         {
             return obj.GetType().GetProperties();
         }
 
-        public static PropertyInfo[] GetProperties<T>()
+        public PropertyInfo[] GetProperties<T>()
         {
             return typeof(T).GetProperties();
         }
 
-        public static PropertyInfo[] GetProperties(object obj, Func<PropertyInfo, bool> predicate)
+        public PropertyInfo[] GetProperties(object obj, Func<PropertyInfo, bool> predicate)
         {
             return GetProperties(obj).Where(predicate).ToArray();
         }
 
-        public static PropertyInfo[] GetProperties<T>(Func<PropertyInfo, bool> predicate)
+        public PropertyInfo[] GetProperties<T>(Func<PropertyInfo, bool> predicate)
         {
             return GetProperties<T>().Where(predicate).ToArray();
         }
 
-        public static PropertyInfo GetProperty(object obj, Func<PropertyInfo, bool> predicate)
+        public PropertyInfo GetProperty(object obj, Func<PropertyInfo, bool> predicate)
         {
             return GetProperties(obj).SingleOrDefault(predicate);
         }
 
-        public static PropertyInfo GetProperty<T>(Func<PropertyInfo, bool> predicate)
+        public PropertyInfo GetProperty<T>(Func<PropertyInfo, bool> predicate)
         {
             return GetProperties<T>().SingleOrDefault(predicate);
         }
 
-        public static PropertyInfo[] GetProperties(object obj, Func<CustomAttribute, bool> predicate)
+        public PropertyInfo[] GetProperties(object obj, Func<CustomAttribute, bool> predicate)
         {
             return GetProperties(obj, p => p.CustomAttributes.Any(predicate));
         }
 
-        public static PropertyInfo[] GetProperties<T>(Func<CustomAttribute, bool> predicate)
+        public PropertyInfo[] GetProperties<T>(Func<CustomAttribute, bool> predicate)
         {
             return GetProperties<T>(p => p.CustomAttributes.Any(predicate));
         }
 
-        public static PropertyInfo GetProperty(object obj, string propertyName)
+        public PropertyInfo GetProperty(object obj, string propertyName)
         {
             return GetProperty(obj, p => p.Name == propertyName);
         }
 
-        public static PropertyInfo GetProperty<T>(string propertyName)
+        public PropertyInfo GetProperty<T>(string propertyName)
         {
             return GetProperty<T>(p => p.Name == propertyName);
         }
 
-        public static PropertyInfo[] GetProperties(object obj, string customAttributeName)
+        public PropertyInfo[] GetProperties(object obj, string customAttributeName)
         {
             return GetProperties(obj, c => c.AttributeType.Name == customAttributeName);
         }
 
-        public static PropertyInfo[] GetProperties<T>(string customAttributeName)
+        public PropertyInfo[] GetProperties<T>(string customAttributeName)
         {
             return GetProperties<T>(c => c.AttributeType.Name == customAttributeName);
         }
 
-        public static CustomAttributeData GetCustomAttribute(object obj, string customAttributeName)
+        public CustomAttributeData GetCustomAttribute(object obj, string customAttributeName)
         {
             return GetCustomAttribute(obj, c => c.AttributeType.Name == customAttributeName);
         }
 
-        public static CustomAttribute GetCustomAttribute<T>(string customAttributeName)
+        public CustomAttribute GetCustomAttribute<T>(string customAttributeName)
         {
             return GetCustomAttribute<T>(c => c.AttributeType.Name == customAttributeName);
         }
 
-        public static NamedArgument GetNamedArgument(PropertyInfo propertyInfo, string memberName)
+        public NamedArgument GetNamedArgument(PropertyInfo propertyInfo, string memberName)
         {
             CustomAttributeData customAttributeData = propertyInfo.CustomAttributes
                     .SingleOrDefault(c => c.AttributeType.Name == "Column" || c.AttributeType.Name == "PrimaryKey");
@@ -299,7 +306,7 @@ namespace MSSQL_Lite.Reflection
             return customAttributeData.NamedArguments.SingleOrDefault(n => n.MemberName == memberName);
         }
 
-        public static object SetValuesForPropertiesOfObject(object model, Dictionary<string, object> pairs)
+        public object SetValuesForPropertiesOfObject(object model, Dictionary<string, object> pairs)
         {
             Type type = model.GetType();
             if (type.IsValueType || type.Name == "String")
@@ -313,6 +320,28 @@ namespace MSSQL_Lite.Reflection
                     propertyInfo.SetValue(model, property.Value);
             }
             return model;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+                disposedValue = true;
+            }
+        }
+        ~Obj()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

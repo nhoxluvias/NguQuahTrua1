@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Access
 {
-    public class SqlContext
+    public class SqlContext : IDisposable
     {
+        private bool disposedValue;
+
         public SqlContext()
         {
-
+            disposedValue = false;
         }
 
         private void ThrowExceptionOfQueryString(string queryString)
@@ -110,6 +112,28 @@ namespace MSSQL_Lite.Access
             object obj = sqlData.ExecuteScalar(sqlCommand);
             sqlData.Disconnect();
             return obj;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+                disposedValue = true;
+            }
+        }
+        ~SqlContext()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

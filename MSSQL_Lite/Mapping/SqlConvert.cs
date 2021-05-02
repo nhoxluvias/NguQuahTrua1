@@ -1,5 +1,4 @@
 ﻿using MSSQL_Lite.Reflection;
-using MSSQL_Lite.String;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,16 +9,25 @@ using System.Text.RegularExpressions;
 
 namespace MSSQL_Lite.Mapping
 {
-    public class SqlConvert
+    public class SqlConvert : IDisposable
     {
-        public static DataTable GetDataTableFromDataSet(DataSet dataSet)
+        private Obj objReflection;
+        private bool disposedValue;
+
+        public SqlConvert()
+        {
+            objReflection = new Obj();
+            disposedValue = false;
+        }
+
+        public DataTable GetDataTableFromDataSet(DataSet dataSet)
         {
             if (dataSet == null)
                 throw new Exception("@'dataSet' must be not null");
             return dataSet.Tables[0];
         }
 
-        public static DataSet GetDataSetFromSqlDataAdapter(SqlDataAdapter sqlDataAdapter)
+        public DataSet GetDataSetFromSqlDataAdapter(SqlDataAdapter sqlDataAdapter)
         {
             if (sqlDataAdapter == null)
                 throw new Exception("@'sqlDataAdapter' must be not null");
@@ -28,7 +36,7 @@ namespace MSSQL_Lite.Mapping
             return dataSet;
         }
 
-        public static Dictionary<string, object> ToDictionary(DataSet dataSet)
+        public Dictionary<string, object> ToDictionary(DataSet dataSet)
         {
             DataTable dataTable = GetDataTableFromDataSet(dataSet);
             Dictionary<string, object> dict = null;
@@ -43,9 +51,9 @@ namespace MSSQL_Lite.Mapping
             return dict;
         }
 
-        public static List<Dictionary<string, object>> ToDictionaryList(DataSet dataSet)
+        public List<Dictionary<string, object>> ToDictionaryList(DataSet dataSet)
         {
-            DataTable dataTable = SqlConvert.GetDataTableFromDataSet(dataSet);
+            DataTable dataTable = GetDataTableFromDataSet(dataSet);
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
             foreach (DataRow row in dataTable.AsEnumerable())
             {
@@ -59,7 +67,7 @@ namespace MSSQL_Lite.Mapping
             return list;
         }
 
-        public static Dictionary<string, object> ToDictionary(SqlDataReader reader)
+        public Dictionary<string, object> ToDictionary(SqlDataReader reader)
         {
             Dictionary<string, object> dict = null;
             if (reader.Read())
@@ -74,7 +82,7 @@ namespace MSSQL_Lite.Mapping
             return dict;
         }
 
-        public static List<Dictionary<string, object>> ToDictionaryList(SqlDataReader reader)
+        public List<Dictionary<string, object>> ToDictionaryList(SqlDataReader reader)
         {
             List<Dictionary<string, object>> list = new List<Dictionary<string, object>>();
             while (reader.Read())
@@ -90,7 +98,7 @@ namespace MSSQL_Lite.Mapping
             return list;
         }
 
-        public static List<string> GetPrefixKeys(Dictionary<string, object> pairs)
+        public List<string> GetPrefixKeys(Dictionary<string, object> pairs)
         {
             List<string> keys = new List<string>();
             foreach (string rawKey in pairs.Keys.ToList())
@@ -102,22 +110,22 @@ namespace MSSQL_Lite.Mapping
             return keys;
         }
 
-        public static string GetPrefixKey(string input)
+        public string GetPrefixKey(string input)
         {
             return input.Substring(0, input.IndexOf('.'));
         }
 
-        public static string GetSuffixKey(string input)
+        public string GetSuffixKey(string input)
         {
             return input.Substring(input.IndexOf('.') + 1);
         }
 
-        public static T To<T>(Dictionary<string, object> pairs)
+        public T To<T>(Dictionary<string, object> pairs)
         {
             if (pairs == null)
                 return default(T);
-            object model = Obj.CreateInstance<T>();
-            model = (T)Obj.SetValuesForPropertiesOfObject(model, pairs);
+            object model = objReflection.CreateInstance<T>();
+            model = (T)objReflection.SetValuesForPropertiesOfObject(model, pairs);
             if (model == null)
                 return default(T);
 
@@ -132,14 +140,14 @@ namespace MSSQL_Lite.Mapping
 
                 foreach (string prefixKey in prefixKeys)
                 {
-                    PropertyInfo subPropertyInfo = Obj.GetProperty(model, prefixKey);
+                    PropertyInfo subPropertyInfo = objReflection.GetProperty(model, prefixKey);
                     if (subPropertyInfo != null)
                     {
                         object subModel = Activator.CreateInstance(subPropertyInfo.PropertyType);
                         Dictionary<string, object> propertiesOfSubModel = subProperties
-                            .Where(p => StringExtension.Substring(p.Key, 0, p.Key.IndexOf('.')) == prefixKey)
+                            .Where(p => p.Key.SubStr(0, p.Key.IndexOf('.')) == prefixKey)
                             .ToDictionary(p => GetSuffixKey(p.Key), p => p.Value);
-                        subModel = Obj.SetValuesForPropertiesOfObject(subModel, propertiesOfSubModel);
+                        subModel = objReflection.SetValuesForPropertiesOfObject(subModel, propertiesOfSubModel);
                         if (subModel != null)
                             subPropertyInfo.SetValue(model, subModel);
                     }
@@ -150,12 +158,12 @@ namespace MSSQL_Lite.Mapping
             return (T)model;
         }
 
-        public static T To<T>(DataSet dataSet)
+        public T To<T>(DataSet dataSet)
         {
             return To<T>(ToDictionary(dataSet));
         }
 
-        public static List<T> ToList<T>(DataSet dataSet)
+        public List<T> ToList<T>(DataSet dataSet)
         {
             List<T> list = new List<T>();
             foreach (Dictionary<string, object> pairs in ToDictionaryList(dataSet))
@@ -165,12 +173,12 @@ namespace MSSQL_Lite.Mapping
             return list;
         }
 
-        public static T To<T>(SqlDataReader reader)
+        public T To<T>(SqlDataReader reader)
         {
             return To<T>(ToDictionary(reader));
         }
 
-        public static List<T> ToList<T>(SqlDataReader reader)
+        public  List<T> ToList<T>(SqlDataReader reader)
         {
             List<T> list = new List<T>();
             foreach (Dictionary<string, object> pairs in ToDictionaryList(reader))
@@ -178,6 +186,30 @@ namespace MSSQL_Lite.Mapping
                 list.Add(To<T>(pairs));
             }
             return list;
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    objReflection.Dispose();
+                    objReflection = null;
+                }
+                disposedValue = true;
+            }
+        }
+
+        ~SqlConvert()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

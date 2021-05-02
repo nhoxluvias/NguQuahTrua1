@@ -7,15 +7,17 @@ using System.Linq.Expressions;
 
 namespace MSSQL_Lite.Query
 {
-    public class SqlQuery : SqlQueryBase, IDisposable
+    public class SqlQuery : SqlQueryBase
     {
         public static bool EnclosedInSquareBrackets = true;
         private SqlMapping sqlMapping;
+        private bool disposed;
 
         public SqlQuery()
             : base()
         {
             sqlMapping = new SqlMapping();
+            disposed = false;
         }
 
         public SqlCommand CreateDatabase(string databaseName)
@@ -195,9 +197,22 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            GC.SuppressFinalize(this);
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

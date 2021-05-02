@@ -5,6 +5,13 @@ namespace MSSQL_Lite.LambdaExpression
 {
     public class ExpresstionExtension : IDisposable
     {
+        private bool disposedValue;
+
+        public ExpresstionExtension()
+        {
+            disposedValue = false;
+        }
+
         public string ConvertExpressionTypeToString(ExpressionType expressionType)
         {
             switch (expressionType)
@@ -24,8 +31,26 @@ namespace MSSQL_Lite.LambdaExpression
             }
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+
+                }
+                disposedValue = true;
+            }
+        }
+
+        ~ExpresstionExtension()
+        {
+            Dispose(disposing: false);
+        }
+
         public void Dispose()
         {
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

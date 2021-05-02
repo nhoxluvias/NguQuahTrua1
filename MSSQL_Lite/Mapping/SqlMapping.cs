@@ -6,15 +6,24 @@ namespace MSSQL_Lite.Mapping
 {
     public class SqlMapping : IDisposable
     {
+        private Obj objReflection;
+        private bool disposedValue;
+
+        public SqlMapping()
+        {
+            objReflection = new Obj();
+            disposedValue = false;
+        }
+
         public string GetTableName<T>(bool enclosedInSquareBrackets = false)
         {
-            string objectName = Obj.GetObjectName<T>();
+            string objectName = objReflection.GetObjectName<T>();
             return (enclosedInSquareBrackets) ? "[" + objectName + "]" : objectName;
         }
 
         public string GetTableName(object obj, bool enclosedInSquareBrackets = false)
         {
-            string objectName = Obj.GetObjectName(obj);
+            string objectName = objReflection.GetObjectName(obj);
             return (enclosedInSquareBrackets) ? "[" + objectName + "]" : objectName;
         }
 
@@ -31,8 +40,27 @@ namespace MSSQL_Lite.Mapping
             return (enclosedInSquareBrackets) ? "[" + propertyInfo.Name + "]" : propertyInfo.Name;
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    objReflection.Dispose();
+                    objReflection = null;
+                }
+                disposedValue = true;
+            }
+        }
+
+        ~SqlMapping()
+        {
+            Dispose(disposing: false);
+        }
+
         public void Dispose()
         {
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

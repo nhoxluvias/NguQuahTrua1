@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Access;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Web
             SqlConnectInfo.InitialCatalog = "Movie";
             SqlConnectInfo.UserID = "sa";
             SqlConnectInfo.Password = "123456789";
+            SqlData.objectReceivingData = ObjectReceivingData.DataSet;
         }
 
         protected void Session_Start(object sender, EventArgs e)

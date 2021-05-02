@@ -3,9 +3,11 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Connection
 {
-    internal class SqlConnection
+    internal class SqlConnection : IDisposable
     {
         protected System.Data.SqlClient.SqlConnection connection;
+        private bool disposedValue;
+
         public SqlConnection(string connectionString)
         {
             this.connection = new System.Data.SqlClient.SqlConnection(connectionString);
@@ -29,10 +31,26 @@ namespace MSSQL_Lite.Connection
                 this.connection.Close();
         }
 
-        public virtual void Dispose()
+        protected virtual void Dispose(bool disposing)
         {
-            this.connection.Dispose();
-            this.connection = null;
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    connection.Dispose();
+                    connection = null;
+                }
+                disposedValue = true;
+            }
+        }
+        ~SqlConnection()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }
