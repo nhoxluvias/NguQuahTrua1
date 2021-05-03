@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Common.Mail;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Web.Common;
 using Web.Models;
 using Web.Validation;
 
@@ -16,11 +18,25 @@ namespace Web.Account
         protected async void Page_Load(object sender, EventArgs e)
         {
             db = new DBContext();
+            InitHyperlink();
             InitValidation();
             if (IsPostBack)
             {
                 await ConfirmAccount();
             }
+            else
+            {
+                await ReSendConfirmCode();
+            }
+        }
+
+        private void InitHyperlink()
+        {
+            hylnkReConfirm.NavigateUrl = GetRouteUrl("Confirm", new
+            {
+                userId = GetUserId(),
+                status = "re-confirm"
+            });
         }
 
         private void InitValidation()
@@ -29,10 +45,38 @@ namespace Web.Account
                 .Init(cvConfirmCode, "txtConfirmCode", "Không được để trống, từ 6 đến 20 ký tự số", true, null, CustomValidation.ValidateConfirmCode);
         }
 
+        private bool IsReConfirm()
+        {
+            string status = (string)Page.RouteData.Values["status"];
+            return (status == "re-confirm");
+        }
+
+        private async Task ReSendConfirmCode()
+        {
+            if (IsReConfirm())
+            {
+                Models.User user = await db.Users
+                    .SingleOrDefaultAsync(u => new { u.email }, u => u.ID == GetUserId());
+                if (user == null)
+                {
+                    Response.RedirectToRoute("Error");
+                }
+                else
+                {
+                    Session["confirmCode"] = new ConfirmCode().Send(user.email);
+                }
+            }
+        }
+
         private bool CheckConfirmCode()
         {
             string confirmCode = Request.Form["txtConfirmCode"];
             return (confirmCode == Session["confirmCode"] as string);
+        }
+
+        private string GetUserId()
+        {
+            return (string)Page.RouteData.Values["userId"];
         }
 
         private async Task ConfirmAccount()
@@ -40,7 +84,7 @@ namespace Web.Account
             cvConfirmCode.Validate();
             if (cvConfirmCode.IsValid && CheckConfirmCode())
             {
-                string userId = (string)Page.RouteData.Values["userId"];
+                string userId = GetUserId();
                 int affected = await db.Users.UpdateAsync(new Models.User { active = true }, u => new { u.active });
                 if (affected == 0) {
                     Response.RedirectToRoute("Error");
@@ -53,7 +97,7 @@ namespace Web.Account
             else
             {
                 Response.RedirectToRoute("Confirm", new { 
-                    userId = (string)Page.RouteData.Values["userId"], 
+                    userId = GetUserId(), 
                     status = "confirm-failed" 
                 });
             }

@@ -30,10 +30,15 @@
     float: right;
 }
 
+.confirm-form-support p a {
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
 @media only screen and (max-width: 1920px) {
     .confirm-form {
         width: 40%;
-        height: 235px;
+        height: 255px;
         top: calc(calc(100% / 2) - calc(310px / 2));
         left: calc(calc(100% / 2) - calc(40% / 2));
     }
@@ -98,12 +103,23 @@
         width: 24%;
         height: 35px;
     }
+
+    .confirm-form-support {
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90%;
+        height: 25px;
+    }
+
+        .confirm-form-support p a {
+            line-height: 25px;
+        }
 }
 
 @media only screen and (max-width: 1024px) {
     .confirm-form {
         width: 60%;
-        height: 235px;
+        height: 255px;
         top: calc(calc(100% / 2) - calc(310px / 2));
         left: calc(calc(100% / 2) - calc(60% / 2));
     }
@@ -168,12 +184,23 @@
         width: 24%;
         height: 35px;
     }
+
+    .confirm-form-support {
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90%;
+        height: 25px;
+    }
+
+        .confirm-form-support p a {
+            line-height: 25px;
+        }
 }
 
 @media only screen and (max-width: 768px) {
     .confirm-form {
         width: 80%;
-        height: 235px;
+        height: 255px;
         top: calc(calc(100% / 2) - calc(310px / 2));
         left: calc(calc(100% / 2) - calc(80% / 2));
     }
@@ -238,4 +265,15 @@
         width: 24%;
         height: 35px;
     }
+
+    .confirm-form-support {
+        margin-left: 5%;
+        margin-right: 5%;
+        width: 90%;
+        height: 25px;
+    }
+
+        .confirm-form-support p a {
+            line-height: 25px;
+        }
 }

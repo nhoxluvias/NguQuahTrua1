@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Routing;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Web.Common;
 using Web.Models;
 using Web.Validation;
 
@@ -124,10 +125,7 @@ namespace Web.Account
                         }
                         else
                         {
-                            string confirmCode = new Random().NextStringOnlyNumericCharacter(8);
-                            Session["confirmCode"] = confirmCode;
-                            string message = string.Format("Mã xác nhận của bạn là: {0}", confirmCode);
-                            new EMail().Send(user.email, "Mã xác nhận tài khoản", message);
+                            Session["confirmCode"] = new ConfirmCode().Send(user.email);
                             Response.RedirectToRoute("Confirm", new
                             {
                                 userId = user.ID,

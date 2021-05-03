@@ -29,6 +29,11 @@
             <div class="confirm-form-submit">
                 <asp:Button ID="btnConfirm" CssClass="button button-red button-confirm" runat="server" Text="Xác nhận" />
             </div>
+           <div class="confirm-form-support">
+                <p>
+                    <asp:HyperLink ID="hylnkReConfirm" runat="server">Gửi lại mã xác nhận</asp:HyperLink>
+                </p>
+            </div>
         </div>
     </form>
     <script src="<%= ResolveUrl("~/js/account/confirm.js") %>"></script>
