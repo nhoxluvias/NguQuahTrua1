@@ -152,16 +152,21 @@ namespace Web.Account
                         }
                         else
                         {
-                            Session["confirmCode"] = new ConfirmCode().Send(user.email);
+                            ConfirmCode confirmCode = new ConfirmCode();
+                            Session["confirmCode"] = confirmCode.Send(user.email);
+                            string confirmToken = confirmCode.CreateToken();
+                            Session["confirmToken"] = confirmToken;
                             bool status = await AddPaymentInfo(user.ID);
                             if (status)
                                 Response.RedirectToRoute("Confirm", new { 
-                                    userId = user.ID, 
+                                    userId = user.ID,
+                                    confirmToken = confirmToken,
                                     status = "register-success" 
                                 });
                             else
                                 Response.RedirectToRoute("Confirm", new {
                                     userId = user.ID, 
+                                    confirmToken = confirmToken,
                                     status = "register-success_no-payment-info"
                                 });
                         }

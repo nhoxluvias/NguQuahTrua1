@@ -21,6 +21,8 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            InitHyperLink();
+            InitValidation();
             if (CheckLoggedIn())
             {
                 Response.RedirectToRoute("Home");
@@ -28,9 +30,7 @@ namespace Web.Account
             else
             {
                 db = new DBContext();
-                InitHyperLink();
                 ShowLoginStatus();
-                InitValidation();
                 if (IsPostBack)
                 {
                     await LoginToAccount();
@@ -125,10 +125,14 @@ namespace Web.Account
                         }
                         else
                         {
-                            Session["confirmCode"] = new ConfirmCode().Send(user.email);
+                            ConfirmCode confirmCode = new ConfirmCode();
+                            Session["confirmCode"] = confirmCode.Send(user.email);
+                            string confirmToken = confirmCode.CreateToken();
+                            Session["confirmToken"] = confirmToken;
                             Response.RedirectToRoute("Confirm", new
                             {
                                 userId = user.ID,
+                                confirmToken = confirmToken,
                                 status = "login-success_unconfirmed"
                             });
                         }

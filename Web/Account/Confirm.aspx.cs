@@ -35,6 +35,7 @@ namespace Web.Account
             hylnkReConfirm.NavigateUrl = GetRouteUrl("Confirm", new
             {
                 userId = GetUserId(),
+                confirmToken = GetConfirmToken(),
                 status = "re-confirm"
             });
         }
@@ -63,7 +64,9 @@ namespace Web.Account
                 }
                 else
                 {
-                    Session["confirmCode"] = new ConfirmCode().Send(user.email);
+                    ConfirmCode confirmCode = new ConfirmCode();
+                    Session["confirmCode"] = confirmCode.Send(user.email);
+                    Session["confirmToken"] = confirmCode.CreateToken();
                 }
             }
         }
@@ -71,12 +74,19 @@ namespace Web.Account
         private bool CheckConfirmCode()
         {
             string confirmCode = Request.Form["txtConfirmCode"];
-            return (confirmCode == Session["confirmCode"] as string);
+            string confirmToken = GetConfirmToken();
+            return (confirmCode == Session["confirmCode"] as string) 
+                && (confirmToken == Session["confirmToken"] as string);
         }
 
         private string GetUserId()
         {
             return (string)Page.RouteData.Values["userId"];
+        }
+
+        private string GetConfirmToken()
+        {
+            return (string)Page.RouteData.Values["confirmToken"];
         }
 
         private async Task ConfirmAccount()

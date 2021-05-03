@@ -16,7 +16,7 @@ namespace Common.Hash
             StringBuilder hashSb = new StringBuilder();
             foreach (byte b in hash)
             {
-                hashSb.Append(b.ToString("X2"));
+                hashSb.Append(b.ToString("x2"));
             }
             return hashSb.ToString();
         }

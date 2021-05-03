@@ -1,4 +1,5 @@
-﻿using Common.Mail;
+﻿using Common.Hash;
+using Common.Mail;
 using System;
 
 namespace Web.Common
@@ -11,6 +12,12 @@ namespace Web.Common
             string message = string.Format("Mã xác nhận của bạn là: {0}", confirmCode);
             new EMail().Send(emailAddress, "Mã xác nhận tài khoản", message);
             return confirmCode;
+        }
+
+        public string CreateToken(int length = 30)
+        {
+            string randomString = new Random().NextString(20);
+            return PBKDF2_Hash.Hash(randomString, "confirmToken", length);
         }
     }
 }

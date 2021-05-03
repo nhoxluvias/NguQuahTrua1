@@ -16,7 +16,7 @@ namespace Web.App_Start
             routes.MapPageRoute("Register", "account/register", "~/Account/Register.aspx");
             routes.MapPageRoute("Register_WithParam", "account/register/{registerStatus}", "~/Account/Register.aspx");
             routes.MapPageRoute("ResetPassword", "account/reset-password", "~/Account/ResetPassword.aspx");
-            routes.MapPageRoute("Confirm", "account/confirm/{userId}/{status}", "~/Account/Confirm.aspx");
+            routes.MapPageRoute("Confirm", "account/confirm/{userId}/{confirmToken}/{status}", "~/Account/Confirm.aspx");
             routes.MapPageRoute("Error", "error", "~/Notification/Error.aspx");
             routes.MapPageRoute("Home", "home", "~/User/Home.aspx");
         }
