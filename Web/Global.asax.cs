@@ -13,18 +13,8 @@ namespace Web
         protected void Application_Start(object sender, EventArgs e)
         {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-
-            SqlConnectInfo.DataSource = @"LAPTOP-B78E1G5S\MSSQLSERVER2019";
-            SqlConnectInfo.InitialCatalog = "Movie";
-            SqlConnectInfo.UserID = "sa";
-            SqlConnectInfo.Password = "123456789";
-            SqlData.objectReceivingData = ObjectReceivingData.DataSet;
-
-            RoleMigration roleMigration = new RoleMigration();
-            roleMigration.AddDataAndRun();
-
-            PaymentMethodMigration paymentMethodMigration = new PaymentMethodMigration();
-            paymentMethodMigration.AddDataAndRun();
+            DatabaseConfig.RegisterDatabase();
+            EmailConfig.RegisterEmail();
         }
 
         protected void Session_Start(object sender, EventArgs e)

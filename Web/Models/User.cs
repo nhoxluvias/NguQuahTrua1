@@ -17,6 +17,7 @@ namespace Web.Models
         public string password { get; set; }
         public string salt { get; set; }
         public string description { get; set; }
+        public bool active { get; set; }
         public string roleId { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }

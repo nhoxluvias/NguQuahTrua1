@@ -1,5 +1,5 @@
-﻿
-using Common.Hash;
+﻿using Common.Hash;
+using Common.Mail;
 using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
@@ -20,13 +20,20 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext();
-            InitHyperLink();
-            ShowLoginStatus();
-            InitValidation();
-            if (IsPostBack)
+            if (CheckLoggedIn())
             {
-                await LoginToAccount();
+                Response.RedirectToRoute("Home");
+            }
+            else
+            {
+                db = new DBContext();
+                InitHyperLink();
+                ShowLoginStatus();
+                InitValidation();
+                if (IsPostBack)
+                {
+                    await LoginToAccount();
+                }
             }
         }
 
@@ -47,18 +54,31 @@ namespace Web.Account
                 .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CustomValidation.ValidatePassword);
         }
 
+        private bool CheckLoggedIn()
+        {
+            return (Session["username"] != null);
+        }
+
+        private bool CheckLogin(string passwordInput, string passwordFromDB, string saltFromDB)
+        {
+            string passwordHashed = PBKDF2_Hash.Hash(passwordInput, saltFromDB, 30);
+            return (passwordHashed == passwordFromDB);
+        }
+
         private void ShowLoginStatus()
         {
             string loginStatus = (string)Page.RouteData.Values["loginStatus"];
             if (string.IsNullOrEmpty(loginStatus))
                 txtLoginStatus.InnerText = "Hãy đăng nhập ngay!";
-            else if(loginStatus == "success")
+            else if (loginStatus == "login-success")
             {
                 txtLoginStatus.InnerText = "Đăng nhập thành công, chờ 3 giây!";
-            }else if(loginStatus == "failed")
+            }
+            else if (loginStatus == "login-failed")
             {
                 txtLoginStatus.InnerText = "Kiểm tra lại thông tin đăng nhập!";
-            }else if(loginStatus == "not-exists")
+            }
+            else if (loginStatus == "login-failed_not-exists")
             {
                 txtLoginStatus.InnerText = "Không tồn tại người dùng này!";
             }
@@ -68,35 +88,62 @@ namespace Web.Account
             }
         }
 
+        private async Task<Models.User> GetUserLoginModel()
+        {
+            string username = Request.Form["txtUsername"];
+            return await db.Users.SingleOrDefaultAsync(
+                u => new {u.ID, u.userName, u.password, u.salt, u.active, u.email },
+                u => u.userName == username
+            );
+        }
+
         private async Task LoginToAccount()
         {
             cvUsername.Validate();
             cvPassword.Validate();
-            if(cvUsername.IsValid && cvPassword.IsValid)
+            if (cvUsername.IsValid && cvPassword.IsValid)
             {
-                string username = Request.Form["txtUsername"];
-                string password = Request.Form["txtPassword"];
-
-                Models.User user = await db.Users
-                    .SingleOrDefaultAsync(u => new { u.password, u.salt }, u => u.userName == username);
-                if (user == null)
+                Models.User user = await GetUserLoginModel();
+                if(user == null)
                 {
-                    Response.RedirectToRoute("Login_WithParam", routeValues: new { loginStatus = "not-exists" });
+                    Response.RedirectToRoute("Login_WithParam", new { 
+                        loginStatus = "login-failed_not-exists" 
+                    });
                 }
                 else
                 {
-                    string passwordHashed = PBKDF2_Hash.Hash(password, user.salt, 30);
-                    if (user.password == passwordHashed)
+                    string passwordInput = Request.Form["txtPassword"];
+                    if (CheckLogin(passwordInput, user.password, user.salt))
                     {
-                        Session["username"] = username;
-                        Response.RedirectToRoute("Login_WithParam", routeValues: new { loginStatus = "success" });
+                        Session["username"] = user.userName;
+                        if (user.active)
+                        {
+                            Response.RedirectToRoute("Login_WithParam", new { 
+                                loginStatus = "login-success"
+                            });
+                        }
+                        else
+                        {
+                            string confirmCode = new Random().NextStringOnlyNumericCharacter(8);
+                            Session["confirmCode"] = confirmCode;
+                            string message = string.Format("Mã xác nhận của bạn là: {0}", confirmCode);
+                            new EMail().Send(user.email, "Mã xác nhận tài khoản", message);
+                            Response.RedirectToRoute("Confirm", new
+                            {
+                                userId = user.ID,
+                                status = "login-success_unconfirmed"
+                            });
+                        }
                     }
                     else
                     {
-                        Response.RedirectToRoute("Login_WithParam", routeValues: new { loginStatus = "failed" });
+                        Response.RedirectToRoute("Login_WithParam", new {
+                            loginStatus = "login-failed" 
+                        });
                     }
                 }
             }
         }
+
     }
 }

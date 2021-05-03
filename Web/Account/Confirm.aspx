@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Confirm.aspx.cs" Inherits="Web.Account.Confirm" %>
+﻿<%@ Page Async="true" Language="C#" AutoEventWireup="true" CodeBehind="Confirm.aspx.cs" Inherits="Web.Account.Confirm" %>
 
 <!DOCTYPE html>
 
@@ -31,5 +31,6 @@
             </div>
         </div>
     </form>
+    <script src="<%= ResolveUrl("~/js/account/confirm.js") %>"></script>
 </body>
 </html>

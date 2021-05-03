@@ -17,19 +17,24 @@ namespace Web.Account
         private DBContext db;
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext();
-            if (CheckLoggedIn())
-                Response.RedirectToRoute("Home");
             InitValidation();
-            if (IsPostBack)
+            if (CheckLoggedIn())
             {
-                await RegisterAccount();
+                Response.RedirectToRoute("Home");
+            }
+            else
+            {
+                db = new DBContext();
+                if (IsPostBack)
+                {
+                    await RegisterAccount();
+                }
             }
         }
 
         private bool CheckLoggedIn()
         {
-            return (Session["username"] == null) ? false : true;
+            return (Session["username"] != null);
         }
 
         private void InitValidation()
@@ -99,13 +104,14 @@ namespace Web.Account
             {
                 Models.User user = new Models.User
                 {
-                    ID = MD5_Hash.Hash(new Random().NextString(10)),
+                    ID = Guid.NewGuid().ToString(),
                     userName = username,
                     email = email,
                     phoneNumber = phoneNumber,
                     password = PBKDF2_Hash.Hash(password, salt, 30),
                     salt = salt,
                     roleId = role.ID,
+                    active = false,
                     createAt = DateTime.Now,
                     updateAt = DateTime.Now
                 };
@@ -128,7 +134,9 @@ namespace Web.Account
                     Models.User usr = await db.Users.SingleOrDefaultAsync(u => u.userName == user.userName);
                     if(usr != null)
                     {
-                        Response.RedirectToRoute("Register_WithParam", new { registerStatus = "already-exist" });
+                        Response.RedirectToRoute("Register_WithParam", new { 
+                            registerStatus = "register-failed_already-exist" 
+                        });
                     }
                     else
                     {
@@ -137,18 +145,27 @@ namespace Web.Account
 
                         if (affected == 0)
                         {
-                            Response.RedirectToRoute("Register_WithParam", new { registerStatus = "failed" });
+                            Response.RedirectToRoute("Register_WithParam", new { 
+                                registerStatus = "register-failed" 
+                            });
                         }
                         else
                         {
                             string confirmCode = new Random().NextStringOnlyNumericCharacter(8);
                             Session["confirmCode"] = confirmCode;
-                            new EMail().Send("phanxuanchanh77@gmail.com", user.email, "Mã xác nhận tài khoản", confirmCode);
+                            string message = string.Format("Mã xác nhận của bạn là: {0}", confirmCode);
+                            new EMail().Send(user.email, "Mã xác nhận tài khoản", message);
                             bool status = await AddPaymentInfo(user.ID);
                             if (status)
-                                Response.RedirectToRoute("Register_WithParam", new { registerStatus = "success" });
+                                Response.RedirectToRoute("Confirm", new { 
+                                    userId = user.ID, 
+                                    status = "register-success" 
+                                });
                             else
-                                Response.RedirectToRoute("Register_WithParam", new { registerStatus = "success_no-payment-info" });
+                                Response.RedirectToRoute("Confirm", new {
+                                    userId = user.ID, 
+                                    status = "register-success_no-payment-info"
+                                });
                         }
                     }
                 }
@@ -194,13 +211,13 @@ namespace Web.Account
         public async Task<bool> AddPaymentInfo(string userId)
         {
             Models.PaymentInfo paymentInfo = await GetPaymentInfoModel();
-            paymentInfo.userId = userId;
             if(paymentInfo == null)
             {
                 return false;
             }
             else
             {
+                paymentInfo.userId = userId;
                 int affected = await db.PaymentInfos.InsertAsync(paymentInfo);
                 if (affected == 0)
                     return false;
