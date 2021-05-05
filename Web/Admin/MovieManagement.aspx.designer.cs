@@ -10,7 +10,7 @@
 
 namespace Web.Admin
 {
-    public partial class Index
+    public partial class MovieManagement
     {
     }
 }

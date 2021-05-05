@@ -66,16 +66,27 @@
     <Content Include="Account\Logout.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\ResetPassword.aspx" />
+    <Content Include="Admin\CategoryManagement.aspx" />
     <Content Include="Admin\Index.aspx" />
+    <Content Include="Admin\MovieManagement.aspx" />
+    <Content Include="Admin\TagManagement.aspx" />
+    <Content Include="Admin\UserManagement.aspx" />
     <Content Include="css\account\common.css" />
     <Content Include="css\account\confirm.css" />
     <Content Include="css\account\login.css" />
     <Content Include="css\account\register.css" />
     <Content Include="css\account\reset-password.css" />
+    <Content Include="css\admin\font-awesome.min.css" />
+    <Content Include="css\admin\milligram.min.css" />
+    <Content Include="css\admin\normalize.css" />
+    <Content Include="css\admin\styles.css" />
+    <Content Include="fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="js\account\confirm.js" />
     <Content Include="js\account\login.js" />
     <Content Include="js\account\register.js" />
+    <Content Include="js\admin\chart-data.js" />
+    <Content Include="js\admin\chart.min.js" />
     <Content Include="libraries\css\styles.css" />
     <Content Include="libraries\js\video.js" />
     <Content Include="libraries\video-js\demo.html" />
@@ -150,12 +161,47 @@
     <Compile Include="Account\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\CategoryManagement.aspx.cs">
+      <DependentUpon>CategoryManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CategoryManagement.aspx.designer.cs">
+      <DependentUpon>CategoryManagement.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\Layout\AdminLayout.Master.cs">
+      <DependentUpon>AdminLayout.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\Layout\AdminLayout.Master.designer.cs">
+      <DependentUpon>AdminLayout.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\MovieManagement.aspx.cs">
+      <DependentUpon>MovieManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\MovieManagement.aspx.designer.cs">
+      <DependentUpon>MovieManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TagManagement.aspx.cs">
+      <DependentUpon>TagManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TagManagement.aspx.designer.cs">
+      <DependentUpon>TagManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UserManagement.aspx.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UserManagement.aspx.designer.cs">
+      <DependentUpon>UserManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\EmailConfig.cs" />
@@ -234,6 +280,12 @@
     <Content Include="libraries\video-js\font\vjs.ttf" />
     <Content Include="libraries\video-js\font\vjs.woff" />
     <Content Include="libraries\video-js\video-js.less" />
+    <Content Include="fonts\fontawesome\fontawesome-webfont.eot" />
+    <Content Include="fonts\fontawesome\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome\FontAwesome.otf" />
+    <Content Include="Admin\Layout\AdminLayout.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -243,7 +295,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Control\" />
-    <Folder Include="css\admin\" />
     <Folder Include="css\user\" />
   </ItemGroup>
   <ItemGroup>

@@ -64,9 +64,7 @@ namespace Web.Account
                 }
                 else
                 {
-                    ConfirmCode confirmCode = new ConfirmCode();
-                    Session["confirmCode"] = confirmCode.Send(user.email);
-                    Session["confirmToken"] = confirmCode.CreateToken();
+                    Session["confirmCode"] = new ConfirmCode().Send(user.email);
                 }
             }
         }
