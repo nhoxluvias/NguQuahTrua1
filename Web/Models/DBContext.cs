@@ -20,5 +20,7 @@ namespace Web.Models
         public SqlAccess<User> Users { get { return new SqlAccess<User>(); } }
         public SqlAccess<PaymentMethod> PaymentMethods { get { return new SqlAccess<PaymentMethod>(); } }
         public SqlAccess<PaymentInfo> PaymentInfos { get { return new SqlAccess<PaymentInfo>(); } }
+        public SqlAccess<Category> Categories { get { return new SqlAccess<Category>(); } }
+        public SqlAccess<Tag> Tags { get { return new SqlAccess<Tag>(); } }
     }
 }

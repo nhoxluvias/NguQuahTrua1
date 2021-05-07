@@ -2,7 +2,9 @@
 using MSSQL_Lite.Connection;
 using System;
 using System.Web.Routing;
+using System.Web.UI.WebControls;
 using Web.App_Start;
+using Web.Common;
 using Web.Migrations;
 
 namespace Web
@@ -19,7 +21,7 @@ namespace Web
 
         protected void Session_Start(object sender, EventArgs e)
         {
-
+            PageVisitor.Add();
         }
 
         protected void Application_BeginRequest(object sender, EventArgs e)
@@ -39,7 +41,7 @@ namespace Web
 
         protected void Session_End(object sender, EventArgs e)
         {
-
+            PageVisitor.Remove();
         }
 
         protected void Application_End(object sender, EventArgs e)
