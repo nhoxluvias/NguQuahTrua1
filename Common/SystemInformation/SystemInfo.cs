@@ -8,24 +8,30 @@ namespace Common.SystemInformation
 {
     public class SystemInfo
     {
-        public string OSName { get; }
-        public string MemoryUsed { get; }
-        public string TotalMemory { get; set; }
-        public string IpAddress { get; set; }
-        public string ExtenalIpAddress { get; set; }
-        public string FfmpegPath { get; set; }
-        public string[] Path_EnvironmentVariable { get; set; }
+        private string osName;
+        private string memoryUsed;
+        private string totalMemory;
+        private string ipAddress;
+        private string extenalIpAddress;
+        private string ffmpegPath;
+        private string[] path_EnvironmentVariable;
+        public string OSName { get { return osName; } }
+        public string MemoryUsed { get { return memoryUsed; } }
+        public string TotalMemory { get { return totalMemory; } }
+        public string IpAddress { get { return ipAddress; } }
+        public string ExtenalIpAddress { get { return extenalIpAddress; } }
+        public string FfmpegPath { get { return (ffmpegPath == null) ? "null" : ffmpegPath; } }
+        public string[] Path_EnvironmentVariable { get { return path_EnvironmentVariable; } }
 
         public SystemInfo()
         {
-            OSName = GetOSName();
-            MemoryUsed = GetMemoryUsed(MemorySizeInfo.MB) + " MB";
-            TotalMemory = GetTotalMemory(MemorySizeInfo.MB) + " MB";
-            IpAddress = GetIPAddress();
-            ExtenalIpAddress = GetExtenalIPAddress();
-            string ffmpegPath = GetFfmpegPath();
-            FfmpegPath = (ffmpegPath == null) ? "null" : ffmpegPath;
-            Path_EnvironmentVariable = GetPath_EnvironmentVariable();
+            osName = GetOSName();
+            memoryUsed = GetMemoryUsed(MemorySizeInfo.MB) + " MB";
+            totalMemory = GetTotalMemory(MemorySizeInfo.MB) + " MB";
+            ipAddress = GetIPAddress();
+            extenalIpAddress = GetExtenalIPAddress();
+            ffmpegPath = GetFfmpegPath();
+            path_EnvironmentVariable = GetPath_EnvironmentVariable();
         }
 
         public enum MemorySizeInfo { Byte, KB, MB, GB };

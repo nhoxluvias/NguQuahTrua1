@@ -30,7 +30,7 @@ namespace Web.Admin
 
         private async Task LoadOverview()
         {
-            movieNumber = 0;
+            movieNumber = await db.Films.CountAsync();
             categoryNumber = await db.Categories.CountAsync();
             tagNumber = await db.Tags.CountAsync();
         }

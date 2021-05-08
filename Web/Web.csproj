@@ -66,11 +66,25 @@
     <Content Include="Account\Logout.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\ResetPassword.aspx" />
-    <Content Include="Admin\CategoryManagement.aspx" />
+    <Content Include="Admin\CategoryList.aspx" />
     <Content Include="Admin\Index.aspx" />
     <Content Include="Admin\MovieManagement.aspx" />
+    <Content Include="Admin\RoleList.aspx" />
     <Content Include="Admin\TagManagement.aspx" />
     <Content Include="Admin\UserManagement.aspx" />
+    <Content Include="User\Article.aspx" />
+    <Content Include="User\Category.aspx" />
+    <Content Include="User\Search.aspx" />
+    <Content Include="User\Watch.aspx" />
+    <Content Include="user_assets\css\plugins.css" />
+    <Content Include="user_assets\css\style.css" />
+    <Content Include="user_assets\images\uploads\ft-bg.jpg" />
+    <Content Include="user_assets\images\uploads\search-bg.png" />
+    <Content Include="user_assets\images\uploads\slider-bg.jpg" />
+    <Content Include="user_assets\js\custom.js" />
+    <Content Include="user_assets\js\jquery.js" />
+    <Content Include="user_assets\js\plugins.js" />
+    <Content Include="user_assets\js\plugins2.js" />
     <Content Include="css\account\common.css" />
     <Content Include="css\account\confirm.css" />
     <Content Include="css\account\login.css" />
@@ -118,11 +132,7 @@
     <Content Include="libraries\video-js\video.novtt.dev.js" />
     <Content Include="libraries\video-js\video.novtt.js" />
     <Content Include="Notification\Error.aspx" />
-    <Content Include="User\Article.aspx" />
-    <Content Include="User\Category.aspx" />
     <Content Include="User\Index.aspx" />
-    <Content Include="User\Search.aspx" />
-    <Content Include="User\Watch.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -161,12 +171,12 @@
     <Compile Include="Account\ResetPassword.aspx.designer.cs">
       <DependentUpon>ResetPassword.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CategoryManagement.aspx.cs">
-      <DependentUpon>CategoryManagement.aspx</DependentUpon>
+    <Compile Include="Admin\CategoryList.aspx.cs">
+      <DependentUpon>CategoryList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CategoryManagement.aspx.designer.cs">
-      <DependentUpon>CategoryManagement.aspx</DependentUpon>
+    <Compile Include="Admin\CategoryList.aspx.designer.cs">
+      <DependentUpon>CategoryList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -188,6 +198,13 @@
     </Compile>
     <Compile Include="Admin\MovieManagement.aspx.designer.cs">
       <DependentUpon>MovieManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\RoleList.aspx.cs">
+      <DependentUpon>RoleList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\RoleList.aspx.designer.cs">
+      <DependentUpon>RoleList.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\TagManagement.aspx.cs">
       <DependentUpon>TagManagement.aspx</DependentUpon>
@@ -287,6 +304,7 @@
     <Content Include="fonts\fontawesome\fontawesome-webfont.woff2" />
     <Content Include="fonts\fontawesome\FontAwesome.otf" />
     <Content Include="Admin\Layout\AdminLayout.Master" />
+    <Content Include="user_assets\fonts\fontawesome-webfont.woff2" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

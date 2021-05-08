@@ -21,6 +21,8 @@ namespace Web.App_Start
             routes.MapPageRoute("Home", "home", "~/User/Home.aspx");
 
             routes.MapPageRoute("Admin_Overview", "admin/overview", "~/Admin/Index.aspx");
+            routes.MapPageRoute("Admin_CategoryList", "admin/category-list", "~/Admin/CategoryList.aspx");
+            routes.MapPageRoute("Admin_RoleList", "admin/role-list", "~/Admin/RoleList.aspx");
         }
     }
 }

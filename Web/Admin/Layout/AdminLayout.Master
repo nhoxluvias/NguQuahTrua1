@@ -55,13 +55,10 @@
                 <h5>Công cụ</h5>
                 <ul>
                     <li><a href="#"><em class="fa fa-home"></em>Tổng quan</a></li>
-                    <li><a href="#charts"><em class="fa fa-bar-chart"></em>Quản lý phim</a></li>
-                    <li><a href="#widgets"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
-                    <li><a href="#forms"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
-                    <li><a href="#alerts"><em class="fa fa-warning"></em>Quản lỹ thẻ tag</a></li>
-                    <li><a href="#buttons"><em class="fa fa-hand-o-up"></em>AA</a></li>
-                    <li><a href="#tables"><em class="fa fa-table"></em>Tables</a></li>
-                    <li><a href="#grid"><em class="fa fa-columns"></em>Grid</a></li>
+                    <li><a href="#"><em class="fa fa-bar-chart"></em>Quản lý phim</a></li>
+                    <li><a href="#"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
+                    <li><a href="#"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
+                    <li><a href="#"><em class="fa fa-warning"></em>Quản lý thẻ tag</a></li>
                 </ul>
             </div>
             <section id="main-content" class="column column-offset-20">
