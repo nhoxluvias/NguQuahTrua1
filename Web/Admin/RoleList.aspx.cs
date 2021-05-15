@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSSQL_Lite.Connection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Web.Admin
         private DBContext db;
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext();
+            db = new DBContext(ConnectionType.ManuallyDisconnect);
             GridView1.DataSource = await db.Roles.ToListAsync();
             GridView1.DataBind();
         }

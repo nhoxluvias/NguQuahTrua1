@@ -1,5 +1,6 @@
 ﻿
 using MSSQL_Lite.Access;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,18 +11,18 @@ namespace Web.Models
 {
     public class DBContext:SqlContext
     {
-        public DBContext()
-            :base()
+        public DBContext(ConnectionType connectionType)
+            :base(connectionType)
         {
 
         }
 
-        public SqlAccess<Role> Roles { get { return new SqlAccess<Role>(); } }
-        public SqlAccess<User> Users { get { return new SqlAccess<User>(); } }
-        public SqlAccess<PaymentMethod> PaymentMethods { get { return new SqlAccess<PaymentMethod>(); } }
-        public SqlAccess<PaymentInfo> PaymentInfos { get { return new SqlAccess<PaymentInfo>(); } }
-        public SqlAccess<Category> Categories { get { return new SqlAccess<Category>(); } }
-        public SqlAccess<Tag> Tags { get { return new SqlAccess<Tag>(); } }
-        public SqlAccess<Film> Films { get { return new SqlAccess<Film>(); } }
+        public SqlAccess<Role> Roles { get { return InitSqlAccess<Role>(); } }
+        public SqlAccess<User> Users { get { return InitSqlAccess<User>(); } }
+        public SqlAccess<PaymentMethod> PaymentMethods { get { return InitSqlAccess<PaymentMethod>(); } }
+        public SqlAccess<PaymentInfo> PaymentInfos { get { return InitSqlAccess<PaymentInfo>(); } }
+        public SqlAccess<Category> Categories { get { return InitSqlAccess<Category>(); } }
+        public SqlAccess<Tag> Tags { get { return InitSqlAccess<Tag>(); } }
+        public SqlAccess<Film> Films { get { return InitSqlAccess<Film>(); } }
     }
 }

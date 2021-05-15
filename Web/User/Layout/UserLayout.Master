@@ -1,5 +1,7 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="UserLayout.master.cs" Inherits="Web.User.Layout.UserLayout" %>
 
+<%@ Import Namespace="Web.Models.DTO" %>
+
 <!DOCTYPE html>
 <!--[if IE 7]>
 <html class="ie ie7 no-js" lang="en-US">
@@ -73,8 +75,10 @@
                                 <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">Thể loại<i class="fa fa-angle-down" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu level1">
-                                    <% for (int i = 0; i < 10; i++){ %>
-                                        <li><a href="movielist.html">Thể loại <% = i %></a></li>
+                                    <% foreach(CategoryInfo category in categories){ %>
+                                        <li>
+                                            <a href="<%= category.url %>"><% = category.name %></a>
+                                        </li>
                                     <% } %>
                                 </ul>
                             </li>
@@ -168,16 +172,16 @@
                             <br>
                             và sớm nhất của chúng tôi.
                         </p>
-                        <form action="#">
+                        <div>
                             <input type="text" placeholder="Enter your email...">
-                        </form>
+                        </div>
                         <a href="#" class="btn">Đăng ký Ngay <i class="ion-ios-arrow-forward"></i></a>
                     </div>
                 </div>
             </div>
             <div class="ft-copyright">
                 <div class="ft-left">
-                    <p>© 2021 TP. Hồ Chí Minh . HUFI. Nhóm bài tập .</p>
+                    <p>© <% =DateTime.Now.ToString("yyyy") %> TP. Hồ Chí Minh . HUFI. Nhóm bài tập .</p>
                 </div>
                 <div class="backtotop">
                     <p><a href="#" id="back-to-top">Về đầu trang  <i class="ion-ios-arrow-thin-up"></i></a></p>

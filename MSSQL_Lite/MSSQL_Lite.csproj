@@ -44,8 +44,10 @@
   <ItemGroup>
     <Compile Include="Access\ObjectReceivingData.cs" />
     <Compile Include="Access\SqlAccess.cs" />
+    <Compile Include="Access\SqlAccessAsync.cs" />
     <Compile Include="Access\SqlContext.cs" />
     <Compile Include="Access\SqlData.cs" />
+    <Compile Include="Connection\ConnectionType.cs" />
     <Compile Include="Connection\SqlConnection.cs" />
     <Compile Include="Connection\SqlConnectInfo.cs" />
     <Compile Include="Execution\SqlExecution.cs" />

@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Web.Models;
 using System.Threading.Tasks;
+using MSSQL_Lite.Connection;
 
 namespace Web.Admin
 {
@@ -22,7 +23,7 @@ namespace Web.Admin
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext();
+            db = new DBContext(ConnectionType.ManuallyDisconnect);
             systemInfo = new SystemInfo();
             pageVisitor = PageVisitor.Views;
             await LoadOverview();

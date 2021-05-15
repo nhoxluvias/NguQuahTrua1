@@ -1,4 +1,5 @@
 ﻿using Common.Mail;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Web.Account
         private DBContext db;
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext();
+            db = new DBContext(ConnectionType.ManuallyDisconnect);
             InitHyperlink();
             InitValidation();
             if (IsPostBack)

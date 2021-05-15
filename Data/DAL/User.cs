@@ -1,13 +1,12 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.Model
+namespace Data.DAL
 {
-    public class UserInfo
+    internal class User
     {
         public string ID { get; set; }
         public string userName { get; set; }
@@ -19,6 +18,7 @@ namespace Test.Model
         public string password { get; set; }
         public string salt { get; set; }
         public string description { get; set; }
+        public bool active { get; set; }
         public string roleId { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }

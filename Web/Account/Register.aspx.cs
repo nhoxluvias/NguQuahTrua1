@@ -1,5 +1,6 @@
 ﻿using Common.Hash;
 using Common.Mail;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Web.Account
             }
             else
             {
-                db = new DBContext();
+                db = new DBContext(ConnectionType.ManuallyDisconnect);
                 if (IsPostBack)
                 {
                     await RegisterAccount();

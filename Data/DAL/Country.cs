@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Test.Model
+namespace Data.DAL
 {
-    public class Test
+    internal class Country
     {
         public int ID { get; set; }
         public string name { get; set; }
+        public string description { get; set; }
         public DateTime createAt { get; set; }
+        public DateTime updateAt { get; set; }
     }
 }

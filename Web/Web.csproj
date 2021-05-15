@@ -72,8 +72,10 @@
     <Content Include="Admin\RoleList.aspx" />
     <Content Include="Admin\TagManagement.aspx" />
     <Content Include="Admin\UserManagement.aspx" />
+    <Content Include="images\img1.jpg" />
     <Content Include="User\Article.aspx" />
     <Content Include="User\Category.aspx" />
+    <Content Include="User\FilmDetails.aspx" />
     <Content Include="User\Search.aspx" />
     <Content Include="User\Watch.aspx" />
     <Content Include="user_assets\css\plugins.css" />
@@ -225,6 +227,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Common\PageVisitor.cs" />
     <Compile Include="Common\ConfirmCode.cs" />
+    <Compile Include="Common\Rate.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -232,6 +235,8 @@
     <Compile Include="Migrations\RoleMigration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\DBContext.cs" />
+    <Compile Include="Models\DTO\CategoryInfo.cs" />
+    <Compile Include="Models\DTO\FilmInfo.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\PaymentInfo.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
@@ -260,6 +265,13 @@
     </Compile>
     <Compile Include="User\Category.aspx.designer.cs">
       <DependentUpon>Category.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\FilmDetails.aspx.cs">
+      <DependentUpon>FilmDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\FilmDetails.aspx.designer.cs">
+      <DependentUpon>FilmDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="User\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -320,6 +332,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{2bafd121-9a00-48e8-921a-fb250b8f81ca}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Data\Data.csproj">
+      <Project>{9e3877f3-e094-4d4b-b954-a5d9f56fb1d8}</Project>
+      <Name>Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\MSSQL_Lite\MSSQL_Lite.csproj">
       <Project>{d7c08863-5fbb-4131-b72c-2ca0e9ed3fe8}</Project>

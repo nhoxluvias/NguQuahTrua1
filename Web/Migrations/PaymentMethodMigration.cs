@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Migration;
+﻿using MSSQL_Lite.Connection;
+using MSSQL_Lite.Migration;
 using System;
 using System.Threading.Tasks;
 using Web.Models;
@@ -9,7 +10,7 @@ namespace Web.Migrations
     {
         public void AddDataAndRun()
         {
-            DBContext db = new DBContext();
+            DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = db.PaymentMethods.Count();
             if(recordNumber == 0)
             {
@@ -32,7 +33,7 @@ namespace Web.Migrations
 
         public async Task AddDataAndRunAsync()
         {
-            DBContext db = new DBContext();
+            DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = await db.PaymentMethods.CountAsync();
             if (recordNumber == 0)
             {

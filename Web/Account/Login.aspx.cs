@@ -29,7 +29,7 @@ namespace Web.Account
             }
             else
             {
-                db = new DBContext();
+                db = new DBContext(ConnectionType.ManuallyDisconnect);
                 ShowLoginStatus();
                 if (IsPostBack)
                 {

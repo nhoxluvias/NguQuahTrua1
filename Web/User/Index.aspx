@@ -1,4 +1,6 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Web.User.Index" %>
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Web.User.Index" %>
+<%@ Import Namespace="Web.Models.DTO" %>
+<%@ Import Namespace="Web.Models" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -14,18 +16,23 @@
                     <a href="#"><i class="ion-social-youtube"></i></a>
                 </div>
                 <div class="slick-multiItemSlider">
-                    <% for (int i = 0; i < 12; i++)
+                    <% foreach(FilmInfo film in latestFilms)
                         { %>
                     <div class="movie-item">
                         <div class="mv-img">
-                            <a href="#">
-                                <img src="images/uploads/slider4.jpg" alt="" width="285" height="437"></a>
+                            <a href="<% = film.url %>">
+                                <img src="<%= film.thumbnail %>" alt="" width="285" height="437">
+                            </a>
+
                         </div>
                         <div class="title-in">
                             <div class="cate">
-                                <span class="blue"><a href="#">Tên thể loại 1</a></span> <span class="orange"><a href="#">Tên thể loại 1</a></span>
+                                <% foreach (Category categoryOfFilm in film.Categories)
+                                    { %>
+                                    <span class="blue"><a href="#"><%= categoryOfFilm.name %></a></span> 
+                                <%} %>
                             </div>
-                            <h6><a href="#">Phim <%=i %></a></h6>
+                            <h6><a href="<% = film.url %>">Phim <% = film.name %></a></h6>
                             <p><i class="ion-android-star"></i><span>7.4</span> /10</p>
                         </div>
                     </div>

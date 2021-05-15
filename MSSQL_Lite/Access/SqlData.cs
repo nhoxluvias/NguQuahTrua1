@@ -112,6 +112,11 @@ namespace MSSQL_Lite.Access
             return sqlConvert.ToList<T>((SqlDataReader)data);
         }
 
+        public object ToOriginalData()
+        {
+            return data;
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

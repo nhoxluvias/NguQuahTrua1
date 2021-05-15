@@ -1,4 +1,5 @@
 ﻿using Common.Hash;
+using MSSQL_Lite.Connection;
 using MSSQL_Lite.Migration;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace Web.Migrations
 
         public void AddDataAndRun()
         {
-            DBContext db = new DBContext();
+            DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = db.Roles.Count();
             if(recordNumber == 0)
             {
@@ -63,7 +64,7 @@ namespace Web.Migrations
 
         public async Task AddDataAndRunAsync()
         {
-            DBContext db = new DBContext();
+            DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = await db.Roles.CountAsync();
             if(recordNumber == 0)
             {

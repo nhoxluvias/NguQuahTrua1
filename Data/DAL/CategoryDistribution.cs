@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.Model
+namespace Data.DAL
 {
-    public class Province
+    internal class CategoryDistribution
     {
-        public long ID { get; set; }
-        public string name { get; set; }
-        public long countryId { get; set; }
+        public int categoryId { get; set; }
+        public string filmId { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
     }

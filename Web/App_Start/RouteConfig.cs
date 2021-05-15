@@ -23,6 +23,10 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_Overview", "admin/overview", "~/Admin/Index.aspx");
             routes.MapPageRoute("Admin_CategoryList", "admin/category-list", "~/Admin/CategoryList.aspx");
             routes.MapPageRoute("Admin_RoleList", "admin/role-list", "~/Admin/RoleList.aspx");
+
+            routes.MapPageRoute("User_Home", "", "~/User/Index.aspx");
+            routes.MapPageRoute("User_Category", "category/{id}", "~/User/Category.aspx");
+            routes.MapPageRoute("User_FilmDetails", "film-details/{slug}/{id}", "~/User/FilmDetails.aspx");
         }
     }
 }

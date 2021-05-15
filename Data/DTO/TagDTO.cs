@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Test.Model
+namespace Data.DTO
 {
-    public class Gender
+    class TagDTO
     {
-        public int ID { get; set; }
-        public string name { get; set; }
     }
 }

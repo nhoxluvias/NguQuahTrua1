@@ -13,6 +13,7 @@ namespace Web.Models
         public string duration { get; set; }
         public int countryId { get; set; }
         public string productionCompany { get; set; }
+        public string thumbnail { get; set; }
         public int langugeId { get; set; }
         public DateTime releaseDate { get; set; }
         public long upvote { get; set; }
