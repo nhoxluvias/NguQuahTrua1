@@ -1,4 +1,4 @@
-﻿using Common.Hash;
+﻿using Data.Common.Hash;
 using MSSQL_Lite.Connection;
 using MSSQL_Lite.Migration;
 using System;

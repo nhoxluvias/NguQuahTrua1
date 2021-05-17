@@ -1,6 +1,6 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="UserLayout.master.cs" Inherits="Web.User.Layout.UserLayout" %>
 
-<%@ Import Namespace="Web.Models.DTO" %>
+<%@ Import Namespace="Data.DTO" %>
 
 <!DOCTYPE html>
 <!--[if IE 7]>

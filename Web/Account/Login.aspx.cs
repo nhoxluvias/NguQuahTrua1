@@ -1,5 +1,4 @@
-﻿using Common.Hash;
-using Common.Mail;
+﻿using Data.Common.Hash;
 using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;

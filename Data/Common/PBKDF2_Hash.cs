@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Common.Hash
+namespace Data.Common.Hash
 {
-    internal class PBKDF2_Hash
+    public class PBKDF2_Hash
     {
         public static string Hash(string input, string salt, int length)
         {

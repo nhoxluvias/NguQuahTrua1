@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Data.DTO
 {
+    public class UserLogin
+    {
+        public string userName { get; set; }
+        public string password { get; set; }
+    }
+
     public class UserInfo
     {
         public string ID { get; set; }
@@ -17,7 +23,11 @@ namespace Data.DTO
         public string phoneNumber { get; set; }
         public string description { get; set; }
         public bool active { get; set; }
-        public string roleId { get; set; }
+        public RoleInfo role { get; set; }
+        public DateTime createAt { get; set; }
+        public DateTime updateAt { get; set; }
+
+        public PaymentInfoDTO PaymentInfo { get; set; }
     }
 
     public class UserCreation
@@ -28,7 +38,7 @@ namespace Data.DTO
         public string password { get; set; }
         public string salt { get; set; }
 
-        public PaymentInfoOfUser PaymentInfo { get; set; }
+        public PaymentInfoDTO PaymentInfo { get; set; }
     }
 
     public class UserUpdate

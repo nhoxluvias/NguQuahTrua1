@@ -6,7 +6,5 @@ using System.Threading.Tasks;
 
 namespace Data.BLL
 {
-    class PaymentMethodBLL
-    {
-    }
+    public enum DataAccessLevel { User, Admin }
 }

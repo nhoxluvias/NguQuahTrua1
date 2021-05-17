@@ -1,6 +1,5 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Web.User.Index" %>
-<%@ Import Namespace="Web.Models.DTO" %>
-<%@ Import Namespace="Web.Models" %>
+<%@ Import Namespace="Data.DTO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -27,7 +26,7 @@
                         </div>
                         <div class="title-in">
                             <div class="cate">
-                                <% foreach (Category categoryOfFilm in film.Categories)
+                                <% foreach (CategoryInfo categoryOfFilm in film.Categories)
                                     { %>
                                     <span class="blue"><a href="#"><%= categoryOfFilm.name %></a></span> 
                                 <%} %>

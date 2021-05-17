@@ -2,7 +2,7 @@
 
 namespace System
 {
-    internal static class RandomExtension
+    public static class RandomExtension
     {
         public static string NextString(this Random random, int length)
         {

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Data.DTO
 {
-    public class PaymentInfoOfUser
+    public class PaymentInfoDTO
     {
+
     }
+
+
 }

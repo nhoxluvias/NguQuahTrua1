@@ -1,5 +1,5 @@
-﻿using Common.Hash;
-using Common.Mail;
+﻿using Common.Mail;
+using Data.Common.Hash;
 using System;
 
 namespace Web.Common

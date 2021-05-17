@@ -6,17 +6,10 @@ using System.Threading.Tasks;
 
 namespace Data.DTO
 {
-    public class CategoryInfoForUser
+    public class CategoryInfo
     {
         public int ID { get; set; }
         public string url { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
-    }
-
-    public class CategoryInfoForAdmin
-    {
-        public int ID { get; set; }
         public string name { get; set; }
         public string description { get; set; }
         public DateTime createAt { get; set; }

@@ -41,29 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\AccessLevel.cs" />
     <Compile Include="BLL\BusinessLogicLayer.cs" />
-    <Compile Include="BLL\CategoryBLL\CategoryBLL.cs" />
-    <Compile Include="BLL\CategoryBLL\CategoryBLLForAdmin.cs" />
-    <Compile Include="BLL\CategoryBLL\CategoryBLLForUser.cs" />
-    <Compile Include="BLL\CountryBLL\CountryBLL.cs" />
-    <Compile Include="BLL\CountryBLL\CountryBLLForAdmin.cs" />
-    <Compile Include="BLL\CountryBLL\CountryBLLForUser.cs" />
-    <Compile Include="BLL\DirectorBLL\DirectorBLL.cs" />
-    <Compile Include="BLL\DirectorBLL\DirectorBLLForAdmin.cs" />
-    <Compile Include="BLL\DirectorBLL\DirectorBLLForUser.cs" />
-    <Compile Include="BLL\FilmBLL\FilmBLL.cs" />
-    <Compile Include="BLL\FilmBLL\FilmBLLForAdmin.cs" />
-    <Compile Include="BLL\FilmBLL\FilmBLLForUser.cs" />
-    <Compile Include="BLL\LanguageBLL\LanguageBLL.cs" />
-    <Compile Include="BLL\LanguageBLL\LanguageBLLForAdmin.cs" />
-    <Compile Include="BLL\LanguageBLL\LanguageBLLForUser.cs" />
-    <Compile Include="BLL\PaymentMethodBLL\PaymentMethodBLL.cs" />
-    <Compile Include="BLL\RoleBLL\RolBLLForUser.cs" />
-    <Compile Include="BLL\RoleBLL\RoleBLL.cs" />
-    <Compile Include="BLL\RoleBLL\RoleBLLForAdmin.cs" />
+    <Compile Include="BLL\CategoryBLL.cs" />
+    <Compile Include="BLL\CountryBLL.cs" />
+    <Compile Include="BLL\DirectorBLL.cs" />
+    <Compile Include="BLL\FilmBLL.cs" />
+    <Compile Include="BLL\LanguageBLL.cs" />
+    <Compile Include="BLL\PaymentInfoBLL.cs" />
+    <Compile Include="BLL\PaymentMethodBLL.cs" />
+    <Compile Include="BLL\RoleBLL.cs" />
     <Compile Include="BLL\UserBLL\UserBLL.cs" />
     <Compile Include="BLL\UserBLL\UserBLLForAdmin.cs" />
     <Compile Include="BLL\UserBLL\UserBLLForUser.cs" />
+    <Compile Include="Common\MD5_Hash.cs" />
+    <Compile Include="Common\PBKDF2_Hash.cs" />
+    <Compile Include="Common\RandomExtension.cs" />
     <Compile Include="DAL\Category.cs" />
     <Compile Include="DAL\CategoryDistribution.cs" />
     <Compile Include="DAL\Country.cs" />
@@ -89,7 +82,9 @@
     <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BLL\FilmBLL\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MSSQL_Lite\MSSQL_Lite.csproj">
       <Project>{d7c08863-5fbb-4131-b72c-2ca0e9ed3fe8}</Project>

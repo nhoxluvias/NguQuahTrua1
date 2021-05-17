@@ -1,13 +1,8 @@
-﻿using Common.Hash;
-using Common.Mail;
+﻿using Data.Common.Hash;
 using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Common;
 using Web.Models;
 using Web.Validation;

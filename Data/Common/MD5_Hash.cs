@@ -5,16 +5,15 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Hash
+namespace Data.Common.Hash
 {
-    internal class PBKDF2_Hash
+    public class MD5_Hash
     {
-        public static string Hash(string input, string salt, int length)
+        public static string Hash(string text)
         {
-
-            Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(input, Encoding.ASCII.GetBytes(salt), iterations: 5000);
+            MD5 md5 = MD5.Create();
+            byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(text));
             StringBuilder hashSb = new StringBuilder();
-            byte[] hash = pbkdf2.GetBytes(length);
             foreach (byte b in hash)
             {
                 hashSb.Append(b.ToString("x2"));

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Common.Hash
 {
-    public class MD5_Hash
+    internal class MD5_Hash
     {
         public static string Hash(string text)
         {
