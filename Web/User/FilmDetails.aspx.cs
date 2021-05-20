@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Connection;
+﻿using Data.BLL;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,17 +10,19 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Web.Models;
-using Web.Models.DTO;
+using Data.DTO;
 
 namespace Web.User
 {
     public partial class FilmDetails : System.Web.UI.Page
     {
         private DBContext db;
+        private FilmBLL filmBLL;
         protected FilmInfo film;
         protected async void Page_Load(object sender, EventArgs e)
         {
             db = new DBContext(ConnectionType.ManuallyDisconnect);
+            filmBLL = new FilmBLL(DataAccessLevel.User);
             await GetFilmById();
         }
 
@@ -34,13 +37,15 @@ namespace Web.User
         private async Task GetFilmById()
         {
             string id = GetFilmId();
-            string query = "Select * from [Film] where [Film].[ID] = @filmId";
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = query;
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", id));
-            film = await db.ExecuteReaderAsync<FilmInfo>(sqlCommand);
-            film.thumbnail = VirtualPathUtility.ToAbsolute("~/images/") + film.thumbnail;
+            if (id == null)
+            {
+
+            }
+            else
+            {
+                film = await filmBLL.GetFilmAsync(id);
+                film.thumbnail = VirtualPathUtility.ToAbsolute("~/images/") + film.thumbnail;
+            }
         }
     }
 }

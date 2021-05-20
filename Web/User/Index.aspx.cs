@@ -18,11 +18,13 @@ namespace Web.User
     {
         private FilmBLL filmBLL;
         protected List<FilmInfo> latestFilms;
+        protected List<List<FilmInfo>> filmsByCategory; 
 
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL(DataAccessLevel.User);
             await GetLatestFilm();
+            await GetFilmsByCategory();
         }
 
         private async Task GetLatestFilm()
@@ -38,30 +40,15 @@ namespace Web.User
                 }).ToList();
         }
 
-        //public async Task<List<List<Dictionary<string, object>>>> GetFilmsByCategory()
-        //{
-        //    List<Models.Category> categories = await db.Categories.ToListAsync();
-
-            
-        //}
-
-        //private async Task<List<Dictionary<string, object>>> GetFilmByCategory(string categoryId)
-        //{
-        //    Models.Category category = await db.Categories
-        //        .SingleOrDefaultAsync(c => new { c.ID }, c => c.name == categoryName);
-        //    string query = "Select * from [Film] where categoryId = @categoryId";
-        //    SqlCommand sqlCommand = new SqlCommand();
-        //    sqlCommand.CommandType = CommandType.Text;
-        //    sqlCommand.CommandText = query;
-        //    sqlCommand.Parameters.Add(new SqlParameter("@categoryId", category.ID));
-        //    DataSet dataSet = (DataSet)await db.ExecuteReaderAsync(sqlCommand);
-        //    return new SqlConvert().ToDictionaryList(dataSet);
-        //}
-
-        //private async Task GetActionFilm()
-        //{
-        //    actionFilms = await GetFilmByCategory("Phim hành động");
-        //}
+        private async Task GetFilmsByCategory()
+        {
+            List<CategoryInfo> categories = await new CategoryBLL(filmBLL, DataAccessLevel.User).GetCategoriesAsync();
+            filmsByCategory = new List<List<FilmInfo>>();
+            foreach(CategoryInfo category in categories)
+            {
+                filmsByCategory.Add(await filmBLL.GetFilmsByCategoryIdAsync(category.ID));
+            }
+        }
 
 
 

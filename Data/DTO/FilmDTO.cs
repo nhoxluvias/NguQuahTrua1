@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.DTO
 {
@@ -19,7 +16,7 @@ namespace Data.DTO
         public DateTime releaseDate { get; set; }
         public long upvote { get; set; }
         public long downvote { get; set; }
-        public long view { get; set; }
+        public long views { get; set; }
         public string url { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
@@ -35,9 +32,9 @@ namespace Data.DTO
         public int countryId { get; set; }
         public string productionCompany { get; set; }
         public string thumbnail { get; set; }
-        public int langugeId { get; set; }
+        public int languageId { get; set; }
         public DateTime releaseDate { get; set; }
-        public long view { get; set; }
+        public long views { get; set; }
     }
 
     public class FilmUpdate
@@ -49,9 +46,9 @@ namespace Data.DTO
         public int countryId { get; set; }
         public string productionCompany { get; set; }
         public string thumbnail { get; set; }
-        public int langugeId { get; set; }
+        public int languageId { get; set; }
         public DateTime releaseDate { get; set; }
-        public long view { get; set; }
+        public long views { get; set; }
         public long upvote { get; set; }
         public long downvote { get; set; }
     }

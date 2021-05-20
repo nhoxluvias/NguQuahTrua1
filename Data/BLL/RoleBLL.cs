@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Data.Common.Hash;
+using Data.DAL;
 using Data.DTO;
 using System;
 using System.Collections.Generic;
@@ -87,7 +88,7 @@ namespace Data.BLL
             return ToRoleInfo(role);
         }
 
-        public async Task<bool> CreateRoleAsync(RoleCreation roleCreation)
+        public async Task<StateOfCreation> CreateRoleAsync(RoleCreation roleCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -95,9 +96,15 @@ namespace Data.BLL
             if (role.name == null)
                 throw new Exception("");
 
-            int affected = await db.Roles.InsertAsync(role);
+            int checkExists = (int)await db.Roles.CountAsync(r => r.name == role.name);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
 
-            return (affected != 0);
+            Random random = new Random();
+            role.ID = MD5_Hash.Hash(random.NextString(10));
+            random = null;
+            int affected = await db.Roles.InsertAsync(role);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
         public async Task<bool> UpdateRoleAsync(RoleUpdate roleUpdate)

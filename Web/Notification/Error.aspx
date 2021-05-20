@@ -9,7 +9,8 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            Đã có lỗi xảy ra
+            <h2><%= error.ErrorTitle %></h2>
+            <p><%= error.ErrorDetail %></p>
         </div>
     </form>
 </body>

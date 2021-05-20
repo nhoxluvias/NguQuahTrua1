@@ -11,25 +11,34 @@ namespace Web.Admin
 {
 
 
-    public partial class CategoryManagement
+    public partial class CreateRole
     {
 
         /// <summary>
-        /// grvCategory control.
+        /// txtRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grvCategory;
+        protected global::System.Web.UI.WebControls.TextBox txtRoleName;
 
         /// <summary>
-        /// hyplnkCreateCategory control.
+        /// cvRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkCreateCategory;
+        protected global::System.Web.UI.WebControls.CustomValidator cvRoleName;
+
+        /// <summary>
+        /// btnSubmit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
     }
 }

@@ -1,7 +1,7 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="RoleList.aspx.cs" Inherits="Web.Admin.RoleList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <!--Tables-->
     <h5 class="mt-2"></h5>
     <a class="anchor" name="tables"></a>

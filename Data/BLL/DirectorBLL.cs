@@ -155,7 +155,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<DirectorInfo>>(sqlCommand);
         }
 
-        public async Task<bool> CreateDirectorAsync(DirectorCreation directorCreation)
+        public async Task<StateOfCreation> CreateDirectorAsync(DirectorCreation directorCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -163,13 +163,17 @@ namespace Data.BLL
             if (director.name == null)
                 throw new Exception("");
 
+            long checkExists = await db.Directors.CountAsync(c => c.name == director.name);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
             int affected;
             if (director.description == null)
                 affected = await db.Directors.InsertAsync(director, new List<string> { "ID", "description" });
             else
                 affected = await db.Directors.InsertAsync(director, new List<string> { "ID" });
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
         public async Task<bool> UpdateDirectorAsync(DirectorUpdate directorUpdate)

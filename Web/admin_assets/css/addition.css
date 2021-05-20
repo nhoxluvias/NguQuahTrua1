@@ -1,0 +1,8 @@
+﻿.text-red{
+    color: red;
+}
+
+.text-area{
+    width: 100% !important;
+    height: 250px !important;
+}

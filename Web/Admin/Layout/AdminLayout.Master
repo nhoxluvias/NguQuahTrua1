@@ -22,6 +22,9 @@
     <!-- Main Styles -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/css/admin/styles.css") %>">
 
+    <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/addition.css") %>"/>
+
+    <script type="text/javascript" src="<%= ResolveUrl("~/admin_assets/js/jquery.js") %>"
     <!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -29,7 +32,7 @@
     </asp:ContentPlaceHolder>
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="frmAdminLayout" runat="server">
         <div class="navbar">
             <div class="row">
                 <div class="column column-30 col-site-title"><a href="#" class="site-title float-left">Trang quản trị</a></div>
@@ -54,19 +57,21 @@
             <div id="sidebar" class="column">
                 <h5>Công cụ</h5>
                 <ul>
-                    <li><a href="#"><em class="fa fa-home"></em>Tổng quan</a></li>
+                    <li><a href="<% = hyplnkOverview %>"><em class="fa fa-home"></em>Tổng quan</a></li>
                     <li><a href="#"><em class="fa fa-bar-chart"></em>Quản lý phim</a></li>
-                    <li><a href="#"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
+                    <li><a href="<% = hyplnkCategoryManagement %>"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
                     <li><a href="#"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
                     <li><a href="#"><em class="fa fa-warning"></em>Quản lý thẻ tag</a></li>
                 </ul>
             </div>
             <section id="main-content" class="column column-offset-20">
-                <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+                <asp:ContentPlaceHolder ID="mainContent" runat="server">
                 </asp:ContentPlaceHolder>
             </section>
         </div>
     </form>
+    <asp:ContentPlaceHolder ID="footer" runat="server">
+    </asp:ContentPlaceHolder>
     <script src="<%= ResolveUrl("~/js/admin/chart.min.js") %>"></script>
     <script src="<%= ResolveUrl("~/js/admin/chart-data.js") %>"></script>
     <script>

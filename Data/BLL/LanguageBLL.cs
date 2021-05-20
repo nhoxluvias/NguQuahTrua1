@@ -117,7 +117,7 @@ namespace Data.BLL
             return ToLanguageInfo(language);
         }
 
-        public async Task<bool> CreateLanguageAsync(LanguageCreation languageCreation)
+        public async Task<StateOfCreation> CreateLanguageAsync(LanguageCreation languageCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -125,13 +125,17 @@ namespace Data.BLL
             if (language.name == null)
                 throw new Exception("");
 
+            int checkExists = (int)await db.Languages.CountAsync(l => l.name == language.name);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
             int affected;
             if (language.description == null)
                 affected = await db.Languages.InsertAsync(language, new List<string> { "ID", "description" });
             else
                 affected = await db.Languages.InsertAsync(language, new List<string> { "ID" });
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
         public async Task<bool> UpdateLanguageAsync(LanguageUpdate languageUpdate)
@@ -165,7 +169,7 @@ namespace Data.BLL
                 throw new Exception("");
             if (languageId <= 0)
                 throw new Exception("");
-            long filmNumberOfLanguageId = await db.Films.CountAsync(f => f.langugeId == languageId);
+            long filmNumberOfLanguageId = await db.Films.CountAsync(f => f.languageId == languageId);
             if (filmNumberOfLanguageId > 0)
                 return false;
 

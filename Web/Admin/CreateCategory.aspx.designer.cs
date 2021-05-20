@@ -7,47 +7,47 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin.Layout
+namespace Web.Admin
 {
 
 
-    public partial class AdminLayout
+    public partial class CreateCategory
     {
 
         /// <summary>
-        /// head control.
+        /// txtCategoryName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
+        protected global::System.Web.UI.WebControls.TextBox txtCategoryName;
 
         /// <summary>
-        /// frmAdminLayout control.
+        /// cvCategoryName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm frmAdminLayout;
+        protected global::System.Web.UI.WebControls.CustomValidator cvCategoryName;
 
         /// <summary>
-        /// mainContent control.
+        /// txtCategoryDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder mainContent;
+        protected global::System.Web.UI.WebControls.TextBox txtCategoryDescription;
 
         /// <summary>
-        /// footer control.
+        /// btnSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder footer;
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
     }
 }

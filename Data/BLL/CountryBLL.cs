@@ -116,7 +116,7 @@ namespace Data.BLL
             return ToCountryInfo(country);
         }
 
-        public async Task<bool> CreateCountryAsync(CountryCreation countryCreation)
+        public async Task<StateOfCreation> CreateCountryAsync(CountryCreation countryCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -124,13 +124,17 @@ namespace Data.BLL
             if (country.name == null)
                 throw new Exception("");
 
+            int checkExists = (int)await db.Countries.CountAsync(c => c.name == country.name);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
             int affected;
             if (country.description == null)
                 affected = await db.Countries.InsertAsync(country, new List<string> { "ID", "description" });
             else
                 affected = await db.Countries.InsertAsync(country, new List<string> { "ID" });
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
         public async Task<bool> UpdateCountryAsync(CountryUpdate countryUpdate)

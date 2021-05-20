@@ -61,17 +61,19 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Account\Confirm.aspx" />
-    <Content Include="Account\Login.aspx" />
-    <Content Include="Account\Logout.aspx" />
-    <Content Include="Account\Register.aspx" />
-    <Content Include="Account\ResetPassword.aspx" />
     <Content Include="Admin\CategoryList.aspx" />
+    <Content Include="Admin\CreateCategory.aspx" />
+    <Content Include="Admin\CreateCountry.aspx" />
+    <Content Include="Admin\CreateDirector.aspx" />
+    <Content Include="Admin\CreateLanguage.aspx" />
+    <Content Include="Admin\CreateRole.aspx" />
     <Content Include="Admin\Index.aspx" />
     <Content Include="Admin\MovieManagement.aspx" />
     <Content Include="Admin\RoleList.aspx" />
     <Content Include="Admin\TagManagement.aspx" />
     <Content Include="Admin\UserManagement.aspx" />
+    <Content Include="admin_assets\css\addition.css" />
+    <Content Include="admin_assets\js\jquery.js" />
     <Content Include="images\img1.jpg" />
     <Content Include="User\Article.aspx" />
     <Content Include="User\Category.aspx" />
@@ -138,47 +140,47 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Account\Confirm.aspx.cs">
-      <DependentUpon>Confirm.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Confirm.aspx.designer.cs">
-      <DependentUpon>Confirm.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\Login.aspx.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Login.aspx.designer.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\Logout.aspx.cs">
-      <DependentUpon>Logout.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Logout.aspx.designer.cs">
-      <DependentUpon>Logout.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\Register.aspx.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\Register.aspx.designer.cs">
-      <DependentUpon>Register.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Account\ResetPassword.aspx.cs">
-      <DependentUpon>ResetPassword.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Account\ResetPassword.aspx.designer.cs">
-      <DependentUpon>ResetPassword.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\CategoryList.aspx.cs">
       <DependentUpon>CategoryList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\CategoryList.aspx.designer.cs">
       <DependentUpon>CategoryList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CreateCategory.aspx.cs">
+      <DependentUpon>CreateCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateCategory.aspx.designer.cs">
+      <DependentUpon>CreateCategory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CreateCountry.aspx.cs">
+      <DependentUpon>CreateCountry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateCountry.aspx.designer.cs">
+      <DependentUpon>CreateCountry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CreateDirector.aspx.cs">
+      <DependentUpon>CreateDirector.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateDirector.aspx.designer.cs">
+      <DependentUpon>CreateDirector.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CreateLanguage.aspx.cs">
+      <DependentUpon>CreateLanguage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateLanguage.aspx.designer.cs">
+      <DependentUpon>CreateLanguage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CreateRole.aspx.cs">
+      <DependentUpon>CreateRole.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CreateRole.aspx.designer.cs">
+      <DependentUpon>CreateRole.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -237,6 +239,7 @@
     <Compile Include="Models\DBContext.cs" />
     <Compile Include="Models\DTO\CategoryInfo.cs" />
     <Compile Include="Models\DTO\FilmInfo.cs" />
+    <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\PaymentInfo.cs" />
     <Compile Include="Models\PaymentMethod.cs" />

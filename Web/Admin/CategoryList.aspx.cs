@@ -1,22 +1,17 @@
-﻿using MSSQL_Lite.Connection;
+﻿using Data.BLL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Web.Models;
 
 namespace Web.Admin
 {
     public partial class CategoryManagement : System.Web.UI.Page
     {
-        private DBContext db;
+        private CategoryBLL categoryBLL;
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext(ConnectionType.ManuallyDisconnect);
-            GridView1.DataSource = await db.Categories.ToListAsync();
-            GridView1.DataBind();
+            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            grvCategory.DataSource = await categoryBLL.GetCategoriesAsync();
+            grvCategory.DataBind();
+            hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateCategory", null);
         }
     }
 }

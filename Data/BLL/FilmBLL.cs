@@ -43,12 +43,12 @@ namespace Data.BLL
                     ? new CountryBLL(this, dataAccessLevel).GetCountry(film.countryId) : null),
                 productionCompany = film.productionCompany,
                 thumbnail = film.thumbnail,
-                language = ((film.langugeId != 0)
-                    ? new LanguageBLL(this, dataAccessLevel).GetLanguage(film.langugeId) : null),
+                language = ((film.languageId != 0)
+                    ? new LanguageBLL(this, dataAccessLevel).GetLanguage(film.languageId) : null),
                 releaseDate = film.releaseDate,
                 upvote = film.upvote,
                 downvote = film.downvote,
-                view = film.view,
+                views = film.views,
                 createAt = film.createAt,
                 updateAt = film.updateAt,
                 Categories = new CategoryBLL(this, dataAccessLevel).GetCategoriesByFilmId(film.ID)
@@ -68,9 +68,9 @@ namespace Data.BLL
                 countryId = filmCreation.countryId,
                 productionCompany = filmCreation.productionCompany,
                 thumbnail = filmCreation.thumbnail,
-                langugeId = filmCreation.langugeId,
+                languageId = filmCreation.languageId,
                 releaseDate = filmCreation.releaseDate,
-                view = filmCreation.view
+                views = filmCreation.views
             };
         }
 
@@ -87,9 +87,9 @@ namespace Data.BLL
                 countryId = filmUpdate.countryId,
                 productionCompany = filmUpdate.productionCompany,
                 thumbnail = filmUpdate.thumbnail,
-                langugeId = filmUpdate.langugeId,
+                languageId = filmUpdate.languageId,
                 releaseDate = filmUpdate.releaseDate,
-                view = filmUpdate.view
+                views = filmUpdate.views
             };
         }
 
@@ -118,7 +118,7 @@ namespace Data.BLL
                                 f.ID,
                                 f.name,
                                 f.description,
-                                f.langugeId,
+                                f.languageId,
                                 f.countryId,
                                 f.productionCompany,
                                 f.releaseDate,
@@ -126,14 +126,14 @@ namespace Data.BLL
                                 f.thumbnail,
                                 f.upvote,
                                 f.downvote,
-                                f.view
+                                f.views
                             })
                     ).Select(f => ToFilmInfo(f)).ToList();
 
             return films;
         }
 
-        public async Task<FilmInfo> GetFilm(string filmId)
+        public async Task<FilmInfo> GetFilmAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
@@ -147,7 +147,7 @@ namespace Data.BLL
                     f.ID,
                     f.name,
                     f.description,
-                    f.langugeId,
+                    f.languageId,
                     f.countryId,
                     f.productionCompany,
                     f.releaseDate,
@@ -155,13 +155,41 @@ namespace Data.BLL
                     f.thumbnail,
                     f.upvote,
                     f.downvote,
-                    f.view
+                    f.views
                 }, f => f.ID == filmId);
 
             return ToFilmInfo(film);
         }
 
-        public async Task<List<FilmInfo>> GetFilmsByCategoryId(int categoryId)
+        public FilmInfo GetFilm(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            Film film = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                film = db.Films.SingleOrDefault(f => f.ID == filmId);
+            else
+                film = db.Films.SingleOrDefault(f => new
+                {
+                    f.ID,
+                    f.name,
+                    f.description,
+                    f.languageId,
+                    f.countryId,
+                    f.productionCompany,
+                    f.releaseDate,
+                    f.duration,
+                    f.thumbnail,
+                    f.upvote,
+                    f.downvote,
+                    f.views
+                }, f => f.ID == filmId);
+
+            return ToFilmInfo(film);
+        }
+
+        public async Task<List<FilmInfo>> GetFilmsByCategoryIdAsync(int categoryId)
         {
             if (categoryId <= 0)
                 throw new Exception("");
@@ -169,17 +197,17 @@ namespace Data.BLL
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
             if(dataAccessLevel == DataAccessLevel.Admin)
-                sqlCommand.CommandText = @"Select [Film].* from [Film], [FilmDistribution]
-                            where [Film].[ID] = [FilmDistribution].[filmId]
-                                and [FilmDistribution].[categoryId] = @categoryId";
+                sqlCommand.CommandText = @"Select [Film].* from [Film], [CategoryDistribution]
+                            where [Film].[ID] = [CategoryDistribution].[filmId]
+                                and [CategoryDistribution].[categoryId] = @categoryId";
             else
                 sqlCommand.CommandText = @"Select [Film].[ID],[Film].[name],[Film].[description],
-                                [Film].[langugeId],[Film].[countryId],[Film].[productionCompany],
+                                [Film].[languageId],[Film].[countryId],[Film].[productionCompany],
                                 [Film].[releaseDate],[Film].[duration],[Film].[thumbnail],
-                                [Film].[upvote],[Film].[downvote],[Film].[view]
-                            from [Film], [FilmDistribution]
-                            where [Film].[ID] = [FilmDistribution].[filmId]
-                                and [FilmDistribution].[categoryId] = @categoryId";
+                                [Film].[upvote],[Film].[downvote],[Film].[views]
+                            from [Film], [CategoryDistribution]
+                            where [Film].[ID] = [CategoryDistribution].[filmId]
+                                and [CategoryDistribution].[categoryId] = @categoryId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@categoryId", categoryId));
             return await db.ExecuteReaderAsync<List<FilmInfo>>(sqlCommand);

@@ -43,7 +43,7 @@ namespace Data.BLL
         private Category ToCategory(CategoryCreation categoryCreation)
         {
             if (categoryCreation == null)
-                throw new Exception("");
+                throw new Exception("@'categoryCreation' must be not null");
             return new Category
             {
                 name = categoryCreation.name,
@@ -161,7 +161,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<CategoryInfo>>(sqlCommand);
         }
 
-        public async Task<bool> CreateCategoryAsync(CategoryCreation categoryCreation)
+        public async Task<StateOfCreation> CreateCategoryAsync(CategoryCreation categoryCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -169,13 +169,17 @@ namespace Data.BLL
             if (category.name == null)
                 throw new Exception("");
 
+            int checkExists = (int)await db.Categories.CountAsync(c => c.name == category.name);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
             int affected;
             if (category.description == null)
                 affected = await db.Categories.InsertAsync(category, new List<string> { "ID", "description" });
             else
                 affected = await db.Categories.InsertAsync(category, new List<string> { "ID" });
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
         public async Task<bool> UpdateCategoryAsync(CategoryUpdate categoryUpdate)
