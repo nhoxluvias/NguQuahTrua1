@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MSSQL_Lite.Connection;
+using MSSQL_Lite.Query;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
@@ -10,10 +12,12 @@ namespace MSSQL_Lite.Access
     {
         private async Task<List<T>> ToListAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             List<T> items = sqlData.ToList<T>();
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return items;
         }
 
@@ -22,9 +26,29 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>());
         }
 
-        public async Task<List<T>> ToListAsync(int recordNumber)
+        public async Task<List<T>> ToListAsync(int skip, int take)
         {
-            return await ToListAsync(sqlQuery.Select<T>(recordNumber));
+            return await ToListAsync(sqlQuery.Select<T>(skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(orderBy, sqlOrderByOptions));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(int top)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(top));
+        }
+
+        public async Task<List<T>> ToListAsync(int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(top, orderBy, sqlOrderByOptions));
         }
 
         public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where)
@@ -32,9 +56,29 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(where));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, int recordNumber)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, int skip, int take)
         {
-            return await ToListAsync(sqlQuery.Select<T>(where, recordNumber));
+            return await ToListAsync(sqlQuery.Select<T>(where, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, int top)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(where, top));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(where, top, orderBy, sqlOrderByOptions));
         }
 
         public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set)
@@ -42,9 +86,29 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, int recordNumber)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, int skip, int take)
         {
-            return await ToListAsync(sqlQuery.Select<T>(set, recordNumber));
+            return await ToListAsync(sqlQuery.Select<T>(set, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, orderBy, sqlOrderByOption));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, orderBy, sqlOrderByOption, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, int top)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, top));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, top, orderBy, sqlOrderByOption));
         }
 
         public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
@@ -52,17 +116,39 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set, where));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int recordNumber)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int skip, int take)
         {
-            return await ToListAsync(sqlQuery.Select<T>(set, where, recordNumber));
+            return await ToListAsync(sqlQuery.Select<T>(set, where, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, where, orderBy, sqlOrderByOptions));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, where, orderBy, sqlOrderByOptions, skip, take));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int top)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, where, top));
+        }
+
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return await ToListAsync(sqlQuery.Select<T>(set, where, top, orderBy, sqlOrderByOptions));
         }
 
         public async Task<T> SingleOrDefaultAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             T item = sqlData.To<T>();
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return item;
         }
 
@@ -88,10 +174,12 @@ namespace MSSQL_Lite.Access
 
         private async Task<T> FirstOrDefaultAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             T item = sqlData.To<T>();
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return item;
         }
 
@@ -117,9 +205,11 @@ namespace MSSQL_Lite.Access
 
         private async Task<int> DeleteAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return affected;
         }
 
@@ -135,9 +225,11 @@ namespace MSSQL_Lite.Access
 
         private async Task<int> UpdateAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return affected;
         }
 
@@ -153,9 +245,11 @@ namespace MSSQL_Lite.Access
 
         private async Task<int> InsertAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return affected;
         }
 
@@ -171,9 +265,11 @@ namespace MSSQL_Lite.Access
 
         private async Task<long> CountAsync(SqlCommand sqlCommand)
         {
-            await sqlData.ConnectAsync();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                await sqlData.ConnectAsync();
             long result = long.Parse((string)await sqlData.ExecuteScalarAsync(sqlCommand));
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return result;
         }
 

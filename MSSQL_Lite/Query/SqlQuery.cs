@@ -38,10 +38,52 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(int recordNumber)
+        public SqlCommand Select<T>(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            string query = string.Format(
+                "Select * from {0} {1}", 
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                GetOrderByStatement<T>(orderBy, sqlOrderByOption, EnclosedInSquareBrackets)
+            );
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(int skip, int take)
+        {
+            string query = string.Format(
+                "Select * from {0} order by current_timestamp {1}",
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                GetSkipTakeStatement(skip, take)
+            );
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        {
+            string query = string.Format(
+                "Select * from {0} {1} {2}",
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                GetOrderByStatement(orderBy, sqlOrderByOption, EnclosedInSquareBrackets),
+                GetSkipTakeStatement(skip, take)
+            );
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(int top)
         {
             string query = string
-                .Format("Select top {0} * from {1}", recordNumber, sqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+                .Format("Select top {0} * from {1}", top, sqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            string query = string.Format(
+                "Select top {0} * from {1} {2}",
+                top,
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                GetOrderByStatement<T>(orderBy, sqlOrderByOption, EnclosedInSquareBrackets)
+            );
             return InitSqlCommand(query);
         }
 
@@ -53,13 +95,64 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int recordNumber)
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int skip, int take)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string.Format(
+                "Select * from {0} {1} order by current_timestamp {2}",
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                sqlQueryData.Statement,
+                GetSkipTakeStatement(skip, take)
+            );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string.Format(
+                "Select * from {0} {1} {2}", 
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets), 
+                sqlQueryData.Statement,
+                GetOrderByStatement(orderBy, sqlOrderByOption, EnclosedInSquareBrackets)
+            );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string.Format(
+                "Select * from {0} {1} {2} {3}",
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                sqlQueryData.Statement,
+                GetOrderByStatement(orderBy, sqlOrderByOption, EnclosedInSquareBrackets),
+                GetSkipTakeStatement(skip, take)
+            );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int top)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string
                 .Format(
                     "Select top {0} * from {1} {2}",
-                    recordNumber, sqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement
+                    top, sqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "Select top {0} * from {1} {2} {3}",
+                    top, 
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets), 
+                    sqlQueryData.Statement,
+                    GetOrderByStatement<T>(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets)
                 );
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
@@ -75,11 +168,61 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, int recordNumber)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, int skip, int take)
+        {
+            string query = string
+                .Format(
+                    "{0} from {1} order by current_timestamp {2}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    GetSkipTakeStatement(skip, take)
+                );
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            string query = string
+                .Format(
+                    "{0} from {1} {2}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    GetOrderByStatement(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets)
+                );
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            string query = string
+                .Format(
+                    "{0} from {1} {2} {3}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    GetOrderByStatement<T>(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets),
+                    GetSkipTakeStatement(skip, take)
+                );
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, int top)
         {
             string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
-                .Replace("Select ", string.Format("Select top {0} ", recordNumber));
+                .Replace("Select ", string.Format("Select top {0} ", top));
             string query = string.Format("{0} from {1}", selectStatement, sqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
+            return InitSqlCommand(query);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
+                .Replace("Select ", string.Format("Select top {0} ", top));
+            string query = string.Format(
+                "{0} from {1} {2}",
+                selectStatement, 
+                sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                GetOrderByStatement<T>(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets)
+            );
             return InitSqlCommand(query);
         }
 
@@ -96,17 +239,76 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int recordNumber)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int skip, int take)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "{0} from {1} {2} order by current_timestamp {3}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement,
+                    GetSkipTakeStatement(skip, take)
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "{0} from {1} {2} {3}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement,
+                    GetOrderByStatement<T>(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets)
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int take, int skip)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string query = string
+                .Format(
+                    "{0} from {1} {2} {3} {4}",
+                    GetSelectStatement<T>(select, EnclosedInSquareBrackets),
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement,
+                    GetOrderByStatement<T>(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets),
+                    GetSkipTakeStatement(skip, take)
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int top)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
-                .Replace("Select ", string.Format("Select top {0} ", recordNumber));
+                .Replace("Select ", string.Format("Select top {0} ", top));
             string query = string
                 .Format(
                     "{0} from {1} {2}",
                     selectStatement,
                     sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
                     sqlQueryData.Statement
+                );
+            return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
+        }
+
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
+            string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
+                .Replace("Select ", string.Format("Select top {0} ", top));
+            string query = string
+                .Format(
+                    "{0} from {1} {2} {3}",
+                    selectStatement,
+                    sqlMapping.GetTableName<T>(EnclosedInSquareBrackets),
+                    sqlQueryData.Statement,
+                    GetOrderByStatement<T>(orderBy, sqlOrderByOptions, EnclosedInSquareBrackets)
                 );
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }

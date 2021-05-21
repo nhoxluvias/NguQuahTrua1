@@ -13,26 +13,23 @@ namespace MSSQL_Lite.Access
         private SqlData sqlData;
         private ConnectionType connectionType;
 
-        public SqlAccess()
-        {
-            sqlQuery = new SqlQuery();
-            sqlData = new SqlData();
-            connectionType = ConnectionType.DisconnectAfterCompletion;
-        }
-
         public SqlAccess(ConnectionType connectionType)
         {
             sqlQuery = new SqlQuery();
             sqlData = new SqlData();
             this.connectionType = connectionType;
+            if (connectionType == ConnectionType.ManuallyDisconnect)
+                sqlData.Connect();
         }
 
         private List<T> ToList(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             List<T> items = sqlData.ToList<T>();
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return items;
         }
 
@@ -41,9 +38,29 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>());
         }
 
-        public List<T> ToList(int recordNumber)
+        public List<T> ToList(int skip, int take)
         {
-            return ToList(sqlQuery.Select<T>(recordNumber));
+            return ToList(sqlQuery.Select<T>(skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return ToList(sqlQuery.Select<T>(orderBy, sqlOrderByOptions));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            return ToList(sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take));
+        }
+
+        public List<T> ToList(int top)
+        {
+            return ToList(sqlQuery.Select<T>(top));
+        }
+
+        public List<T> ToList(int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return ToList(sqlQuery.Select<T>(top, orderBy, sqlOrderByOptions));
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where)
@@ -51,9 +68,29 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(where));
         }
 
-        public List<T> ToList(Expression<Func<T, bool>> where, int recordNumber)
+        public List<T> ToList(Expression<Func<T, bool>> where, int skip, int take)
         {
-            return ToList(sqlQuery.Select<T>(where, recordNumber));
+            return ToList(sqlQuery.Select<T>(where, skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return ToList(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions));
+        }
+
+        public List<T> ToList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            return ToList(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, bool>> where, int top)
+        {
+            return ToList(sqlQuery.Select<T>(where, top));
+        }
+
+        public List<T> ToList(Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return ToList(sqlQuery.Select<T>(where, top, orderBy, sqlOrderByOptions));
         }
 
         public List<T> ToList(Expression<Func<T, object>> set)
@@ -61,9 +98,29 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(set));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> set, int recordNumber)
+        public List<T> ToList(Expression<Func<T, object>> set, int skip, int take)
         {
-            return ToList(sqlQuery.Select<T>(set, recordNumber));
+            return ToList(sqlQuery.Select<T>(set, skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            return ToList(sqlQuery.Select<T>(set, orderBy, sqlOrderByOption));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        {
+            return ToList(sqlQuery.Select<T>(set, orderBy, sqlOrderByOption, skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, int top)
+        {
+            return ToList(sqlQuery.Select<T>(set, top));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        {
+            return ToList(sqlQuery.Select<T>(set, top, orderBy, sqlOrderByOption));
         }
 
         public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
@@ -71,17 +128,39 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(set, where));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int recordNumber)
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int skip, int take)
         {
-            return ToList(sqlQuery.Select<T>(set, where, recordNumber));
+            return ToList(sqlQuery.Select<T>(set, where, skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return ToList(sqlQuery.Select<T>(set, where, orderBy, sqlOrderByOptions));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        {
+            return ToList(sqlQuery.Select<T>(set, where, orderBy, sqlOrderByOptions, skip, take));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int top)
+        {
+            return ToList(sqlQuery.Select<T>(set, where, top));
+        }
+
+        public List<T> ToList(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        {
+            return ToList(sqlQuery.Select<T>(set, where, top, orderBy, sqlOrderByOptions));
         }
 
         public T SingleOrDefault(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             T item = sqlData.To<T>();
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return item;
         }
 
@@ -107,10 +186,12 @@ namespace MSSQL_Lite.Access
 
         private T FirstOrDefault(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             T item = sqlData.To<T>();
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return item;
         }
 
@@ -136,9 +217,11 @@ namespace MSSQL_Lite.Access
 
         private int Delete(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return affected;
         }
 
@@ -154,9 +237,11 @@ namespace MSSQL_Lite.Access
 
         private int Update(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return affected;
         }
 
@@ -172,9 +257,11 @@ namespace MSSQL_Lite.Access
 
         private int Insert(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return affected;
         }
 
@@ -190,9 +277,11 @@ namespace MSSQL_Lite.Access
 
         private long Count(SqlCommand sqlCommand)
         {
-            sqlData.Connect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             long result = long.Parse((string)sqlData.ExecuteScalar(sqlCommand));
-            sqlData.Disconnect();
+            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Disconnect();
             return result;
         }
 

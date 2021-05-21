@@ -292,6 +292,35 @@ namespace MSSQL_Lite.Query
             return selectStatement;
         }
 
+        protected string GetOrderByStatement<T>(Expression<Func<T, object>> selectedProperty, SqlOrderByOptions sqlOrderByOption, bool enclosedInSquareBrackets)
+        {
+            string orderbyStatement = "order by ";
+            if (selectedProperty.ToString().Contains("<>f__AnonymousType"))
+            {
+                Func<T, object> func = selectedProperty.Compile();
+                T model = objReflection.CreateInstance<T>();
+                object obj = func(model);
+                PropertyInfo[] properties = objReflection.GetProperties(obj);
+                if (properties.Length == 0 || properties.Length > 1)
+                    throw new Exception("");
+
+                PropertyInfo property = properties.First();
+                orderbyStatement += 
+                    sqlMapping.GetPropertyName(property, enclosedInSquareBrackets)
+                    + ((sqlOrderByOption == SqlOrderByOptions.Asc) ? " asc" : " desc");
+            }
+            else
+            {
+                if (!(selectedProperty.Body is MemberExpression))
+                    throw new Exception("");
+                string propName = (selectedProperty.Body as MemberExpression).Member.Name;
+                orderbyStatement += 
+                    ((enclosedInSquareBrackets) ? string.Format("[{0}]", propName) : propName)
+                    + ((sqlOrderByOption == SqlOrderByOptions.Asc) ? " asc" : " desc"); ;
+            }
+            return orderbyStatement;
+        }
+
         protected SqlQueryData GetSetStatement<T>(T model, Expression<Func<T, object>> set, bool enclosedInSquareBrackets)
         {
             string setStatement = "set ";
@@ -336,6 +365,11 @@ namespace MSSQL_Lite.Query
                 });
             }
             return new SqlQueryData { Statement = setStatement, SqlQueryParameters = sqlQueryParameters };
+        }
+
+        protected string GetSkipTakeStatement(int skip, int take)
+        {
+            return string.Format("offset {0} rows fetch next {1} rows only", skip, take);
         }
 
         protected SqlCommand InitSqlCommand(string commandText, List<SqlQueryParameter> sqlQueryParameters)
