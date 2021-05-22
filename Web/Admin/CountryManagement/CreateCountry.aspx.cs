@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Web.Models;
 using Web.Validation;
 
-namespace Web.Admin
+namespace Web.Admin.CountryManagement
 {
-    public partial class CreateCategory : System.Web.UI.Page
+    public partial class CreateCountry : System.Web.UI.Page
     {
-        private CategoryBLL categoryBLL;
+        private CountryBLL countryBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +17,7 @@ namespace Web.Admin
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            countryBLL = new CountryBLL(DataAccessLevel.Admin);
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -32,32 +32,32 @@ namespace Web.Admin
         private void InitValidation()
         {
             customValidation.Init(
-                cvCategoryName,
-                "txtCategoryName",
-                "Tên thể loại không hợp lệ",
+                cvCountryName,
+                "txtCountryName",
+                "Tên quốc gia không hợp lệ",
                 true,
                 null,
-                customValidation.ValidateCategoryName
+                customValidation.ValidateCountryName
             );
         }
 
         private void ValidateData()
         {
-            cvCategoryName.Validate();
+            cvCountryName.Validate();
         }
 
         private bool IsValidData()
         {
             ValidateData();
-            return cvCategoryName.IsValid;
+            return cvCountryName.IsValid;
         }
 
-        private CategoryCreation GetCategoryCreation()
+        private CountryCreation GetCountryCreation()
         {
-            return new CategoryCreation
+            return new CountryCreation
             {
-                name = Request.Form[txtCategoryName.UniqueID],
-                description = Request.Form[txtCategoryDescription.UniqueID]
+                name = Request.Form[txtCountryName.UniqueID],
+                description = Request.Form[txtCountryDescription.UniqueID]
             };
         }
 
@@ -67,25 +67,25 @@ namespace Web.Admin
             {
                 if (IsValidData())
                 {
-                    CategoryCreation category = GetCategoryCreation();
-                    StateOfCreation state = await categoryBLL.CreateCategoryAsync(category);
+                    CountryCreation country = GetCountryCreation();
+                    StateOfCreation state = await countryBLL.CreateCountryAsync(country);
                     if (state == StateOfCreation.Success)
                     {
                         enableShowResult = true;
                         stateString = "Success";
-                        stateDetail = "Đã thêm thể loại thành công";
+                        stateDetail = "Đã thêm quốc gia thành công";
                     }
                     else if (state == StateOfCreation.AlreadyExists)
                     {
                         enableShowResult = true;
                         stateString = "AlreadyExists";
-                        stateDetail = "Thêm thể loại thất bại. Lý do: Đã tồn tại thể loại này";
+                        stateDetail = "Thêm quốc gia thất bại. Lý do: Đã tồn tại quốc gia này";
                     }
                     else
                     {
                         enableShowResult = true;
                         stateString = "Failed";
-                        stateDetail = "Thêm thể loại thất bại";
+                        stateDetail = "Thêm quốc gia thất bại";
                     }
                 }
             }

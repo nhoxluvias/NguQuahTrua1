@@ -38,7 +38,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>());
         }
 
-        public List<T> ToList(int skip, int take)
+        public List<T> ToList(long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(skip, take));
         }
@@ -48,7 +48,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(orderBy, sqlOrderByOptions));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public List<T> ToList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take));
         }
@@ -68,7 +68,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(where));
         }
 
-        public List<T> ToList(Expression<Func<T, bool>> where, int skip, int take)
+        public List<T> ToList(Expression<Func<T, bool>> where, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(where, skip, take));
         }
@@ -78,7 +78,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions));
         }
 
-        public List<T> ToList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public List<T> ToList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take));
         }
@@ -98,7 +98,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(set));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> select, int skip, int take)
+        public List<T> ToList(Expression<Func<T, object>> select, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(select, skip, take));
         }
@@ -108,7 +108,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(select, orderBy, sqlOrderByOption));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(select, orderBy, sqlOrderByOption, skip, take));
         }
@@ -128,7 +128,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(select, where));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int skip, int take)
+        public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(select, where, skip, take));
         }
@@ -138,7 +138,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions));
         }
 
-        public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             return ToList(sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions, skip, take));
         }
@@ -153,7 +153,7 @@ namespace MSSQL_Lite.Access
             return ToList(sqlQuery.Select<T>(select, where, top, orderBy, sqlOrderByOptions));
         }
 
-        public SqlPagedList<T> ToPagedList(int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(long pageIndex, long pageSize)
         {
             long totalRecord = Count();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -162,7 +162,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = Count();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -171,7 +171,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, long pageIndex, long pageSize)
         {
             long totalRecord = Count();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -180,7 +180,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = Count();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -189,7 +189,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, bool>> where, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, bool>> where, long pageIndex, long pageSize)
         {
             long totalRecord = Count(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -198,7 +198,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = Count(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -207,7 +207,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long pageIndex, long pageSize)
         {
             long totalRecord = Count(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -216,7 +216,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public SqlPagedList<T> ToPagedList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = Count(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();

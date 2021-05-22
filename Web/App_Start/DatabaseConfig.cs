@@ -14,11 +14,11 @@ namespace Web.App_Start
             SqlConnectInfo.Password = "123456789";
             SqlData.objectReceivingData = ObjectReceivingData.DataSet;
 
-            RoleMigration roleMigration = new RoleMigration();
-            roleMigration.AddDataAndRun();
+            //RoleMigration roleMigration = new RoleMigration();
+            //roleMigration.AddDataAndRun();
 
-            PaymentMethodMigration paymentMethodMigration = new PaymentMethodMigration();
-            paymentMethodMigration.AddDataAndRun();
+            //PaymentMethodMigration paymentMethodMigration = new PaymentMethodMigration();
+            //paymentMethodMigration.AddDataAndRun();
         }
     }
 }

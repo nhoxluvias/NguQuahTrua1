@@ -367,7 +367,7 @@ namespace MSSQL_Lite.Query
             return new SqlQueryData { Statement = setStatement, SqlQueryParameters = sqlQueryParameters };
         }
 
-        protected string GetSkipTakeStatement(int skip, int take)
+        protected string GetSkipTakeStatement(long skip, long take)
         {
             return string.Format("offset {0} rows fetch next {1} rows only", skip, take);
         }

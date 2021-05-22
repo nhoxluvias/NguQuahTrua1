@@ -94,6 +94,26 @@ namespace Data.BLL
             return categories;
         }
 
+        public async Task<PagedList<CategoryInfo>> GetCategoriesAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Category> pagedList = null;
+            Expression<Func<Category, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Categories.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Categories.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<CategoryInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToCategoryInfo(c)).ToList()
+            };
+        }
+
         public PagedList<CategoryInfo> GetCategories(int pageIndex, int pageSize)
         {
             SqlPagedList<Category> pagedList = null;

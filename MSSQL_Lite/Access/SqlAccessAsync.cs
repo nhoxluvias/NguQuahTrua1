@@ -26,7 +26,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>());
         }
 
-        public async Task<List<T>> ToListAsync(int skip, int take)
+        public async Task<List<T>> ToListAsync(long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(skip, take));
         }
@@ -36,7 +36,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(orderBy, sqlOrderByOptions));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take));
         }
@@ -56,7 +56,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(where));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(where, skip, take));
         }
@@ -66,7 +66,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take));
         }
@@ -86,7 +86,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(set, skip, take));
         }
@@ -96,7 +96,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set, orderBy, sqlOrderByOption));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(set, orderBy, sqlOrderByOption, skip, take));
         }
@@ -116,7 +116,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set, where));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(set, where, skip, take));
         }
@@ -126,7 +126,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set, where, orderBy, sqlOrderByOptions));
         }
 
-        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public async Task<List<T>> ToListAsync(Expression<Func<T, object>> set, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             return await ToListAsync(sqlQuery.Select<T>(set, where, orderBy, sqlOrderByOptions, skip, take));
         }
@@ -141,7 +141,7 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set, where, top, orderBy, sqlOrderByOptions));
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -150,7 +150,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -159,7 +159,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -168,7 +168,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync();
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -177,7 +177,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, bool>> where, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, bool>> where, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -186,7 +186,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -195,7 +195,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();
@@ -204,7 +204,7 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long pageIndex, long pageSize)
         {
             long totalRecord = await CountAsync(where);
             SqlPagedList<T> pagedList = new SqlPagedList<T>();

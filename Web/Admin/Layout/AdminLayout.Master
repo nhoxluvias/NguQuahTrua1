@@ -59,7 +59,8 @@
                 <ul>
                     <li><a href="<% = hyplnkOverview %>"><em class="fa fa-home"></em>Tổng quan</a></li>
                     <li><a href="#"><em class="fa fa-bar-chart"></em>Quản lý phim</a></li>
-                    <li><a href="<% = hyplnkCategoryManagement %>"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
+                    <li><a href="<% = hyplnkCategoryList %>"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
+                    <li><a href="<% = hyplnkCountryList %>"><em class="fa fa fa-clone"></em>Quản lý quốc gia</a></li>
                     <li><a href="#"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
                     <li><a href="#"><em class="fa fa-warning"></em>Quản lý thẻ tag</a></li>
                 </ul>

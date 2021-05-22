@@ -1,8 +1,11 @@
 ﻿using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data.BLL
@@ -86,6 +89,46 @@ namespace Data.BLL
                 countries = db.Countries.ToList(c => new { c.ID, c.name, c.description })
                     .Select(c => ToCountryInfo(c)).ToList();
             return countries;
+        }
+
+        public async Task<PagedList<CountryInfo>> GetCountriesAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Country> pagedList = null;
+            Expression<Func<Country, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Countries.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Countries.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<CountryInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToCountryInfo(c)).ToList()
+            };
+        }
+
+        public PagedList<CountryInfo> GetCountries(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Country> pagedList = null;
+            Expression<Func<Country, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Countries.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Countries.ToPagedList(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<CountryInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToCountryInfo(c)).ToList()
+            };
         }
 
         public async Task<CountryInfo> GetCountryAsync(int countryId)

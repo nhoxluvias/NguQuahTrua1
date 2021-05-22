@@ -8,8 +8,8 @@ namespace Data.BLL
 {
     public class PagedList<T>
     {
-        public int PageNumber { get; set; }
-        public int CurrentPage { get; set; }
+        public long PageNumber { get; set; }
+        public long CurrentPage { get; set; }
         public List<T> Items { get; set; }
     }
 }

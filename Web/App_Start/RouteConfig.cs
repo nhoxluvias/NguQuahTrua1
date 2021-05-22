@@ -21,11 +21,16 @@ namespace Web.App_Start
             routes.MapPageRoute("Home", "home", "~/User/Home.aspx");
 
             routes.MapPageRoute("Admin_Overview", "admin/overview", "~/Admin/Index.aspx");
-            routes.MapPageRoute("Admin_CategoryList", "admin/category/list", "~/Admin/CategoryList.aspx");
-            routes.MapPageRoute("Admin_CreateCategory", "admin/category/create", "~/Admin/CreateCategory.aspx");
+            routes.MapPageRoute("Admin_CategoryList", "admin/category/list", "~/Admin/CategoryManagement/CategoryList.aspx");
+            routes.MapPageRoute("Admin_CreateCategory", "admin/category/create", "~/Admin/CategoryManagement/CreateCategory.aspx");
+            routes.MapPageRoute("Admin_UpdateCategory", "admin/category/update/{id}", "~/Admin/CategoryManagement/UpdateCategory.aspx");
+            routes.MapPageRoute("Admin_DeleteCategory", "admin/category/delete/{id}", "~/Admin/CategoryManagement/DeleteCategory.aspx");
             routes.MapPageRoute("Admin_RoleList", "admin/role/list", "~/Admin/RoleList.aspx");
             routes.MapPageRoute("Admin_CreateRole", "admin/role/create", "~/Admin/CreateRole.aspx");
-            routes.MapPageRoute("Admin_CreateCountry", "admin/country/create", "~/Admin/CreateCountry.aspx");
+            routes.MapPageRoute("Admin_CountryList", "admin/country/list", "~/Admin/CountryManagement/CountryList.aspx");
+            routes.MapPageRoute("Admin_CreateCountry", "admin/country/create", "~/Admin/CountryManagement/CreateCountry.aspx");
+            routes.MapPageRoute("Admin_UpdateCountry", "admin/country/update/{id}", "~/Admin/CountryManagement/UpdateCountry.aspx");
+            routes.MapPageRoute("Admin_DeleteCountry", "admin/country/delete/{id}", "~/Admin/CountryManagement/DeleteCountry.aspx");
             routes.MapPageRoute("Admin_CreateLanguage", "admin/language/create", "~/Admin/CreateLanguage.aspx");
             routes.MapPageRoute("Admin_CreateDirector", "admin/director/create", "~/Admin/CreateDirector.aspx");
 

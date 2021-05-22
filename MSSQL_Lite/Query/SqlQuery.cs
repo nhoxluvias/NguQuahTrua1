@@ -48,7 +48,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(int skip, int take)
+        public SqlCommand Select<T>(long skip, long take)
         {
             string query = string.Format(
                 "Select * from {0} order by current_timestamp {1}",
@@ -58,7 +58,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        public SqlCommand Select<T>(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, long skip, long take)
         {
             string query = string.Format(
                 "Select * from {0} {1} {2}",
@@ -69,14 +69,14 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(int top)
+        public SqlCommand Select<T>(long top)
         {
             string query = string
                 .Format("Select top {0} * from {1}", top, sqlMapping.GetTableName<T>(EnclosedInSquareBrackets));
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
+        public SqlCommand Select<T>(long top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
         {
             string query = string.Format(
                 "Select top {0} * from {1} {2}",
@@ -95,7 +95,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int skip, int take)
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, long skip, long take)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string.Format(
@@ -119,7 +119,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, int skip, int take)
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, long skip, long take)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string.Format(
@@ -132,7 +132,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int top)
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, long top)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string
@@ -143,7 +143,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        public SqlCommand Select<T>(Expression<Func<T, bool>> where, long top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string
@@ -168,7 +168,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, int skip, int take)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, long skip, long take)
         {
             string query = string
                 .Format(
@@ -192,7 +192,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int skip, int take)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             string query = string
                 .Format(
@@ -205,7 +205,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, int top)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, long top)
         {
             string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
                 .Replace("Select ", string.Format("Select top {0} ", top));
@@ -213,7 +213,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, long top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
             string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
                 .Replace("Select ", string.Format("Select top {0} ", top));
@@ -239,7 +239,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int skip, int take)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long skip, long take)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string
@@ -267,7 +267,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int take, int skip)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string query = string
@@ -282,7 +282,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int top)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long top)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)
@@ -297,7 +297,7 @@ namespace MSSQL_Lite.Query
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
         }
 
-        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
+        public SqlCommand Select<T>(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
             SqlQueryData sqlQueryData = GetWhereStatement<T>(where, EnclosedInSquareBrackets);
             string selectStatement = GetSelectStatement<T>(select, EnclosedInSquareBrackets)

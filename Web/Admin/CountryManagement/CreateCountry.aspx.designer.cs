@@ -7,38 +7,47 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin
+namespace Web.Admin.CountryManagement
 {
 
 
-    public partial class CategoryManagement
+    public partial class CreateCountry
     {
 
         /// <summary>
-        /// grvCategory control.
+        /// txtCountryName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grvCategory;
+        protected global::System.Web.UI.WebControls.TextBox txtCountryName;
 
         /// <summary>
-        /// drdlPage control.
+        /// cvCountryName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drdlPage;
+        protected global::System.Web.UI.WebControls.CustomValidator cvCountryName;
 
         /// <summary>
-        /// hyplnkCreateCategory control.
+        /// txtCountryDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkCreateCategory;
+        protected global::System.Web.UI.WebControls.TextBox txtCountryDescription;
+
+        /// <summary>
+        /// btnSubmit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
     }
 }

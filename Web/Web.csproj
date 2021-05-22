@@ -61,16 +61,21 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Admin\CategoryList.aspx" />
-    <Content Include="Admin\CreateCategory.aspx" />
-    <Content Include="Admin\CreateCountry.aspx" />
+    <Content Include="Admin\CategoryManagement\CategoryList.aspx" />
+    <Content Include="Admin\CategoryManagement\CreateCategory.aspx" />
+    <Content Include="Admin\CountryManagement\CountryList.aspx" />
+    <Content Include="Admin\CountryManagement\CreateCountry.aspx" />
+    <Content Include="Admin\CountryManagement\DeleteCountry.aspx" />
+    <Content Include="Admin\CountryManagement\UpdateCountry.aspx" />
     <Content Include="Admin\CreateDirector.aspx" />
     <Content Include="Admin\CreateLanguage.aspx" />
     <Content Include="Admin\CreateRole.aspx" />
+    <Content Include="Admin\CategoryManagement\DeleteCategory.aspx" />
     <Content Include="Admin\Index.aspx" />
     <Content Include="Admin\MovieManagement.aspx" />
     <Content Include="Admin\RoleList.aspx" />
     <Content Include="Admin\TagManagement.aspx" />
+    <Content Include="Admin\CategoryManagement\UpdateCategory.aspx" />
     <Content Include="Admin\UserManagement.aspx" />
     <Content Include="admin_assets\css\addition.css" />
     <Content Include="admin_assets\js\jquery.js" />
@@ -140,26 +145,47 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\CategoryList.aspx.cs">
+    <Compile Include="Admin\CategoryManagement\CategoryList.aspx.cs">
       <DependentUpon>CategoryList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CategoryList.aspx.designer.cs">
+    <Compile Include="Admin\CategoryManagement\CategoryList.aspx.designer.cs">
       <DependentUpon>CategoryList.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CreateCategory.aspx.cs">
+    <Compile Include="Admin\CategoryManagement\CreateCategory.aspx.cs">
       <DependentUpon>CreateCategory.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CreateCategory.aspx.designer.cs">
+    <Compile Include="Admin\CategoryManagement\CreateCategory.aspx.designer.cs">
       <DependentUpon>CreateCategory.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CreateCountry.aspx.cs">
+    <Compile Include="Admin\CountryManagement\CountryList.aspx.cs">
+      <DependentUpon>CountryList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\CountryList.aspx.designer.cs">
+      <DependentUpon>CountryList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\CreateCountry.aspx.cs">
       <DependentUpon>CreateCountry.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CreateCountry.aspx.designer.cs">
+    <Compile Include="Admin\CountryManagement\CreateCountry.aspx.designer.cs">
       <DependentUpon>CreateCountry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\DeleteCountry.aspx.cs">
+      <DependentUpon>DeleteCountry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\DeleteCountry.aspx.designer.cs">
+      <DependentUpon>DeleteCountry.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\UpdateCountry.aspx.cs">
+      <DependentUpon>UpdateCountry.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\UpdateCountry.aspx.designer.cs">
+      <DependentUpon>UpdateCountry.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\CreateDirector.aspx.cs">
       <DependentUpon>CreateDirector.aspx</DependentUpon>
@@ -181,6 +207,13 @@
     </Compile>
     <Compile Include="Admin\CreateRole.aspx.designer.cs">
       <DependentUpon>CreateRole.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CategoryManagement\DeleteCategory.aspx.cs">
+      <DependentUpon>DeleteCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CategoryManagement\DeleteCategory.aspx.designer.cs">
+      <DependentUpon>DeleteCategory.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>
@@ -216,6 +249,13 @@
     </Compile>
     <Compile Include="Admin\TagManagement.aspx.designer.cs">
       <DependentUpon>TagManagement.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CategoryManagement\UpdateCategory.aspx.cs">
+      <DependentUpon>UpdateCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CategoryManagement\UpdateCategory.aspx.designer.cs">
+      <DependentUpon>UpdateCategory.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\UserManagement.aspx.cs">
       <DependentUpon>UserManagement.aspx</DependentUpon>
@@ -328,6 +368,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Admin\RoleManagement\" />
     <Folder Include="Control\" />
     <Folder Include="css\user\" />
   </ItemGroup>
