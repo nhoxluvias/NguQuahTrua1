@@ -6,3 +6,15 @@
     width: 100% !important;
     height: 250px !important;
 }
+
+.redirect-to-page p{
+    float: left;
+    color: rgb(255, 0, 0);
+}
+
+.redirect-to-page select{
+    width: 65px;
+    height: 35px;
+    float: left;
+    font-size: 15px;
+}

@@ -141,6 +141,78 @@ namespace MSSQL_Lite.Access
             return await ToListAsync(sqlQuery.Select<T>(set, where, top, orderBy, sqlOrderByOptions));
         }
 
+        public async Task<SqlPagedList<T>> ToPagedListAsync(int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync();
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync();
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(orderBy, sqlOrderByOptions, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync();
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(select, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync();
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(select, orderBy, sqlOrderByOptions, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, bool>> where, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync(where);
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(where, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync(where);
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(where, orderBy, sqlOrderByOptions, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync(where);
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(select, where, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
+        public async Task<SqlPagedList<T>> ToPagedListAsync(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, int pageIndex, int pageSize)
+        {
+            long totalRecord = await CountAsync(where);
+            SqlPagedList<T> pagedList = new SqlPagedList<T>();
+            pagedList.Solve(totalRecord, pageIndex, pageSize);
+            pagedList.Items = await ToListAsync(select, where, orderBy, sqlOrderByOptions, pagedList.Skip, pagedList.Take);
+            return pagedList;
+        }
+
         public async Task<T> SingleOrDefaultAsync(SqlCommand sqlCommand)
         {
             if (connectionType == ConnectionType.DisconnectAfterCompletion)

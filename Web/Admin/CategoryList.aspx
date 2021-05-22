@@ -27,6 +27,18 @@
                         <SortedDescendingHeaderStyle BackColor="#4870BE" />
                     </asp:GridView>
                 </div>
+                <div class="row ml-2 mr-2">
+                    <div class="column column-20">
+                        <p>Trang bạn đang xem: <% = currentPage + 1 %></p>
+                    </div>
+                    <div class="column column-33 redirect-to-page">
+                        <p>Chuyển tới trang: </p>
+                        <asp:DropDownList ID="drdlPage" runat="server" OnSelectedIndexChanged="drdlPage_SelectedIndexChanged" AutoPostBack="True"></asp:DropDownList>
+                    </div>
+                    <div class="column column-20">
+                        <p>Tổng số trang: <% = pageNumber %></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -34,8 +46,8 @@
     <h5 class="mt-2">Buttons</h5>
     <a class="anchor" name="buttons"></a>
     <div class="row grid-responsive">
-				<div class="column">
-                    <asp:HyperLink ID="hyplnkCreateCategory" CssClass="button" runat="server">Thêm mới</asp:HyperLink>
-				</div>
-			</div>
+        <div class="column">
+            <asp:HyperLink ID="hyplnkCreateCategory" CssClass="button" runat="server">Thêm mới</asp:HyperLink>
+        </div>
+    </div>
 </asp:Content>

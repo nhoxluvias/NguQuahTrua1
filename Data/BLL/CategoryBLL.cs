@@ -1,10 +1,13 @@
 ﻿using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data.BLL
@@ -89,6 +92,26 @@ namespace Data.BLL
                 categories = db.Categories.ToList(c => new { c.ID, c.name, c.description })
                     .Select(c => ToCategoryInfo(c)).ToList();
             return categories;
+        }
+
+        public PagedList<CategoryInfo> GetCategories(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Category> pagedList = null;
+            Expression<Func<Category, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Categories.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Categories.ToPagedList(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<CategoryInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToCategoryInfo(c)).ToList()
+            };
         }
 
         public async Task<CategoryInfo> GetCategoryAsync(int categoryId)

@@ -49,6 +49,7 @@
     <Compile Include="BLL\DirectorBLL.cs" />
     <Compile Include="BLL\FilmBLL.cs" />
     <Compile Include="BLL\LanguageBLL.cs" />
+    <Compile Include="BLL\PagedList.cs" />
     <Compile Include="BLL\PaymentInfoBLL.cs" />
     <Compile Include="BLL\PaymentMethodBLL.cs" />
     <Compile Include="BLL\RoleBLL.cs" />

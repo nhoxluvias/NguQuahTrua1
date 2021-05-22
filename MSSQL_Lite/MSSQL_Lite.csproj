@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Access\ObjectReceivingData.cs" />
+    <Compile Include="Access\SqlPagedList.cs" />
     <Compile Include="Access\SqlAccess.cs" />
     <Compile Include="Access\SqlAccessAsync.cs" />
     <Compile Include="Access\SqlContext.cs" />
