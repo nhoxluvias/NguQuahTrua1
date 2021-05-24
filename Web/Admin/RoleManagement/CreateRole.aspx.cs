@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Web.Models;
 using Web.Validation;
 
-namespace Web.Admin
+namespace Web.Admin.RoleManagement
 {
-    public partial class CreateLanguage : System.Web.UI.Page
+    public partial class CreateRole : System.Web.UI.Page
     {
-        private LanguageBLL languageBLL;
+        private RoleBLL roleBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +17,7 @@ namespace Web.Admin
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            roleBLL = new RoleBLL(DataAccessLevel.Admin);
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -32,32 +32,31 @@ namespace Web.Admin
         private void InitValidation()
         {
             customValidation.Init(
-                cvLanguageName,
-                "txtLanguageName",
-                "Tên ngôn ngữ không hợp lệ",
+                cvRoleName,
+                "txtRoleName",
+                "Tên vai trò không hợp lệ",
                 true,
                 null,
-                customValidation.ValidateCategoryName
+                customValidation.ValidateRoleName
             );
         }
 
         private void ValidateData()
         {
-            cvLanguageName.Validate();
+            cvRoleName.Validate();
         }
 
         private bool IsValidData()
         {
             ValidateData();
-            return cvLanguageName.IsValid;
+            return cvRoleName.IsValid;
         }
 
-        private LanguageCreation GetLanguageCreation()
+        private RoleCreation GetRoleCreation()
         {
-            return new LanguageCreation
+            return new RoleCreation
             {
-                name = Request.Form[txtLanguageName.UniqueID],
-                description = Request.Form[txtLanguageDescription.UniqueID]
+                name = Request.Form[txtRoleName.UniqueID],
             };
         }
 
@@ -67,25 +66,25 @@ namespace Web.Admin
             {
                 if (IsValidData())
                 {
-                    LanguageCreation language = GetLanguageCreation();
-                    StateOfCreation state = await languageBLL.CreateLanguageAsync(language);
+                    RoleCreation role = GetRoleCreation();
+                    StateOfCreation state = await roleBLL.CreateRoleAsync(role);
                     if (state == StateOfCreation.Success)
                     {
                         enableShowResult = true;
                         stateString = "Success";
-                        stateDetail = "Đã thêm ngôn ngữ thành công";
+                        stateDetail = "Đã thêm vai trò thành công";
                     }
                     else if (state == StateOfCreation.AlreadyExists)
                     {
                         enableShowResult = true;
                         stateString = "AlreadyExists";
-                        stateDetail = "Thêm ngôn ngữ thất bại. Lý do: Đã tồn tại ngôn ngữ này";
+                        stateDetail = "Thêm vài trò thất bại. Lý do: Đã tồn tại vai trò này";
                     }
                     else
                     {
                         enableShowResult = true;
                         stateString = "Failed";
-                        stateDetail = "Thêm ngôn ngữ thất bại";
+                        stateDetail = "Thêm vai trò thất bại";
                     }
                 }
             }

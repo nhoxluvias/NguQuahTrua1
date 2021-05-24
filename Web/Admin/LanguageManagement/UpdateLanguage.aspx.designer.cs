@@ -8,9 +8,9 @@
 //------------------------------------------------------------------------------
 
 
-namespace Web.Admin
+namespace Web.Admin.LanguageManagement
 {
-    public partial class MovieManagement
+    public partial class UpdateLanguage
     {
     }
 }

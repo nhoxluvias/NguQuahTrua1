@@ -1,10 +1,10 @@
-﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="CreateLanguage.aspx.cs" Inherits="Web.Admin.CreateLanguage" %>
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="CreateRole.aspx.cs" Inherits="Web.Admin.RoleManagement.CreateRole" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <% if (enableShowResult)
         { %>
-    <h5 class="mt-2">Trạng thái thêm ngôn ngữ</h5>
+    <h5 class="mt-2">Trạng thái thêm vai trò</h5>
     <a class="anchor" name="alerts"></a>
     <div class="row grid-responsive">
         <div class="column">
@@ -23,22 +23,20 @@
         </div>
     </div>
     <%} %>
-    <h5 class="mt-2">Tạo mới ngôn ngữ</h5>
+    <h5 class="mt-2">Tạo mới vai trò</h5>
     <a class="anchor" name="forms"></a>
     <div class="row grid-responsive">
         <div class="column ">
             <div class="card">
                 <div class="card-title">
-                    <h3>Nhập dữ liệu vào các trường bên dưới để tạo mới 1 ngôn ngữ</h3>
+                    <h3>Nhập dữ liệu vào các trường bên dưới để tạo mới 1 vai trò</h3>
                 </div>
                 <div class="card-block">
                     <div>
                         <fieldset>
-                            <label for="txtLanguageName">Tên ngôn ngữ</label>
-                            <asp:TextBox ID="txtLanguageName" placeholder="Nhập vào tên ngôn ngữ" runat="server"></asp:TextBox>
-                            <asp:CustomValidator ID="cvLanguageName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <label for="txtLanguageDescription">Mô tả ngôn ngữ</label>
-                            <asp:TextBox ID="txtLanguageDescription" placeholder="Nhập vào mô tả ngôn ngữ" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
+                            <label for="txtRoleName">Tên vai trò</label>
+                            <asp:TextBox ID="txtRoleName" placeholder="Nhập vào tên vai trò" runat="server"></asp:TextBox>
+                            <asp:CustomValidator ID="cvRoleName" CssClass="text-red" runat="server"></asp:CustomValidator>
                         </fieldset>
                     </div>
                 </div>
@@ -49,5 +47,6 @@
         </div>
     </div>
 </asp:Content>
+
 <asp:Content ID="Content3" ContentPlaceHolderID="footer" runat="server">
 </asp:Content>

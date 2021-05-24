@@ -20,7 +20,7 @@ namespace Web.Admin.CountryManagement
             try
             {
                 countryBLL = new CountryBLL(DataAccessLevel.Admin);
-                hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateCategory", null);
+                hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateCountry", null);
                 selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;

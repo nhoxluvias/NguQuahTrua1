@@ -61,22 +61,23 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\CategoryManagement\CategoryDetail.aspx" />
     <Content Include="Admin\CategoryManagement\CategoryList.aspx" />
     <Content Include="Admin\CategoryManagement\CreateCategory.aspx" />
     <Content Include="Admin\CountryManagement\CountryList.aspx" />
     <Content Include="Admin\CountryManagement\CreateCountry.aspx" />
     <Content Include="Admin\CountryManagement\DeleteCountry.aspx" />
     <Content Include="Admin\CountryManagement\UpdateCountry.aspx" />
-    <Content Include="Admin\CreateDirector.aspx" />
-    <Content Include="Admin\CreateLanguage.aspx" />
-    <Content Include="Admin\CreateRole.aspx" />
+    <Content Include="Admin\DirectorManagement\CreateDirector.aspx" />
+    <Content Include="Admin\LanguageManagement\CreateLanguage.aspx" />
+    <Content Include="Admin\RoleManagement\CreateRole.aspx" />
     <Content Include="Admin\CategoryManagement\DeleteCategory.aspx" />
     <Content Include="Admin\Index.aspx" />
-    <Content Include="Admin\MovieManagement.aspx" />
-    <Content Include="Admin\RoleList.aspx" />
-    <Content Include="Admin\TagManagement.aspx" />
+    <Content Include="Admin\LanguageManagement\DeleteLanguage.aspx" />
+    <Content Include="Admin\LanguageManagement\LanguageList.aspx" />
+    <Content Include="Admin\LanguageManagement\UpdateLanguage.aspx" />
+    <Content Include="Admin\RoleManagement\RoleList.aspx" />
     <Content Include="Admin\CategoryManagement\UpdateCategory.aspx" />
-    <Content Include="Admin\UserManagement.aspx" />
     <Content Include="admin_assets\css\addition.css" />
     <Content Include="admin_assets\js\jquery.js" />
     <Content Include="images\img1.jpg" />
@@ -145,6 +146,13 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CategoryManagement\CategoryDetail.aspx.cs">
+      <DependentUpon>CategoryDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CategoryManagement\CategoryDetail.aspx.designer.cs">
+      <DependentUpon>CategoryDetail.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\CategoryManagement\CategoryList.aspx.cs">
       <DependentUpon>CategoryList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -187,25 +195,25 @@
     <Compile Include="Admin\CountryManagement\UpdateCountry.aspx.designer.cs">
       <DependentUpon>UpdateCountry.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CreateDirector.aspx.cs">
+    <Compile Include="Admin\DirectorManagement\CreateDirector.aspx.cs">
       <DependentUpon>CreateDirector.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CreateDirector.aspx.designer.cs">
+    <Compile Include="Admin\DirectorManagement\CreateDirector.aspx.designer.cs">
       <DependentUpon>CreateDirector.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CreateLanguage.aspx.cs">
+    <Compile Include="Admin\LanguageManagement\CreateLanguage.aspx.cs">
       <DependentUpon>CreateLanguage.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CreateLanguage.aspx.designer.cs">
+    <Compile Include="Admin\LanguageManagement\CreateLanguage.aspx.designer.cs">
       <DependentUpon>CreateLanguage.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CreateRole.aspx.cs">
+    <Compile Include="Admin\RoleManagement\CreateRole.aspx.cs">
       <DependentUpon>CreateRole.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\CreateRole.aspx.designer.cs">
+    <Compile Include="Admin\RoleManagement\CreateRole.aspx.designer.cs">
       <DependentUpon>CreateRole.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\CategoryManagement\DeleteCategory.aspx.cs">
@@ -222,6 +230,27 @@
     <Compile Include="Admin\Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\LanguageManagement\DeleteLanguage.aspx.cs">
+      <DependentUpon>DeleteLanguage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\DeleteLanguage.aspx.designer.cs">
+      <DependentUpon>DeleteLanguage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\LanguageList.aspx.cs">
+      <DependentUpon>LanguageList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\LanguageList.aspx.designer.cs">
+      <DependentUpon>LanguageList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\UpdateLanguage.aspx.cs">
+      <DependentUpon>UpdateLanguage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\UpdateLanguage.aspx.designer.cs">
+      <DependentUpon>UpdateLanguage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\Layout\AdminLayout.Master.cs">
       <DependentUpon>AdminLayout.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -229,26 +258,12 @@
     <Compile Include="Admin\Layout\AdminLayout.Master.designer.cs">
       <DependentUpon>AdminLayout.Master</DependentUpon>
     </Compile>
-    <Compile Include="Admin\MovieManagement.aspx.cs">
-      <DependentUpon>MovieManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\MovieManagement.aspx.designer.cs">
-      <DependentUpon>MovieManagement.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\RoleList.aspx.cs">
+    <Compile Include="Admin\RoleManagement\RoleList.aspx.cs">
       <DependentUpon>RoleList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\RoleList.aspx.designer.cs">
+    <Compile Include="Admin\RoleManagement\RoleList.aspx.designer.cs">
       <DependentUpon>RoleList.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\TagManagement.aspx.cs">
-      <DependentUpon>TagManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TagManagement.aspx.designer.cs">
-      <DependentUpon>TagManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\CategoryManagement\UpdateCategory.aspx.cs">
       <DependentUpon>UpdateCategory.aspx</DependentUpon>
@@ -256,13 +271,6 @@
     </Compile>
     <Compile Include="Admin\CategoryManagement\UpdateCategory.aspx.designer.cs">
       <DependentUpon>UpdateCategory.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\UserManagement.aspx.cs">
-      <DependentUpon>UserManagement.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\UserManagement.aspx.designer.cs">
-      <DependentUpon>UserManagement.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\EmailConfig.cs" />
@@ -368,7 +376,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Admin\RoleManagement\" />
+    <Folder Include="Admin\CastManagement\" />
+    <Folder Include="Admin\SourceManagement\" />
+    <Folder Include="Admin\TagManagement\" />
+    <Folder Include="Admin\UserManagement\" />
     <Folder Include="Control\" />
     <Folder Include="css\user\" />
   </ItemGroup>

@@ -7,47 +7,38 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin
+namespace Web.Admin.CategoryManagement
 {
 
 
-    public partial class CreateLanguage
+    public partial class CategoryDetail
     {
 
         /// <summary>
-        /// txtLanguageName control.
+        /// hyplnkList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLanguageName;
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkList;
 
         /// <summary>
-        /// cvLanguageName control.
+        /// hyplnkEdit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvLanguageName;
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit;
 
         /// <summary>
-        /// txtLanguageDescription control.
+        /// hyplnkDelete control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLanguageDescription;
-
-        /// <summary>
-        /// btnSubmit control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSubmit;
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkDelete;
     }
 }

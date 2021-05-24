@@ -86,6 +86,7 @@ namespace Web.Admin.CategoryManagement
                 CategoryInfo categoryInfo = await categoryBLL.GetCategoryAsync(key);
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", categoryInfo.ID, categoryInfo.name);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CategoryDetail", new { id = categoryInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCategory", new { id = categoryInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", new { id = categoryInfo.ID });
             }

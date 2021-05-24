@@ -8,9 +8,9 @@
 //------------------------------------------------------------------------------
 
 
-namespace Web.Admin
+namespace Web.Admin.LanguageManagement
 {
-    public partial class TagManagement
+    public partial class LanguageList
     {
     }
 }

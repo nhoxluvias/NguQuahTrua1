@@ -8,9 +8,9 @@
 //------------------------------------------------------------------------------
 
 
-namespace Web.Admin
+namespace Web.Admin.LanguageManagement
 {
-    public partial class UserManagement
+    public partial class DeleteLanguage
     {
     }
 }

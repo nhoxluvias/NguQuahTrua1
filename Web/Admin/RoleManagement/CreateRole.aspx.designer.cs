@@ -7,39 +7,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin
+namespace Web.Admin.RoleManagement
 {
 
 
-    public partial class CreateDirector
+    public partial class CreateRole
     {
 
         /// <summary>
-        /// txtDirectorName control.
+        /// txtRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDirectorName;
+        protected global::System.Web.UI.WebControls.TextBox txtRoleName;
 
         /// <summary>
-        /// cvDirectorName control.
+        /// cvRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvDirectorName;
-
-        /// <summary>
-        /// txtDirectorDescription control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDirectorDescription;
+        protected global::System.Web.UI.WebControls.CustomValidator cvRoleName;
 
         /// <summary>
         /// btnSubmit control.

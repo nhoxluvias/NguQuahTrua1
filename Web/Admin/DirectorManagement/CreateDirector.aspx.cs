@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Web.Models;
 using Web.Validation;
 
-namespace Web.Admin
+namespace Web.Admin.DirectorManagement
 {
-    public partial class CreateRole : System.Web.UI.Page
+    public partial class CreateDirector : System.Web.UI.Page
     {
-        private RoleBLL roleBLL;
+        private DirectorBLL directorBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +17,7 @@ namespace Web.Admin
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -32,31 +32,32 @@ namespace Web.Admin
         private void InitValidation()
         {
             customValidation.Init(
-                cvRoleName,
-                "txtRoleName",
-                "Tên vai trò không hợp lệ",
+                cvDirectorName,
+                "txtDirectorName",
+                "Tên đạo diễn không hợp lệ",
                 true,
                 null,
-                customValidation.ValidateRoleName
+                customValidation.ValidateCategoryName
             );
         }
 
         private void ValidateData()
         {
-            cvRoleName.Validate();
+            cvDirectorName.Validate();
         }
 
         private bool IsValidData()
         {
             ValidateData();
-            return cvRoleName.IsValid;
+            return cvDirectorName.IsValid;
         }
 
-        private RoleCreation GetRoleCreation()
+        private DirectorCreation GetDirectorCreation()
         {
-            return new RoleCreation
+            return new DirectorCreation
             {
-                name = Request.Form[txtRoleName.UniqueID],
+                name = Request.Form[txtDirectorName.UniqueID],
+                description = Request.Form[txtDirectorDescription.UniqueID]
             };
         }
 
@@ -66,25 +67,25 @@ namespace Web.Admin
             {
                 if (IsValidData())
                 {
-                    RoleCreation role = GetRoleCreation();
-                    StateOfCreation state = await roleBLL.CreateRoleAsync(role);
+                    DirectorCreation director = GetDirectorCreation();
+                    StateOfCreation state = await directorBLL.CreateDirectorAsync(director);
                     if (state == StateOfCreation.Success)
                     {
                         enableShowResult = true;
                         stateString = "Success";
-                        stateDetail = "Đã thêm vai trò thành công";
+                        stateDetail = "Đã thêm đạo diễn thành công";
                     }
                     else if (state == StateOfCreation.AlreadyExists)
                     {
                         enableShowResult = true;
                         stateString = "AlreadyExists";
-                        stateDetail = "Thêm vài trò thất bại. Lý do: Đã tồn tại vai trò này";
+                        stateDetail = "Thêm đạo diễn thất bại. Lý do: Đã tồn tại đạo diễn này";
                     }
                     else
                     {
                         enableShowResult = true;
                         stateString = "Failed";
-                        stateDetail = "Thêm vai trò thất bại";
+                        stateDetail = "Thêm đạo diễn thất bại";
                     }
                 }
             }

@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Web.Models;
 using Web.Validation;
 
-namespace Web.Admin
+namespace Web.Admin.LanguageManagement
 {
-    public partial class CreateDirector : System.Web.UI.Page
+    public partial class CreateLanguage : System.Web.UI.Page
     {
-        private DirectorBLL directorBLL;
+        private LanguageBLL languageBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +17,7 @@ namespace Web.Admin
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -32,9 +32,9 @@ namespace Web.Admin
         private void InitValidation()
         {
             customValidation.Init(
-                cvDirectorName,
-                "txtDirectorName",
-                "Tên đạo diễn không hợp lệ",
+                cvLanguageName,
+                "txtLanguageName",
+                "Tên ngôn ngữ không hợp lệ",
                 true,
                 null,
                 customValidation.ValidateCategoryName
@@ -43,21 +43,21 @@ namespace Web.Admin
 
         private void ValidateData()
         {
-            cvDirectorName.Validate();
+            cvLanguageName.Validate();
         }
 
         private bool IsValidData()
         {
             ValidateData();
-            return cvDirectorName.IsValid;
+            return cvLanguageName.IsValid;
         }
 
-        private DirectorCreation GetDirectorCreation()
+        private LanguageCreation GetLanguageCreation()
         {
-            return new DirectorCreation
+            return new LanguageCreation
             {
-                name = Request.Form[txtDirectorName.UniqueID],
-                description = Request.Form[txtDirectorDescription.UniqueID]
+                name = Request.Form[txtLanguageName.UniqueID],
+                description = Request.Form[txtLanguageDescription.UniqueID]
             };
         }
 
@@ -67,25 +67,25 @@ namespace Web.Admin
             {
                 if (IsValidData())
                 {
-                    DirectorCreation director = GetDirectorCreation();
-                    StateOfCreation state = await directorBLL.CreateDirectorAsync(director);
+                    LanguageCreation language = GetLanguageCreation();
+                    StateOfCreation state = await languageBLL.CreateLanguageAsync(language);
                     if (state == StateOfCreation.Success)
                     {
                         enableShowResult = true;
                         stateString = "Success";
-                        stateDetail = "Đã thêm đạo diễn thành công";
+                        stateDetail = "Đã thêm ngôn ngữ thành công";
                     }
                     else if (state == StateOfCreation.AlreadyExists)
                     {
                         enableShowResult = true;
                         stateString = "AlreadyExists";
-                        stateDetail = "Thêm đạo diễn thất bại. Lý do: Đã tồn tại đạo diễn này";
+                        stateDetail = "Thêm ngôn ngữ thất bại. Lý do: Đã tồn tại ngôn ngữ này";
                     }
                     else
                     {
                         enableShowResult = true;
                         stateString = "Failed";
-                        stateDetail = "Thêm đạo diễn thất bại";
+                        stateDetail = "Thêm ngôn ngữ thất bại";
                     }
                 }
             }

@@ -7,30 +7,39 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin
+namespace Web.Admin.LanguageManagement
 {
 
 
-    public partial class CreateRole
+    public partial class CreateLanguage
     {
 
         /// <summary>
-        /// txtRoleName control.
+        /// txtLanguageName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtRoleName;
+        protected global::System.Web.UI.WebControls.TextBox txtLanguageName;
 
         /// <summary>
-        /// cvRoleName control.
+        /// cvLanguageName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvRoleName;
+        protected global::System.Web.UI.WebControls.CustomValidator cvLanguageName;
+
+        /// <summary>
+        /// txtLanguageDescription control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtLanguageDescription;
 
         /// <summary>
         /// btnSubmit control.

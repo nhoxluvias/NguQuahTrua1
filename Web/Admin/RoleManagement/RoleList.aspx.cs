@@ -8,7 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Web.Models;
 
-namespace Web.Admin
+namespace Web.Admin.RoleManagement
 {
     public partial class RoleList : System.Web.UI.Page
     {

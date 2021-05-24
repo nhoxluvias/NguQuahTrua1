@@ -7,65 +7,47 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin.CategoryManagement
+namespace Web.Admin.DirectorManagement
 {
 
 
-    public partial class CategoryList
+    public partial class CreateDirector
     {
 
         /// <summary>
-        /// grvCategory control.
+        /// txtDirectorName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grvCategory;
+        protected global::System.Web.UI.WebControls.TextBox txtDirectorName;
 
         /// <summary>
-        /// drdlPage control.
+        /// cvDirectorName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drdlPage;
+        protected global::System.Web.UI.WebControls.CustomValidator cvDirectorName;
 
         /// <summary>
-        /// hyplnkDetail control.
+        /// txtDirectorDescription control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkDetail;
+        protected global::System.Web.UI.WebControls.TextBox txtDirectorDescription;
 
         /// <summary>
-        /// hyplnkEdit control.
+        /// btnSubmit control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit;
-
-        /// <summary>
-        /// hyplnkDelete control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkDelete;
-
-        /// <summary>
-        /// hyplnkCreateCategory control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkCreateCategory;
+        protected global::System.Web.UI.WebControls.Button btnSubmit;
     }
 }

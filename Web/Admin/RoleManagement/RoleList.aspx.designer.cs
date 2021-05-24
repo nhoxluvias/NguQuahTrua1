@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin
+namespace Web.Admin.RoleManagement
 {
 
 
