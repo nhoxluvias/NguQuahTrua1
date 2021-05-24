@@ -49,6 +49,11 @@ namespace Web.Admin.CategoryManagement
             {
                 enableShowDetail = true;
                 categoryInfo = await categoryBLL.GetCategoryAsync(id);
+                if (categoryInfo == null)
+                {
+                    enableShowDetail = false;
+                    Response.RedirectToRoute("Admin_CategoryList", null);
+                }
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Data.BLL
         private CategoryInfo ToCategoryInfo(Category category)
         {
             if (category == null)
-                throw new Exception("");
+                return null;
             return new CategoryInfo
             {
                 ID = category.ID,
@@ -225,7 +225,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<bool> UpdateCategoryAsync(CategoryUpdate categoryUpdate)
+        public async Task<StateOfUpdate> UpdateCategoryAsync(CategoryUpdate categoryUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -247,10 +247,10 @@ namespace Data.BLL
                     c => c.ID == category.ID
                 );
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<bool> DeleteCategoryAsync(int categoryId)
+        public async Task<StateOfDeletion> DeleteCategoryAsync(int categoryId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -260,10 +260,10 @@ namespace Data.BLL
             long categoryDistributionNumber = await db.CategoryDistributons
                 .CountAsync(cd => cd.categoryId == categoryId);
             if (categoryDistributionNumber > 0)
-                return true;
+                return StateOfDeletion.ConstraintExists;
 
             int affected = await db.Categories.DeleteAsync(c => c.ID == categoryId);
-            return (affected != 0);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
         public async Task<int> CountAllAsync()

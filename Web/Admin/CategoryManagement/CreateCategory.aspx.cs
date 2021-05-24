@@ -17,15 +17,24 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
-            customValidation = new CustomValidation();
-            enableShowResult = false;
-            stateString = null;
-            stateDetail = null;
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                await Create();
+                categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+                customValidation = new CustomValidation();
+                enableShowResult = false;
+                stateString = null;
+                stateDetail = null;
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_CategoryList", null);
+                InitValidation();
+                if (IsPostBack)
+                {
+                    await Create();
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
         }
 
@@ -63,36 +72,26 @@ namespace Web.Admin.CategoryManagement
 
         public async Task Create()
         {
-            try
+            if (IsValidData())
             {
-                if (IsValidData())
+                CategoryCreation category = GetCategoryCreation();
+                StateOfCreation state = await categoryBLL.CreateCategoryAsync(category);
+                enableShowResult = true;
+                if (state == StateOfCreation.Success)
                 {
-                    CategoryCreation category = GetCategoryCreation();
-                    StateOfCreation state = await categoryBLL.CreateCategoryAsync(category);
-                    if (state == StateOfCreation.Success)
-                    {
-                        enableShowResult = true;
-                        stateString = "Success";
-                        stateDetail = "Đã thêm thể loại thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        enableShowResult = true;
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm thể loại thất bại. Lý do: Đã tồn tại thể loại này";
-                    }
-                    else
-                    {
-                        enableShowResult = true;
-                        stateString = "Failed";
-                        stateDetail = "Thêm thể loại thất bại";
-                    }
+                    stateString = "Success";
+                    stateDetail = "Đã thêm thể loại thành công";
                 }
-            }
-            catch (Exception ex)
-            {
-                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
-                Response.RedirectToRoute("Notification_Error", null);
+                else if (state == StateOfCreation.AlreadyExists)
+                {
+                    stateString = "AlreadyExists";
+                    stateDetail = "Thêm thể loại thất bại. Lý do: Đã tồn tại thể loại này";
+                }
+                else
+                {
+                    stateString = "Failed";
+                    stateDetail = "Thêm thể loại thất bại";
+                }
             }
         }
     }

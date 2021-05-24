@@ -50,6 +50,14 @@
             </div>
         </div>
     </div>
+
+    <div class="row grid-responsive">
+        <div class="column page-heading">
+            <div class="large-card">
+                <asp:HyperLink ID="hyplnkList" CssClass="button button-blue" runat="server">Quay về trang danh sách</asp:HyperLink>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="footer" runat="server">
