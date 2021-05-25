@@ -15,6 +15,15 @@ namespace Web.Admin.CategoryManagement
     {
 
         /// <summary>
+        /// lbCategoryName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCategoryName;
+
+        /// <summary>
         /// txtCategoryName control.
         /// </summary>
         /// <remarks>
@@ -31,6 +40,15 @@ namespace Web.Admin.CategoryManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CustomValidator cvCategoryName;
+
+        /// <summary>
+        /// lbCategoryDescription control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbCategoryDescription;
 
         /// <summary>
         /// txtCategoryDescription control.

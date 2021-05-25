@@ -22,6 +22,7 @@ namespace Web.Admin.CountryManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
+            hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
             InitValidation();
             if (IsPostBack)
             {

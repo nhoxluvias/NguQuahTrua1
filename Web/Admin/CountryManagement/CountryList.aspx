@@ -59,6 +59,7 @@
     <p class="mt-2">Bạn đang thao tác trên quốc gia: <% = toolDetail %></p>
     <div class="row grid-responsive">
         <div class="column">
+            <asp:HyperLink ID="hyplnkDetail" CssClass="button button-blue" runat="server">Xem chi tiết</asp:HyperLink>
             <asp:HyperLink ID="hyplnkEdit" CssClass="button button-green" runat="server">Chỉnh sửa</asp:HyperLink>
             <asp:HyperLink ID="hyplnkDelete" CssClass="button button-red" runat="server">Xóa</asp:HyperLink>
         </div>

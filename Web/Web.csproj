@@ -64,12 +64,14 @@
     <Content Include="Admin\CategoryManagement\CategoryDetail.aspx" />
     <Content Include="Admin\CategoryManagement\CategoryList.aspx" />
     <Content Include="Admin\CategoryManagement\CreateCategory.aspx" />
+    <Content Include="Admin\CountryManagement\CountryDetail.aspx" />
     <Content Include="Admin\CountryManagement\CountryList.aspx" />
     <Content Include="Admin\CountryManagement\CreateCountry.aspx" />
     <Content Include="Admin\CountryManagement\DeleteCountry.aspx" />
     <Content Include="Admin\CountryManagement\UpdateCountry.aspx" />
     <Content Include="Admin\DirectorManagement\CreateDirector.aspx" />
     <Content Include="Admin\LanguageManagement\CreateLanguage.aspx" />
+    <Content Include="Admin\LanguageManagement\LanguageDetail.aspx" />
     <Content Include="Admin\RoleManagement\CreateRole.aspx" />
     <Content Include="Admin\CategoryManagement\DeleteCategory.aspx" />
     <Content Include="Admin\Index.aspx" />
@@ -167,6 +169,13 @@
     <Compile Include="Admin\CategoryManagement\CreateCategory.aspx.designer.cs">
       <DependentUpon>CreateCategory.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\CountryManagement\CountryDetail.aspx.cs">
+      <DependentUpon>CountryDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CountryManagement\CountryDetail.aspx.designer.cs">
+      <DependentUpon>CountryDetail.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\CountryManagement\CountryList.aspx.cs">
       <DependentUpon>CountryList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -208,6 +217,13 @@
     </Compile>
     <Compile Include="Admin\LanguageManagement\CreateLanguage.aspx.designer.cs">
       <DependentUpon>CreateLanguage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\LanguageDetail.aspx.cs">
+      <DependentUpon>LanguageDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\LanguageManagement\LanguageDetail.aspx.designer.cs">
+      <DependentUpon>LanguageDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\RoleManagement\CreateRole.aspx.cs">
       <DependentUpon>CreateRole.aspx</DependentUpon>

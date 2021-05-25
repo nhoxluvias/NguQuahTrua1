@@ -34,10 +34,10 @@
                 <div class="card-block">
                     <div>
                         <fieldset>
-                            <label for="txtCountryName">Tên quốc gia</label>
+                            <asp:Label ID="lbCountryName" runat="server" Text="Tên quốc gia" AssociatedControlID="txtCountryName"></asp:Label>
                             <asp:TextBox ID="txtCountryName" placeholder="Nhập vào tên quốc gia" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvCountryName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <label for="txtCountryDescription">Mô tả về quốc gia</label>
+                            <asp:Label ID="lbCountryDescription" runat="server" Text="Mô tả về quốc gia" AssociatedControlID="txtCategoryDescription"></asp:Label>
                             <asp:TextBox ID="txtCountryDescription" placeholder="Nhập vào mô tả quốc gia" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
                         </fieldset>
                     </div>
@@ -45,6 +45,14 @@
                 <div class="card-block mt-0">
                     <asp:Button ID="btnSubmit" CssClass="button-primary" runat="server" Text="Tạo mới" />
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row grid-responsive">
+        <div class="column page-heading">
+            <div class="large-card">
+                <asp:HyperLink ID="hyplnkList" CssClass="button button-blue" runat="server">Quay về trang danh sách</asp:HyperLink>
             </div>
         </div>
     </div>

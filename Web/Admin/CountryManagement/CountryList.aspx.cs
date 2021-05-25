@@ -86,6 +86,7 @@ namespace Web.Admin.CountryManagement
                 CountryInfo countryInfo = await countryBLL.GetCountryAsync(key);
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", countryInfo.ID, countryInfo.name);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CountryDetail", new { id = countryInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCountry", new { id = countryInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", new { id = countryInfo.ID });
             }

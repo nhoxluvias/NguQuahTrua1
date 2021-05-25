@@ -180,7 +180,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<bool> UpdateCountryAsync(CountryUpdate countryUpdate)
+        public async Task<StateOfUpdate> UpdateCountryAsync(CountryUpdate countryUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -202,21 +202,22 @@ namespace Data.BLL
                     c => c.ID == country.ID
                 );
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<bool> DeleteAsync(int countryId)
+        public async Task<StateOfDeletion> DeleteCountryAsync(int countryId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
             if (countryId <= 0)
                 throw new Exception("");
+
             long filmNumberOfCountryId = await db.Films.CountAsync(f => f.countryId == countryId);
             if (filmNumberOfCountryId > 0)
-                return false;
+                return StateOfDeletion.ConstraintExists;
 
             int affected = await db.Languages.DeleteAsync(l => l.ID == countryId);
-            return (affected != 0);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
         public async Task<int> CountAllAsync()

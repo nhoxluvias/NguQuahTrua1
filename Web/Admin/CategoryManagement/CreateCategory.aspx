@@ -36,10 +36,10 @@
                 <div class="card-block">
                     <div>
                         <fieldset>
-                            <label for="txtCategoryName">Tên thể loại</label>
+                            <asp:Label ID="lbCategoryName" runat="server" Text="Tên thể loại" AssociatedControlID="txtCategoryName"></asp:Label>
                             <asp:TextBox ID="txtCategoryName" placeholder="Nhập vào tên thể loại" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvCategoryName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <label for="txtCategoryDescription">Mô tả thể loại</label>
+                            <asp:Label ID="lbCategoryDescription" runat="server" Text="Mô tả thể loại" AssociatedControlID="txtCategoryDescription"></asp:Label>
                             <asp:TextBox ID="txtCategoryDescription" placeholder="Nhập vào mô tả thể loại" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
                         </fieldset>
                     </div>

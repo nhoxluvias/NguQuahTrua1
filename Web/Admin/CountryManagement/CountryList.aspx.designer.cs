@@ -33,6 +33,15 @@ namespace Web.Admin.CountryManagement
         protected global::System.Web.UI.WebControls.DropDownList drdlPage;
 
         /// <summary>
+        /// hyplnkDetail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkDetail;
+
+        /// <summary>
         /// hyplnkEdit control.
         /// </summary>
         /// <remarks>
