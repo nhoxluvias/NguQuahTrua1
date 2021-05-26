@@ -49,8 +49,5 @@ namespace Web.User
                 filmsByCategory.Add(await filmBLL.GetFilmsByCategoryIdAsync(category.ID));
             }
         }
-
-
-
     }
 }

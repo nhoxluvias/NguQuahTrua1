@@ -49,7 +49,8 @@
     <Compile Include="BLL\DirectorBLL.cs" />
     <Compile Include="BLL\FilmBLL.cs" />
     <Compile Include="BLL\LanguageBLL.cs" />
-    <Compile Include="BLL\Migration\MigrationConfig.cs" />
+    <Compile Include="Config\DatabaseConfig.cs" />
+    <Compile Include="Config\MigrationConfig.cs" />
     <Compile Include="BLL\Migration\PaymentMethodMigration.cs" />
     <Compile Include="BLL\Migration\RoleMigration.cs" />
     <Compile Include="BLL\PagedList.cs" />
@@ -87,9 +88,7 @@
     <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BLL\FilmBLL\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\MSSQL_Lite\MSSQL_Lite.csproj">
       <Project>{d7c08863-5fbb-4131-b72c-2ca0e9ed3fe8}</Project>

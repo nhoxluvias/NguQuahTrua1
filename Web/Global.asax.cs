@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.Config;
+using System;
 using System.Web.Routing;
 using Web.App_Start;
 using Web.Common;
@@ -11,7 +12,8 @@ namespace Web
         protected void Application_Start(object sender, EventArgs e)
         {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            DatabaseConfig.RegisterDatabase();
+            DatabaseConfig.ManualConfig(@"LAPTOP-B78E1G5S\MSSQLSERVER2019", "Movie", "sa", "123456789");
+            MigrationConfig.Migrate();
             EmailConfig.RegisterEmail();
         }
 

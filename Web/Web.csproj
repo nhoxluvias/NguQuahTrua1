@@ -312,7 +312,6 @@
     <Compile Include="Admin\RoleManagement\UpdateRole.aspx.designer.cs">
       <DependentUpon>UpdateRole.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\EmailConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Common\PageVisitor.cs" />
@@ -414,6 +413,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="account_assets\" />
     <Folder Include="Admin\CastManagement\" />
     <Folder Include="Admin\SourceManagement\" />
     <Folder Include="Admin\TagManagement\" />
