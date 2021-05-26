@@ -1,6 +1,6 @@
-﻿using MSSQL_Lite.Access;
+﻿using Data.BLL.Migration;
+using MSSQL_Lite.Access;
 using MSSQL_Lite.Connection;
-using Web.Migrations;
 
 namespace Web.App_Start
 {
@@ -14,11 +14,8 @@ namespace Web.App_Start
             SqlConnectInfo.Password = "123456789";
             SqlData.objectReceivingData = ObjectReceivingData.DataSet;
 
-            //RoleMigration roleMigration = new RoleMigration();
-            //roleMigration.AddDataAndRun();
-
-            //PaymentMethodMigration paymentMethodMigration = new PaymentMethodMigration();
-            //paymentMethodMigration.AddDataAndRun();
+            MigrationConfig migrationConfig = new MigrationConfig();
+            migrationConfig.Start();
         }
     }
 }

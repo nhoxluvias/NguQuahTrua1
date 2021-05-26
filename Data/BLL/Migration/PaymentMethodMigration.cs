@@ -1,18 +1,25 @@
-﻿using MSSQL_Lite.Connection;
+﻿using Data.DAL;
+using MSSQL_Lite.Connection;
 using MSSQL_Lite.Migration;
 using System;
 using System.Threading.Tasks;
-using Web.Models;
 
-namespace Web.Migrations
+namespace Data.BLL.Migration
 {
-    public class PaymentMethodMigration : SqlMigration<PaymentMethod>, ISqlMigration
+    internal class PaymentMethodMigration : SqlMigration<PaymentMethod>, ISqlMigration
     {
+
+        public PaymentMethodMigration()
+            : base()
+        {
+
+        }
+
         public void AddDataAndRun()
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = db.PaymentMethods.Count();
-            if(recordNumber == 0)
+            if (recordNumber == 0)
             {
                 AddItem(new PaymentMethod
                 {

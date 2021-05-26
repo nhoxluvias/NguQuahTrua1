@@ -321,8 +321,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\PaymentMethodMigration.cs" />
-    <Compile Include="Migrations\RoleMigration.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\DBContext.cs" />
     <Compile Include="Models\DTO\CategoryInfo.cs" />

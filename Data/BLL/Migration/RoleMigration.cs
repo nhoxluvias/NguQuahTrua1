@@ -1,15 +1,15 @@
 ﻿using Data.Common.Hash;
+using Data.DAL;
 using MSSQL_Lite.Connection;
 using MSSQL_Lite.Migration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Web.Models;
 
-namespace Web.Migrations
+namespace Data.BLL.Migration
 {
-    public class RoleMigration : SqlMigration<Role>, ISqlMigration
+    internal class RoleMigration : SqlMigration<Role>, ISqlMigration
     {
         public RoleMigration()
             : base()
@@ -21,7 +21,7 @@ namespace Web.Migrations
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = db.Roles.Count();
-            if(recordNumber == 0)
+            if (recordNumber == 0)
             {
                 List<string> IDs = new List<string>();
                 int count = 0;
@@ -66,7 +66,7 @@ namespace Web.Migrations
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = await db.Roles.CountAsync();
-            if(recordNumber == 0)
+            if (recordNumber == 0)
             {
                 List<string> IDs = new List<string>();
                 int count = 0;
