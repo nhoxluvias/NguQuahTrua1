@@ -20,13 +20,13 @@ namespace Web.Admin.CategoryManagement
             try
             {
                 categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
-                hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateCategory", null);
+                hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateCategory", null);
                 selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
-                    await SetGrvCategory(0);
+                    await SetGrvCategory();
                     selectedIndex = 0;
                     SetDrdlPage();
                 }
@@ -41,7 +41,7 @@ namespace Web.Admin.CategoryManagement
         {
             try
             {
-                await SetGrvCategory(drdlPage.SelectedIndex);
+                await SetGrvCategory();
                 selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
@@ -53,7 +53,7 @@ namespace Web.Admin.CategoryManagement
             
         }
 
-        private async Task SetGrvCategory(int pageIndex)
+        private async Task SetGrvCategory()
         {
             PagedList<CategoryInfo> categories = await categoryBLL
                 .GetCategoriesAsync(drdlPage.SelectedIndex, 20);

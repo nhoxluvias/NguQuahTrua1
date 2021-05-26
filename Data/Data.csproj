@@ -44,11 +44,13 @@
     <Compile Include="BLL\AccessLevel.cs" />
     <Compile Include="BLL\BLLState.cs" />
     <Compile Include="BLL\BusinessLogicLayer.cs" />
+    <Compile Include="BLL\CastBLL.cs" />
     <Compile Include="BLL\CategoryBLL.cs" />
     <Compile Include="BLL\CountryBLL.cs" />
     <Compile Include="BLL\DirectorBLL.cs" />
     <Compile Include="BLL\FilmBLL.cs" />
     <Compile Include="BLL\LanguageBLL.cs" />
+    <Compile Include="BLL\TagBLL.cs" />
     <Compile Include="Config\DatabaseConfig.cs" />
     <Compile Include="Config\MigrationConfig.cs" />
     <Compile Include="BLL\Migration\PaymentMethodMigration.cs" />

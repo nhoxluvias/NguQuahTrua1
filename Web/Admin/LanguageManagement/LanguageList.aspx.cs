@@ -20,7 +20,7 @@ namespace Web.Admin.LanguageManagement
             try
             {
                 languageBLL = new LanguageBLL(DataAccessLevel.Admin);
-                hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateLanguage", null);
+                hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateLanguage", null);
                 selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;

@@ -70,6 +70,9 @@
     <Content Include="Admin\CountryManagement\DeleteCountry.aspx" />
     <Content Include="Admin\CountryManagement\UpdateCountry.aspx" />
     <Content Include="Admin\DirectorManagement\CreateDirector.aspx" />
+    <Content Include="Admin\DirectorManagement\DeleteDirector.aspx" />
+    <Content Include="Admin\DirectorManagement\DirectorList.aspx" />
+    <Content Include="Admin\DirectorManagement\UpdateDirector.aspx" />
     <Content Include="Admin\LanguageManagement\CreateLanguage.aspx" />
     <Content Include="Admin\LanguageManagement\LanguageDetail.aspx" />
     <Content Include="Admin\RoleManagement\CreateRole.aspx" />
@@ -213,6 +216,27 @@
     </Compile>
     <Compile Include="Admin\DirectorManagement\CreateDirector.aspx.designer.cs">
       <DependentUpon>CreateDirector.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\DeleteDirector.aspx.cs">
+      <DependentUpon>DeleteDirector.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\DeleteDirector.aspx.designer.cs">
+      <DependentUpon>DeleteDirector.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\DirectorList.aspx.cs">
+      <DependentUpon>DirectorList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\DirectorList.aspx.designer.cs">
+      <DependentUpon>DirectorList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\UpdateDirector.aspx.cs">
+      <DependentUpon>UpdateDirector.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\UpdateDirector.aspx.designer.cs">
+      <DependentUpon>UpdateDirector.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\LanguageManagement\CreateLanguage.aspx.cs">
       <DependentUpon>CreateLanguage.aspx</DependentUpon>

@@ -7,21 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin.CountryManagement
+namespace Web.Admin.DirectorManagement
 {
 
 
-    public partial class CountryList
+    public partial class DirectorList
     {
 
         /// <summary>
-        /// grvCountry control.
+        /// grvDirector control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView grvCountry;
+        protected global::System.Web.UI.WebControls.GridView grvDirector;
 
         /// <summary>
         /// drdlPage control.

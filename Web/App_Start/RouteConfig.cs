@@ -41,7 +41,11 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_CreateLanguage", "admin/language/create", "~/Admin/LanguageManagement/CreateLanguage.aspx");
             routes.MapPageRoute("Admin_UpdateLanguage", "admin/language/update/{id}", "~/Admin/LanguageManagement/UpdateLanguage.aspx");
             routes.MapPageRoute("Admin_DeleteLanguage", "admin/language/delete/{id}", "~/Admin/LanguageManagement/DeleteLanguage.aspx");
-            routes.MapPageRoute("Admin_CreateDirector", "admin/director/create", "~/Admin/CreateDirector.aspx");
+            routes.MapPageRoute("Admin_DirectorList", "admin/director/list", "~/Admin/DirectorManagement/DirectorList.aspx");
+            routes.MapPageRoute("Admin_DirectorDetail", "admin/director/detail/{id}", "~/Admin/DirectorManagement/DirectorDetail.aspx");
+            routes.MapPageRoute("Admin_CreateDirector", "admin/director/create", "~/Admin/DirectorManagement/CreateDirector.aspx");
+            routes.MapPageRoute("Admin_UpdateDirector", "admin/director/update/{id}", "~/Admin/DirectorManagement/UpdateDirector.aspx");
+            routes.MapPageRoute("Admin_DeleteDirector", "admin/director/delete/{id}", "~/Admin/DirectorManagement/DeleteDirector.aspx");
 
             routes.MapPageRoute("User_Home", "", "~/User/Index.aspx");
             routes.MapPageRoute("User_Category", "category/{id}", "~/User/Category.aspx");

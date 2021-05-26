@@ -60,12 +60,12 @@ namespace Web.Admin.RoleManagement
         protected global::System.Web.UI.WebControls.HyperLink hyplnkDelete;
 
         /// <summary>
-        /// hyplnkCreateCategory control.
+        /// hyplnkCreate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkCreateCategory;
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkCreate;
     }
 }

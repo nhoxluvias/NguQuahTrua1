@@ -1,10 +1,13 @@
 ﻿using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data.BLL
@@ -29,7 +32,7 @@ namespace Data.BLL
         private DirectorInfo ToDirectorInfo(Director director)
         {
             if (director == null)
-                throw new Exception("");
+                return null;
             return new DirectorInfo
             {
                 ID = director.ID,
@@ -87,6 +90,46 @@ namespace Data.BLL
                 directors = db.Directors.ToList(c => new { c.ID, c.name, c.description })
                     .Select(d => ToDirectorInfo(d)).ToList();
             return directors;
+        }
+
+        public PagedList<DirectorInfo> GetDirectors(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Director> pagedList = null;
+            Expression<Func<Director, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Directors.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Directors.ToPagedList(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<DirectorInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToDirectorInfo(c)).ToList()
+            };
+        }
+
+        public async Task<PagedList<DirectorInfo>> GetDirectorsAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Director> pagedList = null;
+            Expression<Func<Director, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Directors.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Directors.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<DirectorInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToDirectorInfo(c)).ToList()
+            };
         }
 
         public async Task<DirectorInfo> GetDirectorAsync(long directorId)
@@ -176,7 +219,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<bool> UpdateDirectorAsync(DirectorUpdate directorUpdate)
+        public async Task<StateOfUpdate> UpdateDirectorAsync(DirectorUpdate directorUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -198,10 +241,10 @@ namespace Data.BLL
                     d => d.ID == director.ID
                 );
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<bool> DeleteDirectorAsync(long directorId)
+        public async Task<StateOfDeletion> DeleteDirectorAsync(long directorId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -210,10 +253,10 @@ namespace Data.BLL
 
             long directorOfFilmNumber = await db.DirectorOfFilms.CountAsync(df => df.directorId == directorId);
             if (directorOfFilmNumber > 0)
-                return false;
+                return StateOfDeletion.ConstraintExists;
 
             int affected = await db.Directors.DeleteAsync(d => d.ID == directorId);
-            return (affected != 0);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
         public async Task<long> CountAllAsync()

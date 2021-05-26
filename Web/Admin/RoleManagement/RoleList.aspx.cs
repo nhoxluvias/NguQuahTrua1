@@ -20,13 +20,13 @@ namespace Web.Admin.RoleManagement
             try
             {
                 roleBLL = new RoleBLL(DataAccessLevel.Admin);
-                hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateRole", null);
+                hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateRole", null);
                 selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
-                    await SetGrvRole(0);
+                    await SetGrvRole();
                     selectedIndex = 0;
                     SetDrdlPage();
                 }
@@ -42,7 +42,7 @@ namespace Web.Admin.RoleManagement
         {
             try
             {
-                await SetGrvRole(drdlPage.SelectedIndex);
+                await SetGrvRole();
                 selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
@@ -54,7 +54,7 @@ namespace Web.Admin.RoleManagement
 
         }
 
-        private async Task SetGrvRole(int pageIndex)
+        private async Task SetGrvRole()
         {
             PagedList<RoleInfo> roles = await roleBLL
                 .GetRolesAsync(drdlPage.SelectedIndex, 20);

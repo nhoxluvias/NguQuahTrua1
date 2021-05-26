@@ -1,8 +1,11 @@
 ﻿using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data.BLL
@@ -27,7 +30,7 @@ namespace Data.BLL
         private PaymentMethodInfo ToPaymentMethodInfo(PaymentMethod paymentMethod)
         {
             if (paymentMethod == null)
-                throw new Exception("");
+                return null;
             return new PaymentMethodInfo
             {
                 ID = paymentMethod.ID,
@@ -87,7 +90,47 @@ namespace Data.BLL
             return ToPaymentMethodInfo(paymentMethod);
         }
 
-        public async Task<bool> CreateRoleAsync(PaymentMethodCreation paymentMethodCreation)
+        public PagedList<PaymentMethodInfo> GetPaymentMethods(int pageIndex, int pageSize)
+        {
+            SqlPagedList<PaymentMethod> pagedList = null;
+            Expression<Func<PaymentMethod, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.PaymentMethods.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.PaymentMethods.ToPagedList(
+                    c => new { c.ID, c.name },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<PaymentMethodInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToPaymentMethodInfo(c)).ToList()
+            };
+        }
+
+        public async Task<PagedList<PaymentMethodInfo>> GetPaymentMethodsAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<PaymentMethod> pagedList = null;
+            Expression<Func<PaymentMethod, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.PaymentMethods.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.PaymentMethods.ToPagedListAsync(
+                    c => new { c.ID, c.name },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<PaymentMethodInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToPaymentMethodInfo(c)).ToList()
+            };
+        }
+
+        public async Task<StateOfCreation> CreateRoleAsync(PaymentMethodCreation paymentMethodCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -97,10 +140,10 @@ namespace Data.BLL
 
             int affected = await db.PaymentMethods.InsertAsync(paymentMethod);
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<bool> UpdateRoleAsync(PaymentMethodUpdate paymentMethodUpdate)
+        public async Task<StateOfUpdate> UpdateRoleAsync(PaymentMethodUpdate paymentMethodUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -111,10 +154,10 @@ namespace Data.BLL
             int affected = await db.PaymentMethods
                 .UpdateAsync(paymentMethod, p => new { p.name, p.updateAt }, p => p.ID == paymentMethod.ID);
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<bool> DeleteAsync(int paymentMethodId)
+        public async Task<StateOfDeletion> DeleteAsync(int paymentMethodId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -124,10 +167,10 @@ namespace Data.BLL
             long paymentInfoNumber = await db.PaymentInfos
                 .CountAsync(p => p.paymentMethodId == paymentMethodId);
             if (paymentInfoNumber > 0)
-                return false;
+                return StateOfDeletion.ConstraintExists;
 
             int affected = await db.PaymentMethods.DeleteAsync(p => p.ID == paymentMethodId);
-            return (affected != 0);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
         public async Task<int> CountAllAsync()

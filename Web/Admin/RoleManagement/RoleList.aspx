@@ -19,7 +19,7 @@
                             <asp:BoundField DataField="name" HeaderText="Tên vai trò" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
-                            <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn thể loại" />
+                            <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn vai trò" />
                         </Columns>
                         <EditRowStyle BackColor="#2461BF" />
                         <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -68,7 +68,7 @@
     <a class="anchor" name="buttons"></a>
     <div class="row grid-responsive">
         <div class="column">
-            <asp:HyperLink ID="hyplnkCreateCategory" CssClass="button" runat="server">Thêm mới</asp:HyperLink>
+            <asp:HyperLink ID="hyplnkCreate" CssClass="button" runat="server">Thêm mới</asp:HyperLink>
         </div>
     </div>
 </asp:Content>

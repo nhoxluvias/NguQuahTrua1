@@ -1,7 +1,7 @@
-﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="CountryList.aspx.cs" Inherits="Web.Admin.CountryManagement.CountryList" MaintainScrollPositionOnPostback="true" %>
-
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DirectorList.aspx.cs" Inherits="Web.Admin.DirectorManagement.DirectorList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <!--Tables-->
     <h5 class="mt-2"></h5>
@@ -10,18 +10,18 @@
         <div class="column ">
             <div class="card">
                 <div class="card-title">
-                    <h3>Danh sách quốc gia</h3>
+                    <h3>Danh sách đạo diễn</h3>
                 </div>
                 <div class="card-block">
-                    <asp:GridView ID="grvCountry" runat="server" BorderColor="Silver" BorderStyle="Solid" AutoGenerateColumns="False" DataKeyNames="ID" OnSelectedIndexChanged="grvCategory_SelectedIndexChanged">
+                    <asp:GridView ID="grvDirector" runat="server" BorderColor="Silver" BorderStyle="Solid" AutoGenerateColumns="False" DataKeyNames="ID" OnSelectedIndexChanged="grvDirector_SelectedIndexChanged">
                         <AlternatingRowStyle BackColor="White" />
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
-                            <asp:BoundField DataField="name" HeaderText="Tên quốc gia" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả quốc gia" />
+                            <asp:BoundField DataField="name" HeaderText="Tên đạo diễn" />
+                            <asp:BoundField DataField="description" HeaderText="Mô tả đạo điễn" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
-                            <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn quốc gia" />
+                            <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn đạo diễn" />
                         </Columns>
                         <EditRowStyle BackColor="#2461BF" />
                         <FooterStyle BackColor="#507CD1" Font-Bold="True" ForeColor="White" />
@@ -33,7 +33,7 @@
                         <SortedAscendingHeaderStyle BackColor="#6D95E1" />
                         <SortedDescendingCellStyle BackColor="#E9EBEF" />
                         <SortedDescendingHeaderStyle BackColor="#4870BE" />
-
+                      
                     </asp:GridView>
                 </div>
                 <div class="row ml-2 mr-2">
@@ -54,9 +54,9 @@
 
     <%if (enableTool)
         { %>
-    <h5 class="mt-2">Công cụ chỉnh sửa quốc gia</h5>
+    <h5 class="mt-2">Công cụ chỉnh sửa đạo diễn</h5>
     <a class="anchor" name="buttons"></a>
-    <p class="mt-2">Bạn đang thao tác trên quốc gia: <% = toolDetail %></p>
+    <p class="mt-2">Bạn đang thao tác trên đạo diễn: <% = toolDetail %></p>
     <div class="row grid-responsive">
         <div class="column">
             <asp:HyperLink ID="hyplnkDetail" CssClass="button button-blue" runat="server">Xem chi tiết</asp:HyperLink>
@@ -66,7 +66,7 @@
     </div>
     <%} %>
 
-    <h5 class="mt-2">Thêm mới quốc gia</h5>
+    <h5 class="mt-2">Thêm mới đạo diễn</h5>
     <a class="anchor" name="buttons"></a>
     <div class="row grid-responsive">
         <div class="column">

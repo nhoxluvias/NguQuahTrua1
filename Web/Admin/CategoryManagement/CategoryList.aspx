@@ -70,7 +70,7 @@
     <a class="anchor" name="buttons"></a>
     <div class="row grid-responsive">
         <div class="column">
-            <asp:HyperLink ID="hyplnkCreateCategory" CssClass="button" runat="server">Thêm mới</asp:HyperLink>
+            <asp:HyperLink ID="hyplnkCreate" CssClass="button" runat="server">Thêm mới</asp:HyperLink>
         </div>
     </div>
 </asp:Content>
