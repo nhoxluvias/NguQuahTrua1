@@ -1,23 +1,101 @@
-﻿using MSSQL_Lite.Connection;
+﻿using Data.BLL;
+using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Admin.RoleManagement
 {
     public partial class RoleList : System.Web.UI.Page
     {
-        private DBContext db;
+        private RoleBLL roleBLL;
+        private int selectedIndex;
+        protected long currentPage;
+        protected long pageNumber;
+        protected bool enableTool;
+        protected string toolDetail;
+
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext(ConnectionType.ManuallyDisconnect);
-            GridView1.DataSource = await db.Roles.ToListAsync();
-            GridView1.DataBind();
+            try
+            {
+                roleBLL = new RoleBLL(DataAccessLevel.Admin);
+                hyplnkCreateCategory.NavigateUrl = GetRouteUrl("Admin_CreateRole", null);
+                selectedIndex = 0;
+                enableTool = false;
+                toolDetail = null;
+                if (!IsPostBack)
+                {
+                    await SetGrvRole(0);
+                    selectedIndex = 0;
+                    SetDrdlPage();
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
+        }
+
+        protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                await SetGrvRole(drdlPage.SelectedIndex);
+                selectedIndex = drdlPage.SelectedIndex;
+                SetDrdlPage();
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
+
+        }
+
+        private async Task SetGrvRole(int pageIndex)
+        {
+            PagedList<RoleInfo> roles = await roleBLL
+                .GetRolesAsync(drdlPage.SelectedIndex, 20);
+            grvRole.DataSource = roles.Items;
+            grvRole.DataBind();
+
+            pageNumber = roles.PageNumber;
+            currentPage = roles.CurrentPage;
+        }
+
+        private void SetDrdlPage()
+        {
+            drdlPage.Items.Clear();
+            for (int i = 0; i < pageNumber; i++)
+            {
+                string item = (i + 1).ToString();
+                if (i == currentPage)
+                    drdlPage.Items.Add(string.Format("{0}*", item));
+                else
+                    drdlPage.Items.Add(item);
+            }
+            drdlPage.SelectedIndex = selectedIndex;
+        }
+
+        protected async void grvRole_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                string key = (string)grvRole.DataKeys[grvRole.SelectedIndex].Value;
+                RoleInfo roleInfo = await roleBLL.GetRoleAsync(key);
+                enableTool = true;
+                toolDetail = string.Format("{0} -- {1}", roleInfo.ID, roleInfo.name);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_RoleDetail", new { id = roleInfo.ID });
+                hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateRole", new { id = roleInfo.ID });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", new { id = roleInfo.ID });
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
         }
     }
 }

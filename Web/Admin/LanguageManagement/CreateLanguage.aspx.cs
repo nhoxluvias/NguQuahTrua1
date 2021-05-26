@@ -22,6 +22,7 @@ namespace Web.Admin.LanguageManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
+            hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
             InitValidation();
             if (IsPostBack)
             {

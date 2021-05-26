@@ -1,16 +1,20 @@
 ﻿using Data.BLL;
 using Data.DTO;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Web.Models;
 
-namespace Web.Admin.LanguageManagement
+namespace Web.Admin.RoleManagement
 {
-    public partial class DeleteLanguage : System.Web.UI.Page
+    public partial class DeleteRole : System.Web.UI.Page
     {
-        private LanguageBLL languageBLL;
-        protected LanguageInfo languageInfo;
+        private RoleBLL roleBLL;
+        protected RoleInfo roleInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
         protected string stateString;
@@ -20,14 +24,14 @@ namespace Web.Admin.LanguageManagement
         {
             try
             {
-                languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+                roleBLL = new RoleBLL(DataAccessLevel.Admin);
                 enableShowInfo = false;
                 enableShowResult = false;
                 stateString = null;
                 stateDetail = null;
-                hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
                 if (!IsPostBack)
-                    await GetLanguageInfo();
+                    await GetRoleInfo();
             }
             catch (Exception ex)
             {
@@ -36,28 +40,28 @@ namespace Web.Admin.LanguageManagement
             }
         }
 
-        private int GetLanguageId()
+        private string GetRoleId()
         {
             object obj = Page.RouteData.Values["id"];
             if (obj == null)
-                return -1;
-            return int.Parse(obj.ToString());
+                return null;
+            return obj.ToString();
         }
 
-        private async Task GetLanguageInfo()
+        private async Task GetRoleInfo()
         {
-            int id = GetLanguageId();
-            if (id <= 0)
+            string id = GetRoleId();
+            if (String.IsNullOrEmpty(id))
             {
-                Response.RedirectToRoute("Admin_LanguageList", null);
+                Response.RedirectToRoute("Admin_RoleList", null);
             }
             else
             {
-                languageInfo = await languageBLL.GetLanguageAsync(id);
-                if (languageInfo == null)
+                roleInfo = await roleBLL.GetRoleAsync(id);
+                if (roleInfo == null)
                 {
                     enableShowInfo = false;
-                    Response.RedirectToRoute("Admin_LanguageList", null);
+                    Response.RedirectToRoute("Admin_RoleList", null);
                 }
                 else
                 {
@@ -66,32 +70,32 @@ namespace Web.Admin.LanguageManagement
             }
         }
 
-        private async Task DeleteCategoryInfo()
+        private async Task DeleteRoleInfo()
         {
-            int id = GetLanguageId();
-            StateOfDeletion state = await languageBLL.DeleteLanguageAsync(id);
+            string id = GetRoleId();
+            StateOfDeletion state = await roleBLL.DeleteRoleAsync(id);
             enableShowResult = true;
             enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
-                stateDetail = "Đã xóa ngôn ngữ thành công";
+                stateDetail = "Đã xóa vai trò thành công";
             }
             else if (state == StateOfDeletion.Failed)
             {
                 stateString = "Failed";
-                stateDetail = "Xóa ngôn ngữ thất bại";
+                stateDetail = "Xóa vai trò thất bại";
             }
             else
             {
                 stateString = "ConstraintExists";
-                stateDetail = "Không thể xóa ngôn ngữ. Lý do: Ngôn ngữ này đang được sử dụng!";
+                stateDetail = "Không thể xóa vai trò. Lý do: Vai trò này đang được sử dụng!";
             }
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
         {
-            await DeleteCategoryInfo();
+            await DeleteRoleInfo();
         }
     }
 }

@@ -15,6 +15,15 @@ namespace Web.Admin.LanguageManagement
     {
 
         /// <summary>
+        /// lbLanguageName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbLanguageName;
+
+        /// <summary>
         /// txtLanguageName control.
         /// </summary>
         /// <remarks>
@@ -33,6 +42,15 @@ namespace Web.Admin.LanguageManagement
         protected global::System.Web.UI.WebControls.CustomValidator cvLanguageName;
 
         /// <summary>
+        /// lbLanguageDescription control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbLanguageDescription;
+
+        /// <summary>
         /// txtLanguageDescription control.
         /// </summary>
         /// <remarks>
@@ -49,5 +67,14 @@ namespace Web.Admin.LanguageManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSubmit;
+
+        /// <summary>
+        /// hyplnkList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkList;
     }
 }

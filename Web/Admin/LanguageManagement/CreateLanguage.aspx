@@ -34,10 +34,10 @@
                 <div class="card-block">
                     <div>
                         <fieldset>
-                            <label for="txtLanguageName">Tên ngôn ngữ</label>
+                            <asp:Label ID="lbLanguageName" runat="server" Text="Tên ngôn ngữ" AssociatedControlID="txtLanguageName"></asp:Label>
                             <asp:TextBox ID="txtLanguageName" placeholder="Nhập vào tên ngôn ngữ" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvLanguageName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <label for="txtLanguageDescription">Mô tả ngôn ngữ</label>
+                            <asp:Label ID="lbLanguageDescription" runat="server" Text="Mô tả ngôn ngữ" AssociatedControlID="txtLanguageDescription"></asp:Label>
                             <asp:TextBox ID="txtLanguageDescription" placeholder="Nhập vào mô tả ngôn ngữ" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
                         </fieldset>
                     </div>
@@ -45,6 +45,14 @@
                 <div class="card-block mt-0">
                     <asp:Button ID="btnSubmit" CssClass="button-primary" runat="server" Text="Tạo mới" />
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row grid-responsive">
+        <div class="column page-heading">
+            <div class="large-card">
+                <asp:HyperLink ID="hyplnkList" CssClass="button button-blue" runat="server">Quay về trang danh sách</asp:HyperLink>
             </div>
         </div>
     </div>

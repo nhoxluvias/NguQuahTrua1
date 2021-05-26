@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin.LanguageManagement
+namespace Web.Admin.RoleManagement
 {
 
 
-    public partial class DeleteLanguage
+    public partial class DeleteRole
     {
 
         /// <summary>

@@ -78,8 +78,11 @@
     <Content Include="Admin\LanguageManagement\DeleteLanguage.aspx" />
     <Content Include="Admin\LanguageManagement\LanguageList.aspx" />
     <Content Include="Admin\LanguageManagement\UpdateLanguage.aspx" />
+    <Content Include="Admin\RoleManagement\DeleteRole.aspx" />
+    <Content Include="Admin\RoleManagement\RoleDetail.aspx" />
     <Content Include="Admin\RoleManagement\RoleList.aspx" />
     <Content Include="Admin\CategoryManagement\UpdateCategory.aspx" />
+    <Content Include="Admin\RoleManagement\UpdateRole.aspx" />
     <Content Include="admin_assets\css\addition.css" />
     <Content Include="admin_assets\js\jquery.js" />
     <Content Include="images\img1.jpg" />
@@ -102,17 +105,17 @@
     <Content Include="css\account\login.css" />
     <Content Include="css\account\register.css" />
     <Content Include="css\account\reset-password.css" />
-    <Content Include="css\admin\font-awesome.min.css" />
-    <Content Include="css\admin\milligram.min.css" />
-    <Content Include="css\admin\normalize.css" />
-    <Content Include="css\admin\styles.css" />
+    <Content Include="admin_assets\css\font-awesome.min.css" />
+    <Content Include="admin_assets\css\milligram.min.css" />
+    <Content Include="admin_assets\css\normalize.css" />
+    <Content Include="admin_assets\css\styles.css" />
     <Content Include="fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="js\account\confirm.js" />
     <Content Include="js\account\login.js" />
     <Content Include="js\account\register.js" />
-    <Content Include="js\admin\chart-data.js" />
-    <Content Include="js\admin\chart.min.js" />
+    <Content Include="admin_assets\js\chart-data.js" />
+    <Content Include="admin_assets\js\chart.min.js" />
     <Content Include="libraries\css\styles.css" />
     <Content Include="libraries\js\video.js" />
     <Content Include="libraries\video-js\demo.html" />
@@ -274,6 +277,20 @@
     <Compile Include="Admin\Layout\AdminLayout.Master.designer.cs">
       <DependentUpon>AdminLayout.Master</DependentUpon>
     </Compile>
+    <Compile Include="Admin\RoleManagement\DeleteRole.aspx.cs">
+      <DependentUpon>DeleteRole.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\RoleManagement\DeleteRole.aspx.designer.cs">
+      <DependentUpon>DeleteRole.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\RoleManagement\RoleDetail.aspx.cs">
+      <DependentUpon>RoleDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\RoleManagement\RoleDetail.aspx.designer.cs">
+      <DependentUpon>RoleDetail.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\RoleManagement\RoleList.aspx.cs">
       <DependentUpon>RoleList.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -287,6 +304,13 @@
     </Compile>
     <Compile Include="Admin\CategoryManagement\UpdateCategory.aspx.designer.cs">
       <DependentUpon>UpdateCategory.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\RoleManagement\UpdateRole.aspx.cs">
+      <DependentUpon>UpdateRole.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\RoleManagement\UpdateRole.aspx.designer.cs">
+      <DependentUpon>UpdateRole.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\DatabaseConfig.cs" />
     <Compile Include="App_Start\EmailConfig.cs" />
@@ -397,7 +421,6 @@
     <Folder Include="Admin\TagManagement\" />
     <Folder Include="Admin\UserManagement\" />
     <Folder Include="Control\" />
-    <Folder Include="css\user\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

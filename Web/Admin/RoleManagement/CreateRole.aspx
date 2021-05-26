@@ -34,7 +34,7 @@
                 <div class="card-block">
                     <div>
                         <fieldset>
-                            <label for="txtRoleName">Tên vai trò</label>
+                            <asp:Label ID="lbRoleName" runat="server" Text="Tên vai trò" AssociatedControlID="txtRoleName"></asp:Label>
                             <asp:TextBox ID="txtRoleName" placeholder="Nhập vào tên vai trò" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvRoleName" CssClass="text-red" runat="server"></asp:CustomValidator>
                         </fieldset>
@@ -43,6 +43,14 @@
                 <div class="card-block mt-0">
                     <asp:Button ID="btnSubmit" CssClass="button-primary" runat="server" Text="Tạo mới" />
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row grid-responsive">
+        <div class="column page-heading">
+            <div class="large-card">
+                <asp:HyperLink ID="hyplnkList" CssClass="button button-blue" runat="server">Quay về trang danh sách</asp:HyperLink>
             </div>
         </div>
     </div>

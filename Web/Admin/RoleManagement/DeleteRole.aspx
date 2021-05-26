@@ -1,11 +1,11 @@
-﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DeleteLanguage.aspx.cs" Inherits="Web.Admin.LanguageManagement.DeleteLanguage" %>
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DeleteRole.aspx.cs" Inherits="Web.Admin.RoleManagement.DeleteRole" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <% if (enableShowResult)
         { %>
-    <h5 class="mt-2">Trạng thái xóa ngôn ngữ</h5>
+    <h5 class="mt-2">Trạng thái xóa vai trò</h5>
     <a class="anchor" name="alerts"></a>
     <div class="row grid-responsive">
         <div class="column">
@@ -30,7 +30,7 @@
     <div class="row grid-responsive">
         <div class="column page-heading">
             <div class="large-card">
-                <h3>Xóa ngôn ngữ: <% = string.Format("{0} -- {1}", languageInfo.ID, languageInfo.name) %></h3>
+                <h3>Xóa vai trò: <% = string.Format("{0} -- {1}", roleInfo.ID, roleInfo.name) %></h3>
                 <p>Hãy cân nhắc trước khi xóa</p>
                 <asp:Button ID="btnDelete" CssClass="button button-red" runat="server" Text="Xóa" OnClick="btnDelete_Click" />
             </div>

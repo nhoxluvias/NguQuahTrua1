@@ -11,16 +11,16 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700" rel="stylesheet">
 
     <!-- Template Styles -->
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/admin/font-awesome.min.css") %>">
+    <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/font-awesome.min.css") %>">
 
     <!-- CSS Reset -->
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/admin/normalize.css") %>">
+    <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/normalize.css") %>">
 
     <!-- Milligram CSS minified -->
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/admin/milligram.min.css") %>">
+    <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/milligram.min.css") %>">
 
     <!-- Main Styles -->
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/admin/styles.css") %>">
+    <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/styles.css") %>">
 
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/addition.css") %>"/>
 
@@ -61,6 +61,8 @@
                     <li><a href="#"><em class="fa fa-bar-chart"></em>Quản lý phim</a></li>
                     <li><a href="<% = hyplnkCategoryList %>"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
                     <li><a href="<% = hyplnkCountryList %>"><em class="fa fa fa-clone"></em>Quản lý quốc gia</a></li>
+                    <li><a href="<% = hyplnkLanguageList %>"><em class="fa fa fa-clone"></em>Quản lý ngôn ngữ</a></li>
+                    <li><a href="<% = hyplnkRoleList %>"><em class="fa fa fa-clone"></em>Quản lý vai trò</a></li>
                     <li><a href="#"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
                     <li><a href="#"><em class="fa fa-warning"></em>Quản lý thẻ tag</a></li>
                 </ul>
@@ -73,8 +75,8 @@
     </form>
     <asp:ContentPlaceHolder ID="footer" runat="server">
     </asp:ContentPlaceHolder>
-    <script src="<%= ResolveUrl("~/js/admin/chart.min.js") %>"></script>
-    <script src="<%= ResolveUrl("~/js/admin/chart-data.js") %>"></script>
+    <script src="<%= ResolveUrl("~/admin_assets/js/chart.min.js") %>"></script>
+    <script src="<%= ResolveUrl("~/admin_assets/js/chart-data.js") %>"></script>
     <script>
         window.onload = function () {
             var chart1 = document.getElementById("line-chart").getContext("2d");

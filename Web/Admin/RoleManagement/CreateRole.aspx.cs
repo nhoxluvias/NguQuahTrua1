@@ -22,6 +22,7 @@ namespace Web.Admin.RoleManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
+            hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
             InitValidation();
             if (IsPostBack)
             {

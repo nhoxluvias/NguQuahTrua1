@@ -1,8 +1,11 @@
 ﻿using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,7 +14,7 @@ namespace Data.BLL
     public class LanguageBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
-        public LanguageBLL(DataAccessLevel dataAccessLevel) 
+        public LanguageBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
@@ -68,7 +71,7 @@ namespace Data.BLL
         public async Task<List<LanguageInfo>> GetLanguagesAsync()
         {
             List<LanguageInfo> languages = null;
-            if(dataAccessLevel == DataAccessLevel.Admin)
+            if (dataAccessLevel == DataAccessLevel.Admin)
                 languages = (await db.Languages.ToListAsync())
                     .Select(l => ToLanguageInfo(l)).ToList();
             else
@@ -89,17 +92,57 @@ namespace Data.BLL
             return languages;
         }
 
+        public async Task<PagedList<LanguageInfo>> GetLanguagesAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Language> pagedList = null;
+            Expression<Func<Language, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Languages.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Languages.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<LanguageInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToLanguageInfo(c)).ToList()
+            };
+        }
+
+        public PagedList<LanguageInfo> GetLanguages(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Language> pagedList = null;
+            Expression<Func<Language, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Languages.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Languages.ToPagedList(
+                    c => new { c.ID, c.name, c.description },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<LanguageInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToLanguageInfo(c)).ToList()
+            };
+        }
+
         public async Task<LanguageInfo> GetLanguageAsync(int languageId)
         {
             if (languageId <= 0)
                 throw new Exception("");
             Language language = null;
-            if(dataAccessLevel == DataAccessLevel.Admin)
+            if (dataAccessLevel == DataAccessLevel.Admin)
                 language = (await db.Languages.SingleOrDefaultAsync(l => l.ID == languageId));
             else
                 language = (await db.Languages
                     .SingleOrDefaultAsync(l => new { l.ID, l.name, l.description }, l => l.ID == languageId));
-            
+
             return ToLanguageInfo(language);
         }
 
@@ -138,7 +181,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<bool> UpdateLanguageAsync(LanguageUpdate languageUpdate)
+        public async Task<StateOfUpdate> UpdateLanguageAsync(LanguageUpdate languageUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -150,20 +193,20 @@ namespace Data.BLL
             if (language.description == null)
                 affected = await db.Languages.UpdateAsync(
                     language,
-                    l => new { l.name, l.createAt },
+                    l => new { l.name, l.updateAt },
                     l => l.ID == language.ID
                 );
             else
                 affected = await db.Languages.UpdateAsync(
                     language,
-                    l => new { l.name, l.createAt },
+                    l => new { l.name, l.description, l.updateAt },
                     l => l.ID == language.ID
                 );
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<bool> DeleteAsync(int languageId)
+        public async Task<StateOfDeletion> DeleteLanguageAsync(int languageId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -171,10 +214,10 @@ namespace Data.BLL
                 throw new Exception("");
             long filmNumberOfLanguageId = await db.Films.CountAsync(f => f.languageId == languageId);
             if (filmNumberOfLanguageId > 0)
-                return false;
+                return StateOfDeletion.ConstraintExists;
 
             int affected = await db.Languages.DeleteAsync(l => l.ID == languageId);
-            return (affected != 0);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
         public async Task<int> CountAllAsync()

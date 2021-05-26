@@ -1,9 +1,12 @@
 ﻿using Data.Common.Hash;
 using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Data.BLL
@@ -28,7 +31,7 @@ namespace Data.BLL
         private RoleInfo ToRoleInfo(Role role)
         {
             if (role == null)
-                throw new Exception("");
+                return null;
             return new RoleInfo
             {
                 ID = role.ID,
@@ -88,6 +91,46 @@ namespace Data.BLL
             return ToRoleInfo(role);
         }
 
+        public PagedList<RoleInfo> GetRoles(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Role> pagedList = null;
+            Expression<Func<Role, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Roles.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Roles.ToPagedList(
+                    c => new { c.name },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<RoleInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToRoleInfo(c)).ToList()
+            };
+        }
+
+        public async Task<PagedList<RoleInfo>> GetRolesAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Role> pagedList = null;
+            Expression<Func<Role, object>> orderBy = c => new { c.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Roles.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Roles.ToPagedListAsync(
+                    c => new { c.name },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<RoleInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(c => ToRoleInfo(c)).ToList()
+            };
+        }
+
         public async Task<StateOfCreation> CreateRoleAsync(RoleCreation roleCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
@@ -107,7 +150,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<bool> UpdateRoleAsync(RoleUpdate roleUpdate)
+        public async Task<StateOfUpdate> UpdateRoleAsync(RoleUpdate roleUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -118,10 +161,10 @@ namespace Data.BLL
             int affected = await db.Roles
                 .UpdateAsync(role, r => new { r.name, r.updateAt }, r => r.ID == role.ID);
 
-            return (affected != 0);
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<bool> DeleteAsync(string roleId)
+        public async Task<StateOfDeletion> DeleteRoleAsync(string roleId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -130,10 +173,10 @@ namespace Data.BLL
 
             long userNumberOfRoleId = await db.Users.CountAsync(r => r.roleId == roleId);
             if (userNumberOfRoleId > 0)
-                return false;
+                return StateOfDeletion.ConstraintExists;
 
             int affected = await db.Roles.DeleteAsync(r => r.ID == roleId);
-            return (affected != 0);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
         public async Task<int> CountAllAsync()

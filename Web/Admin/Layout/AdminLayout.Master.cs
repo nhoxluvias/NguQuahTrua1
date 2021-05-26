@@ -12,12 +12,16 @@ namespace Web.Admin.Layout
         protected string hyplnkOverview;
         protected string hyplnkCategoryList;
         protected string hyplnkCountryList;
+        protected string hyplnkLanguageList;
+        protected string hyplnkRoleList;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             hyplnkOverview = GetRouteUrl("Admin_Overview", null);
             hyplnkCategoryList = GetRouteUrl("Admin_CategoryList", null);
             hyplnkCountryList = GetRouteUrl("Admin_CountryList", null);
+            hyplnkLanguageList = GetRouteUrl("Admin_LanguageList", null);
+            hyplnkRoleList = GetRouteUrl("Admin_RoleList", null);
         }
     }
 }

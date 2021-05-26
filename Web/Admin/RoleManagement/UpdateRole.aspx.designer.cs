@@ -7,66 +7,48 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Web.Admin.LanguageManagement
+namespace Web.Admin.RoleManagement
 {
 
 
-    public partial class UpdateLanguage
+    public partial class UpdateRole
     {
 
         /// <summary>
-        /// hdLanguageId control.
+        /// hdRoleId control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdLanguageId;
+        protected global::System.Web.UI.WebControls.HiddenField hdRoleId;
 
         /// <summary>
-        /// lbLanguageName control.
+        /// lbRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbLanguageName;
+        protected global::System.Web.UI.WebControls.Label lbRoleName;
 
         /// <summary>
-        /// txtLanguageName control.
+        /// txtRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLanguageName;
+        protected global::System.Web.UI.WebControls.TextBox txtRoleName;
 
         /// <summary>
-        /// cvLanguageName control.
+        /// cvRoleName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvLanguageName;
-
-        /// <summary>
-        /// lbLanguageDescription control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbLanguageDescription;
-
-        /// <summary>
-        /// txtLanguageDescription control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtLanguageDescription;
+        protected global::System.Web.UI.WebControls.CustomValidator cvRoleName;
 
         /// <summary>
         /// btnSubmit control.
