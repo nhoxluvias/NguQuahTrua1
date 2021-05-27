@@ -12,6 +12,7 @@ namespace Data.DAL
         private SqlAccess<PaymentInfo> paymentInfos;
         private SqlAccess<Category> categories;
         private SqlAccess<Tag> tags;
+        private SqlAccess<TagDistribution> tagDistributions;
         private SqlAccess<Film> films;
         private SqlAccess<Language> languages;
         private SqlAccess<Country> countries;
@@ -30,6 +31,7 @@ namespace Data.DAL
             paymentMethods = null;
             categories = null;
             tags = null;
+            tagDistributions = null;
             films = null;
             languages = null;
             countries = null;
@@ -46,6 +48,7 @@ namespace Data.DAL
         public SqlAccess<PaymentInfo> PaymentInfos { get { return InitSqlAccess<PaymentInfo>(ref paymentInfos); } }
         public SqlAccess<Category> Categories { get { return InitSqlAccess<Category>(ref categories); } }
         public SqlAccess<Tag> Tags { get { return InitSqlAccess<Tag>(ref tags); } }
+        public SqlAccess<TagDistribution> TagDistributions { get { return InitSqlAccess<TagDistribution>(ref tagDistributions); } }
         public SqlAccess<Film> Films { get { return InitSqlAccess<Film>(ref films); } }
         public SqlAccess<Language> Languages { get { return InitSqlAccess<Language>(ref languages); } }
         public SqlAccess<Country> Countries { get { return InitSqlAccess<Country>(ref countries); } }
@@ -69,6 +72,7 @@ namespace Data.DAL
                         DisposeSqlAccess<Category>(ref categories);
                         DisposeSqlAccess<CategoryDistribution>(ref categoryDistributions);
                         DisposeSqlAccess<Tag>(ref tags);
+                        DisposeSqlAccess<TagDistribution>(ref tagDistributions);
                         DisposeSqlAccess<Language>(ref languages);
                         DisposeSqlAccess<Country>(ref countries);
                         DisposeSqlAccess<Director>(ref directors);

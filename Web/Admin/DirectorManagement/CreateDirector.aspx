@@ -35,10 +35,10 @@
                 <div class="card-block">
                     <div>
                         <fieldset>
-                            <label for="txtDirectorName">Tên đạo diễn</label>
+                            <asp:Label ID="lbDirectorName" runat="server" Text="Tên đạo diễn" AssociatedControlID="txtDirectorName"></asp:Label>
                             <asp:TextBox ID="txtDirectorName" placeholder="Nhập vào tên đạo diễn" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvDirectorName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <label for="txtDirectorDescription">Mô tả đạo diễn</label>
+                            <asp:Label ID="lbDirectorDescription" runat="server" Text="Mô tả đạo diễn" AssociatedControlID="txtDirectorDescripiton"></asp:Label>
                             <asp:TextBox ID="txtDirectorDescription" placeholder="Nhập vào mô tả đạo diễn" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
                         </fieldset>
                     </div>
@@ -46,6 +46,14 @@
                 <div class="card-block mt-0">
                     <asp:Button ID="btnSubmit" CssClass="button-primary" runat="server" Text="Tạo mới" />
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row grid-responsive">
+        <div class="column page-heading">
+            <div class="large-card">
+                <asp:HyperLink ID="hyplnkList" CssClass="button button-blue" runat="server">Quay về trang danh sách</asp:HyperLink>
             </div>
         </div>
     </div>

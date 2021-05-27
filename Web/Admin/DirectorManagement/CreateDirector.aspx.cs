@@ -22,11 +22,13 @@ namespace Web.Admin.DirectorManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
+            hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
             InitValidation();
             if (IsPostBack)
             {
                 await Create();
             }
+            directorBLL.Dispose();
         }
 
         private void InitValidation()
@@ -37,7 +39,7 @@ namespace Web.Admin.DirectorManagement
                 "Tên đạo diễn không hợp lệ",
                 true,
                 null,
-                customValidation.ValidateCategoryName
+                customValidation.ValidateDirectorName
             );
         }
 

@@ -61,6 +61,9 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\CastManagement\CastDetail.aspx" />
+    <Content Include="Admin\CastManagement\CastList.aspx" />
+    <Content Include="Admin\CastManagement\DeleteCast.aspx" />
     <Content Include="Admin\CategoryManagement\CategoryDetail.aspx" />
     <Content Include="Admin\CategoryManagement\CategoryList.aspx" />
     <Content Include="Admin\CategoryManagement\CreateCategory.aspx" />
@@ -71,6 +74,7 @@
     <Content Include="Admin\CountryManagement\UpdateCountry.aspx" />
     <Content Include="Admin\DirectorManagement\CreateDirector.aspx" />
     <Content Include="Admin\DirectorManagement\DeleteDirector.aspx" />
+    <Content Include="Admin\DirectorManagement\DirectorDetail.aspx" />
     <Content Include="Admin\DirectorManagement\DirectorList.aspx" />
     <Content Include="Admin\DirectorManagement\UpdateDirector.aspx" />
     <Content Include="Admin\LanguageManagement\CreateLanguage.aspx" />
@@ -86,6 +90,14 @@
     <Content Include="Admin\RoleManagement\RoleList.aspx" />
     <Content Include="Admin\CategoryManagement\UpdateCategory.aspx" />
     <Content Include="Admin\RoleManagement\UpdateRole.aspx" />
+    <Content Include="Admin\SourceManagement\CreateSource.aspx" />
+    <Content Include="Admin\SourceManagement\SourceDetail.aspx" />
+    <Content Include="Admin\SourceManagement\SourceList.aspx" />
+    <Content Include="Admin\SourceManagement\UpdateSource.aspx" />
+    <Content Include="Admin\TagManagement\CreateTag.aspx" />
+    <Content Include="Admin\TagManagement\TagDetail.aspx" />
+    <Content Include="Admin\TagManagement\TagList.aspx" />
+    <Content Include="Admin\TagManagement\UpdateTag.aspx" />
     <Content Include="admin_assets\css\addition.css" />
     <Content Include="admin_assets\js\jquery.js" />
     <Content Include="images\img1.jpg" />
@@ -152,6 +164,28 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\CastManagement\CastDetail.aspx.cs">
+      <DependentUpon>CastDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CastManagement\CastDetail.aspx.designer.cs">
+      <DependentUpon>CastDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CastManagement\CastList.aspx.cs">
+      <DependentUpon>CastList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CastManagement\CastList.aspx.designer.cs">
+      <DependentUpon>CastList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CastManagement\DeleteCast.aspx.cs">
+      <DependentUpon>DeleteCast.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CastManagement\DeleteCast.aspx.designer.cs">
+      <DependentUpon>DeleteCast.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\CastManagement\UpdateCast.cs" />
     <Compile Include="Admin\CategoryManagement\CategoryDetail.aspx.cs">
       <DependentUpon>CategoryDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -221,6 +255,13 @@
     </Compile>
     <Compile Include="Admin\DirectorManagement\DeleteDirector.aspx.designer.cs">
       <DependentUpon>DeleteDirector.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\DirectorDetail.aspx.cs">
+      <DependentUpon>DirectorDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DirectorManagement\DirectorDetail.aspx.designer.cs">
+      <DependentUpon>DirectorDetail.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\DirectorManagement\DirectorList.aspx.cs">
       <DependentUpon>DirectorList.aspx</DependentUpon>
@@ -334,6 +375,62 @@
     <Compile Include="Admin\RoleManagement\UpdateRole.aspx.designer.cs">
       <DependentUpon>UpdateRole.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\SourceManagement\CreateSource.aspx.cs">
+      <DependentUpon>CreateSource.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\CreateSource.aspx.designer.cs">
+      <DependentUpon>CreateSource.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\SourceDetail.aspx.cs">
+      <DependentUpon>SourceDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\SourceDetail.aspx.designer.cs">
+      <DependentUpon>SourceDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\SourceList.aspx.cs">
+      <DependentUpon>SourceList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\SourceList.aspx.designer.cs">
+      <DependentUpon>SourceList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\UpdateSource.aspx.cs">
+      <DependentUpon>UpdateSource.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\SourceManagement\UpdateSource.aspx.designer.cs">
+      <DependentUpon>UpdateSource.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TagManagement\CreateTag.aspx.cs">
+      <DependentUpon>CreateTag.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TagManagement\CreateTag.aspx.designer.cs">
+      <DependentUpon>CreateTag.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TagManagement\TagDetail.aspx.cs">
+      <DependentUpon>TagDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TagManagement\TagDetail.aspx.designer.cs">
+      <DependentUpon>TagDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TagManagement\TagList.aspx.cs">
+      <DependentUpon>TagList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TagManagement\TagList.aspx.designer.cs">
+      <DependentUpon>TagList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\TagManagement\UpdateTag.aspx.cs">
+      <DependentUpon>UpdateTag.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TagManagement\UpdateTag.aspx.designer.cs">
+      <DependentUpon>UpdateTag.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\EmailConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Common\PageVisitor.cs" />
@@ -412,9 +509,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="account_assets\" />
-    <Folder Include="Admin\CastManagement\" />
-    <Folder Include="Admin\SourceManagement\" />
-    <Folder Include="Admin\TagManagement\" />
     <Folder Include="Admin\UserManagement\" />
     <Folder Include="Control\" />
   </ItemGroup>

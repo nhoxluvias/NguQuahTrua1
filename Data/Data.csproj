@@ -78,6 +78,7 @@
     <Compile Include="DAL\PaymentMethod.cs" />
     <Compile Include="DAL\Role.cs" />
     <Compile Include="DAL\Tag.cs" />
+    <Compile Include="DAL\TagDistribution.cs" />
     <Compile Include="DAL\User.cs" />
     <Compile Include="DTO\CastDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />

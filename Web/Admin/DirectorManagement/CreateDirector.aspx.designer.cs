@@ -15,6 +15,15 @@ namespace Web.Admin.DirectorManagement
     {
 
         /// <summary>
+        /// lbDirectorName control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDirectorName;
+
+        /// <summary>
         /// txtDirectorName control.
         /// </summary>
         /// <remarks>
@@ -33,6 +42,15 @@ namespace Web.Admin.DirectorManagement
         protected global::System.Web.UI.WebControls.CustomValidator cvDirectorName;
 
         /// <summary>
+        /// lbDirectorDescription control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbDirectorDescription;
+
+        /// <summary>
         /// txtDirectorDescription control.
         /// </summary>
         /// <remarks>
@@ -49,5 +67,14 @@ namespace Web.Admin.DirectorManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSubmit;
+
+        /// <summary>
+        /// hyplnkList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkList;
     }
 }

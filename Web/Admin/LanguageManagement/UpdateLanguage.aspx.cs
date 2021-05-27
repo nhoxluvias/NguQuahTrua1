@@ -96,7 +96,7 @@ namespace Web.Admin.LanguageManagement
                 "Tên ngôn ngữ không hợp lệ",
                 true,
                 null,
-                customValidation.ValidateCategoryName
+                customValidation.ValidateLanguageName
             );
         }
 

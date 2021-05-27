@@ -11,17 +11,8 @@ namespace Web.Admin.DirectorManagement
 {
 
 
-    public partial class DeleteDirector
+    public partial class DirectorDetail
     {
-
-        /// <summary>
-        /// btnDelete control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDelete;
 
         /// <summary>
         /// hyplnkList control.
@@ -31,5 +22,23 @@ namespace Web.Admin.DirectorManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hyplnkList;
+
+        /// <summary>
+        /// hyplnkEdit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit;
+
+        /// <summary>
+        /// hyplnkDelete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkDelete;
     }
 }

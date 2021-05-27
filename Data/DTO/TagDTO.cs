@@ -6,7 +6,24 @@ using System.Threading.Tasks;
 
 namespace Data.DTO
 {
-    class TagDTO
+    public class TagInfo
     {
+        public long ID { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
+        public DateTime createAt { get; set; }
+        public DateTime updateAt { get; set; }
+    }
+
+    public class TagCreation{
+        public string name { get; set; }
+        public string description { get; set; }
+    }
+
+    public class TagUpdate
+    {
+        public long ID { get; set; }
+        public string name { get; set; }
+        public string description { get; set; }
     }
 }
