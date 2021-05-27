@@ -24,6 +24,7 @@ namespace Web.Admin.RoleManagement
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateRole", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", new { id = id });
                 await GetRoleInfo(id);
+                roleBLL.Dispose();
             }
             catch (Exception ex)
             {

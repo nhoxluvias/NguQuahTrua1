@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Web.Models
+namespace Data.DAL
 {
-    public class Category
+    internal class Cast
     {
-        public int ID { get; set; }
+        public long ID { get; set; }
         public string name { get; set; }
         public string description { get; set; }
         public DateTime createAt { get; set; }

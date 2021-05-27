@@ -55,13 +55,14 @@ namespace Web.Admin.CountryManagement
 
         private async Task SetGrvCountry()
         {
-            PagedList<CountryInfo> categories = await countryBLL
+            PagedList<CountryInfo> countries = await countryBLL
                 .GetCountriesAsync(drdlPage.SelectedIndex, 20);
-            grvCountry.DataSource = categories.Items;
+            countryBLL.Dispose();
+            grvCountry.DataSource = countries.Items;
             grvCountry.DataBind();
 
-            pageNumber = categories.PageNumber;
-            currentPage = categories.CurrentPage;
+            pageNumber = countries.PageNumber;
+            currentPage = countries.CurrentPage;
         }
 
         private void SetDrdlPage()
@@ -84,6 +85,7 @@ namespace Web.Admin.CountryManagement
             {
                 int key = (int)grvCountry.DataKeys[grvCountry.SelectedIndex].Value;
                 CountryInfo countryInfo = await countryBLL.GetCountryAsync(key);
+                countryBLL.Dispose();
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", countryInfo.ID, countryInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CountryDetail", new { id = countryInfo.ID });

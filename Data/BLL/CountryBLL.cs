@@ -13,11 +13,13 @@ namespace Data.BLL
     public class CountryBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
+        private bool disposed;
         public CountryBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         public CountryBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -25,6 +27,7 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private CountryInfo ToCountryInfo(Country country)
@@ -223,6 +226,25 @@ namespace Data.BLL
         public async Task<int> CountAllAsync()
         {
             return (int)await db.Countries.CountAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

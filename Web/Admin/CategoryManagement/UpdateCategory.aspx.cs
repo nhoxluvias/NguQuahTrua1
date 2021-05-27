@@ -45,7 +45,7 @@ namespace Web.Admin.CategoryManagement
                 {
                     await LoadCategoryInfo(id);
                 }
-                
+                categoryBLL.Dispose();
             }
             catch (Exception ex)
             {

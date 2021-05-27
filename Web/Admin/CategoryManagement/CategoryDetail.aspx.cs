@@ -23,6 +23,7 @@ namespace Web.Admin.CategoryManagement
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCategory", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", new { id = id });
                 await GetCategoryInfo(id);
+                categoryBLL.Dispose();
             }
             catch(Exception ex)
             {

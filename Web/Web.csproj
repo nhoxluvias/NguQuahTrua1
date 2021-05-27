@@ -90,8 +90,6 @@
     <Content Include="admin_assets\js\jquery.js" />
     <Content Include="images\img1.jpg" />
     <Content Include="User\Article.aspx" />
-    <Content Include="User\Category.aspx" />
-    <Content Include="User\FilmDetails.aspx" />
     <Content Include="User\Search.aspx" />
     <Content Include="User\Watch.aspx" />
     <Content Include="user_assets\css\plugins.css" />
@@ -344,18 +342,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\DBContext.cs" />
-    <Compile Include="Models\DTO\CategoryInfo.cs" />
-    <Compile Include="Models\DTO\FilmInfo.cs" />
     <Compile Include="Models\ErrorModel.cs" />
-    <Compile Include="Models\Language.cs" />
-    <Compile Include="Models\PaymentInfo.cs" />
-    <Compile Include="Models\PaymentMethod.cs" />
-    <Compile Include="Models\Role.cs" />
-    <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\Video.cs" />
     <Compile Include="Notification\Error.aspx.cs">
       <DependentUpon>Error.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -370,20 +358,6 @@
     </Compile>
     <Compile Include="User\Article.aspx.designer.cs">
       <DependentUpon>Article.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User\Category.aspx.cs">
-      <DependentUpon>Category.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User\Category.aspx.designer.cs">
-      <DependentUpon>Category.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="User\FilmDetails.aspx.cs">
-      <DependentUpon>FilmDetails.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User\FilmDetails.aspx.designer.cs">
-      <DependentUpon>FilmDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="User\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>

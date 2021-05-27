@@ -57,6 +57,7 @@ namespace Web.Admin.CategoryManagement
         {
             PagedList<CategoryInfo> categories = await categoryBLL
                 .GetCategoriesAsync(drdlPage.SelectedIndex, 20);
+            categoryBLL.Dispose();
             grvCategory.DataSource = categories.Items;
             grvCategory.DataBind();
 
@@ -84,6 +85,7 @@ namespace Web.Admin.CategoryManagement
             {
                 int key = (int)grvCategory.DataKeys[grvCategory.SelectedIndex].Value;
                 CategoryInfo categoryInfo = await categoryBLL.GetCategoryAsync(key);
+                categoryBLL.Dispose();
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", categoryInfo.ID, categoryInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CategoryDetail", new { id = categoryInfo.ID });

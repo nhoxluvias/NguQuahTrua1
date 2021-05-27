@@ -31,7 +31,10 @@ namespace Web.Admin.RoleManagement
                 stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
                 if (!IsPostBack)
+                {
                     await GetRoleInfo();
+                    roleBLL.Dispose();
+                }
             }
             catch (Exception ex)
             {
@@ -74,6 +77,7 @@ namespace Web.Admin.RoleManagement
         {
             string id = GetRoleId();
             StateOfDeletion state = await roleBLL.DeleteRoleAsync(id);
+            roleBLL.Dispose();
             enableShowResult = true;
             enableShowInfo = false;
             if (state == StateOfDeletion.Success)
@@ -95,7 +99,15 @@ namespace Web.Admin.RoleManagement
 
         protected async void btnDelete_Click(object sender, EventArgs e)
         {
-            await DeleteRoleInfo();
+            try
+            {
+                await DeleteRoleInfo();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            } 
         }
     }
 }

@@ -22,9 +22,20 @@ namespace MSSQL_Lite.Access
             disposedValue = false;
         }
 
-        protected SqlAccess<T> InitSqlAccess<T>()
+        protected SqlAccess<T> InitSqlAccess<T>(ref SqlAccess<T> sqlAccess)
         {
-            return new SqlAccess<T>(connectionType);
+            if (sqlAccess == null)
+                sqlAccess = new SqlAccess<T>(connectionType, sqlData);
+            return sqlAccess;
+        }
+
+        protected void DisposeSqlAccess<T>(ref SqlAccess<T> sqlAccess)
+        {
+            if (sqlAccess != null)
+            {
+                sqlAccess.Dispose();
+                sqlAccess = null;
+            }
         }
 
         private void ThrowExceptionOfQueryString(string queryString)
@@ -170,6 +181,7 @@ namespace MSSQL_Lite.Access
             {
                 if (disposing)
                 {
+                    sqlData.Disconnect();
                     sqlData.Dispose();
                     sqlData = null;
                 }

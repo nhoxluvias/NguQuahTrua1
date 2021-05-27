@@ -28,6 +28,7 @@ namespace Web.Admin.LanguageManagement
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateLanguage", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteLanguage", new { id = id });
                 await GetLanguageInfo(id);
+                languageBLL.Dispose();
             }
             catch (Exception ex)
             {

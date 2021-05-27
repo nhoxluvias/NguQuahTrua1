@@ -46,7 +46,7 @@ namespace Web.Admin.RoleManagement
                 {
                     await LoadRoleInfo(id);
                 }
-
+                roleBLL.Dispose();
             }
             catch (Exception ex)
             {

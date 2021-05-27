@@ -26,8 +26,12 @@ namespace Web.Admin.CategoryManagement
                 stateString = null;
                 stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CategoryList", null);
-                if(!IsPostBack)
+                if (!IsPostBack)
+                {
                     await GetCategoryInfo();
+                    categoryBLL.Dispose();
+                }
+                    
             }
             catch(Exception ex)
             {
@@ -70,6 +74,7 @@ namespace Web.Admin.CategoryManagement
         {
             int id = GetCategoryId();
             StateOfDeletion state = await categoryBLL.DeleteCategoryAsync(id);
+            categoryBLL.Dispose();
             enableShowResult = true;
             enableShowInfo = false;
             if (state == StateOfDeletion.Success)
@@ -91,7 +96,15 @@ namespace Web.Admin.CategoryManagement
 
         protected async void btnDelete_Click(object sender, EventArgs e)
         {
-            await DeleteCategoryInfo();
+            try
+            {
+                await DeleteCategoryInfo();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
         }
     }
 }

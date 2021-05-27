@@ -65,6 +65,7 @@
     <Compile Include="Common\MD5_Hash.cs" />
     <Compile Include="Common\PBKDF2_Hash.cs" />
     <Compile Include="Common\RandomExtension.cs" />
+    <Compile Include="DAL\Cast.cs" />
     <Compile Include="DAL\Category.cs" />
     <Compile Include="DAL\CategoryDistribution.cs" />
     <Compile Include="DAL\Country.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="DAL\Role.cs" />
     <Compile Include="DAL\Tag.cs" />
     <Compile Include="DAL\User.cs" />
+    <Compile Include="DTO\CastDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />
     <Compile Include="DTO\CountryDTO.cs" />
     <Compile Include="DTO\DirectorDTO.cs" />

@@ -13,11 +13,14 @@ namespace Data.BLL
     public class PaymentMethodBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
+        private bool disposed;
+
         protected PaymentMethodBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         protected PaymentMethodBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -25,6 +28,7 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private PaymentMethodInfo ToPaymentMethodInfo(PaymentMethod paymentMethod)
@@ -176,6 +180,25 @@ namespace Data.BLL
         public async Task<int> CountAllAsync()
         {
             return (int)await db.PaymentMethods.CountAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

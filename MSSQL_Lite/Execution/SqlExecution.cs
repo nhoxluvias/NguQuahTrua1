@@ -84,6 +84,8 @@ namespace MSSQL_Lite.Execution
                 {
                     if (disposing)
                     {
+                        sqlConvert.Dispose();
+                        sqlConvert = null;
                     }
                     this.disposed = true;
                 }

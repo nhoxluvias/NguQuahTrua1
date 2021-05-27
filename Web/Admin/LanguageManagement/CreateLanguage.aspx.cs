@@ -28,6 +28,7 @@ namespace Web.Admin.LanguageManagement
             {
                 await Create();
             }
+            languageBLL.Dispose();
         }
 
         private void InitValidation()

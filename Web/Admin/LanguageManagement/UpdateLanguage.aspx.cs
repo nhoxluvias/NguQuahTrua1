@@ -49,7 +49,7 @@ namespace Web.Admin.LanguageManagement
                 {
                     await LoadLanguageInfo(id);
                 }
-
+                languageBLL.Dispose();
             }
             catch (Exception ex)
             {

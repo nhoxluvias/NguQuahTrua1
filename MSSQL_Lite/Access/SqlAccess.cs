@@ -12,11 +12,13 @@ namespace MSSQL_Lite.Access
         private SqlQuery sqlQuery;
         private SqlData sqlData;
         private ConnectionType connectionType;
+        private bool disposedValue;
 
-        public SqlAccess(ConnectionType connectionType)
+        public SqlAccess(ConnectionType connectionType, SqlData sqlData)
         {
             sqlQuery = new SqlQuery();
-            sqlData = new SqlData();
+            this.sqlData = sqlData;
+            disposedValue = false;
             this.connectionType = connectionType;
             if (connectionType == ConnectionType.ManuallyDisconnect)
                 sqlData.Connect();
@@ -372,11 +374,26 @@ namespace MSSQL_Lite.Access
             return Count(sqlQuery.Count<T>(propertyName, where));
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    sqlQuery.Dispose();
+                    sqlQuery = null;
+                }
+                disposedValue = true;
+            }
+        }
+        ~SqlAccess()
+        {
+            Dispose(disposing: false);
+        }
+
         public void Dispose()
         {
-            this.sqlQuery = null;
-            sqlData.Dispose();
-            sqlData = null;
+            Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
     }

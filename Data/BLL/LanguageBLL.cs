@@ -14,11 +14,14 @@ namespace Data.BLL
     public class LanguageBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
+        private bool disposed;
+
         public LanguageBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         public LanguageBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -26,12 +29,13 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private LanguageInfo ToLanguageInfo(Language language)
         {
             if (language == null)
-                throw new Exception("");
+                return null;
             return new LanguageInfo
             {
                 ID = language.ID,
@@ -223,6 +227,25 @@ namespace Data.BLL
         public async Task<int> CountAllAsync()
         {
             return (int)await db.Languages.CountAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

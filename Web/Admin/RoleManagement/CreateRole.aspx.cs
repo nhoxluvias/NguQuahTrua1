@@ -28,6 +28,7 @@ namespace Web.Admin.RoleManagement
             {
                 await Create();
             }
+            roleBLL.Dispose();
         }
 
         private void InitValidation()

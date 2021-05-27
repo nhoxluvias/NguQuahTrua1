@@ -58,6 +58,7 @@ namespace Web.Admin.DirectorManagement
         {
             PagedList<DirectorInfo> directors = await directorBLL
                 .GetDirectorsAsync(drdlPage.SelectedIndex, 20);
+            directorBLL.Dispose();
             grvDirector.DataSource = directors.Items;
             grvDirector.DataBind();
 
@@ -85,6 +86,7 @@ namespace Web.Admin.DirectorManagement
             {
                 long key = (long)grvDirector.DataKeys[grvDirector.SelectedIndex].Value;
                 DirectorInfo directorInfo = await directorBLL.GetDirectorAsync(key);
+                directorBLL.Dispose();
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", directorInfo.ID, directorInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_DirectorDetail", new { id = directorInfo.ID });

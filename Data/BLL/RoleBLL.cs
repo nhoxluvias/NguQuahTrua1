@@ -14,11 +14,14 @@ namespace Data.BLL
     public class RoleBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
+        private bool disposed;
+
         public RoleBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         public RoleBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -26,6 +29,7 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private RoleInfo ToRoleInfo(Role role)
@@ -182,6 +186,25 @@ namespace Data.BLL
         public async Task<int> CountAllAsync()
         {
             return (int)await db.Roles.CountAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

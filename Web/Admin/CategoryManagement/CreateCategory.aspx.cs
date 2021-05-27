@@ -30,6 +30,7 @@ namespace Web.Admin.CategoryManagement
                 {
                     await Create();
                 }
+                categoryBLL.Dispose();
             }
             catch (Exception ex)
             {

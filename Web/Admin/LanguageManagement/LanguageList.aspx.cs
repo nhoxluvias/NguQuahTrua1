@@ -42,6 +42,7 @@ namespace Web.Admin.LanguageManagement
         {
             PagedList<LanguageInfo> languages = await languageBLL
                 .GetLanguagesAsync(drdlPage.SelectedIndex, 20);
+            languageBLL.Dispose();
             grvLanguage.DataSource = languages.Items;
             grvLanguage.DataBind();
 
@@ -69,6 +70,7 @@ namespace Web.Admin.LanguageManagement
             {
                 int key = (int)grvLanguage.DataKeys[grvLanguage.SelectedIndex].Value;
                 LanguageInfo languageInfo = await languageBLL.GetLanguageAsync(key);
+                languageBLL.Dispose();
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", languageInfo.ID, languageInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_LanguageDetail", new { id = languageInfo.ID });

@@ -15,11 +15,13 @@ namespace Data.BLL
     public class DirectorBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
+        private bool disposed;
         public DirectorBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         public DirectorBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -27,6 +29,7 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private DirectorInfo ToDirectorInfo(Director director)
@@ -262,6 +265,25 @@ namespace Data.BLL
         public async Task<long> CountAllAsync()
         {
             return await db.Directors.CountAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

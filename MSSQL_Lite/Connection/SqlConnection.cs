@@ -11,6 +11,7 @@ namespace MSSQL_Lite.Connection
         public SqlConnection(string connectionString)
         {
             this.connection = new System.Data.SqlClient.SqlConnection(connectionString);
+            disposedValue = false;
         }
 
         public async Task ConnectAsync()

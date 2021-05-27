@@ -15,11 +15,14 @@ namespace Data.BLL
     public class CategoryBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
+        private bool disposed;
+
         public CategoryBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         public CategoryBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -27,6 +30,7 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private CategoryInfo ToCategoryInfo(Category category)
@@ -269,6 +273,25 @@ namespace Data.BLL
         public async Task<int> CountAllAsync()
         {
             return (int)await db.Categories.CountAsync();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

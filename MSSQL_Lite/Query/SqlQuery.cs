@@ -407,6 +407,8 @@ namespace MSSQL_Lite.Query
                 {
                     if (disposing)
                     {
+                        sqlMapping.Dispose();
+                        sqlMapping = null;
                     }
                     this.disposed = true;
                 }

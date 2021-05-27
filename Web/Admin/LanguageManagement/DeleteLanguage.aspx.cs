@@ -27,7 +27,10 @@ namespace Web.Admin.LanguageManagement
                 stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
                 if (!IsPostBack)
+                {
                     await GetLanguageInfo();
+                    languageBLL.Dispose();
+                }
             }
             catch (Exception ex)
             {
@@ -70,6 +73,7 @@ namespace Web.Admin.LanguageManagement
         {
             int id = GetLanguageId();
             StateOfDeletion state = await languageBLL.DeleteLanguageAsync(id);
+            languageBLL.Dispose();
             enableShowResult = true;
             enableShowInfo = false;
             if (state == StateOfDeletion.Success)
@@ -91,7 +95,15 @@ namespace Web.Admin.LanguageManagement
 
         protected async void btnDelete_Click(object sender, EventArgs e)
         {
-            await DeleteCategoryInfo();
+            try
+            {
+                await DeleteCategoryInfo();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
         }
     }
 }

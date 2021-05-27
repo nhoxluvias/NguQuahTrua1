@@ -31,7 +31,11 @@ namespace Web.Admin.CountryManagement
                 stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
                 if (!IsPostBack)
+                {
                     await GetCountryInfo();
+                    countryBLL.Dispose();
+                }
+                    
             }
             catch (Exception ex)
             {
@@ -74,6 +78,7 @@ namespace Web.Admin.CountryManagement
         {
             int id = GetCountryId();
             StateOfDeletion state = await countryBLL.DeleteCountryAsync(id);
+            countryBLL.Dispose();
             enableShowResult = true;
             enableShowInfo = false;
             if (state == StateOfDeletion.Success)
@@ -95,7 +100,15 @@ namespace Web.Admin.CountryManagement
 
         protected async void btnDelete_Click(object sender, EventArgs e)
         {
-            await DeleteCountryInfo();
+            try
+            {
+                await DeleteCountryInfo();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ namespace Web.Admin.CountryManagement
                 {
                     await LoadCountryInfo(id);
                 }
-
+                countryBLL.Dispose();
             }
             catch (Exception ex)
             {

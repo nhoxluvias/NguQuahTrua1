@@ -6,7 +6,21 @@ using System.Threading.Tasks;
 
 namespace Data.BLL
 {
-    public class TagBLL
+    public class TagBLL : BusinessLogicLayer
     {
+        private DataAccessLevel dataAccessLevel;
+
+        public TagBLL(DataAccessLevel dataAccessLevel)
+            : base()
+        {
+            InitDAL();
+        }
+
+        public TagBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+            : base()
+        {
+            InitDAL(bll.db);
+        }
+
     }
 }

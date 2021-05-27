@@ -25,6 +25,8 @@ namespace Web.User.Layout
                     description = c.description,
                     url = GetRouteUrl("User_Category", new { id = c.ID })
                 }).ToList();
+
+            categoryBLL.Dispose();
         }
 
 

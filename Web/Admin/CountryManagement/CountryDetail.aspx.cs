@@ -28,6 +28,7 @@ namespace Web.Admin.CountryManagement
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCountry", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", new { id = id });
                 await GetCountryInfo(id);
+                countryBLL.Dispose();
             }
             catch (Exception ex)
             {

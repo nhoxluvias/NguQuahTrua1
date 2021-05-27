@@ -58,6 +58,7 @@ namespace Web.Admin.RoleManagement
         {
             PagedList<RoleInfo> roles = await roleBLL
                 .GetRolesAsync(drdlPage.SelectedIndex, 20);
+            roleBLL.Dispose();
             grvRole.DataSource = roles.Items;
             grvRole.DataBind();
 
@@ -85,6 +86,7 @@ namespace Web.Admin.RoleManagement
             {
                 string key = (string)grvRole.DataKeys[grvRole.SelectedIndex].Value;
                 RoleInfo roleInfo = await roleBLL.GetRoleAsync(key);
+                roleBLL.Dispose();
                 enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", roleInfo.ID, roleInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_RoleDetail", new { id = roleInfo.ID });
