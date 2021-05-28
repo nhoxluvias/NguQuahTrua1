@@ -8,17 +8,19 @@ namespace Data.BLL.Migration
 {
     internal class PaymentMethodMigration : SqlMigration<PaymentMethod>, ISqlMigration
     {
+        private bool disposed;
 
         public PaymentMethodMigration()
             : base()
         {
-
+            disposed = false;
         }
 
         public void AddDataAndRun()
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = db.PaymentMethods.Count();
+            db.Dispose();
             if (recordNumber == 0)
             {
                 AddItem(new PaymentMethod
@@ -42,6 +44,7 @@ namespace Data.BLL.Migration
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = await db.PaymentMethods.CountAsync();
+            db.Dispose();
             if (recordNumber == 0)
             {
                 AddItem(new PaymentMethod
@@ -58,6 +61,25 @@ namespace Data.BLL.Migration
                 });
                 AddExcludeProperty("ID");
                 await RunAsync();
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
             }
         }
     }

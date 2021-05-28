@@ -50,6 +50,7 @@
     <Compile Include="BLL\DirectorBLL.cs" />
     <Compile Include="BLL\FilmBLL.cs" />
     <Compile Include="BLL\LanguageBLL.cs" />
+    <Compile Include="BLL\Migration\UserMigration.cs" />
     <Compile Include="BLL\TagBLL.cs" />
     <Compile Include="Config\DatabaseConfig.cs" />
     <Compile Include="Config\MigrationConfig.cs" />
@@ -59,13 +60,12 @@
     <Compile Include="BLL\PaymentInfoBLL.cs" />
     <Compile Include="BLL\PaymentMethodBLL.cs" />
     <Compile Include="BLL\RoleBLL.cs" />
-    <Compile Include="BLL\UserBLL\UserBLL.cs" />
-    <Compile Include="BLL\UserBLL\UserBLLForAdmin.cs" />
-    <Compile Include="BLL\UserBLL\UserBLLForUser.cs" />
+    <Compile Include="BLL\UserBLL.cs" />
     <Compile Include="Common\MD5_Hash.cs" />
     <Compile Include="Common\PBKDF2_Hash.cs" />
     <Compile Include="Common\RandomExtension.cs" />
     <Compile Include="DAL\Cast.cs" />
+    <Compile Include="DAL\CastOfFilm.cs" />
     <Compile Include="DAL\Category.cs" />
     <Compile Include="DAL\CategoryDistribution.cs" />
     <Compile Include="DAL\Country.cs" />

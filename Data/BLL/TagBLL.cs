@@ -271,7 +271,7 @@ namespace Data.BLL
 
         public async Task<int> CountAllAsync()
         {
-            return (int)await db.Categories.CountAsync();
+            return (int)await db.Tags.CountAsync();
         }
 
         protected override void Dispose(bool disposing)

@@ -38,7 +38,7 @@ namespace Data.DTO
         public string password { get; set; }
         public string salt { get; set; }
 
-        public PaymentInfoDTO PaymentInfo { get; set; }
+        public PaymentInfoCreation PaymentInfo { get; set; }
     }
 
     public class UserUpdate

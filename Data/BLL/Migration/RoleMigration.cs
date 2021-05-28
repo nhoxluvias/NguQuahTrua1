@@ -11,16 +11,19 @@ namespace Data.BLL.Migration
 {
     internal class RoleMigration : SqlMigration<Role>, ISqlMigration
     {
+        private bool disposed;
+
         public RoleMigration()
             : base()
         {
-
+            disposed = false;
         }
 
         public void AddDataAndRun()
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = db.Roles.Count();
+            db.Dispose();
             if (recordNumber == 0)
             {
                 List<string> IDs = new List<string>();
@@ -66,6 +69,7 @@ namespace Data.BLL.Migration
         {
             DBContext db = new DBContext(ConnectionType.ManuallyDisconnect);
             long recordNumber = await db.Roles.CountAsync();
+            db.Dispose();
             if (recordNumber == 0)
             {
                 List<string> IDs = new List<string>();
@@ -104,6 +108,25 @@ namespace Data.BLL.Migration
                     updateAt = DateTime.Now
                 });
                 await RunAsync();
+            }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
             }
         }
     }

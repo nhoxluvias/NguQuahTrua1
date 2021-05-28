@@ -12,12 +12,13 @@ namespace Data.BLL
     public class UserBLL : BusinessLogicLayer
     {
         private DataAccessLevel dataAccessLevel;
-
+        private bool disposed;
         public UserBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         public UserBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
@@ -25,6 +26,7 @@ namespace Data.BLL
         {
             InitDAL(bll.db);
             this.dataAccessLevel = dataAccessLevel;
+            disposed = false;
         }
 
         private UserInfo ToUserInfo(User user)
@@ -102,7 +104,7 @@ namespace Data.BLL
                 .SingleOrDefaultAsync(u => new { u.active }, u => u.userName == username)).active;
         }
 
-        public enum RegisterState { Success, Failed, AlreadyExist };
+        public enum RegisterState { Success, Success_NoPaymentInfo, Failed, AlreadyExist };
 
         public async Task<RegisterState> Register(UserCreation userCreation)
         {
@@ -127,9 +129,14 @@ namespace Data.BLL
             );
             if (affected == 0)
                 return RegisterState.Failed;
+            if (userCreation.PaymentInfo == null)
+                return RegisterState.Success_NoPaymentInfo;
+
+            StateOfCreation state = await new PaymentInfoBLL(this, dataAccessLevel).CreatePaymentInfoAsync(userCreation.PaymentInfo);
+            if (state == StateOfCreation.AlreadyExists || state == StateOfCreation.Failed)
+                return RegisterState.Success_NoPaymentInfo;
+
             return RegisterState.Success;
         }
-
-
     }
 }

@@ -69,7 +69,6 @@ namespace Data.BLL
                 ID = categoryUpdate.ID,
                 name = categoryUpdate.name,
                 description = categoryUpdate.description,
-                createAt = DateTime.Now,
                 updateAt = DateTime.Now
             };
         }
