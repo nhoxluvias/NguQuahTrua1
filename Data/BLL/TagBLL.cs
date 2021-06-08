@@ -207,7 +207,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<TagInfo>>(sqlCommand);
         }
 
-        public async Task<StateOfCreation> CreateCategoryAsync(TagCreation tagCreation)
+        public async Task<StateOfCreation> CreateTagAsync(TagCreation tagCreation)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -228,7 +228,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateCategoryAsync(TagUpdate tagUpdate)
+        public async Task<StateOfUpdate> UpdateTagAsync(TagUpdate tagUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
@@ -253,7 +253,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteCategoryAsync(int tagId)
+        public async Task<StateOfDeletion> DeleteTagAsync(int tagId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");

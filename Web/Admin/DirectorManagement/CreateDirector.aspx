@@ -38,7 +38,7 @@
                             <asp:Label ID="lbDirectorName" runat="server" Text="Tên đạo diễn" AssociatedControlID="txtDirectorName"></asp:Label>
                             <asp:TextBox ID="txtDirectorName" placeholder="Nhập vào tên đạo diễn" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvDirectorName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <asp:Label ID="lbDirectorDescription" runat="server" Text="Mô tả đạo diễn" AssociatedControlID="txtDirectorDescripiton"></asp:Label>
+                            <asp:Label ID="lbDirectorDescription" runat="server" Text="Mô tả đạo diễn" AssociatedControlID="txtDirectorDescription"></asp:Label>
                             <asp:TextBox ID="txtDirectorDescription" placeholder="Nhập vào mô tả đạo diễn" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
                         </fieldset>
                     </div>

@@ -50,6 +50,11 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_CastDetail", "admin/cast/detail/{id}", "~/Admin/CastManagement/CastDetail.aspx");
             routes.MapPageRoute("Admin_UpdateCast", "admin/cast/update/{id}", "~/Admin/CastManagement/UpdateCast.aspx");
             routes.MapPageRoute("Admin_DeleteCast", "admin/cast/delete/{id}", "~/Admin/CastManagement/DeleteCast.aspx");
+            routes.MapPageRoute("Admin_TagList", "admin/tag/list", "~/Admin/TagManagement/TagList.aspx");
+            routes.MapPageRoute("Admin_TagDetail", "admin/tag/detail/{id}", "~/Admin/TagManagement/TagDetail.aspx");
+            routes.MapPageRoute("Admin_CreateTag", "admin/tag/create", "~/Admin/TagManagement/CreateTag.aspx");
+            routes.MapPageRoute("Admin_UpdateTag", "admin/tag/update/{id}", "~/Admin/TagManagement/UpdateTag.aspx");
+            routes.MapPageRoute("Admin_DeleteTag", "admin/tag/delete/{id}", "~/Admin/TagManagement/DeleteTag.aspx");
 
 
 

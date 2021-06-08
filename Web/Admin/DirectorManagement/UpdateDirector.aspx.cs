@@ -111,7 +111,7 @@ namespace Web.Admin.DirectorManagement
         {
             return new DirectorUpdate
             {
-                ID = int.Parse(Request.Form[hdDirectorId.UniqueID]),
+                ID = long.Parse(Request.Form[hdDirectorId.UniqueID]),
                 name = Request.Form[txtDirectorName.UniqueID],
                 description = Request.Form[txtDirectorDescription.UniqueID]
             };

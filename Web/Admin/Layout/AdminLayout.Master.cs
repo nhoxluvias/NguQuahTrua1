@@ -14,6 +14,9 @@ namespace Web.Admin.Layout
         protected string hyplnkCountryList;
         protected string hyplnkLanguageList;
         protected string hyplnkRoleList;
+        protected string hyplnkTagList;
+        protected string hyplnkDirectorList;
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -22,6 +25,8 @@ namespace Web.Admin.Layout
             hyplnkCountryList = GetRouteUrl("Admin_CountryList", null);
             hyplnkLanguageList = GetRouteUrl("Admin_LanguageList", null);
             hyplnkRoleList = GetRouteUrl("Admin_RoleList", null);
+            hyplnkDirectorList = GetRouteUrl("Admin_DirectorList", null);
+            hyplnkTagList = GetRouteUrl("Admin_TagList", null);
         }
     }
 }

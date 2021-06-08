@@ -24,7 +24,7 @@
 
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/addition.css") %>"/>
 
-    <script type="text/javascript" src="<%= ResolveUrl("~/admin_assets/js/jquery.js") %>"
+    <script type="text/javascript" src="<%= ResolveUrl("~/admin_assets/js/jquery.js") %>"></script>
     <!--[if lt IE 9]>
 	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
@@ -62,9 +62,11 @@
                     <li><a href="<% = hyplnkCategoryList %>"><em class="fa fa fa-clone"></em>Quản lý thể loại</a></li>
                     <li><a href="<% = hyplnkCountryList %>"><em class="fa fa fa-clone"></em>Quản lý quốc gia</a></li>
                     <li><a href="<% = hyplnkLanguageList %>"><em class="fa fa fa-clone"></em>Quản lý ngôn ngữ</a></li>
+                    <li><a href="<% = hyplnkTagList %>"><em class="fa fa-clone"></em>Quản lý thẻ tag</a></li>
+                    <li><a href="<% = hyplnkDirectorList %>"><em class="fa fa-clone"></em>Quản lý đạo diễn</a></li>
                     <li><a href="<% = hyplnkRoleList %>"><em class="fa fa fa-clone"></em>Quản lý vai trò</a></li>
                     <li><a href="#"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
-                    <li><a href="#"><em class="fa fa-warning"></em>Quản lý thẻ tag</a></li>
+                    
                 </ul>
             </div>
             <section id="main-content" class="column column-offset-20">

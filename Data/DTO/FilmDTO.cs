@@ -25,7 +25,6 @@ namespace Data.DTO
 
     public class FilmCreation
     {
-        public string ID { get; set; }
         public string name { get; set; }
         public string description { get; set; }
         public string duration { get; set; }
@@ -34,7 +33,6 @@ namespace Data.DTO
         public string thumbnail { get; set; }
         public int languageId { get; set; }
         public DateTime releaseDate { get; set; }
-        public long views { get; set; }
     }
 
     public class FilmUpdate

@@ -37,7 +37,7 @@
                             <asp:Label ID="lbCountryName" runat="server" Text="Tên quốc gia" AssociatedControlID="txtCountryName"></asp:Label>
                             <asp:TextBox ID="txtCountryName" placeholder="Nhập vào tên quốc gia" runat="server"></asp:TextBox>
                             <asp:CustomValidator ID="cvCountryName" CssClass="text-red" runat="server"></asp:CustomValidator>
-                            <asp:Label ID="lbCountryDescription" runat="server" Text="Mô tả về quốc gia" AssociatedControlID="txtCategoryDescription"></asp:Label>
+                            <asp:Label ID="lbCountryDescription" runat="server" Text="Mô tả về quốc gia" AssociatedControlID="txtCountryDescription"></asp:Label>
                             <asp:TextBox ID="txtCountryDescription" placeholder="Nhập vào mô tả quốc gia" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
                         </fieldset>
                     </div>

@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Data.Common.Hash;
+using Data.DAL;
 using Data.DTO;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace Data.BLL
         private FilmInfo ToFilmInfo(Film film)
         {
             if (film == null)
-                throw new Exception("");
+                return null;
 
             return new FilmInfo
             {
@@ -73,7 +74,11 @@ namespace Data.BLL
                 thumbnail = filmCreation.thumbnail,
                 languageId = filmCreation.languageId,
                 releaseDate = filmCreation.releaseDate,
-                views = filmCreation.views
+                views = 0,
+                downvote = 0,
+                upvote = 0,
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now,
             };
         }
 
@@ -92,7 +97,6 @@ namespace Data.BLL
                 thumbnail = filmUpdate.thumbnail,
                 languageId = filmUpdate.languageId,
                 releaseDate = filmUpdate.releaseDate,
-                views = filmUpdate.views
             };
         }
 
@@ -215,6 +219,183 @@ namespace Data.BLL
             sqlCommand.Parameters.Add(new SqlParameter("@categoryId", categoryId));
             return await db.ExecuteReaderAsync<List<FilmInfo>>(sqlCommand);
         }
+
+        public async Task<StateOfCreation> CreateFilmAsync(FilmCreation filmCreation)
+        {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+            Film film = ToFilm(filmCreation);
+            if (string.IsNullOrEmpty(film.name) || film.languageId <= 0 
+                || film.countryId <= 0 || string.IsNullOrEmpty(film.thumbnail)
+            )
+            {
+                throw new Exception("");
+            }
+
+            long checkExists = (long)await db.Films.CountAsync(
+                f => f.name == film.name
+                    && f.languageId == film.languageId
+                    && f.countryId == film.countryId
+                    && f.thumbnail == film.thumbnail
+            );
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
+            film.ID = MD5_Hash.Hash(string.Format("name:{0}//random:{1}", film.name, new Random().NextString(25)));
+            int affected;
+            if(
+                film.description == null || film.duration == null
+                || film.productionCompany == null
+            ){
+                if(
+                    film.description == null && film.duration == null
+                    && film.productionCompany == null
+                )
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "productionCompany", "duration" });
+                }
+                else if(film.description == null)
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "description" });
+                }else if(film.duration == null)
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "duration" });
+                }
+                else
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "productionCompany" });
+                }
+            }
+            else
+            {
+                affected = await db.Films.InsertAsync(film);
+            }
+
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        public async Task<StateOfCreation> UpdateFilmAsync(FilmUpdate filmUpdate)
+        {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+            Film film = ToFilm(filmUpdate);
+            if (string.IsNullOrEmpty(film.name) || film.languageId <= 0
+                || film.countryId <= 0 || string.IsNullOrEmpty(film.thumbnail)
+            )
+            {
+                throw new Exception("");
+            }
+
+            int affected;
+            if (
+                film.description == null || film.duration == null
+                || film.productionCompany == null
+            )
+            {
+                if (
+                    film.description == null && film.duration == null
+                    && film.productionCompany == null
+                )
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "productionCompany", "duration" });
+                    affected = await db.Films.UpdateAsync(
+                    film,
+                    f => new
+                    {
+                        f.name,
+                        f.countryId,
+                        f.languageId,
+                        f.releaseDate,
+                        f.thumbnail
+                    },
+                    f => f.ID == film.ID
+                );
+                }
+                else if (film.description == null)
+                {
+                    affected = await db.Films.UpdateAsync(
+                    film,
+                    f => new
+                    {
+                        f.name,
+                        f.duration,
+                        f.countryId,
+                        f.languageId,
+                        f.productionCompany,
+                        f.releaseDate,
+                        f.thumbnail
+                    },
+                    f => f.ID == film.ID
+                );
+                }
+                else if (film.duration == null)
+                {
+                    affected = await db.Films.UpdateAsync(
+                    film,
+                    f => new
+                    {
+                        f.name,
+                        f.description,
+                        f.countryId,
+                        f.languageId,
+                        f.productionCompany,
+                        f.releaseDate,
+                        f.thumbnail
+                    },
+                    f => f.ID == film.ID
+                );
+                }
+                else
+                {
+                    affected = await db.Films.UpdateAsync(
+                    film,
+                    f => new
+                    {
+                        f.name,
+                        f.description,
+                        f.duration,
+                        f.countryId,
+                        f.languageId,
+                        f.releaseDate,
+                        f.thumbnail
+                    },
+                    f => f.ID == film.ID
+                );
+                }
+            }
+            else
+            {
+                affected = await db.Films.UpdateAsync(
+                    film,
+                    f => new
+                    {
+                        f.name,
+                        f.description,
+                        f.duration,
+                        f.countryId,
+                        f.languageId,
+                        f.productionCompany,
+                        f.releaseDate,
+                        f.thumbnail
+                    },
+                    f => f.ID == film.ID
+                );
+            }
+
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteFilmAsync(int categoryId)
+        {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+            if (categoryId <= 0)
+                throw new Exception("");
+
+            int affected = await db.Categories.DeleteAsync(c => c.ID == categoryId);
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
 
         public async Task<long> CountAllAsync()
         {

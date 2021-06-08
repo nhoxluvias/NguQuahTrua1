@@ -219,7 +219,7 @@ namespace Data.BLL
             if (filmNumberOfCountryId > 0)
                 return StateOfDeletion.ConstraintExists;
 
-            int affected = await db.Languages.DeleteAsync(l => l.ID == countryId);
+            int affected = await db.Countries.DeleteAsync(c => c.ID == countryId);
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 

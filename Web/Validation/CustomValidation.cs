@@ -87,5 +87,10 @@ namespace Web.Validation
         {
             args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
         }
+
+        public void ValidateTagName(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
+        }
     }
 }
