@@ -253,7 +253,7 @@ namespace Data.BLL
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteTagAsync(int tagId)
+        public async Task<StateOfDeletion> DeleteTagAsync(long tagId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");

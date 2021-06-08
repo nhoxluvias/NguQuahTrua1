@@ -61,6 +61,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Account\Login.aspx" />
+    <Content Include="Account\Register.aspx" />
     <Content Include="Admin\CastManagement\CastDetail.aspx" />
     <Content Include="Admin\CastManagement\CastList.aspx" />
     <Content Include="Admin\CastManagement\DeleteCast.aspx" />
@@ -95,9 +97,13 @@
     <Content Include="Admin\SourceManagement\SourceList.aspx" />
     <Content Include="Admin\SourceManagement\UpdateSource.aspx" />
     <Content Include="Admin\TagManagement\CreateTag.aspx" />
+    <Content Include="Admin\TagManagement\DeleteTag.aspx" />
     <Content Include="Admin\TagManagement\TagDetail.aspx" />
     <Content Include="Admin\TagManagement\TagList.aspx" />
     <Content Include="Admin\TagManagement\UpdateTag.aspx" />
+    <Content Include="Admin\UserManagement\CreateUser.aspx" />
+    <Content Include="Admin\UserManagement\DeleteUser.aspx" />
+    <Content Include="Admin\UserManagement\UserList.aspx" />
     <Content Include="admin_assets\css\addition.css" />
     <Content Include="admin_assets\js\jquery.js" />
     <Content Include="images\img1.jpg" />
@@ -113,57 +119,70 @@
     <Content Include="user_assets\js\jquery.js" />
     <Content Include="user_assets\js\plugins.js" />
     <Content Include="user_assets\js\plugins2.js" />
-    <Content Include="css\account\common.css" />
-    <Content Include="css\account\confirm.css" />
-    <Content Include="css\account\login.css" />
-    <Content Include="css\account\register.css" />
-    <Content Include="css\account\reset-password.css" />
+    <Content Include="account_assets\css\common.css" />
+    <Content Include="account_assets\css\confirm.css" />
+    <Content Include="account_assets\css\login.css" />
+    <Content Include="account_assets\css\register.css" />
+    <Content Include="account_assets\css\reset-password.css" />
     <Content Include="admin_assets\css\font-awesome.min.css" />
     <Content Include="admin_assets\css\milligram.min.css" />
     <Content Include="admin_assets\css\normalize.css" />
     <Content Include="admin_assets\css\styles.css" />
     <Content Include="fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
-    <Content Include="js\account\confirm.js" />
-    <Content Include="js\account\login.js" />
-    <Content Include="js\account\register.js" />
+    <Content Include="account_assets\js\confirm.js" />
+    <Content Include="account_assets\js\login.js" />
     <Content Include="admin_assets\js\chart-data.js" />
     <Content Include="admin_assets\js\chart.min.js" />
-    <Content Include="libraries\css\styles.css" />
-    <Content Include="libraries\js\video.js" />
-    <Content Include="libraries\video-js\demo.html" />
-    <Content Include="libraries\video-js\font\vjs.svg" />
-    <Content Include="libraries\video-js\lang\ar.js" />
-    <Content Include="libraries\video-js\lang\bg.js" />
-    <Content Include="libraries\video-js\lang\ca.js" />
-    <Content Include="libraries\video-js\lang\cs.js" />
-    <Content Include="libraries\video-js\lang\de.js" />
-    <Content Include="libraries\video-js\lang\es.js" />
-    <Content Include="libraries\video-js\lang\fr.js" />
-    <Content Include="libraries\video-js\lang\hu.js" />
-    <Content Include="libraries\video-js\lang\it.js" />
-    <Content Include="libraries\video-js\lang\ja.js" />
-    <Content Include="libraries\video-js\lang\ko.js" />
-    <Content Include="libraries\video-js\lang\nl.js" />
-    <Content Include="libraries\video-js\lang\pt-BR.js" />
-    <Content Include="libraries\video-js\lang\ru.js" />
-    <Content Include="libraries\video-js\lang\tr.js" />
-    <Content Include="libraries\video-js\lang\uk.js" />
-    <Content Include="libraries\video-js\lang\vi.js" />
-    <Content Include="libraries\video-js\lang\zh-CN.js" />
-    <Content Include="libraries\video-js\lang\zh-TW.js" />
-    <Content Include="libraries\video-js\video-js.css" />
-    <Content Include="libraries\video-js\video-js.min.css" />
-    <Content Include="libraries\video-js\video-js.swf" />
-    <Content Include="libraries\video-js\video.dev.js" />
-    <Content Include="libraries\video-js\video.js" />
-    <Content Include="libraries\video-js\video.novtt.dev.js" />
-    <Content Include="libraries\video-js\video.novtt.js" />
+    <Content Include="common_assets\css\styles.css" />
+    <Content Include="common_assets\js\video.js" />
+    <Content Include="common_assets\video-js\demo.html" />
+    <Content Include="common_assets\video-js\font\vjs.svg" />
+    <Content Include="common_assets\video-js\lang\ar.js" />
+    <Content Include="common_assets\video-js\lang\bg.js" />
+    <Content Include="common_assets\video-js\lang\ca.js" />
+    <Content Include="common_assets\video-js\lang\cs.js" />
+    <Content Include="common_assets\video-js\lang\de.js" />
+    <Content Include="common_assets\video-js\lang\es.js" />
+    <Content Include="common_assets\video-js\lang\fr.js" />
+    <Content Include="common_assets\video-js\lang\hu.js" />
+    <Content Include="common_assets\video-js\lang\it.js" />
+    <Content Include="common_assets\video-js\lang\ja.js" />
+    <Content Include="common_assets\video-js\lang\ko.js" />
+    <Content Include="common_assets\video-js\lang\nl.js" />
+    <Content Include="common_assets\video-js\lang\pt-BR.js" />
+    <Content Include="common_assets\video-js\lang\ru.js" />
+    <Content Include="common_assets\video-js\lang\tr.js" />
+    <Content Include="common_assets\video-js\lang\uk.js" />
+    <Content Include="common_assets\video-js\lang\vi.js" />
+    <Content Include="common_assets\video-js\lang\zh-CN.js" />
+    <Content Include="common_assets\video-js\lang\zh-TW.js" />
+    <Content Include="common_assets\video-js\video-js.css" />
+    <Content Include="common_assets\video-js\video-js.min.css" />
+    <Content Include="common_assets\video-js\video-js.swf" />
+    <Content Include="common_assets\video-js\video.dev.js" />
+    <Content Include="common_assets\video-js\video.js" />
+    <Content Include="common_assets\video-js\video.novtt.dev.js" />
+    <Content Include="common_assets\video-js\video.novtt.js" />
     <Content Include="Notification\Error.aspx" />
     <Content Include="User\Index.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\Login.aspx.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Login.aspx.designer.cs">
+      <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\Register.aspx.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Register.aspx.designer.cs">
+      <DependentUpon>Register.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\CastManagement\CastDetail.aspx.cs">
       <DependentUpon>CastDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -410,6 +429,13 @@
     <Compile Include="Admin\TagManagement\CreateTag.aspx.designer.cs">
       <DependentUpon>CreateTag.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\TagManagement\DeleteTag.aspx.cs">
+      <DependentUpon>DeleteTag.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TagManagement\DeleteTag.aspx.designer.cs">
+      <DependentUpon>DeleteTag.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\TagManagement\TagDetail.aspx.cs">
       <DependentUpon>TagDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -431,6 +457,27 @@
     <Compile Include="Admin\TagManagement\UpdateTag.aspx.designer.cs">
       <DependentUpon>UpdateTag.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\UserManagement\CreateUser.aspx.cs">
+      <DependentUpon>CreateUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UserManagement\CreateUser.aspx.designer.cs">
+      <DependentUpon>CreateUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UserManagement\DeleteUser.aspx.cs">
+      <DependentUpon>DeleteUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UserManagement\DeleteUser.aspx.designer.cs">
+      <DependentUpon>DeleteUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\UserManagement\UserList.aspx.cs">
+      <DependentUpon>UserList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\UserManagement\UserList.aspx.designer.cs">
+      <DependentUpon>UserList.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\EmailConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Common\PageVisitor.cs" />
@@ -441,6 +488,7 @@
     </Compile>
     <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\UserSession.cs" />
     <Compile Include="Notification\Error.aspx.cs">
       <DependentUpon>Error.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -488,11 +536,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="User\Layout\UserLayout.Master" />
-    <Content Include="libraries\video-js\demo.captions.vtt" />
-    <Content Include="libraries\video-js\font\vjs.eot" />
-    <Content Include="libraries\video-js\font\vjs.ttf" />
-    <Content Include="libraries\video-js\font\vjs.woff" />
-    <Content Include="libraries\video-js\video-js.less" />
+    <Content Include="common_assets\video-js\demo.captions.vtt" />
+    <Content Include="common_assets\video-js\font\vjs.eot" />
+    <Content Include="common_assets\video-js\font\vjs.ttf" />
+    <Content Include="common_assets\video-js\font\vjs.woff" />
+    <Content Include="common_assets\video-js\video-js.less" />
     <Content Include="fonts\fontawesome\fontawesome-webfont.eot" />
     <Content Include="fonts\fontawesome\fontawesome-webfont.ttf" />
     <Content Include="fonts\fontawesome\fontawesome-webfont.woff" />
@@ -508,8 +556,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="account_assets\" />
-    <Folder Include="Admin\UserManagement\" />
     <Folder Include="Control\" />
   </ItemGroup>
   <ItemGroup>

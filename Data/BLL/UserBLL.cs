@@ -1,9 +1,12 @@
 ﻿using Data.Common.Hash;
 using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -32,10 +35,21 @@ namespace Data.BLL
         private UserInfo ToUserInfo(User user)
         {
             if (user == null)
-                throw new Exception("");
+                return null;
             return new UserInfo
             {
-
+                ID = user.ID,
+                userName = user.userName,
+                surName = user.surName,
+                middleName = user.middleName,
+                name = user.name,
+                description = user.description,
+                phoneNumber = user.phoneNumber,
+                email = user.email,
+                active = user.active,
+                Role = ((user.roleId == null ) ? null : new RoleBLL(this, dataAccessLevel).GetRole(user.roleId)),
+                createAt = user.createAt,
+                updateAt = user.updateAt
             };
         }
 
@@ -74,9 +88,186 @@ namespace Data.BLL
             };
         }
 
+        public async Task<List<UserInfo>> GetUsersAsync()
+        {
+            List<UserInfo> users = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                users = (await db.Users.ToListAsync())
+                    .Select(u => ToUserInfo(u)).ToList();
+            else
+                users = (await db.Users.ToListAsync(u => new {
+                    u.ID,
+                    u.userName,
+                    u.surName,
+                    u.middleName,
+                    u.name,
+                    u.description,
+                    u.email,
+                    u.phoneNumber,
+                    u.roleId
+                })).Select(u => ToUserInfo(u)).ToList();
+            return users;
+        }
+
+        public List<UserInfo> GetUsers()
+        {
+            List<UserInfo> users = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                users = db.Users.ToList()
+                    .Select(u => ToUserInfo(u)).ToList();
+            else
+                users = db.Users.ToList(u => new {
+                    u.ID,
+                    u.userName,
+                    u.surName,
+                    u.middleName,
+                    u.name,
+                    u.description,
+                    u.email,
+                    u.phoneNumber,
+                    u.roleId
+                }).Select(u => ToUserInfo(u)).ToList();
+            return users;
+        }
+
+        public async Task<PagedList<UserInfo>> GetUsersAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<User> pagedList = null;
+            Expression<Func<User, object>> orderBy = u => new { u.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Users.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Users.ToPagedListAsync(
+                    u => new {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.roleId
+                    },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<UserInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(u => ToUserInfo(u)).ToList()
+            };
+        }
+
+        public PagedList<UserInfo> GetUsers(int pageIndex, int pageSize)
+        {
+            SqlPagedList<User> pagedList = null;
+            Expression<Func<User, object>> orderBy = u => new { u.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Users.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Users.ToPagedList(
+                    u => new {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.roleId
+                    },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<UserInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(u => ToUserInfo(u)).ToList()
+            };
+        }
+
+        public async Task<UserInfo> GetUserAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new Exception("");
+            User user = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                user = await db.Users
+                     .SingleOrDefaultAsync(u => u.ID == userId);
+            else
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.roleId
+                    }, u => u.ID == userId);
+
+            return ToUserInfo(user);
+        }
+
+        public UserInfo GetUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+                throw new Exception("");
+            User user = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                user = db.Users
+                     .SingleOrDefault(u => u.ID == userId);
+            else
+                user = db.Users
+                    .SingleOrDefault(u => new {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.roleId
+                    }, u => u.ID == userId);
+
+            return ToUserInfo(user);
+        }
+
+        public async Task<UserInfo> GetUserByUserNameAsync(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                throw new Exception("");
+            User user = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                user = await db.Users
+                     .SingleOrDefaultAsync(u => u.userName == userName);
+            else
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.roleId
+                    }, u => u.userName == userName);
+
+            return ToUserInfo(user);
+        }
+
         public enum LoginState { Success, Unconfirmed, WrongPassword, NotExists };
 
-        public async Task<LoginState> Login(UserLogin userLogin)
+        public async Task<LoginState> LoginAsync(UserLogin userLogin)
         {
             if (userLogin == null)
                 throw new Exception("");
@@ -98,7 +289,7 @@ namespace Data.BLL
             return LoginState.Success;
         }
 
-        public async Task<bool> IsActive(string username)
+        public async Task<bool> IsActiveAsync(string username)
         {
             return (await db.Users
                 .SingleOrDefaultAsync(u => new { u.active }, u => u.userName == username)).active;
@@ -106,7 +297,7 @@ namespace Data.BLL
 
         public enum RegisterState { Success, Success_NoPaymentInfo, Failed, AlreadyExist };
 
-        public async Task<RegisterState> Register(UserCreation userCreation)
+        public async Task<RegisterState> RegisterAsync(UserCreation userCreation)
         {
             if (userCreation == null)
                 throw new Exception("");
@@ -132,11 +323,32 @@ namespace Data.BLL
             if (userCreation.PaymentInfo == null)
                 return RegisterState.Success_NoPaymentInfo;
 
+            usr = await db.Users.SingleOrDefaultAsync(u => new { u.ID }, u => u.userName == userCreation.userName);
+            userCreation.PaymentInfo.userId = usr.ID;
             StateOfCreation state = await new PaymentInfoBLL(this, dataAccessLevel).CreatePaymentInfoAsync(userCreation.PaymentInfo);
             if (state == StateOfCreation.AlreadyExists || state == StateOfCreation.Failed)
                 return RegisterState.Success_NoPaymentInfo;
 
             return RegisterState.Success;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
     }
 }

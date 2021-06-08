@@ -65,6 +65,7 @@ namespace Data.BLL
                 throw new Exception("");
             return new Director
             {
+                ID = directorUpdate.ID,
                 name = directorUpdate.name,
                 description = directorUpdate.description,
                 updateAt = DateTime.Now

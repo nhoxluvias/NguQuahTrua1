@@ -15,7 +15,7 @@ namespace Data.BLL
         private DataAccessLevel dataAccessLevel;
         private bool disposed;
 
-        protected PaymentMethodBLL(DataAccessLevel dataAccessLevel)
+        public PaymentMethodBLL(DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL();
@@ -23,7 +23,7 @@ namespace Data.BLL
             disposed = false;
         }
 
-        protected PaymentMethodBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public PaymentMethodBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
             : base()
         {
             InitDAL(bll.db);

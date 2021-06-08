@@ -6,8 +6,8 @@ namespace Web.App_Start
     {
         public static void RegisterEmail()
         {
-            EMail.Address = "phanxuanchanh77@gmail.com";
-            EMail.Password = "fkvissggfyytiedg";
+            EMail.Address = "phanxuanchanh77@gmail.com";//tien010120011@gmail.com
+            EMail.Password = "fkvissggfyytiedg";//juiglhsnblrkrngd
         }
     }
 }

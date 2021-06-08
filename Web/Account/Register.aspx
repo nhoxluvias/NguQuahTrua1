@@ -6,7 +6,7 @@
 <head runat="server">
     <title>Đăng ký tài khoản</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/account/register.css") %>">
+    <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/register.css") %>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
@@ -70,8 +70,6 @@
                     </div>
                     <p>Phương thức thanh toán</p>
                     <asp:DropDownList ID="drdlPaymentMethod" runat="server">
-                        <asp:ListItem Value="Visa"></asp:ListItem>
-                        <asp:ListItem Value="Mastercard"></asp:ListItem>
                     </asp:DropDownList>
                 </div>
             </div>
@@ -80,6 +78,14 @@
             </div>
         </div>
     </form>
-    <script src="<%= ResolveUrl("~/js/account/register.js") %>"></script>
+    <% if (enableShowResult)
+        { %>
+        <script type="text/javascript">
+            var stateDetail = "<% = stateDetail %>";
+            setTimeout(function () {
+                alert(stateDetail);
+            }, 1500);
+        </script>
+    <%} %>
 </body>
 </html>

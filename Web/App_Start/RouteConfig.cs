@@ -11,12 +11,11 @@ namespace Web.App_Start
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.MapPageRoute("Login", "account/login", "~/Account/Login.aspx");
-            routes.MapPageRoute("Login_WithParam", "account/login/{loginStatus}", "~/Account/Login.aspx");
             routes.MapPageRoute("Logout", "account/logout", "~/Account/Logout.aspx");
             routes.MapPageRoute("Register", "account/register", "~/Account/Register.aspx");
-            routes.MapPageRoute("Register_WithParam", "account/register/{registerStatus}", "~/Account/Register.aspx");
             routes.MapPageRoute("ResetPassword", "account/reset-password", "~/Account/ResetPassword.aspx");
-            routes.MapPageRoute("Confirm", "account/confirm/{userId}/{confirmToken}/{status}", "~/Account/Confirm.aspx");
+            routes.MapPageRoute("Confirm", "account/confirm/{userId}/{confirmToken}/{type}", "~/Account/Confirm.aspx");
+
             routes.MapPageRoute("Error", "error", "~/Notification/Error.aspx");
             routes.MapPageRoute("Home", "home", "~/User/Home.aspx");
 
@@ -55,7 +54,8 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_CreateTag", "admin/tag/create", "~/Admin/TagManagement/CreateTag.aspx");
             routes.MapPageRoute("Admin_UpdateTag", "admin/tag/update/{id}", "~/Admin/TagManagement/UpdateTag.aspx");
             routes.MapPageRoute("Admin_DeleteTag", "admin/tag/delete/{id}", "~/Admin/TagManagement/DeleteTag.aspx");
-
+            routes.MapPageRoute("Admin_UserList", "admin/user/list", "~/Admin/UserManagement/UserList.aspx");
+            routes.MapPageRoute("Admin_CreateUser", "admin/user/create", "~/Admin/UserManagement/CreateUser.aspx");
 
 
             routes.MapPageRoute("User_Home", "", "~/User/Index.aspx");

@@ -95,6 +95,19 @@ namespace Data.BLL
             return ToRoleInfo(role);
         }
 
+        public RoleInfo GetRole(string roleId)
+        {
+            if (string.IsNullOrEmpty(roleId))
+                throw new Exception("");
+            Role role = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                role = (db.Roles.SingleOrDefault(c => c.ID == roleId));
+            else
+                role = (db.Roles.SingleOrDefault(c => new { c.name }, c => c.ID == roleId));
+
+            return ToRoleInfo(role);
+        }
+
         public PagedList<RoleInfo> GetRoles(int pageIndex, int pageSize)
         {
             SqlPagedList<Role> pagedList = null;

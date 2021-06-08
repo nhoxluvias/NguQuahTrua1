@@ -64,8 +64,8 @@
                     <li><a href="<% = hyplnkLanguageList %>"><em class="fa fa fa-clone"></em>Quản lý ngôn ngữ</a></li>
                     <li><a href="<% = hyplnkTagList %>"><em class="fa fa-clone"></em>Quản lý thẻ tag</a></li>
                     <li><a href="<% = hyplnkDirectorList %>"><em class="fa fa-clone"></em>Quản lý đạo diễn</a></li>
-                    <li><a href="<% = hyplnkRoleList %>"><em class="fa fa fa-clone"></em>Quản lý vai trò</a></li>
-                    <li><a href="#"><em class="fa fa-pencil-square-o"></em>Quản lý người dùng</a></li>
+                    <li><a href="<% = hyplnkRoleList %>"><em class="fa fa-clone"></em>Quản lý vai trò</a></li>
+                    <li><a href="<% = hyplnkUserList %>"><em class="fa fa-clone"></em>Quản lý người dùng</a></li>
                     
                 </ul>
             </div>

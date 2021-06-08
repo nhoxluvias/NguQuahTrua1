@@ -81,8 +81,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreatePaymentInfoAsync(PaymentInfoCreation paymentInfoCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             PaymentInfo paymentInfo = ToPaymentInfo(paymentInfoCreation);
             if (
                 paymentInfo.paymentMethodId <= 0 || string.IsNullOrEmpty(paymentInfo.userId)

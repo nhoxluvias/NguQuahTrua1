@@ -1,13 +1,7 @@
-﻿using Data.Common.Hash;
-using MSSQL_Lite.Connection;
+﻿using Data.BLL;
+using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.Routing;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Common;
 using Web.Models;
 using Web.Validation;
@@ -16,24 +10,30 @@ namespace Web.Account
 {
     public partial class Login : System.Web.UI.Page
     {
-        private DBContext db;
+        private UserBLL userBLL;
+        private CustomValidation customValidation;
+        protected bool enableShowResult;
+        protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            customValidation = new CustomValidation();
             InitHyperLink();
             InitValidation();
+            enableShowResult = false;
+            stateDetail = null;
             if (CheckLoggedIn())
             {
                 Response.RedirectToRoute("Home");
             }
             else
             {
-                db = new DBContext(ConnectionType.ManuallyDisconnect);
-                ShowLoginStatus();
+                userBLL = new UserBLL(DataAccessLevel.User);
                 if (IsPostBack)
                 {
                     await LoginToAccount();
                 }
+                userBLL.Dispose();
             }
         }
 
@@ -48,98 +48,87 @@ namespace Web.Account
 
         private void InitValidation()
         {
-            CustomValidation
-                .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CustomValidation.ValidateUsername);
-            CustomValidation
-                .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CustomValidation.ValidatePassword);
+            customValidation.Init(
+                cvUsername,
+                "txtUsername",
+                "Không được trống, chỉ chứa a-z, 0-9, _ và -",
+                true,
+                null,
+                customValidation.ValidateUsername
+            );
+            customValidation.Init(
+                cvPassword,
+                "txtPassword",
+                "Tối thiểu 6 ký tự, tối đa 20 ký tự",
+                true,
+                null,
+                customValidation.ValidatePassword
+            );
+        }
+
+        private void ValidateData()
+        {
+            cvUsername.Validate();
+            cvPassword.Validate();
+        }
+
+        private bool IsValidData()
+        {
+            ValidateData();
+            return (cvUsername.IsValid && cvPassword.IsValid);
         }
 
         private bool CheckLoggedIn()
         {
-            return (Session["username"] != null);
+            return (Session["userSession"] != null);
         }
 
-        private bool CheckLogin(string passwordInput, string passwordFromDB, string saltFromDB)
+        private UserLogin GetUserLogin()
         {
-            string passwordHashed = PBKDF2_Hash.Hash(passwordInput, saltFromDB, 30);
-            return (passwordHashed == passwordFromDB);
-        }
-
-        private void ShowLoginStatus()
-        {
-            string loginStatus = (string)Page.RouteData.Values["loginStatus"];
-            if (string.IsNullOrEmpty(loginStatus))
-                txtLoginStatus.InnerText = "Hãy đăng nhập ngay!";
-            else if (loginStatus == "login-success")
+            return new UserLogin
             {
-                txtLoginStatus.InnerText = "Đăng nhập thành công, chờ 3 giây!";
-            }
-            else if (loginStatus == "login-failed")
-            {
-                txtLoginStatus.InnerText = "Kiểm tra lại thông tin đăng nhập!";
-            }
-            else if (loginStatus == "login-failed_not-exists")
-            {
-                txtLoginStatus.InnerText = "Không tồn tại người dùng này!";
-            }
-            else
-            {
-                txtLoginStatus.InnerText = "Hãy đăng nhập ngay!";
-            }
-        }
-
-        private async Task<Models.User> GetUserLoginModel()
-        {
-            string username = Request.Form["txtUsername"];
-            return await db.Users.SingleOrDefaultAsync(
-                u => new {u.ID, u.userName, u.password, u.salt, u.active, u.email },
-                u => u.userName == username
-            );
+                userName = Request.Form["txtUsername"],
+                password = Request.Form["txtPassword"]
+            };
         }
 
         private async Task LoginToAccount()
         {
-            cvUsername.Validate();
-            cvPassword.Validate();
-            if (cvUsername.IsValid && cvPassword.IsValid)
+            if (IsValidData())
             {
-                Models.User user = await GetUserLoginModel();
-                if(user == null)
+                UserLogin userLogin = GetUserLogin();
+                UserBLL.LoginState loginState = await userBLL.LoginAsync(userLogin);
+                if(loginState == UserBLL.LoginState.NotExists || loginState == UserBLL.LoginState.WrongPassword)
                 {
-                    Response.RedirectToRoute("Login_WithParam", new { 
-                        loginStatus = "login-failed_not-exists" 
-                    });
+                    enableShowResult = true;
+                    if (loginState == UserBLL.LoginState.NotExists)
+                        stateDetail = "Không tồn tại tài khoản";
+                    else
+                        stateDetail = "Mật khẩu bạn nhập vào không đúng";
                 }
                 else
                 {
-                    string passwordInput = Request.Form["txtPassword"];
-                    if (CheckLogin(passwordInput, user.password, user.salt))
+                    UserInfo userInfo = await userBLL.GetUserByUserNameAsync(userLogin.userName);
+                    if (loginState == UserBLL.LoginState.Success)
                     {
-                        Session["username"] = user.userName;
-                        if (user.active)
-                        {
-                            Response.RedirectToRoute("Login_WithParam", new { 
-                                loginStatus = "login-success"
-                            });
-                        }
+                        Session["userSession"] = new UserSession { username = userLogin.userName, role = userInfo.Role.name };
+                        if (userInfo.Role.name == "User")
+                            Response.RedirectToRoute("User_Home");
                         else
-                        {
-                            ConfirmCode confirmCode = new ConfirmCode();
-                            Session["confirmCode"] = confirmCode.Send(user.email);
-                            string confirmToken = confirmCode.CreateToken();
-                            Session["confirmToken"] = confirmToken;
-                            Response.RedirectToRoute("Confirm", new
-                            {
-                                userId = user.ID,
-                                confirmToken = confirmToken,
-                                status = "login-success_unconfirmed"
-                            });
-                        }
+                            Response.RedirectToRoute("Admin_Overview");
                     }
                     else
                     {
-                        Response.RedirectToRoute("Login_WithParam", new {
-                            loginStatus = "login-failed" 
+                        ConfirmCode confirmCode = new ConfirmCode();
+                        Session["confirmCode"] = confirmCode.Send(userInfo.email);
+                        string confirmToken = confirmCode.CreateToken();
+                        Session["confirmToken"] = confirmToken;
+
+                        Response.RedirectToRoute("Confirm", new
+                        {
+                            userId = userInfo.ID,
+                            confirmToken = confirmToken,
+                            type = "login"
                         });
                     }
                 }

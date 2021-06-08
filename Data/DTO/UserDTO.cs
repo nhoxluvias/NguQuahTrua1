@@ -23,10 +23,11 @@ namespace Data.DTO
         public string phoneNumber { get; set; }
         public string description { get; set; }
         public bool active { get; set; }
-        public RoleInfo role { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
 
+
+        public RoleInfo Role { get; set; }
         public PaymentInfoDTO PaymentInfo { get; set; }
     }
 

@@ -1,31 +1,51 @@
-﻿using Data.Common.Hash;
-using MSSQL_Lite.Connection;
+﻿using Data.BLL;
+using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
 using Web.Common;
-using Web.Models;
 using Web.Validation;
 
 namespace Web.Account
 {
     public partial class Register : System.Web.UI.Page
     {
-        private DBContext db;
+        private UserBLL userBLL;
+        private CustomValidation customValidation;
+        protected bool enableShowResult;
+        protected string stateDetail;
+
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.User);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateDetail = null;
+            await SetDrdlPaymentMethod();
             InitValidation();
+
             if (CheckLoggedIn())
             {
                 Response.RedirectToRoute("Home");
             }
             else
             {
-                db = new DBContext(ConnectionType.ManuallyDisconnect);
                 if (IsPostBack)
                 {
                     await RegisterAccount();
                 }
+            }
+            userBLL.Dispose();
+        }
+
+        private async Task SetDrdlPaymentMethod()
+        {
+            List<PaymentMethodInfo> paymentMethods = await new PaymentMethodBLL(userBLL, DataAccessLevel.User)
+                .GetPaymentMethodsAsync();
+            foreach(PaymentMethodInfo paymentMethod in paymentMethods)
+            {
+                drdlPaymentMethod.Items.Add(new ListItem(paymentMethod.name, paymentMethod.ID.ToString()));
             }
         }
 
@@ -36,25 +56,81 @@ namespace Web.Account
 
         private void InitValidation()
         {
-            CustomValidation
-                .Init(cvUsername, "txtUsername", "Không được trống, chỉ chứa a-z, 0-9, _ và -", true, null, CustomValidation.ValidateUsername);
-            CustomValidation
-                .Init(cvEmail, "txtEmail", "Không được để trống và phải hợp lệ", true, null, CustomValidation.ValidateEmail);
-            CustomValidation
-                .Init(cvPhoneNumber, "txtPhoneNumber", "Số điện thoại không hợp lệ", false, null, CustomValidation.ValidatePhoneNumber);
-            CustomValidation
-                .Init(cvPassword, "txtPassword", "Tối thiểu 6 ký tự, tối đa 20 ký tự", true, null, CustomValidation.ValidatePassword);
+            customValidation.Init(
+                cvUsername,
+                "txtUsername",
+                "Không được trống, chỉ chứa a-z, 0-9, _ và -",
+                true,
+                null,
+                customValidation.ValidateUsername
+            );
+
+            customValidation.Init(
+                cvEmail, 
+                "txtEmail", 
+                "Không được để trống và phải hợp lệ", 
+                true, 
+                null, 
+                customValidation.ValidateEmail
+            );
+
+            customValidation.Init(
+                cvPhoneNumber, 
+                "txtPhoneNumber", 
+                "Số điện thoại không hợp lệ", 
+                false,
+                null, 
+                customValidation.ValidatePhoneNumber
+            );
+
+            customValidation.Init(
+                cvPassword, 
+                "txtPassword", 
+                "Tối thiểu 6 ký tự, tối đa 20 ký tự", 
+                true, 
+                null, 
+                customValidation.ValidatePassword
+            );
+
             cmpRePassword.ControlToValidate = "txtPassword";
             cmpRePassword.ControlToCompare = "txtRePassword";
             cmpRePassword.ErrorMessage = "Không khớp với mật khẩu mà bạn đã nhập";
-            CustomValidation
-                .Init(cvCardNumber, "txtCardNumber", "Số thẻ không hợp lệ", false, null, CustomValidation.ValidateCardNumber);
-            CustomValidation
-                .Init(cvCvv, "txtCvv", "Số CVV không hợp lệ", false, null, CustomValidation.ValidateCVV);
-            CustomValidation
-                .Init(cvAccountName, "txtAccountName", "Tên chủ tài khoản không hợp lệ", false, null, CustomValidation.ValidateAccountName);
-            CustomValidation
-                .Init(cvExpirationDate, "txtExpirationDate", "Ngày hết hạn không hợp lệ", false, null, CustomValidation.ValidateExpirationDate);
+
+            customValidation.Init(
+                cvCardNumber, 
+                "txtCardNumber", 
+                "Số thẻ không hợp lệ", 
+                false, 
+                null, 
+                customValidation.ValidateCardNumber
+            );
+
+            customValidation.Init(
+                cvCvv, 
+                "txtCvv", 
+                "Số CVV không hợp lệ",
+                false, 
+                null,
+                customValidation.ValidateCVV
+            );
+
+            customValidation.Init(
+                cvAccountName, 
+                "txtAccountName", 
+                "Tên chủ tài khoản không hợp lệ", 
+                false, 
+                null, 
+                customValidation.ValidateAccountName
+            );
+
+            customValidation.Init(
+                cvExpirationDate, 
+                "txtExpirationDate", 
+                "Ngày hết hạn không hợp lệ",
+                false, 
+                null, 
+                customValidation.ValidateExpirationDate
+            );
         }
 
         private void ValidateData()
@@ -72,106 +148,27 @@ namespace Web.Account
 
         private bool IsValidData()
         {
-            if (
+            ValidateData();
+            return (
                 cvUsername.IsValid && cvEmail.IsValid && cvPhoneNumber.IsValid && cvPassword.IsValid
                 && cmpRePassword.IsValid && cvCardNumber.IsValid && cvCvv.IsValid && cvAccountName.IsValid
                 && cvExpirationDate.IsValid
-            )
-            {
-                return true;
-            }
-            return false;
+            );
         }
 
-        private async Task<Models.User> GetUserModel()
+        private UserCreation GetUserRegister()
         {
-            string username = Request.Form["txtUsername"];
-            string email = Request.Form["txtEmail"];
-            string phoneNumber = Request.Form["txtPhoneNumber"];
-            string password = Request.Form["txtPassword"];
-
-            string salt = MD5_Hash.Hash(new Random().NextString(25));
-
-            Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
-            if (role == null)
+            return new UserCreation
             {
-                return null;
-            }
-            else
-            {
-                Models.User user = new Models.User
-                {
-                    ID = Guid.NewGuid().ToString(),
-                    userName = username,
-                    email = email,
-                    phoneNumber = phoneNumber,
-                    password = PBKDF2_Hash.Hash(password, salt, 30),
-                    salt = salt,
-                    roleId = role.ID,
-                    active = false,
-                    createAt = DateTime.Now,
-                    updateAt = DateTime.Now
-                };
-                return user;
-            }
+                userName = Request.Form["txtUsername"],
+                email = Request.Form["txtEmail"],
+                phoneNumber = Request.Form["txtPhoneNumber"],
+                password = Request.Form["txtPassword"],
+                PaymentInfo = GetPaymentInfo()
+            };
         }
 
-        private async Task RegisterAccount()
-        {
-            ValidateData();
-            if (IsValidData())
-            {
-                Models.User user = await GetUserModel();
-                if (user == null)
-                {
-                    Response.RedirectToRoute("error");
-                }
-                else
-                {
-                    Models.User usr = await db.Users.SingleOrDefaultAsync(u => u.userName == user.userName);
-                    if(usr != null)
-                    {
-                        Response.RedirectToRoute("Register_WithParam", new { 
-                            registerStatus = "register-failed_already-exist" 
-                        });
-                    }
-                    else
-                    {
-                        int affected = await db
-                        .Users.InsertAsync(user, new List<string> { "surName", "middleName", "name", "description" });
-
-                        if (affected == 0)
-                        {
-                            Response.RedirectToRoute("Register_WithParam", new { 
-                                registerStatus = "register-failed" 
-                            });
-                        }
-                        else
-                        {
-                            ConfirmCode confirmCode = new ConfirmCode();
-                            Session["confirmCode"] = confirmCode.Send(user.email);
-                            string confirmToken = confirmCode.CreateToken();
-                            Session["confirmToken"] = confirmToken;
-                            bool status = await AddPaymentInfo(user.ID);
-                            if (status)
-                                Response.RedirectToRoute("Confirm", new { 
-                                    userId = user.ID,
-                                    confirmToken = confirmToken,
-                                    status = "register-success" 
-                                });
-                            else
-                                Response.RedirectToRoute("Confirm", new {
-                                    userId = user.ID, 
-                                    confirmToken = confirmToken,
-                                    status = "register-success_no-payment-info"
-                                });
-                        }
-                    }
-                }
-            }
-        }
-
-        private async Task<PaymentInfo> GetPaymentInfoModel()
+        private PaymentInfoCreation GetPaymentInfo()
         {
             string cardNumber = Request.Form["txtCardNumber"];
             string cvv = Request.Form["txtCvv"];
@@ -179,48 +176,61 @@ namespace Web.Account
             string expirationDate = Request.Form["txtExpirationDate"];
             string paymentMethod = Request.Form["drdlPaymentMethod"];
             if (
-                (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(cvv) || string.IsNullOrEmpty(accountName)
-                || string.IsNullOrEmpty(expirationDate) || string.IsNullOrEmpty(paymentMethod)) == false
+               (string.IsNullOrEmpty(cardNumber) || string.IsNullOrEmpty(cvv) || string.IsNullOrEmpty(accountName)
+               || string.IsNullOrEmpty(expirationDate) || string.IsNullOrEmpty(paymentMethod)) == false
             )
             {
-                Models.PaymentMethod paymntMethod = await db
-                    .PaymentMethods.SingleOrDefaultAsync(p => new { p.ID }, p => p.name == paymentMethod);
-                if (paymntMethod == null)
+                return new PaymentInfoCreation
                 {
-                    return null;
-                }
-                else
-                {
-                    Models.PaymentInfo paymentInfo = new Models.PaymentInfo
-                    {
-                        cardNumber = cardNumber,
-                        cvv = cvv,
-                        owner = accountName,
-                        expirationDate = expirationDate,
-                        paymentMethodId = paymntMethod.ID,
-                        createAt = DateTime.Now,
-                        updateAt = DateTime.Now
-                    };
-                    return paymentInfo;
-                }
+                    cardNumber = cardNumber,
+                    cvv = cvv,
+                    owner = accountName,
+                    expirationDate = expirationDate,
+                    paymentMethodId = int.Parse(paymentMethod)
+                };
             }
             return null;
         }
 
-        public async Task<bool> AddPaymentInfo(string userId)
+        private async Task RegisterAccount()
         {
-            Models.PaymentInfo paymentInfo = await GetPaymentInfoModel();
-            if(paymentInfo == null)
+            if (IsValidData())
             {
-                return false;
-            }
-            else
-            {
-                paymentInfo.userId = userId;
-                int affected = await db.PaymentInfos.InsertAsync(paymentInfo);
-                if (affected == 0)
-                    return false;
-                return true;
+                UserCreation userCreation = GetUserRegister();
+                UserBLL.RegisterState registerState = await userBLL.RegisterAsync(userCreation);
+
+                if (registerState == UserBLL.RegisterState.Failed || registerState == UserBLL.RegisterState.AlreadyExist)
+                {
+                    enableShowResult = true;
+                    if (registerState == UserBLL.RegisterState.Failed)
+                        stateDetail = "Đăng ký tài khoản thất bại";
+                    else
+                        stateDetail = "Đã tồn tại tài khoản có thông tin này";
+                }
+                else
+                {
+                    ConfirmCode confirmCode = new ConfirmCode();
+                    Session["confirmCode"] = confirmCode.Send(userCreation.email);
+                    string confirmToken = confirmCode.CreateToken();
+                    Session["confirmToken"] = confirmToken;
+
+                    UserInfo userInfo = await userBLL.GetUserByUserNameAsync(userCreation.userName);
+
+                    if (registerState == UserBLL.RegisterState.Success)
+                        Response.RedirectToRoute("Confirm", new
+                        {
+                            userId = userInfo.ID,
+                            confirmToken = confirmToken,
+                            type = "register"
+                        });
+                    else
+                        Response.RedirectToRoute("Confirm", new
+                        {
+                            userId =userInfo.ID,
+                            confirmToken = confirmToken,
+                            type = "register_no-payment-info"
+                        });
+                }
             }
         }
     }

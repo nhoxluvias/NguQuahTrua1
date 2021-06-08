@@ -6,14 +6,14 @@
 <head runat="server">
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/account/login.css") %>">
-    <script type="text/javascript" src="<%= ResolveUrl("~/libraries/js/video.js") %>"></script>
+    <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/login.css") %>">
+    <script type="text/javascript" src="<%= ResolveUrl("~/common_assets/js/video.js") %>"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <form id="frmLogin" method="post" runat="server">
         <video id="backgroundVideo" class="background-video" autoplay>
-            <source src="<%--https://www.phanxuanchanh.com/trailer.mp4--%>" type='video/mp4'>
+            <source src="https://www.phanxuanchanh.com/trailer.mp4" type='video/mp4'>
             <p>Không thể phát video</p>
         </video>
         <div class="audio-tool">
@@ -23,12 +23,15 @@
                 <i id="audioControlTitle" class="fa fa-volume-up"></i>
             </div>
         </div>
+        <% if (enableShowResult)
+            { %>
         <div class="login-status">
             <div class="login-status-space"></div>
             <div class="login-status-message">
-                <h3 id="txtLoginStatus" runat="server"></h3>
+                <h3><% = stateDetail %></h3>
             </div>
         </div>
+        <%} %>
         <div class="video-info">
             <h3>Bạn đang xem? </h3>
             <h4>Marvel Studios' Loki | Official Trailer | Disney+</h4>
@@ -81,7 +84,7 @@
                     <asp:HyperLink ID="hylnkTermOfUse" runat="server">Điều khoản sử dụng dịch vụ</asp:HyperLink></span>
             </div>
         </div>
-        <script src="<%= ResolveUrl("~/js/account/login.js") %>"> </script>
+        <script src="<%= ResolveUrl("~/account_assets/js/login.js") %>"> </script>
     </form>
 </body>
 </html>
