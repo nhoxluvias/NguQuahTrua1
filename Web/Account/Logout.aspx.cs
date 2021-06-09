@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace Web.Account
 {
@@ -11,7 +6,15 @@ namespace Web.Account
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            Session["username"] = null; 
+            hyplnkHome.NavigateUrl = GetRouteUrl("User_Home", null);
+            if (Session["userSession"] == null)
+                Response.RedirectToRoute("User_Home");
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            Session["userSession"] = null;
+            Response.RedirectToRoute("User_Home");
         }
     }
 }

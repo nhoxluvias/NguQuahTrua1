@@ -1,4 +1,6 @@
 ﻿using Common.Mail;
+using Data.BLL;
+using Data.DTO;
 using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
@@ -15,19 +17,26 @@ namespace Web.Account
 {
     public partial class Confirm : System.Web.UI.Page
     {
-        private DBContext db;
+        private UserBLL userBLL;
+        private CustomValidation customValidation;
         protected async void Page_Load(object sender, EventArgs e)
         {
-            db = new DBContext(ConnectionType.ManuallyDisconnect);
+            customValidation = new CustomValidation();
             InitHyperlink();
             InitValidation();
-            if (IsPostBack)
+            if(Session["confirmCode"] == null || Session["confirmToken"] == null)
             {
-                await ConfirmAccount();
+                Response.RedirectToRoute("User_Home");
             }
             else
             {
-                await ReSendConfirmCode();
+                userBLL = new UserBLL(DataAccessLevel.User);
+                if (IsPostBack)
+                    await ConfirmAccount();
+                else
+                    await ReSendConfirmCode();
+
+                userBLL.Dispose();
             }
         }
 
@@ -37,19 +46,36 @@ namespace Web.Account
             {
                 userId = GetUserId(),
                 confirmToken = GetConfirmToken(),
-                status = "re-confirm"
+                type = "re-confirm"
             });
         }
 
         private void InitValidation()
         {
-            CustomValidation
-                .Init(cvConfirmCode, "txtConfirmCode", "Không được để trống, từ 6 đến 20 ký tự số", true, null, CustomValidation.ValidateConfirmCode);
+            customValidation.Init(
+                cvConfirmCode, 
+                "txtConfirmCode", 
+                "Không được để trống, từ 6 đến 20 ký tự số", 
+                true, 
+                null, 
+                customValidation.ValidateConfirmCode
+            );
+        }
+
+        private void ValidateData()
+        {
+            cvConfirmCode.Validate();
+        }
+
+        public bool IsValidData()
+        {
+            ValidateData();
+            return cvConfirmCode.IsValid;
         }
 
         private bool IsReConfirm()
         {
-            string status = (string)Page.RouteData.Values["status"];
+            string status = (string)Page.RouteData.Values["type"];
             return (status == "re-confirm");
         }
 
@@ -57,16 +83,12 @@ namespace Web.Account
         {
             if (IsReConfirm())
             {
-                Models.User user = await db.Users
-                    .SingleOrDefaultAsync(u => new { u.email }, u => u.ID == GetUserId());
-                if (user == null)
-                {
+                UserInfo userInfo = await userBLL.GetUserAsync(GetUserId());
+
+                if (userInfo == null)
                     Response.RedirectToRoute("Error");
-                }
                 else
-                {
-                    Session["confirmCode"] = new ConfirmCode().Send(user.email);
-                }
+                    Session["confirmCode"] = new ConfirmCode().Send(userInfo.email);
             }
         }
 
@@ -90,24 +112,22 @@ namespace Web.Account
 
         private async Task ConfirmAccount()
         {
-            cvConfirmCode.Validate();
-            if (cvConfirmCode.IsValid && CheckConfirmCode())
+            if (IsValidData() && CheckConfirmCode())
             {
                 string userId = GetUserId();
-                int affected = await db.Users.UpdateAsync(new Models.User { active = true }, u => new { u.active });
-                if (affected == 0) {
-                    Response.RedirectToRoute("Error");
-                }
-                else
-                {
+                bool state = await userBLL.ActiveUserAsync(userId);
+                Session["confirmCode"] = null;
+                Session["confirmToken"] = null;
+                if (state)
                     Response.RedirectToRoute("Login");
-                }
+                else
+                    Response.RedirectToRoute("Error");
             }
             else
             {
                 Response.RedirectToRoute("Confirm", new { 
                     userId = GetUserId(), 
-                    status = "confirm-failed" 
+                    type = "confirm-failed" 
                 });
             }
         }

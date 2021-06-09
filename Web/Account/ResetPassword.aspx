@@ -6,7 +6,7 @@
 <head runat="server">
     <title>Lấy lại mật khẩu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="<%= ResolveUrl("~/css/account/reset-password.css") %>">
+    <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/reset-password.css") %>">
 </head>
 <body>
     <form id="form1" runat="server">

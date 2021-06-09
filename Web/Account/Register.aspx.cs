@@ -27,7 +27,7 @@ namespace Web.Account
 
             if (CheckLoggedIn())
             {
-                Response.RedirectToRoute("Home");
+                Response.RedirectToRoute("User_Home");
             }
             else
             {
@@ -51,7 +51,7 @@ namespace Web.Account
 
         private bool CheckLoggedIn()
         {
-            return (Session["username"] != null);
+            return (Session["userSession"] != null);
         }
 
         private void InitValidation()

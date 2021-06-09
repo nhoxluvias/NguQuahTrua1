@@ -24,7 +24,7 @@ namespace Web.Account
             stateDetail = null;
             if (CheckLoggedIn())
             {
-                Response.RedirectToRoute("Home");
+                Response.RedirectToRoute("User_Home");
             }
             else
             {
@@ -128,7 +128,7 @@ namespace Web.Account
                         {
                             userId = userInfo.ID,
                             confirmToken = confirmToken,
-                            type = "login"
+                            type = "login_unconfirmed"
                         });
                     }
                 }

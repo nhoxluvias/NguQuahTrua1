@@ -295,6 +295,12 @@ namespace Data.BLL
                 .SingleOrDefaultAsync(u => new { u.active }, u => u.userName == username)).active;
         }
 
+        public async Task<bool> ActiveUserAsync(string userId)
+        {
+            int affected = await db.Users.UpdateAsync(new User { active = true }, u => new { u.active }, u => u.ID == userId);
+            return (affected != 0);
+        } 
+
         public enum RegisterState { Success, Success_NoPaymentInfo, Failed, AlreadyExist };
 
         public async Task<RegisterState> RegisterAsync(UserCreation userCreation)

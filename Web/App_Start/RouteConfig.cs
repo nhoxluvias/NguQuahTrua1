@@ -17,7 +17,6 @@ namespace Web.App_Start
             routes.MapPageRoute("Confirm", "account/confirm/{userId}/{confirmToken}/{type}", "~/Account/Confirm.aspx");
 
             routes.MapPageRoute("Error", "error", "~/Notification/Error.aspx");
-            routes.MapPageRoute("Home", "home", "~/User/Home.aspx");
 
             routes.MapPageRoute("Admin_Overview", "admin/overview", "~/Admin/Index.aspx");
             routes.MapPageRoute("Admin_CategoryList", "admin/category/list", "~/Admin/CategoryManagement/CategoryList.aspx");
