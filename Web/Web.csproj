@@ -64,6 +64,7 @@
     <Content Include="Account\Confirm.aspx" />
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Logout.aspx" />
+    <Content Include="Account\NewPassword.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Account\ResetPassword.aspx" />
     <Content Include="account_assets\css\logout.css" />
@@ -193,6 +194,13 @@
     </Compile>
     <Compile Include="Account\Logout.aspx.designer.cs">
       <DependentUpon>Logout.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\NewPassword.aspx.cs">
+      <DependentUpon>NewPassword.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\NewPassword.aspx.designer.cs">
+      <DependentUpon>NewPassword.aspx</DependentUpon>
     </Compile>
     <Compile Include="Account\Register.aspx.cs">
       <DependentUpon>Register.aspx</DependentUpon>

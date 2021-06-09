@@ -265,6 +265,31 @@ namespace Data.BLL
             return ToUserInfo(user);
         }
 
+        public async Task<UserInfo> GetUserByEmailAsync(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                throw new Exception("");
+            User user = null;
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                user = await db.Users
+                     .SingleOrDefaultAsync(u => u.email == email);
+            else
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.roleId
+                    }, u => u.email == email);
+
+            return ToUserInfo(user);
+        }
+
         public enum LoginState { Success, Unconfirmed, WrongPassword, NotExists };
 
         public async Task<LoginState> LoginAsync(UserLogin userLogin)
@@ -315,7 +340,8 @@ namespace Data.BLL
                 throw new Exception("");
             }
 
-            User usr = await db.Users.SingleOrDefaultAsync(u => u.userName == userCreation.userName);
+            User usr = await db.Users
+                .SingleOrDefaultAsync(u => u.userName == userCreation.userName || u.email == userCreation.email || u.phoneNumber == userCreation.phoneNumber);
             if (usr != null)
                 return RegisterState.AlreadyExist;
 

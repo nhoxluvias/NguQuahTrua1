@@ -11,35 +11,35 @@ namespace Web.Account
 {
 
 
-    public partial class ResetPassword
+    public partial class NewPassword
     {
 
         /// <summary>
-        /// frmResetPassword control.
+        /// frmNewPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm frmResetPassword;
+        protected global::System.Web.UI.HtmlControls.HtmlForm frmNewPassword;
 
         /// <summary>
-        /// txtEmail control.
+        /// txtNewPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtEmail;
+        protected global::System.Web.UI.WebControls.TextBox txtNewPassword;
 
         /// <summary>
-        /// cvEmail control.
+        /// cvPassword control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CustomValidator cvEmail;
+        protected global::System.Web.UI.WebControls.CustomValidator cvPassword;
 
         /// <summary>
         /// btnSubmit control.

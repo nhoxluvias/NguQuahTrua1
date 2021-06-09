@@ -1,4 +1,4 @@
-﻿<%@ Page Async="true" Language="C#" AutoEventWireup="true" CodeBehind="ResetPassword.aspx.cs" Inherits="Web.Account.ResetPassword" %>
+﻿<%@ Page Async="true" Language="C#" AutoEventWireup="true" CodeBehind="NewPassword.aspx.cs" Inherits="Web.Account.NewPassword" %>
 
 <!DOCTYPE html>
 
@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/reset-password.css") %>">
 </head>
 <body>
-    <form id="frmResetPassword" runat="server">
+    <form id="frmNewPassword" runat="server">
         <div class="reset-password-form">
             <div class="reset-password-form-title">
                 <h3>Đặt lại mật khẩu</h3>
@@ -18,11 +18,11 @@
             </div>
             <div class="reset-password-form-data">
                 <div class="reset-password-form-group">
-                    <p>Địa chỉ Email</p>
-                    <asp:TextBox ID="txtEmail" TextMode="Email" Text="" placeholder="Nhập vào địa chỉ Email" runat="server"></asp:TextBox>
+                    <p>Nhập mật khẩu mới</p>
+                    <asp:TextBox ID="txtNewPassword" TextMode="Password" Text="" placeholder="Nhập vào mật khẩu mới" runat="server"></asp:TextBox>
                     <div class="show-error">
                         <span>
-                            <asp:CustomValidator ID="cvEmail" runat="server"></asp:CustomValidator>
+                            <asp:CustomValidator ID="cvPassword" runat="server"></asp:CustomValidator>
                         </span>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
             </div>
         </div>
     </form>
-    <% if (enableShowResult)
+    <%--<% if (enableShowResult)
         { %>
         <script type="text/javascript">
             var stateDetail = "<% = stateDetail %>";
@@ -40,6 +40,6 @@
                 alert(stateDetail);
             }, 1500);
         </script>
-    <%} %>
+    <%} %>--%>
 </body>
 </html>
