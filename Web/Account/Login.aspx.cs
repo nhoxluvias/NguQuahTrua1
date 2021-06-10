@@ -17,30 +17,38 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            customValidation = new CustomValidation();
-            InitHyperLink();
-            InitValidation();
-            enableShowResult = false;
-            stateDetail = null;
-            if (CheckLoggedIn())
+            try
             {
-                Response.RedirectToRoute("User_Home");
-            }
-            else
-            {
-                userBLL = new UserBLL(DataAccessLevel.User);
-                if (IsPostBack)
+                customValidation = new CustomValidation();
+                InitHyperLink();
+                InitValidation();
+                enableShowResult = false;
+                stateDetail = null;
+                if (CheckLoggedIn())
                 {
-                    await LoginToAccount();
+                    Response.RedirectToRoute("User_Home");
                 }
-                userBLL.Dispose();
+                else
+                {
+                    if (IsPostBack)
+                    {
+                        userBLL = new UserBLL(DataAccessLevel.User);
+                        await LoginToAccount();
+                        userBLL.Dispose();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
         }
 
         private void InitHyperLink()
         {
-            hylnkResetPassword.NavigateUrl = GetRouteUrl("ResetPassword", null);
-            hylnkRegister.NavigateUrl = GetRouteUrl("Register", null);
+            hylnkResetPassword.NavigateUrl = GetRouteUrl("Account_ResetPassword", null);
+            hylnkRegister.NavigateUrl = GetRouteUrl("Account_Register", null);
             hylnkFeedback.NavigateUrl = "#";
             hylnkContact.NavigateUrl = "#";
             hylnkTermOfUse.NavigateUrl = "#";
@@ -124,7 +132,7 @@ namespace Web.Account
                         string confirmToken = confirmCode.CreateToken();
                         Session["confirmToken"] = confirmToken;
 
-                        Response.RedirectToRoute("Confirm", new
+                        Response.RedirectToRoute("Account_Confirm", new
                         {
                             userId = userInfo.ID,
                             confirmToken = confirmToken,

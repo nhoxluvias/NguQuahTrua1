@@ -1,14 +1,8 @@
-﻿using Common.Mail;
-using Data.BLL;
+﻿using Data.BLL;
 using Data.DTO;
-using MSSQL_Lite.Connection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Common;
 using Web.Models;
 using Web.Validation;
@@ -21,28 +15,40 @@ namespace Web.Account
         private CustomValidation customValidation;
         protected async void Page_Load(object sender, EventArgs e)
         {
-            customValidation = new CustomValidation();
-            InitHyperlink();
-            InitValidation();
-            if(Session["confirmCode"] == null || Session["confirmToken"] == null)
+            try
             {
-                Response.RedirectToRoute("User_Home");
-            }
-            else
-            {
-                userBLL = new UserBLL(DataAccessLevel.User);
-                if (IsPostBack)
-                    await ConfirmAccount();
+                customValidation = new CustomValidation();
+                InitHyperlink();
+                InitValidation();
+                if (Session["confirmCode"] == null || Session["confirmToken"] == null)
+                {
+                    Response.RedirectToRoute("User_Home");
+                }
+                else if (!IsValidConfirmToken())
+                {
+                    Response.RedirectToRoute("User_Home");
+                }
                 else
-                    await ReSendConfirmCode();
+                {
+                    userBLL = new UserBLL(DataAccessLevel.User);
+                    if (IsPostBack)
+                        await ConfirmAccount();
+                    else
+                        await ReSendConfirmCode();
 
-                userBLL.Dispose();
+                    userBLL.Dispose();
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
         }
 
         private void InitHyperlink()
         {
-            hylnkReConfirm.NavigateUrl = GetRouteUrl("Confirm", new
+            hylnkReConfirm.NavigateUrl = GetRouteUrl("Account_Confirm", new
             {
                 userId = GetUserId(),
                 confirmToken = GetConfirmToken(),
@@ -53,11 +59,11 @@ namespace Web.Account
         private void InitValidation()
         {
             customValidation.Init(
-                cvConfirmCode, 
-                "txtConfirmCode", 
-                "Không được để trống, từ 6 đến 20 ký tự số", 
-                true, 
-                null, 
+                cvConfirmCode,
+                "txtConfirmCode",
+                "Không được để trống, từ 6 đến 20 ký tự số",
+                true,
+                null,
                 customValidation.ValidateConfirmCode
             );
         }
@@ -79,6 +85,12 @@ namespace Web.Account
             return (status == "re-confirm");
         }
 
+        private bool IsResetPassword()
+        {
+            string status = (string)Page.RouteData.Values["type"];
+            return (status == "reset-password" || status == "reset-password-failed");
+        }
+
         private async Task ReSendConfirmCode()
         {
             if (IsReConfirm())
@@ -86,18 +98,21 @@ namespace Web.Account
                 UserInfo userInfo = await userBLL.GetUserAsync(GetUserId());
 
                 if (userInfo == null)
-                    Response.RedirectToRoute("Error");
+                    Response.RedirectToRoute("Notification_Error");
                 else
                     Session["confirmCode"] = new ConfirmCode().Send(userInfo.email);
             }
         }
 
+        private bool IsValidConfirmToken()
+        {
+            return GetConfirmToken() == Session["confirmToken"] as string;
+        }
+
         private bool CheckConfirmCode()
         {
             string confirmCode = Request.Form["txtConfirmCode"];
-            string confirmToken = GetConfirmToken();
-            return (confirmCode == Session["confirmCode"] as string) 
-                && (confirmToken == Session["confirmToken"] as string);
+            return (confirmCode == Session["confirmCode"] as string);
         }
 
         private string GetUserId()
@@ -115,19 +130,47 @@ namespace Web.Account
             if (IsValidData() && CheckConfirmCode())
             {
                 string userId = GetUserId();
-                bool state = await userBLL.ActiveUserAsync(userId);
+                UserBLL.ActiveUserState activeUserState = await userBLL.ActiveUserAsync(userId);
                 Session["confirmCode"] = null;
                 Session["confirmToken"] = null;
-                if (state)
-                    Response.RedirectToRoute("Login");
+                if (activeUserState == UserBLL.ActiveUserState.Success)
+                {
+                    if (IsResetPassword())
+                    {
+                        ConfirmCode confirmCode = new ConfirmCode();
+                        string newPasswordToken = confirmCode.CreateToken();
+                        Session["newPasswordToken"] = newPasswordToken;
+                        Response.RedirectToRoute("Account_NewPassword", new { userId = userId, newPasswordToken = newPasswordToken });
+                    }
+                    else
+                    {
+                        Response.RedirectToRoute("Account_Login");
+                    }
+                }
+                else if (activeUserState == UserBLL.ActiveUserState.NotExists)
+                {
+                    Response.RedirectToRoute("User_Home");
+                }
                 else
-                    Response.RedirectToRoute("Error");
+                {
+                    Response.RedirectToRoute("Notification_Error");
+                }
+            }
+            else if (IsResetPassword())
+            {
+
+                Response.RedirectToRoute("Account_Confirm", new
+                {
+                    userId = GetUserId(),
+                    type = "reset-password-failed"
+                });
             }
             else
             {
-                Response.RedirectToRoute("Confirm", new { 
-                    userId = GetUserId(), 
-                    type = "confirm-failed" 
+                Response.RedirectToRoute("Account_Confirm", new
+                {
+                    userId = GetUserId(),
+                    type = "confirm-failed"
                 });
             }
         }

@@ -31,13 +31,15 @@ namespace Data.BLL.Migration
                 while (count < 3)
                 {
                     Random random = new Random();
-                    string id = MD5_Hash.Hash(random.NextString(10));
+                    MD5_Hash md5 = new MD5_Hash();
+                    string id = md5.Hash(random.NextString(10));
                     if (IDs.Any(i => i.Equals(id)) == false)
                     {
                         IDs.Add(id);
                         count++;
                     }
                     random = null;
+                    md5 = null;
                 }
 
                 AddItem(new Role
@@ -77,13 +79,15 @@ namespace Data.BLL.Migration
                 while (count < 3)
                 {
                     Random random = new Random();
-                    string id = MD5_Hash.Hash(random.NextString(10));
+                    MD5_Hash md5 = new MD5_Hash();
+                    string id = md5.Hash(random.NextString(10));
                     if (IDs.Any(i => i.Equals(id)) == false)
                     {
                         IDs.Add(id);
                         count++;
                     }
                     random = null;
+                    md5 = null;
                 }
 
                 AddItem(new Role

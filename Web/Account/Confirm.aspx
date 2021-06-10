@@ -4,13 +4,13 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
+    <title>Xác minh tài khoản</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/confirm.css") %>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <form id="form1" runat="server">
+    <form id="frmConfirm" runat="server">
        <div class="confirm-form">
             <div class="confirm-form-title">
                 <h3>Xác minh tài khoản</h3>

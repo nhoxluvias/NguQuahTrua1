@@ -9,7 +9,7 @@ namespace Data.Common.Hash
 {
     public class MD5_Hash
     {
-        public static string Hash(string text)
+        public string Hash(string text)
         {
             MD5 md5 = MD5.Create();
             byte[] hash = md5.ComputeHash(Encoding.UTF8.GetBytes(text));

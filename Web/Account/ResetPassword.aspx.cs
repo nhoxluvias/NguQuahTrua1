@@ -3,6 +3,7 @@ using Data.DTO;
 using System;
 using System.Threading.Tasks;
 using Web.Common;
+using Web.Models;
 using Web.Validation;
 
 namespace Web.Account
@@ -16,13 +17,21 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            customValidation = new CustomValidation();
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                userBLL = new UserBLL(DataAccessLevel.User);
-                await ResetPwd();
-                userBLL.Dispose();
+                customValidation = new CustomValidation();
+                InitValidation();
+                if (IsPostBack)
+                {
+                    userBLL = new UserBLL(DataAccessLevel.User);
+                    await ResetPwd();
+                    userBLL.Dispose();
+                }
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
         }
 
@@ -72,7 +81,7 @@ namespace Web.Account
                     string confirmToken = confirmCode.CreateToken();
                     Session["confirmToken"] = confirmToken;
 
-                    Response.RedirectToRoute("Confirm", new
+                    Response.RedirectToRoute("Account_Confirm", new
                     {
                         userId = userInfo.ID,
                         confirmToken = confirmToken,

@@ -10,14 +10,12 @@ namespace Web.App_Start
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            routes.MapPageRoute("Login", "account/login", "~/Account/Login.aspx");
-            routes.MapPageRoute("Logout", "account/logout", "~/Account/Logout.aspx");
-            routes.MapPageRoute("Register", "account/register", "~/Account/Register.aspx");
-            routes.MapPageRoute("ResetPassword", "account/reset-password", "~/Account/ResetPassword.aspx");
+            routes.MapPageRoute("Account_Login", "account/login", "~/Account/Login.aspx");
+            routes.MapPageRoute("Account_Logout", "account/logout", "~/Account/Logout.aspx");
+            routes.MapPageRoute("Account_Register", "account/register", "~/Account/Register.aspx");
+            routes.MapPageRoute("Account_ResetPassword", "account/reset-password", "~/Account/ResetPassword.aspx");
             routes.MapPageRoute("Account_NewPassword", "account/new-password/{userId}/{newPasswordToken}", "~/Account/NewPassword.aspx");
-            routes.MapPageRoute("Confirm", "account/confirm/{userId}/{confirmToken}/{type}", "~/Account/Confirm.aspx");
-
-            routes.MapPageRoute("Error", "error", "~/Notification/Error.aspx");
+            routes.MapPageRoute("Account_Confirm", "account/confirm/{userId}/{confirmToken}/{type}", "~/Account/Confirm.aspx");
 
             routes.MapPageRoute("Admin_Overview", "admin/overview", "~/Admin/Index.aspx");
             routes.MapPageRoute("Admin_CategoryList", "admin/category/list", "~/Admin/CategoryManagement/CategoryList.aspx");

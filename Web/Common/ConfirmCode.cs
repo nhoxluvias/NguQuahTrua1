@@ -17,7 +17,8 @@ namespace Web.Common
         public string CreateToken(int length = 30)
         {
             string randomString = new Random().NextString(20);
-            return PBKDF2_Hash.Hash(randomString, "confirmToken", length);
+            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
+            return pbkdf2.Hash(randomString, "confirmToken", length);
         }
     }
 }

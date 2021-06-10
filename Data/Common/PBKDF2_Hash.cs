@@ -5,7 +5,7 @@ namespace Data.Common.Hash
 {
     public class PBKDF2_Hash
     {
-        public static string Hash(string input, string salt, int length)
+        public string Hash(string input, string salt, int length)
         {
 
             Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(input, Encoding.ASCII.GetBytes(salt), iterations: 5000);

@@ -241,7 +241,8 @@ namespace Data.BLL
             if (checkExists != 0)
                 return StateOfCreation.AlreadyExists;
 
-            film.ID = MD5_Hash.Hash(string.Format("name:{0}//random:{1}", film.name, new Random().NextString(25)));
+            MD5_Hash md5 = new MD5_Hash();
+            film.ID = md5.Hash(string.Format("name:{0}//random:{1}", film.name, new Random().NextString(25)));
             int affected;
             if(
                 film.description == null || film.duration == null

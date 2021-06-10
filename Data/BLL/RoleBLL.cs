@@ -161,8 +161,8 @@ namespace Data.BLL
                 return StateOfCreation.AlreadyExists;
 
             Random random = new Random();
-            role.ID = MD5_Hash.Hash(random.NextString(10));
-            random = null;
+            MD5_Hash md5 = new MD5_Hash();
+            role.ID = md5.Hash(random.NextString(10));
             int affected = await db.Roles.InsertAsync(role);
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }

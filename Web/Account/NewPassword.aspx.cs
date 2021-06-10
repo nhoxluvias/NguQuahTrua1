@@ -1,11 +1,8 @@
 ﻿using Data.BLL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
+using Web.Models;
 using Web.Validation;
 
 namespace Web.Account
@@ -14,16 +11,39 @@ namespace Web.Account
     {
         private UserBLL userBLL;
         private CustomValidation customValidation;
+        protected bool enableShowResult;
+        protected string stateDetail;
 
-        protected void Page_Load(object sender, EventArgs e)
+        protected async void Page_Load(object sender, EventArgs e)
         {
-            customValidation = new CustomValidation();
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                userBLL = new UserBLL(DataAccessLevel.User);
-
-                userBLL.Dispose();
+                customValidation = new CustomValidation();
+                InitValidation();
+                enableShowResult = true;
+                stateDetail = null;
+                if (Session["newPasswordToken"] == null)
+                {
+                    Response.RedirectToRoute("User_Home");
+                }
+                else if (!IsValidNewPasswordToken())
+                {
+                    Response.RedirectToRoute("User_Home");
+                }
+                else
+                {
+                    if (IsPostBack)
+                    {
+                        userBLL = new UserBLL(DataAccessLevel.User);
+                        await CreateNewPassword();
+                        userBLL.Dispose();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
         }
 
@@ -50,10 +70,41 @@ namespace Web.Account
             return cvPassword.IsValid;
         }
 
-        private async Task CreateNewPassword()
+        private string GetUserId()
         {
-            
+            return (string)Page.RouteData.Values["userId"];
         }
 
+        private string GetNewPassword()
+        {
+            return Request.Form["txtNewPassword"];
+        }
+
+        private string GetNewPasswordToken()
+        {
+            return (string)Page.RouteData.Values["newPasswordToken"];
+        }
+
+        private bool IsValidNewPasswordToken()
+        {
+            return GetNewPasswordToken() == Session["newPasswordToken"] as string;
+        }
+
+        private async Task CreateNewPassword()
+        {
+            if (IsValidData())
+            {
+                string userId = GetUserId();
+                string password = GetNewPassword();
+                UserBLL.CreateNewPasswordState createNewPasswordState = await userBLL.CreateNewPasswordAsync(userId, password);
+                Session["newPasswordToken"] = null;
+                if (createNewPasswordState == UserBLL.CreateNewPasswordState.Success)
+                    Response.RedirectToRoute("Account_Login");
+                else if (createNewPasswordState == UserBLL.CreateNewPasswordState.NotExists)
+                    Response.RedirectToRoute("User_Home");
+                else
+                    Response.RedirectToRoute("Notification_Error");
+            }
+        }
     }
 }

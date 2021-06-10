@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
 using Web.Common;
+using Web.Models;
 using Web.Validation;
 
 namespace Web.Account
@@ -18,25 +19,33 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL(DataAccessLevel.User);
-            customValidation = new CustomValidation();
-            enableShowResult = false;
-            stateDetail = null;
-            await SetDrdlPaymentMethod();
-            InitValidation();
+            try
+            {
+                userBLL = new UserBLL(DataAccessLevel.User);
+                customValidation = new CustomValidation();
+                enableShowResult = false;
+                stateDetail = null;
+                await SetDrdlPaymentMethod();
+                InitValidation();
 
-            if (CheckLoggedIn())
-            {
-                Response.RedirectToRoute("User_Home");
-            }
-            else
-            {
-                if (IsPostBack)
+                if (CheckLoggedIn())
                 {
-                    await RegisterAccount();
+                    Response.RedirectToRoute("User_Home");
                 }
+                else
+                {
+                    if (IsPostBack)
+                    {
+                        await RegisterAccount();
+                    }
+                }
+                userBLL.Dispose();
             }
-            userBLL.Dispose();
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
         }
 
         private async Task SetDrdlPaymentMethod()
@@ -217,14 +226,14 @@ namespace Web.Account
                     UserInfo userInfo = await userBLL.GetUserByUserNameAsync(userCreation.userName);
 
                     if (registerState == UserBLL.RegisterState.Success)
-                        Response.RedirectToRoute("Confirm", new
+                        Response.RedirectToRoute("Account_Confirm", new
                         {
                             userId = userInfo.ID,
                             confirmToken = confirmToken,
                             type = "register"
                         });
                     else
-                        Response.RedirectToRoute("Confirm", new
+                        Response.RedirectToRoute("Account_Confirm", new
                         {
                             userId =userInfo.ID,
                             confirmToken = confirmToken,

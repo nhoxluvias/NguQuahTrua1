@@ -58,18 +58,20 @@ namespace Data.BLL
             if (userCreation == null)
                 throw new Exception("");
 
-            string salt = MD5_Hash.Hash(new Random().NextString(25));
+            MD5_Hash md5 = new MD5_Hash();
+            string salt = md5.Hash(new Random().NextString(25));
             Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
             if (role == null)
                 throw new Exception("");
 
+            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
             return new User
             {
                 ID = Guid.NewGuid().ToString(),
                 userName = userCreation.userName,
                 email = userCreation.email,
                 phoneNumber = userCreation.phoneNumber,
-                password = PBKDF2_Hash.Hash(userCreation.password, salt, 30),
+                password = pbkdf2.Hash(userCreation.password, salt, 30),
                 salt = salt,
                 roleId = role.ID,
                 active = false,
@@ -306,7 +308,8 @@ namespace Data.BLL
             if (user == null)
                 return LoginState.NotExists;
 
-            string passwordHashed = PBKDF2_Hash.Hash(userLogin.password, user.salt, 30);
+            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
+            string passwordHashed = pbkdf2.Hash(userLogin.password, user.salt, 30);
             if (user.password != passwordHashed)
                 return LoginState.WrongPassword;
             if (!user.active)
@@ -320,11 +323,47 @@ namespace Data.BLL
                 .SingleOrDefaultAsync(u => new { u.active }, u => u.userName == username)).active;
         }
 
-        public async Task<bool> ActiveUserAsync(string userId)
+        public enum ActiveUserState { Success, Failed, NotExists }
+
+        public async Task<ActiveUserState> ActiveUserAsync(string userId)
         {
-            int affected = await db.Users.UpdateAsync(new User { active = true }, u => new { u.active }, u => u.ID == userId);
-            return (affected != 0);
-        } 
+            if (string.IsNullOrEmpty(userId))
+                throw new Exception("");
+
+            long count = await db.Users.CountAsync(u => u.ID == userId);
+            if (count == 0)
+                return ActiveUserState.NotExists;
+
+            int affected = await db.Users.UpdateAsync(new User { 
+                active = true, 
+                updateAt = DateTime.Now 
+            }, u => new { u.active, u.updateAt }, u => u.ID == userId);
+
+            return (affected == 0) ? ActiveUserState.Failed : ActiveUserState.Success;
+        }
+
+        public enum CreateNewPasswordState { Success, Failed, NotExists };
+
+        public async Task<CreateNewPasswordState> CreateNewPasswordAsync(string userId, string newPassword)
+        {
+            if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(userId))
+                throw new Exception("");
+
+            long count = await db.Users.CountAsync(u => u.ID == userId);
+            if (count == 0)
+                return CreateNewPasswordState.NotExists;
+
+            MD5_Hash md5 = new MD5_Hash();
+            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
+            string salt = md5.Hash(new Random().NextString(25));
+            int affected = await db.Users.UpdateAsync(new User {
+                password = pbkdf2.Hash(newPassword, salt, 30),
+                salt = salt,
+                updateAt = DateTime.Now
+            }, u => new { u.password, u.salt, u.updateAt }, u => u.ID == userId);
+
+            return (affected == 0) ? CreateNewPasswordState.Failed : CreateNewPasswordState.Success;
+        }
 
         public enum RegisterState { Success, Success_NoPaymentInfo, Failed, AlreadyExist };
 

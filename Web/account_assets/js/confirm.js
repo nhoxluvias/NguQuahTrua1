@@ -28,6 +28,20 @@
         );
     }
     regex = null;
+    regex = new RegExp("(\/account\/confirm\/)[a-zA-Z0-9-]{1,}(/)[a-zA-Z0-9]{1,}(/reset-password)$")
+    if (regex.test(path)) {
+        alert(
+            "Đã gửi tới email của bạn mã xác nhận, vui lòng nhập mã xác nhận để đặt lại mật khẩu"
+        );
+    }
+    regex = null;
+    regex = new RegExp("(\/account\/confirm\/)[a-zA-Z0-9-]{1,}(/)[a-zA-Z0-9]{1,}(/reset-password-failed)$")
+    if (regex.test(path)) {
+        alert(
+            "Bạn đã nhập sai mã xác nhận, vui lòng nhập lại mã xác nhận để đặt lại mật khẩu"
+        );
+    }
+    regex = null;
     regex = new RegExp("(\/account\/confirm\/)[a-zA-Z0-9-]{1,}(/)[a-zA-Z0-9]{1,}(/confirm-failed)$");
     if (regex.test(path)) {
         alert("Mã xác nhận không đúng, vui lòng nhập lại");
