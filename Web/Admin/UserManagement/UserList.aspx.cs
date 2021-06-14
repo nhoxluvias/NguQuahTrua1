@@ -9,7 +9,6 @@ namespace Web.Admin.UserManagement
     public partial class UserList : System.Web.UI.Page
     {
         private UserBLL userBLL;
-        private int selectedIndex;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -21,13 +20,11 @@ namespace Web.Admin.UserManagement
             {
                 userBLL = new UserBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateUser", null);
-                selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
                     await SetGrvUser();
-                    selectedIndex = 0;
                     SetDrdlPage();
                 }
             }
@@ -43,7 +40,6 @@ namespace Web.Admin.UserManagement
             try
             {
                 await SetGrvUser();
-                selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
             catch (Exception ex)
@@ -68,6 +64,7 @@ namespace Web.Admin.UserManagement
 
         private void SetDrdlPage()
         {
+            int selectedIndex = drdlPage.SelectedIndex;
             drdlPage.Items.Clear();
             for (int i = 0; i < pageNumber; i++)
             {

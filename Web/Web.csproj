@@ -70,7 +70,9 @@
     <Content Include="account_assets\css\logout.css" />
     <Content Include="Admin\CastManagement\CastDetail.aspx" />
     <Content Include="Admin\CastManagement\CastList.aspx" />
+    <Content Include="Admin\CastManagement\CreateCast.aspx" />
     <Content Include="Admin\CastManagement\DeleteCast.aspx" />
+    <Content Include="Admin\CastManagement\UpdateCast.aspx" />
     <Content Include="Admin\CategoryManagement\CategoryDetail.aspx" />
     <Content Include="Admin\CategoryManagement\CategoryList.aspx" />
     <Content Include="Admin\CategoryManagement\CreateCategory.aspx" />
@@ -84,6 +86,11 @@
     <Content Include="Admin\DirectorManagement\DirectorDetail.aspx" />
     <Content Include="Admin\DirectorManagement\DirectorList.aspx" />
     <Content Include="Admin\DirectorManagement\UpdateDirector.aspx" />
+    <Content Include="Admin\FilmManagement\CreateFilm.aspx" />
+    <Content Include="Admin\FilmManagement\DeleteFilm.aspx" />
+    <Content Include="Admin\FilmManagement\FilmDetail.aspx" />
+    <Content Include="Admin\FilmManagement\FilmList.aspx" />
+    <Content Include="Admin\FilmManagement\UpdateFilm.aspx" />
     <Content Include="Admin\LanguageManagement\CreateLanguage.aspx" />
     <Content Include="Admin\LanguageManagement\LanguageDetail.aspx" />
     <Content Include="Admin\RoleManagement\CreateRole.aspx" />
@@ -230,6 +237,13 @@
     <Compile Include="Admin\CastManagement\CastList.aspx.designer.cs">
       <DependentUpon>CastList.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\CastManagement\CreateCast.aspx.cs">
+      <DependentUpon>CreateCast.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CastManagement\CreateCast.aspx.designer.cs">
+      <DependentUpon>CreateCast.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\CastManagement\DeleteCast.aspx.cs">
       <DependentUpon>DeleteCast.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -237,7 +251,13 @@
     <Compile Include="Admin\CastManagement\DeleteCast.aspx.designer.cs">
       <DependentUpon>DeleteCast.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\CastManagement\UpdateCast.cs" />
+    <Compile Include="Admin\CastManagement\UpdateCast.aspx.cs">
+      <DependentUpon>UpdateCast.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\CastManagement\UpdateCast.aspx.designer.cs">
+      <DependentUpon>UpdateCast.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\CategoryManagement\CategoryDetail.aspx.cs">
       <DependentUpon>CategoryDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -328,6 +348,41 @@
     </Compile>
     <Compile Include="Admin\DirectorManagement\UpdateDirector.aspx.designer.cs">
       <DependentUpon>UpdateDirector.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\CreateFilm.aspx.cs">
+      <DependentUpon>CreateFilm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\CreateFilm.aspx.designer.cs">
+      <DependentUpon>CreateFilm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\DeleteFilm.aspx.cs">
+      <DependentUpon>DeleteFilm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\DeleteFilm.aspx.designer.cs">
+      <DependentUpon>DeleteFilm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\FilmDetail.aspx.cs">
+      <DependentUpon>FilmDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\FilmDetail.aspx.designer.cs">
+      <DependentUpon>FilmDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\FilmList.aspx.cs">
+      <DependentUpon>FilmList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\FilmList.aspx.designer.cs">
+      <DependentUpon>FilmList.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\UpdateFilm.aspx.cs">
+      <DependentUpon>UpdateFilm.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\UpdateFilm.aspx.designer.cs">
+      <DependentUpon>UpdateFilm.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\LanguageManagement\CreateLanguage.aspx.cs">
       <DependentUpon>CreateLanguage.aspx</DependentUpon>

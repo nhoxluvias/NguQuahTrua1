@@ -9,7 +9,6 @@ namespace Web.Admin.DirectorManagement
     public partial class DirectorList : System.Web.UI.Page
     {
         private DirectorBLL directorBLL;
-        private int selectedIndex;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -21,13 +20,11 @@ namespace Web.Admin.DirectorManagement
             {
                 directorBLL = new DirectorBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateDirector", null);
-                selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
                     await SetGrvDirector();
-                    selectedIndex = 0;
                     SetDrdlPage();
                 }
             }
@@ -43,7 +40,6 @@ namespace Web.Admin.DirectorManagement
             try
             {
                 await SetGrvDirector();
-                selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
             catch (Exception ex)
@@ -68,6 +64,7 @@ namespace Web.Admin.DirectorManagement
 
         private void SetDrdlPage()
         {
+            int selectedIndex = drdlPage.SelectedIndex;
             drdlPage.Items.Clear();
             for (int i = 0; i < pageNumber; i++)
             {

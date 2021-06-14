@@ -4,11 +4,11 @@ using System;
 using System.Threading.Tasks;
 using Web.Models;
 
-namespace Web.Admin.CategoryManagement
+namespace Web.Admin.FilmManagement
 {
-    public partial class CategoryList : System.Web.UI.Page
+    public partial class FilmList : System.Web.UI.Page
     {
-        private CategoryBLL categoryBLL;
+        private FilmBLL filmBLL;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -18,16 +18,17 @@ namespace Web.Admin.CategoryManagement
         {
             try
             {
-                categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
-                hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateCategory", null);
+                filmBLL = new FilmBLL(DataAccessLevel.Admin);
+                hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateFilm", null);
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
-                    await SetGrvCategory();
+                    await SetGrvFilm();
                     SetDrdlPage();
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
@@ -38,27 +39,27 @@ namespace Web.Admin.CategoryManagement
         {
             try
             {
-                await SetGrvCategory();
+                await SetGrvFilm();
                 SetDrdlPage();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            
+
         }
 
-        private async Task SetGrvCategory()
+        private async Task SetGrvFilm()
         {
-            PagedList<CategoryInfo> categories = await categoryBLL
-                .GetCategoriesAsync(drdlPage.SelectedIndex, 20);
-            categoryBLL.Dispose();
-            grvCategory.DataSource = categories.Items;
-            grvCategory.DataBind();
+            PagedList<FilmInfo> films = await filmBLL
+                .GetFilmsAsync(drdlPage.SelectedIndex, 20);
+            filmBLL.Dispose();
+            grvFilm.DataSource = films.Items;
+            grvFilm.DataBind();
 
-            pageNumber = categories.PageNumber;
-            currentPage = categories.CurrentPage;
+            pageNumber = films.PageNumber;
+            currentPage = films.CurrentPage;
         }
 
         private void SetDrdlPage()
@@ -76,20 +77,20 @@ namespace Web.Admin.CategoryManagement
             drdlPage.SelectedIndex = selectedIndex;
         }
 
-        protected async void grvCategory_SelectedIndexChanged(object sender, EventArgs e)
+        protected async void grvFilm_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                int key = (int)grvCategory.DataKeys[grvCategory.SelectedIndex].Value;
-                CategoryInfo categoryInfo = await categoryBLL.GetCategoryAsync(key);
-                categoryBLL.Dispose();
+                string key = (string)grvFilm.DataKeys[grvFilm.SelectedIndex].Value;
+                FilmInfo filmInfo = await filmBLL.GetFilmAsync(key);
+                filmBLL.Dispose();
                 enableTool = true;
-                toolDetail = string.Format("{0} -- {1}", categoryInfo.ID, categoryInfo.name);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CategoryDetail", new { id = categoryInfo.ID });
-                hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCategory", new { id = categoryInfo.ID });
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", new { id = categoryInfo.ID });
+                toolDetail = string.Format("{0} -- {1}", filmInfo.ID, filmInfo.name);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = filmInfo.ID });
+                hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = filmInfo.ID });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = filmInfo.ID });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);

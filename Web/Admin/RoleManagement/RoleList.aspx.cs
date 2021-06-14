@@ -9,7 +9,6 @@ namespace Web.Admin.RoleManagement
     public partial class RoleList : System.Web.UI.Page
     {
         private RoleBLL roleBLL;
-        private int selectedIndex;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -21,13 +20,11 @@ namespace Web.Admin.RoleManagement
             {
                 roleBLL = new RoleBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateRole", null);
-                selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
                     await SetGrvRole();
-                    selectedIndex = 0;
                     SetDrdlPage();
                 }
             }
@@ -43,7 +40,6 @@ namespace Web.Admin.RoleManagement
             try
             {
                 await SetGrvRole();
-                selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
             catch (Exception ex)
@@ -68,6 +64,7 @@ namespace Web.Admin.RoleManagement
 
         private void SetDrdlPage()
         {
+            int selectedIndex = drdlPage.SelectedIndex;
             drdlPage.Items.Clear();
             for (int i = 0; i < pageNumber; i++)
             {

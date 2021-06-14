@@ -9,7 +9,6 @@ namespace Web.Admin.LanguageManagement
     public partial class LanguageList : System.Web.UI.Page
     {
         private LanguageBLL languageBLL;
-        private int selectedIndex;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -21,13 +20,11 @@ namespace Web.Admin.LanguageManagement
             {
                 languageBLL = new LanguageBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateLanguage", null);
-                selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
                     await SetGrvLanguage(0);
-                    selectedIndex = 0;
                     SetDrdlPage();
                 }
             }
@@ -52,6 +49,7 @@ namespace Web.Admin.LanguageManagement
 
         private void SetDrdlPage()
         {
+            int selectedIndex = drdlPage.SelectedIndex;
             drdlPage.Items.Clear();
             for (int i = 0; i < pageNumber; i++)
             {
@@ -89,7 +87,6 @@ namespace Web.Admin.LanguageManagement
             try
             {
                 await SetGrvLanguage(drdlPage.SelectedIndex);
-                selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
             catch (Exception ex)

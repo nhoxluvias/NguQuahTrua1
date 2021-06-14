@@ -9,7 +9,6 @@ namespace Web.Admin.TagManagement
     public partial class TagList : System.Web.UI.Page
     {
         private TagBLL tagBLL;
-        private int selectedIndex;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -21,13 +20,11 @@ namespace Web.Admin.TagManagement
             {
                 tagBLL = new TagBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateTag", null);
-                selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
                     await SetGrvTag();
-                    selectedIndex = 0;
                     SetDrdlPage();
                 }
             }
@@ -43,7 +40,6 @@ namespace Web.Admin.TagManagement
             try
             {
                 await SetGrvTag();
-                selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
             catch (Exception ex)
@@ -68,6 +64,7 @@ namespace Web.Admin.TagManagement
 
         private void SetDrdlPage()
         {
+            int selectedIndex = drdlPage.SelectedIndex;
             drdlPage.Items.Clear();
             for (int i = 0; i < pageNumber; i++)
             {

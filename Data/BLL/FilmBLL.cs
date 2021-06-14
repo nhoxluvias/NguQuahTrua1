@@ -1,11 +1,14 @@
 ﻿using Data.Common.Hash;
 using Data.DAL;
 using Data.DTO;
+using MSSQL_Lite.Access;
+using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -168,6 +171,70 @@ namespace Data.BLL
             return ToFilmInfo(film);
         }
 
+        public async Task<PagedList<FilmInfo>> GetFilmsAsync(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Film> pagedList = null;
+            Expression<Func<Film, object>> orderBy = f => new { f.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = await db.Films.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = await db.Films.ToPagedListAsync(
+                    f => new {
+                        f.ID,
+                        f.name,
+                        f.description,
+                        f.languageId,
+                        f.countryId,
+                        f.productionCompany,
+                        f.releaseDate,
+                        f.duration,
+                        f.thumbnail,
+                        f.upvote,
+                        f.downvote,
+                        f.views
+                    },orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<FilmInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(f => ToFilmInfo(f)).ToList()
+            };
+        }
+
+        public PagedList<FilmInfo> GetFilms(int pageIndex, int pageSize)
+        {
+            SqlPagedList<Film> pagedList = null;
+            Expression<Func<Film, object>> orderBy = f => new { f.ID };
+            if (dataAccessLevel == DataAccessLevel.Admin)
+                pagedList = db.Films.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else
+                pagedList = db.Films.ToPagedList(
+                    f => new {
+                        f.ID,
+                        f.name,
+                        f.description,
+                        f.languageId,
+                        f.countryId,
+                        f.productionCompany,
+                        f.releaseDate,
+                        f.duration,
+                        f.thumbnail,
+                        f.upvote,
+                        f.downvote,
+                        f.views
+                    },orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+
+            return new PagedList<FilmInfo>
+            {
+                PageNumber = pagedList.PageNumber,
+                CurrentPage = pagedList.CurrentPage,
+                Items = pagedList.Items.Select(f => ToFilmInfo(f)).ToList()
+            };
+        }
+
         public FilmInfo GetFilm(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
@@ -232,7 +299,7 @@ namespace Data.BLL
                 throw new Exception("");
             }
 
-            long checkExists = (long)await db.Films.CountAsync(
+            long checkExists = await db.Films.CountAsync(
                 f => f.name == film.name
                     && f.languageId == film.languageId
                     && f.countryId == film.countryId
@@ -386,14 +453,14 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteFilmAsync(int categoryId)
+        public async Task<StateOfDeletion> DeleteFilmAsync(string filmId)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
-            if (categoryId <= 0)
+            if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
-            int affected = await db.Categories.DeleteAsync(c => c.ID == categoryId);
+            int affected = await db.Films.DeleteAsync(f => f.ID == filmId);
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 

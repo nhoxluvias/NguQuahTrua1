@@ -9,7 +9,6 @@ namespace Web.Admin.CountryManagement
     public partial class CountryList : System.Web.UI.Page
     {
         private CountryBLL countryBLL;
-        private int selectedIndex;
         protected long currentPage;
         protected long pageNumber;
         protected bool enableTool;
@@ -21,13 +20,11 @@ namespace Web.Admin.CountryManagement
             {
                 countryBLL = new CountryBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateCountry", null);
-                selectedIndex = 0;
                 enableTool = false;
                 toolDetail = null;
                 if (!IsPostBack)
                 {
                     await SetGrvCountry();
-                    selectedIndex = 0;
                     SetDrdlPage();
                 }
             }
@@ -43,7 +40,6 @@ namespace Web.Admin.CountryManagement
             try
             {
                 await SetGrvCountry();
-                selectedIndex = drdlPage.SelectedIndex;
                 SetDrdlPage();
             }
             catch(Exception ex)
@@ -67,6 +63,7 @@ namespace Web.Admin.CountryManagement
 
         private void SetDrdlPage()
         {
+            int selectedIndex = drdlPage.SelectedIndex;
             drdlPage.Items.Clear();
             for (int i = 0; i < pageNumber; i++)
             {
