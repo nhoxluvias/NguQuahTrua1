@@ -46,6 +46,7 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_DeleteDirector", "admin/director/delete/{id}", "~/Admin/DirectorManagement/DeleteDirector.aspx");
             routes.MapPageRoute("Admin_CastList", "admin/cast/list", "~/Admin/CastManagement/CastList.aspx");
             routes.MapPageRoute("Admin_CastDetail", "admin/cast/detail/{id}", "~/Admin/CastManagement/CastDetail.aspx");
+            routes.MapPageRoute("Admin_CreateCast", "admin/cast/create", "~/Admin/CastManagement/CreateCast.aspx");
             routes.MapPageRoute("Admin_UpdateCast", "admin/cast/update/{id}", "~/Admin/CastManagement/UpdateCast.aspx");
             routes.MapPageRoute("Admin_DeleteCast", "admin/cast/delete/{id}", "~/Admin/CastManagement/DeleteCast.aspx");
             routes.MapPageRoute("Admin_TagList", "admin/tag/list", "~/Admin/TagManagement/TagList.aspx");
@@ -53,6 +54,11 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_CreateTag", "admin/tag/create", "~/Admin/TagManagement/CreateTag.aspx");
             routes.MapPageRoute("Admin_UpdateTag", "admin/tag/update/{id}", "~/Admin/TagManagement/UpdateTag.aspx");
             routes.MapPageRoute("Admin_DeleteTag", "admin/tag/delete/{id}", "~/Admin/TagManagement/DeleteTag.aspx");
+            routes.MapPageRoute("Admin_SourceList", "admin/source/list", "~/Admin/SourceManagement/SourceList.aspx");
+            routes.MapPageRoute("Admin_SourceDetail", "admin/source/detail/{id}", "~/Admin/SourceManagement/SourceDetail.aspx");
+            routes.MapPageRoute("Admin_CreateSource", "admin/source/create", "~/Admin/SourceManagement/CreateSource.aspx");
+            routes.MapPageRoute("Admin_UpdateSource", "admin/source/update/{id}", "~/Admin/SourceManagement/UpdateSource.aspx");
+            routes.MapPageRoute("Admin_DeleteSource", "admin/source/delete/{id}", "~/Admin/SourceManagement/DeleteSource.aspx");
             routes.MapPageRoute("Admin_UserList", "admin/user/list", "~/Admin/UserManagement/UserList.aspx");
             routes.MapPageRoute("Admin_CreateUser", "admin/user/create", "~/Admin/UserManagement/CreateUser.aspx");
 

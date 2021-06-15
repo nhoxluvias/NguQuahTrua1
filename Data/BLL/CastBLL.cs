@@ -137,7 +137,7 @@ namespace Data.BLL
             };
         }
 
-        public async Task<CastInfo> GetCastAsync(int castId)
+        public async Task<CastInfo> GetCastAsync(long castId)
         {
             if (castId <= 0)
                 throw new Exception("");
@@ -152,7 +152,7 @@ namespace Data.BLL
             return ToCastInfo(cast);
         }
 
-        public CastInfo GetCast(int castId)
+        public CastInfo GetCast(long castId)
         {
             if (castId <= 0)
                 throw new Exception("");

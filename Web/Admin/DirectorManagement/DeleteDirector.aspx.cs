@@ -1,12 +1,8 @@
 ﻿using Data.BLL;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Admin.DirectorManagement

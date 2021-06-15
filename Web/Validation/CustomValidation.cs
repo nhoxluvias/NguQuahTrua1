@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 
 namespace Web.Validation
@@ -84,6 +85,11 @@ namespace Web.Validation
         }
 
         public void ValidateDirectorName(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
+        }
+
+        public void ValidateCastName(object source, ServerValidateEventArgs args)
         {
             args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
         }
