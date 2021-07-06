@@ -1,8 +1,8 @@
-﻿using Data.Config;
+﻿using Common.Web;
+using Data.Config;
 using System;
 using System.Web.Routing;
 using Web.App_Start;
-using Web.Common;
 
 namespace Web
 {

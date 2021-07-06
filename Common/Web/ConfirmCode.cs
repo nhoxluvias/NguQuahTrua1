@@ -1,8 +1,8 @@
-﻿using Common.Mail;
-using Data.Common.Hash;
+﻿using Common.Hash;
+using Common.Mail;
 using System;
 
-namespace Web.Common
+namespace Common.Web
 {
     public class ConfirmCode
     {
@@ -17,8 +17,8 @@ namespace Web.Common
         public string CreateToken(int length = 30)
         {
             string randomString = new Random().NextString(20);
-            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
-            return pbkdf2.Hash(randomString, "confirmToken", length);
+            HashFunction hash = new HashFunction();
+            return hash.PBKDF2_Hash(randomString, "confirmToken", length);
         }
     }
 }

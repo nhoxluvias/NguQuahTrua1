@@ -16,7 +16,7 @@ namespace Data.DAL
         public string productionCompany { get; set; }
         public string thumbnail { get; set; }
         public int languageId { get; set; }
-        public DateTime releaseDate { get; set; }
+        public string releaseDate { get; set; }
         public long upvote { get; set; }
         public long downvote { get; set; }
         public long views { get; set; }

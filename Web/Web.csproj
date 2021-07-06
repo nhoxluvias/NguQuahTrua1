@@ -86,6 +86,7 @@
     <Content Include="Admin\DirectorManagement\DirectorDetail.aspx" />
     <Content Include="Admin\DirectorManagement\DirectorList.aspx" />
     <Content Include="Admin\DirectorManagement\UpdateDirector.aspx" />
+    <Content Include="Admin\FilmManagement\AddImage.aspx" />
     <Content Include="Admin\FilmManagement\CreateFilm.aspx" />
     <Content Include="Admin\FilmManagement\DeleteFilm.aspx" />
     <Content Include="Admin\FilmManagement\FilmDetail.aspx" />
@@ -349,6 +350,13 @@
     <Compile Include="Admin\DirectorManagement\UpdateDirector.aspx.designer.cs">
       <DependentUpon>UpdateDirector.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\FilmManagement\AddImage.aspx.cs">
+      <DependentUpon>AddImage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\AddImage.aspx.designer.cs">
+      <DependentUpon>AddImage.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\FilmManagement\CreateFilm.aspx.cs">
       <DependentUpon>CreateFilm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -568,9 +576,6 @@
     </Compile>
     <Compile Include="App_Start\EmailConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Common\PageVisitor.cs" />
-    <Compile Include="Common\ConfirmCode.cs" />
-    <Compile Include="Common\Rate.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -645,6 +650,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Control\" />
+    <Folder Include="FileUpload\Images\" />
+    <Folder Include="FileUpload\Videos\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -654,10 +661,6 @@
     <ProjectReference Include="..\Data\Data.csproj">
       <Project>{9e3877f3-e094-4d4b-b954-a5d9f56fb1d8}</Project>
       <Name>Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MSSQL_Lite\MSSQL_Lite.csproj">
-      <Project>{d7c08863-5fbb-4131-b72c-2ca0e9ed3fe8}</Project>
-      <Name>MSSQL_Lite</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

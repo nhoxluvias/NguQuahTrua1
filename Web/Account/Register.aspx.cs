@@ -1,10 +1,10 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.UI.WebControls;
-using Web.Common;
 using Web.Models;
 using Web.Validation;
 

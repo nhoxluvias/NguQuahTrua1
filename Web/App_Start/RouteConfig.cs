@@ -17,6 +17,7 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_FilmList", "admin/film/list", "~/Admin/FilmManagement/FilmList.aspx");
             routes.MapPageRoute("Admin_FilmDetail", "admin/film/detail/{id}", "~/Admin/FilmManagement/FilmDetail.aspx");
             routes.MapPageRoute("Admin_CreateFilm", "admin/film/create", "~/Admin/FilmManagement/CreateFilm.aspx");
+            routes.MapPageRoute("Admin_AddImage_Film", "admin/film/add-image/{id}", "~/Admin/FilmManagement/AddImage.aspx");
             routes.MapPageRoute("Admin_UpdateFilm", "admin/film/update/{id}", "~/Admin/FilmManagement/UpdateFilm.aspx");
             routes.MapPageRoute("Admin_DeleteFilm", "admin/film/delete/{id}", "~/Admin/FilmManagement/DeleteFilm.aspx");
             routes.MapPageRoute("Admin_CategoryList", "admin/category/list", "~/Admin/CategoryManagement/CategoryList.aspx");

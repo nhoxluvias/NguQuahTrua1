@@ -1,4 +1,4 @@
-﻿using Data.Common.Hash;
+﻿using Common.Hash;
 using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
@@ -161,8 +161,8 @@ namespace Data.BLL
                 return StateOfCreation.AlreadyExists;
 
             Random random = new Random();
-            MD5_Hash md5 = new MD5_Hash();
-            role.ID = md5.Hash(random.NextString(10));
+            HashFunction hash = new HashFunction();
+            role.ID = hash.MD5_Hash(random.NextString(10));
             int affected = await db.Roles.InsertAsync(role);
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }

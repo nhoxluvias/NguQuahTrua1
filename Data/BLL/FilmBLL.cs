@@ -1,4 +1,4 @@
-﻿using Data.Common.Hash;
+﻿using Common.Hash;
 using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
@@ -66,9 +66,14 @@ namespace Data.BLL
         {
             if (filmCreation == null)
                 throw new Exception("");
+
+            HashFunction hash = new HashFunction();
+            string filmId = hash.MD5_Hash(string
+                .Format("name:{0}//random:{1}", filmCreation.name, new Random().NextString(25)));
+
             return new Film
             {
-                ID = null,
+                ID = filmId,
                 name = filmCreation.name,
                 description = filmCreation.description,
                 duration = filmCreation.duration,
@@ -293,6 +298,7 @@ namespace Data.BLL
                 throw new Exception("");
             Film film = ToFilm(filmCreation);
             if (string.IsNullOrEmpty(film.name) || film.languageId <= 0 
+                || string.IsNullOrEmpty(film.productionCompany)
                 || film.countryId <= 0 || string.IsNullOrEmpty(film.thumbnail)
             )
             {
@@ -300,38 +306,27 @@ namespace Data.BLL
             }
 
             long checkExists = await db.Films.CountAsync(
-                f => f.name == film.name
+                f => (f.ID == film.ID) || (f.name == film.name
                     && f.languageId == film.languageId
                     && f.countryId == film.countryId
-                    && f.thumbnail == film.thumbnail
+                    && f.thumbnail == film.thumbnail)
             );
             if (checkExists != 0)
                 return StateOfCreation.AlreadyExists;
 
-            MD5_Hash md5 = new MD5_Hash();
-            film.ID = md5.Hash(string.Format("name:{0}//random:{1}", film.name, new Random().NextString(25)));
             int affected;
-            if(
-                film.description == null || film.duration == null
-                || film.productionCompany == null
-            ){
-                if(
-                    film.description == null && film.duration == null
-                    && film.productionCompany == null
-                )
+
+            if(film.description == null || film.duration == null){
+                if(film.description == null && film.duration == null)
                 {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "productionCompany", "duration" });
+                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration" });
                 }
                 else if(film.description == null)
                 {
                     affected = await db.Films.InsertAsync(film, new List<string> { "description" });
-                }else if(film.duration == null)
+                }else
                 {
                     affected = await db.Films.InsertAsync(film, new List<string> { "duration" });
-                }
-                else
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "productionCompany" });
                 }
             }
             else
@@ -463,7 +458,6 @@ namespace Data.BLL
             int affected = await db.Films.DeleteAsync(f => f.ID == filmId);
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
-
 
         public async Task<long> CountAllAsync()
         {

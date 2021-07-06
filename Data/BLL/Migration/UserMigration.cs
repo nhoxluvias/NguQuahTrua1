@@ -1,4 +1,4 @@
-﻿using Data.Common.Hash;
+﻿using Common.Hash;
 using Data.DAL;
 using MSSQL_Lite.Connection;
 using MSSQL_Lite.Migration;
@@ -23,9 +23,8 @@ namespace Data.BLL.Migration
             long recordNumber = db.Users.Count();
             if(recordNumber == 0)
             {
-                MD5_Hash md5 = new MD5_Hash();
-                PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
-                string salt = md5.Hash(new Random().NextString(25));
+                HashFunction hash = new HashFunction();
+                string salt = hash.MD5_Hash(new Random().NextString(25));
                 Role role = db.Roles.SingleOrDefault(r => new { r.ID }, r => r.name == "Admin");
                 db.Dispose();
                 AddItem(new User
@@ -38,15 +37,14 @@ namespace Data.BLL.Migration
                     description = "Tài khoản quản trị cấp cao",
                     email = "systemadmin@admin.com",
                     phoneNumber = "00000000",
-                    password = pbkdf2.Hash("admin12341234", salt, 30),
+                    password = hash.PBKDF2_Hash("admin12341234", salt, 30),
                     salt = salt,
                     roleId = role.ID,
                     active = true,
                     createAt = DateTime.Now,
                     updateAt = DateTime.Now
                 });
-                md5 = null;
-                pbkdf2 = null;
+                hash = null;
                 Run();
             }
         }
@@ -57,9 +55,8 @@ namespace Data.BLL.Migration
             long recordNumber = await db.Users.CountAsync();
             if (recordNumber == 0)
             {
-                MD5_Hash md5 = new MD5_Hash();
-                PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
-                string salt = md5.Hash(new Random().NextString(25));
+                HashFunction hash = new HashFunction();
+                string salt = hash.MD5_Hash(new Random().NextString(25));
                 Role role = db.Roles.SingleOrDefault(r => new { r.ID }, r => r.name == "Admin");
                 db.Dispose();
                 AddItem(new User
@@ -72,15 +69,14 @@ namespace Data.BLL.Migration
                     description = "Tài khoản quản trị cấp cao",
                     email = "systemadmin@admin.com",
                     phoneNumber = "00000000",
-                    password = pbkdf2.Hash("admin12341234", salt, 30),
+                    password = hash.PBKDF2_Hash("admin12341234", salt, 30),
                     salt = salt,
                     roleId = role.ID,
                     active = true,
                     createAt = DateTime.Now,
                     updateAt = DateTime.Now
                 });
-                md5 = null;
-                pbkdf2 = null;
+                hash = null;
                 await RunAsync();
             }
         }

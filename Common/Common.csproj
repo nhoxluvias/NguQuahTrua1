@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,10 +47,15 @@
     <Compile Include="FFMPEG\FFMPEGExecution.cs" />
     <Compile Include="FFMPEG\FFMPEGStatement.cs" />
     <Compile Include="FFMPEG\Model\VideoInfo.cs" />
+    <Compile Include="Hash\HashFunction.cs" />
     <Compile Include="Mail\EMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Random\RandomExtension.cs" />
     <Compile Include="String\StringExtension.cs" />
     <Compile Include="SystemInformation\SystemInfo.cs" />
+    <Compile Include="Upload\FileUpload.cs" />
+    <Compile Include="Web\ConfirmCode.cs" />
+    <Compile Include="Web\PageVisitor.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

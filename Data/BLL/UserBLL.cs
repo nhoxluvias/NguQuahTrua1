@@ -1,4 +1,4 @@
-﻿using Data.Common.Hash;
+﻿using Common.Hash;
 using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
@@ -7,7 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.BLL
@@ -58,20 +57,19 @@ namespace Data.BLL
             if (userCreation == null)
                 throw new Exception("");
 
-            MD5_Hash md5 = new MD5_Hash();
-            string salt = md5.Hash(new Random().NextString(25));
+            HashFunction hash = new HashFunction();
+            string salt = hash.MD5_Hash(new Random().NextString(25));
             Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
             if (role == null)
                 throw new Exception("");
 
-            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
             return new User
             {
                 ID = Guid.NewGuid().ToString(),
                 userName = userCreation.userName,
                 email = userCreation.email,
                 phoneNumber = userCreation.phoneNumber,
-                password = pbkdf2.Hash(userCreation.password, salt, 30),
+                password = hash.PBKDF2_Hash(userCreation.password, salt, 30),
                 salt = salt,
                 roleId = role.ID,
                 active = false,
@@ -308,8 +306,8 @@ namespace Data.BLL
             if (user == null)
                 return LoginState.NotExists;
 
-            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
-            string passwordHashed = pbkdf2.Hash(userLogin.password, user.salt, 30);
+            HashFunction hash = new HashFunction();
+            string passwordHashed = hash.PBKDF2_Hash(userLogin.password, user.salt, 30);
             if (user.password != passwordHashed)
                 return LoginState.WrongPassword;
             if (!user.active)
@@ -353,11 +351,10 @@ namespace Data.BLL
             if (count == 0)
                 return CreateNewPasswordState.NotExists;
 
-            MD5_Hash md5 = new MD5_Hash();
-            PBKDF2_Hash pbkdf2 = new PBKDF2_Hash();
-            string salt = md5.Hash(new Random().NextString(25));
+            HashFunction hash = new HashFunction();
+            string salt = hash.MD5_Hash(new Random().NextString(25));
             int affected = await db.Users.UpdateAsync(new User {
-                password = pbkdf2.Hash(newPassword, salt, 30),
+                password = hash.PBKDF2_Hash(newPassword, salt, 30),
                 salt = salt,
                 updateAt = DateTime.Now
             }, u => new { u.password, u.salt, u.updateAt }, u => u.ID == userId);

@@ -1,4 +1,4 @@
-﻿using Data.Common.Hash;
+﻿using Common.Hash;
 using Data.DAL;
 using MSSQL_Lite.Connection;
 using MSSQL_Lite.Migration;
@@ -31,15 +31,15 @@ namespace Data.BLL.Migration
                 while (count < 3)
                 {
                     Random random = new Random();
-                    MD5_Hash md5 = new MD5_Hash();
-                    string id = md5.Hash(random.NextString(10));
+                    HashFunction hash = new HashFunction();
+                    string id = hash.MD5_Hash(random.NextString(10));
                     if (IDs.Any(i => i.Equals(id)) == false)
                     {
                         IDs.Add(id);
                         count++;
                     }
                     random = null;
-                    md5 = null;
+                    hash = null;
                 }
 
                 AddItem(new Role
@@ -79,15 +79,15 @@ namespace Data.BLL.Migration
                 while (count < 3)
                 {
                     Random random = new Random();
-                    MD5_Hash md5 = new MD5_Hash();
-                    string id = md5.Hash(random.NextString(10));
+                    HashFunction hash = new HashFunction();
+                    string id = hash.MD5_Hash(random.NextString(10));
                     if (IDs.Any(i => i.Equals(id)) == false)
                     {
                         IDs.Add(id);
                         count++;
                     }
                     random = null;
-                    md5 = null;
+                    hash = null;
                 }
 
                 AddItem(new Role

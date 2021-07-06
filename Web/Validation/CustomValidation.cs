@@ -98,5 +98,20 @@ namespace Web.Validation
         {
             args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
         }
+
+        public void ValidateFilmName(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
+        }
+
+        public void ValidateProductionCompany(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, @"^[0-9\w-_. ]{3,50}$");
+        }
+
+        public void ValidateReleaseDate(object source, ServerValidateEventArgs args)
+        {
+            args.IsValid = Regex.IsMatch(args.Value, @"^[0-9]{4,10}$");
+        }
     }
 }

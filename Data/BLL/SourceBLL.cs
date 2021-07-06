@@ -208,7 +208,7 @@ namespace Data.BLL
                 else if (string.IsNullOrEmpty(source.secondarySource2))
                 {
                     affected = await db.Sources
-                        .InsertAsync(source, new List<string> { "secondarySource2"}); ;
+                        .InsertAsync(source, new List<string> { "secondarySource2" }); ;
                 }
                 else
                 {
