@@ -40,13 +40,13 @@ namespace Common.Upload
             return UploadState.Success;
         }
 
-        public UploadState UploadDocument(HttpPostedFile file, ref string filePath)
+        public UploadState UploadVideo(HttpPostedFile file, ref string filePath)
         {
             if (file == null)
                 throw new Exception("@'file' must be not null");
-            if (!IsValidDocument(file))
+            if (!IsValidVideo(file))
                 return UploadState.Failed_InvalidFile;
-            string path = $"{GenerateDocumentFolder()}/{file.FileName}";
+            string path = $"{GenerateVideoFolder()}/{file.FileName}";
             filePath = path.Replace(VideoFilePath, "");
             string fileMapPath = HttpContext.Current.Server.MapPath(path);
             if (CheckExists(fileMapPath))
@@ -73,7 +73,7 @@ namespace Common.Upload
             return path2;
         }
 
-        public string GenerateDocumentFolder()
+        public string GenerateVideoFolder()
         {
             string path1 = $"{VideoFilePath}/{DateTime.Now.Year}";
             string mapPath = HttpContext.Current.Server.MapPath(path1);
@@ -103,7 +103,7 @@ namespace Common.Upload
             return false;
         }
 
-        public bool IsValidDocument(HttpPostedFile file)
+        public bool IsValidVideo(HttpPostedFile file)
         {
             List<string> contentType = new List<string>();
             contentType.Add("application/epub+zip");
@@ -128,7 +128,7 @@ namespace Common.Upload
             return false;
         }
 
-        public bool RemoveDocument(string filePath)
+        public bool RemoveVideo(string filePath)
         {
             string fullFilePath = $"{VideoFilePath}/{filePath}";
             string fullFileMapPath = HttpContext.Current.Server.MapPath(fullFilePath);
