@@ -106,9 +106,11 @@ namespace Common.Upload
         public bool IsValidVideo(HttpPostedFile file)
         {
             List<string> contentType = new List<string>();
-            contentType.Add("application/epub+zip");
-            contentType.Add("application/pdf");
-            contentType.Add("image/gif");
+            contentType.Add("video/mp4");
+            contentType.Add("video/mpeg");
+            contentType.Add("video/ogg");
+            contentType.Add("video/webm");
+            contentType.Add("video/3gpp");
             string mime = file.ContentType;
 
             if (contentType.Contains(mime))
