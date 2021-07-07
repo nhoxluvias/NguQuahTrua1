@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="UpdateDirector.aspx.cs" Inherits="Web.Admin.DirectorManagement.UpdateDirector" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Cập nhật đạo diễn - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">

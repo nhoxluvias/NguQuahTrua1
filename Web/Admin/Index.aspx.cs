@@ -26,7 +26,8 @@ namespace Web.Admin
             FilmBLL filmBLL = new FilmBLL(DataAccessLevel.Admin);
             movieNumber = await filmBLL.CountAllAsync();
             categoryNumber = await new CategoryBLL(filmBLL, DataAccessLevel.Admin).CountAllAsync();
-            tagNumber = 0;
+            tagNumber = await new TagBLL(filmBLL, DataAccessLevel.Admin).CountAllAsync();
+            filmBLL.Dispose();
         }
     }
 }

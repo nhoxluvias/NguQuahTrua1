@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DeleteLanguage.aspx.cs" Inherits="Web.Admin.LanguageManagement.DeleteLanguage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Xóa ngôn ngữ - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">

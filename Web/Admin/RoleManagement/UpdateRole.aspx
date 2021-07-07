@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="UpdateRole.aspx.cs" Inherits="Web.Admin.RoleManagement.UpdateRole" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Cập nhật vai trò - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">

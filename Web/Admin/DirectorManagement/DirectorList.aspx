@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DirectorList.aspx.cs" Inherits="Web.Admin.DirectorManagement.DirectorList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Danh sách đạo diễn - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
@@ -18,7 +19,6 @@
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
                             <asp:BoundField DataField="name" HeaderText="Tên đạo diễn" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả đạo điễn" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
                             <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn đạo diễn" />

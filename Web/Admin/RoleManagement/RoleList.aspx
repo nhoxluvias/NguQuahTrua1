@@ -1,6 +1,8 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="RoleList.aspx.cs" Inherits="Web.Admin.RoleManagement.RoleList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Danh sách vai trò - Trang quản trị</title>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <!--Tables-->
     <h5 class="mt-2"></h5>

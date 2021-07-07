@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="TagList.aspx.cs" Inherits="Web.Admin.TagManagement.TagList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Danh sách thẻ tag - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">

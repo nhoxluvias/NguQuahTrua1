@@ -1,5 +1,6 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="EditImage.aspx.cs" Inherits="Web.Admin.FilmManagement.EditImage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Chỉnh sửa hình ảnh cho phim - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">

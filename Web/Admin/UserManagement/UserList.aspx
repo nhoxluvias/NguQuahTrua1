@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="UserList.aspx.cs" Inherits="Web.Admin.UserManagement.UserList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Danh sách người dùng - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
@@ -18,7 +19,6 @@
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
                             <asp:BoundField DataField="userName" HeaderText="Tên người dùng" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả người dùng" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
                             <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn người dùng" />

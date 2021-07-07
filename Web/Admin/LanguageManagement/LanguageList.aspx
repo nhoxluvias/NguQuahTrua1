@@ -1,5 +1,6 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="LanguageList.aspx.cs" Inherits="Web.Admin.LanguageManagement.LanguageList" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Danh sách ngôn ngữ - Trang quản trị</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
@@ -18,7 +19,6 @@
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
                             <asp:BoundField DataField="name" HeaderText="Tên ngôn ngữ" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả ngôn ngữ" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
                             <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn ngôn ngữ" />

@@ -1,7 +1,9 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="CategoryList.aspx.cs" Inherits="Web.Admin.CategoryManagement.CategoryList" MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Danh sách thể loại - Trang quản trị</title>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <!--Tables-->
     <h5 class="mt-2"></h5>
@@ -18,7 +20,6 @@
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
                             <asp:BoundField DataField="name" HeaderText="Tên thể loại" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả thể loại" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
                             <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn thể loại" />

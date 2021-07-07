@@ -1,6 +1,8 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="CreateLanguage.aspx.cs" Inherits="Web.Admin.LanguageManagement.CreateLanguage" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Tạo mới ngôn ngữ - Trang quản trị</title>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <% if (enableShowResult)
         { %>
