@@ -1,4 +1,7 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="FilmDetail.aspx.cs" Inherits="Web.Admin.FilmManagement.FilmDetail" %>
+
+<%@ Import Namespace="Data.DTO" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Chi tiết phim - Trang quản trị</title>
 </asp:Content>
@@ -30,12 +33,53 @@
                             <td><% = filmInfo.Country.name %></td>
                         </tr>
                         <tr>
+                            <th>Ngôn ngữ</th>
+                            <td><% = filmInfo.Language.name %></td>
+                        </tr>
+                        <tr>
+                            <th>Thể loại</th>
+                            <td>
+                                <ul>
+                                    <% foreach (CategoryInfo categoryInfo in filmInfo.Categories)
+                                        {%>
+                                    <li><% = categoryInfo.name %></li>
+                                    <% } %>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Công ty sản xuất</th>
                             <td><% = filmInfo.productionCompany %></td>
                         </tr>
                         <tr>
+                            <th>Đạo diễn</th>
+                            <td>
+                                <ul>
+                                    <% foreach (DirectorInfo directorInfo in filmInfo.Directors)
+                                        {%>
+                                    <li><% = directorInfo.name %></li>
+                                    <% } %>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Diễn viên</th>
+                            <td>
+                                <ul>
+                                    <% foreach (CastInfo castInfo in filmInfo.Casts)
+                                        {%>
+                                    <li><% = castInfo.name %></li>
+                                    <% } %>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
                             <th>Mô tả của phim</th>
                             <td><% = filmInfo.description %></td>
+                        </tr>
+                        <tr>
+                            <th>Ảnh</th>
+                            <td><img src="<% = filmInfo.thumbnail %>" width="150" height="240"/></td>
                         </tr>
                         <tr>
                             <th>Ngày tạo của phim</th>

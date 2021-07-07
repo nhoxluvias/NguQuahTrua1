@@ -191,12 +191,12 @@ namespace Data.BLL
             if (dataAccessLevel == DataAccessLevel.Admin)
                 sqlCommand.CommandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
-                                and [Director].[filmId] = @filmId";
+                                and [DirectorOfFilm].[filmId] = @filmId";
             else
                 sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
-                                and [Director].[filmId] = @filmId";
+                                and [DirectorOfFilm].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
             return db.ExecuteReader<List<DirectorInfo>>(sqlCommand);

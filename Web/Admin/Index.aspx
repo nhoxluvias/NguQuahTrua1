@@ -67,5 +67,5 @@
             </div>
         </div>
     </div>
-    <p class="credit">Trang quản trị -- <a href="https://www.medialoot.com">Phan Xuân Chánh</a></p>
+    <p class="credit">Trang quản trị -- <a href="#">Đồ án Lập trình Web</a></p>
 </asp:Content>

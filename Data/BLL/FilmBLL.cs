@@ -58,7 +58,9 @@ namespace Data.BLL
                 views = film.views,
                 createAt = film.createAt,
                 updateAt = film.updateAt,
-                Categories = new CategoryBLL(this, dataAccessLevel).GetCategoriesByFilmId(film.ID)
+                Categories = new CategoryBLL(this, dataAccessLevel).GetCategoriesByFilmId(film.ID),
+                Directors = new DirectorBLL(this, dataAccessLevel).GetDirectorsByFilmId(film.ID),
+                Casts = new CastBLL(this, dataAccessLevel).GetCastsByFilmId(film.ID)
             };
         }
 
@@ -315,155 +317,40 @@ namespace Data.BLL
                 return StateOfCreation.AlreadyExists;
 
             int affected;
-
-            if (film.description == null || film.duration == null || film.thumbnail == null)
-            {
-                if (film.description == null && film.duration == null && film.thumbnail == null)
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration", "thumbnail" });
-                }
-                else if (film.description == null && film.duration == null)
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration" });
-                }
-                else if (film.description == null && film.thumbnail == null)
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "thumbnail" });
-                }
-                else if (film.duration == null && film.thumbnail == null)
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "duration", "thumbnail" });
-                }
-                else if (film.description == null)
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "description" });
-                }
-                else if (film.duration == null)
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "duration" });
-                }
-                else
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "thumbnail" });
-                }
-            }
+            if (film.description == null)
+                affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration", "thumbnail" });
             else
-            {
-                affected = await db.Films.InsertAsync(film);
-            }
+                affected = await db.Films.InsertAsync(film, new List<string> { "duration", "thumbnail" });
 
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<StateOfCreation> UpdateFilmAsync(FilmUpdate filmUpdate)
+        public async Task<StateOfUpdate> UpdateFilmAsync(FilmUpdate filmUpdate)
         {
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
             Film film = ToFilm(filmUpdate);
             if (string.IsNullOrEmpty(film.name) || film.languageId <= 0
-                || film.countryId <= 0 || string.IsNullOrEmpty(film.thumbnail)
+                || string.IsNullOrEmpty(film.productionCompany) || film.countryId <= 0
             )
             {
                 throw new Exception("");
             }
 
             int affected;
-            if (
-                film.description == null || film.duration == null
-                || film.productionCompany == null
-            )
-            {
-                if (
-                    film.description == null && film.duration == null
-                    && film.productionCompany == null
-                )
-                {
-                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "productionCompany", "duration" });
-                    affected = await db.Films.UpdateAsync(
-                    film,
-                    f => new
-                    {
-                        f.name,
-                        f.countryId,
-                        f.languageId,
-                        f.releaseDate,
-                        f.thumbnail
-                    },
-                    f => f.ID == film.ID
-                );
-                }
-                else if (film.description == null)
-                {
-                    affected = await db.Films.UpdateAsync(
-                    film,
-                    f => new
-                    {
-                        f.name,
-                        f.duration,
-                        f.countryId,
-                        f.languageId,
-                        f.productionCompany,
-                        f.releaseDate,
-                        f.thumbnail
-                    },
-                    f => f.ID == film.ID
-                );
-                }
-                else if (film.duration == null)
-                {
-                    affected = await db.Films.UpdateAsync(
-                    film,
-                    f => new
-                    {
-                        f.name,
-                        f.description,
-                        f.countryId,
-                        f.languageId,
-                        f.productionCompany,
-                        f.releaseDate,
-                        f.thumbnail
-                    },
-                    f => f.ID == film.ID
-                );
-                }
-                else
-                {
-                    affected = await db.Films.UpdateAsync(
-                    film,
-                    f => new
-                    {
-                        f.name,
-                        f.description,
-                        f.duration,
-                        f.countryId,
-                        f.languageId,
-                        f.releaseDate,
-                        f.thumbnail
-                    },
-                    f => f.ID == film.ID
-                );
-                }
-            }
-            else
-            {
-                affected = await db.Films.UpdateAsync(
-                    film,
-                    f => new
-                    {
-                        f.name,
-                        f.description,
-                        f.duration,
-                        f.countryId,
-                        f.languageId,
-                        f.productionCompany,
-                        f.releaseDate,
-                        f.thumbnail
-                    },
-                    f => f.ID == film.ID
-                );
-            }
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            if (film.description == null)
+                affected = await db.Films.UpdateAsync(film, f => new
+                {
+                    f.name, f.countryId, f.languageId, f.releaseDate, f.productionCompany
+                },f => f.ID == film.ID);
+            else
+                affected = await db.Films.UpdateAsync(film, f => new
+                {
+                    f.name, f.description, f.countryId, f.languageId, f.releaseDate, f.productionCompany
+                }, f => f.ID == film.ID);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
         public async Task<StateOfDeletion> DeleteFilmAsync(string filmId)

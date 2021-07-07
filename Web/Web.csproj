@@ -88,6 +88,7 @@
     <Content Include="Admin\DirectorManagement\UpdateDirector.aspx" />
     <Content Include="Admin\FilmManagement\CreateFilm.aspx" />
     <Content Include="Admin\FilmManagement\DeleteFilm.aspx" />
+    <Content Include="Admin\FilmManagement\EditCategory.aspx" />
     <Content Include="Admin\FilmManagement\EditImage.aspx" />
     <Content Include="Admin\FilmManagement\FilmDetail.aspx" />
     <Content Include="Admin\FilmManagement\FilmList.aspx" />
@@ -363,6 +364,13 @@
     </Compile>
     <Compile Include="Admin\FilmManagement\DeleteFilm.aspx.designer.cs">
       <DependentUpon>DeleteFilm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\EditCategory.aspx.cs">
+      <DependentUpon>EditCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\EditCategory.aspx.designer.cs">
+      <DependentUpon>EditCategory.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\FilmManagement\EditImage.aspx.cs">
       <DependentUpon>EditImage.aspx</DependentUpon>

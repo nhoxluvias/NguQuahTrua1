@@ -45,6 +45,7 @@ namespace Web.Admin.FilmManagement
 
         private async Task LoadFilmCountries()
         {
+            drdlFilmCountry.Items.Clear();
             List<CountryInfo> countryInfos = await new CountryBLL(filmBLL, DataAccessLevel.Admin).GetCountriesAsync();
             foreach (CountryInfo countryInfo in countryInfos)
             {
@@ -55,6 +56,7 @@ namespace Web.Admin.FilmManagement
 
         private async Task LoadFilmLanguages()
         {
+            drdlFilmLanguage.Items.Clear();
             List<LanguageInfo> languageInfos = await new LanguageBLL(filmBLL, DataAccessLevel.Admin).GetLanguagesAsync();
             foreach (LanguageInfo languageInfo in languageInfos)
             {

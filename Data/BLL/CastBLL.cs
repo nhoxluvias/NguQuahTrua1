@@ -200,7 +200,7 @@ namespace Data.BLL
             else
                 sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
                                 from [CastOfFilm], [Cast]
-                                where [CastOfFilm].[categoryID] = [Cast].[ID]
+                                where [CastOfFilm].[castID] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));

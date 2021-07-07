@@ -1,12 +1,10 @@
-﻿using Data.BLL;
+﻿using Common.Upload;
+using Data.BLL;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Admin.FilmManagement
@@ -61,6 +59,15 @@ namespace Web.Admin.FilmManagement
                 {
                     enableShowDetail = false;
                     Response.RedirectToRoute("Admin_FilmList", null);
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(filmInfo.thumbnail))
+                        filmInfo.thumbnail = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.ImageFilePath));
+                    else
+                        filmInfo.thumbnail = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/{1}", FileUpload.ImageFilePath, filmInfo.thumbnail));
                 }
             }
         }
