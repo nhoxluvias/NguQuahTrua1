@@ -3,7 +3,6 @@ using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI.WebControls;
 using Web.Models;
 using Web.Validation;
@@ -90,9 +89,6 @@ namespace Web.Admin.FilmManagement
                 null,
                 customValidation.ValidateReleaseDate
             );
-
-            rfvFilmThumbnail.ControlToValidate = "fuFilmThumbnail";
-            rfvFilmThumbnail.ErrorMessage = "Bắt buộc phải có ảnh thu nhỏ";
         }
 
         private void ValidateData()
@@ -100,14 +96,12 @@ namespace Web.Admin.FilmManagement
             cvFilmName.Validate();
             cvProductionCompany.Validate();
             cvReleaseDate.Validate();
-            rfvFilmThumbnail.Validate();
         }
 
         private bool IsValidData()
         {
             ValidateData();
-            return (cvFilmName.IsValid && cvProductionCompany.IsValid
-                && cvReleaseDate.IsValid && rfvFilmThumbnail.IsValid);
+            return (cvFilmName.IsValid && cvProductionCompany.IsValid && cvReleaseDate.IsValid);
         }
 
         private FilmCreation GetFilmCreation()
@@ -123,58 +117,27 @@ namespace Web.Admin.FilmManagement
             };
         }
 
-        private Common.Upload.FileUpload.UploadState GetFilmThumbnail(ref string filePath)
-        {
-            HttpPostedFile httpPostedFile = Request.Files[fuFilmThumbnail.UniqueID];
-            Common.Upload.FileUpload fileUpload = new Common.Upload.FileUpload();
-            return fileUpload.UploadImage(httpPostedFile, ref filePath);
-        }
-
         public async Task Create()
         {
             if (IsValidData())
             {
-                string thumbnailFilePath = null;
-                Common.Upload.FileUpload.UploadState uploadState = GetFilmThumbnail(ref thumbnailFilePath);
+                FilmCreation filmCreation = GetFilmCreation();
+                StateOfCreation state = await filmBLL.CreateFilmAsync(filmCreation);
                 enableShowResult = true;
-                if (uploadState == Common.Upload.FileUpload.UploadState.Success)
+                if (state == StateOfCreation.Success)
                 {
-                    FilmCreation filmCreation = GetFilmCreation();
-                    //filmCreation.thumbnail = string.Format(
-                    //    "{0}/{1}",
-                    //    Common.Upload.FileUpload.ImageFilePath, thumbnailFilePath
-                    //);
-                    filmCreation.thumbnail = thumbnailFilePath;
-                    StateOfCreation state = await filmBLL.CreateFilmAsync(filmCreation);
-                    if (state == StateOfCreation.Success)
-                    {
-                        stateString = "Success";
-                        stateDetail = "Đã thêm phim thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm phim thất bại. Lý do: Đã tồn tại phim này";
-                    }
-                    else
-                    {
-                        stateString = "Failed";
-                        stateDetail = "Thêm phim thất bại";
-                    }
-                }else if(uploadState == Common.Upload.FileUpload.UploadState.Failed_AlreadyExist)
+                    stateString = "Success";
+                    stateDetail = "Đã thêm phim thành công";
+                }
+                else if (state == StateOfCreation.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
-                    stateDetail = "Hình ảnh đã tồn tại, vui lòng chọn hình khác hoặc đổi tên";
-                }
-                else if(uploadState == Common.Upload.FileUpload.UploadState.Failed_InvalidFile)
-                {
-                    stateString = "Failed";
-                    stateDetail = "Hình ảnh không hợp lệ, vui lòng kiểm tra lại";
+                    stateDetail = "Thêm phim thất bại. Lý do: Đã tồn tại phim này";
                 }
                 else
                 {
                     stateString = "Failed";
-                    stateDetail = "Upload hình ảnh thất bại";
+                    stateDetail = "Thêm phim thất bại";
                 }
             }
         }

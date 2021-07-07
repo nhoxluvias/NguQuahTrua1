@@ -86,9 +86,9 @@
     <Content Include="Admin\DirectorManagement\DirectorDetail.aspx" />
     <Content Include="Admin\DirectorManagement\DirectorList.aspx" />
     <Content Include="Admin\DirectorManagement\UpdateDirector.aspx" />
-    <Content Include="Admin\FilmManagement\AddImage.aspx" />
     <Content Include="Admin\FilmManagement\CreateFilm.aspx" />
     <Content Include="Admin\FilmManagement\DeleteFilm.aspx" />
+    <Content Include="Admin\FilmManagement\EditImage.aspx" />
     <Content Include="Admin\FilmManagement\FilmDetail.aspx" />
     <Content Include="Admin\FilmManagement\FilmList.aspx" />
     <Content Include="Admin\FilmManagement\UpdateFilm.aspx" />
@@ -350,13 +350,6 @@
     <Compile Include="Admin\DirectorManagement\UpdateDirector.aspx.designer.cs">
       <DependentUpon>UpdateDirector.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\FilmManagement\AddImage.aspx.cs">
-      <DependentUpon>AddImage.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\FilmManagement\AddImage.aspx.designer.cs">
-      <DependentUpon>AddImage.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\FilmManagement\CreateFilm.aspx.cs">
       <DependentUpon>CreateFilm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -370,6 +363,13 @@
     </Compile>
     <Compile Include="Admin\FilmManagement\DeleteFilm.aspx.designer.cs">
       <DependentUpon>DeleteFilm.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\EditImage.aspx.cs">
+      <DependentUpon>EditImage.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\FilmManagement\EditImage.aspx.designer.cs">
+      <DependentUpon>EditImage.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\FilmManagement\FilmDetail.aspx.cs">
       <DependentUpon>FilmDetail.aspx</DependentUpon>
@@ -650,7 +650,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Control\" />
-    <Folder Include="FileUpload\Images\" />
+    <Folder Include="FileUpload\Images\Default\" />
     <Folder Include="FileUpload\Videos\" />
   </ItemGroup>
   <ItemGroup>

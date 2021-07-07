@@ -9,10 +9,8 @@ namespace Data.DTO
         public string name { get; set; }
         public string description { get; set; }
         public string duration { get; set; }
-        public CountryInfo country { get; set; }
         public string productionCompany { get; set; }
         public string thumbnail { get; set; }
-        public LanguageInfo language { get; set; }
         public string releaseDate { get; set; }
         public long upvote { get; set; }
         public long downvote { get; set; }
@@ -20,6 +18,9 @@ namespace Data.DTO
         public string url { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
+
+        public LanguageInfo Language { get; set; }
+        public CountryInfo Country { get; set; }
         public List<CategoryInfo> Categories { get; set; }
     }
 

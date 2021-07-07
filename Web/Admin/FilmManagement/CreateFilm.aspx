@@ -50,9 +50,6 @@
                             <asp:CustomValidator ID="cvReleaseDate" CssClass="text-red" runat="server"></asp:CustomValidator>
                             <asp:Label ID="lbFilmDescription" runat="server" Text="Mô tả phim" AssociatedControlID="txtFilmDescription"></asp:Label>
                             <asp:TextBox ID="txtFilmDescription" placeholder="Nhập vào mô tả phim" CssClass="text-area" TextMode="MultiLine" runat="server"></asp:TextBox>
-                            <asp:Label ID="lbFilmThumbnail" runat="server" Text="Ảnh thu nhỏ" AssociatedControlID="fuFilmThumbnail"></asp:Label>
-                            <asp:FileUpload ID="fuFilmThumbnail" runat="server" />
-                            <asp:RequiredFieldValidator ID="rfvFilmThumbnail" CssClass="text-red" runat="server"></asp:RequiredFieldValidator>
                         </fieldset>
                     </div>
                 </div>

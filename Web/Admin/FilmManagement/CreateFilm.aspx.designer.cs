@@ -150,33 +150,6 @@ namespace Web.Admin.FilmManagement
         protected global::System.Web.UI.WebControls.TextBox txtFilmDescription;
 
         /// <summary>
-        /// lbFilmThumbnail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbFilmThumbnail;
-
-        /// <summary>
-        /// fuFilmThumbnail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.FileUpload fuFilmThumbnail;
-
-        /// <summary>
-        /// rfvFilmThumbnail control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFilmThumbnail;
-
-        /// <summary>
         /// btnSubmit control.
         /// </summary>
         /// <remarks>

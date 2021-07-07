@@ -33,7 +33,7 @@ namespace Data.BLL
         private CountryInfo ToCountryInfo(Country country)
         {
             if (country == null)
-                throw new Exception("");
+                return null;
             return new CountryInfo
             {
                 ID = country.ID,

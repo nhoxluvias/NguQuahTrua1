@@ -18,7 +18,7 @@
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
                             <asp:BoundField DataField="name" HeaderText="Tên phim" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả phim" />
+                            <asp:ImageField DataImageUrlField="thumbnail" DataImageUrlFormatString="{0}" HeaderText="Hình ảnh" ControlStyle-Width="80" ControlStyle-Height="110" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
                             <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn phim" />
@@ -60,6 +60,8 @@
     <div class="row grid-responsive">
         <div class="column">
             <asp:HyperLink ID="hyplnkDetail" CssClass="button button-blue" runat="server">Xem chi tiết</asp:HyperLink>
+            <asp:HyperLink ID="hyplnkEdit_Category" CssClass="button button-green" runat="server">Thêm/xóa thể loại</asp:HyperLink>
+            <asp:HyperLink ID="hyplnkEdit_Image" CssClass="button button-green" runat="server">Thêm/xóa hình ảnh</asp:HyperLink>
             <asp:HyperLink ID="hyplnkEdit" CssClass="button button-green" runat="server">Chỉnh sửa</asp:HyperLink>
             <asp:HyperLink ID="hyplnkDelete" CssClass="button button-red" runat="server">Xóa</asp:HyperLink>
         </div>

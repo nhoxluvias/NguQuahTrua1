@@ -49,7 +49,7 @@ namespace Web.Admin.CountryManagement
         {
             if (id <= 0)
             {
-                Response.RedirectToRoute("Admin_CategoryList", null);
+                Response.RedirectToRoute("Admin_CountryList", null);
             }
             else
             {
@@ -58,7 +58,7 @@ namespace Web.Admin.CountryManagement
                 if (countryInfo == null)
                 {
                     enableShowDetail = false;
-                    Response.RedirectToRoute("Admin_CategoryList", null);
+                    Response.RedirectToRoute("Admin_CountryList", null);
                 }
             }
         }

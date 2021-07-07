@@ -46,11 +46,11 @@ namespace Data.BLL
                 name = film.name,
                 description = film.description,
                 duration = film.duration,
-                country = ((film.countryId != 0) 
+                Country = ((film.countryId != 0)
                     ? new CountryBLL(this, dataAccessLevel).GetCountry(film.countryId) : null),
                 productionCompany = film.productionCompany,
                 thumbnail = film.thumbnail,
-                language = ((film.languageId != 0)
+                Language = ((film.languageId != 0)
                     ? new LanguageBLL(this, dataAccessLevel).GetLanguage(film.languageId) : null),
                 releaseDate = film.releaseDate,
                 upvote = film.upvote,
@@ -184,7 +184,8 @@ namespace Data.BLL
                 pagedList = await db.Films.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Films.ToPagedListAsync(
-                    f => new {
+                    f => new
+                    {
                         f.ID,
                         f.name,
                         f.description,
@@ -197,7 +198,7 @@ namespace Data.BLL
                         f.upvote,
                         f.downvote,
                         f.views
-                    },orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                    }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
                 );
 
             return new PagedList<FilmInfo>
@@ -216,7 +217,8 @@ namespace Data.BLL
                 pagedList = db.Films.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Films.ToPagedList(
-                    f => new {
+                    f => new
+                    {
                         f.ID,
                         f.name,
                         f.description,
@@ -229,7 +231,7 @@ namespace Data.BLL
                         f.upvote,
                         f.downvote,
                         f.views
-                    },orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                    }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
                 );
 
             return new PagedList<FilmInfo>
@@ -275,7 +277,7 @@ namespace Data.BLL
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if(dataAccessLevel == DataAccessLevel.Admin)
+            if (dataAccessLevel == DataAccessLevel.Admin)
                 sqlCommand.CommandText = @"Select [Film].* from [Film], [CategoryDistribution]
                             where [Film].[ID] = [CategoryDistribution].[filmId]
                                 and [CategoryDistribution].[categoryId] = @categoryId";
@@ -297,9 +299,8 @@ namespace Data.BLL
             if (dataAccessLevel == DataAccessLevel.User)
                 throw new Exception("");
             Film film = ToFilm(filmCreation);
-            if (string.IsNullOrEmpty(film.name) || film.languageId <= 0 
-                || string.IsNullOrEmpty(film.productionCompany)
-                || film.countryId <= 0 || string.IsNullOrEmpty(film.thumbnail)
+            if (string.IsNullOrEmpty(film.name) || film.languageId <= 0
+                || string.IsNullOrEmpty(film.productionCompany) || film.countryId <= 0
             )
             {
                 throw new Exception("");
@@ -308,25 +309,42 @@ namespace Data.BLL
             long checkExists = await db.Films.CountAsync(
                 f => (f.ID == film.ID) || (f.name == film.name
                     && f.languageId == film.languageId
-                    && f.countryId == film.countryId
-                    && f.thumbnail == film.thumbnail)
+                    && f.countryId == film.countryId)
             );
             if (checkExists != 0)
                 return StateOfCreation.AlreadyExists;
 
             int affected;
 
-            if(film.description == null || film.duration == null){
-                if(film.description == null && film.duration == null)
+            if (film.description == null || film.duration == null || film.thumbnail == null)
+            {
+                if (film.description == null && film.duration == null && film.thumbnail == null)
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration", "thumbnail" });
+                }
+                else if (film.description == null && film.duration == null)
                 {
                     affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration" });
                 }
-                else if(film.description == null)
+                else if (film.description == null && film.thumbnail == null)
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "description", "thumbnail" });
+                }
+                else if (film.duration == null && film.thumbnail == null)
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "duration", "thumbnail" });
+                }
+                else if (film.description == null)
                 {
                     affected = await db.Films.InsertAsync(film, new List<string> { "description" });
-                }else
+                }
+                else if (film.duration == null)
                 {
                     affected = await db.Films.InsertAsync(film, new List<string> { "duration" });
+                }
+                else
+                {
+                    affected = await db.Films.InsertAsync(film, new List<string> { "thumbnail" });
                 }
             }
             else
