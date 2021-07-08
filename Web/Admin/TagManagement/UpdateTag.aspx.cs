@@ -30,8 +30,8 @@ namespace Web.Admin.TagManagement
                 stateDetail = null;
                 long id = GetTagId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_TagList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_TagDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteTag", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_TagDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteTag", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

@@ -30,8 +30,8 @@ namespace Web.Admin.CastManagement
                 stateDetail = null;
                 long id = GetCastId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CastList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CastDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCast", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CastDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCast", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

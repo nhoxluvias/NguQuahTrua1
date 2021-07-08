@@ -34,8 +34,8 @@ namespace Web.Admin.LanguageManagement
                 stateDetail = null;
                 int id = GetLanguageId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_LanguageDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteLanguage", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_LanguageDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteLanguage", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

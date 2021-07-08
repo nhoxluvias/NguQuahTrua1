@@ -30,8 +30,8 @@ namespace Web.Admin.CategoryManagement
                 stateDetail = null;
                 int id = GetCategoryId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CategoryList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CategoryDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CategoryDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

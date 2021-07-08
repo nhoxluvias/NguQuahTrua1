@@ -34,8 +34,8 @@ namespace Web.Admin.FilmManagement
                 stateDetail = null;
                 string id = GetFilmId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

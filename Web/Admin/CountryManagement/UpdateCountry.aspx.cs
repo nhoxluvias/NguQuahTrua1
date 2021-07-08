@@ -34,8 +34,8 @@ namespace Web.Admin.CountryManagement
                 stateDetail = null;
                 int id = GetCountryId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CountryDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CountryDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

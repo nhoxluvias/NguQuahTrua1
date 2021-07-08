@@ -30,8 +30,8 @@ namespace Web.Admin.DirectorManagement
                 stateDetail = null;
                 long id = GetDirectorId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_DirectorDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteDirector", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_DirectorDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteDirector", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {

@@ -30,8 +30,8 @@ namespace Web.Admin.RoleManagement
                 stateDetail = null;
                 string id = GetRoleId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
-                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_RoleDetail", null);
-                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_RoleDetail", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", new { id = id });
                 InitValidation();
                 if (IsPostBack)
                 {
