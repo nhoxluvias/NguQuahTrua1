@@ -108,6 +108,7 @@ namespace Data.BLL
                 thumbnail = filmUpdate.thumbnail,
                 languageId = filmUpdate.languageId,
                 releaseDate = filmUpdate.releaseDate,
+                updateAt = DateTime.Now
             };
         }
 
@@ -339,7 +340,6 @@ namespace Data.BLL
             }
 
             int affected;
-
             if (film.description == null)
                 affected = await db.Films.UpdateAsync(film, f => new
                 {
@@ -347,7 +347,8 @@ namespace Data.BLL
                     f.countryId,
                     f.languageId,
                     f.releaseDate,
-                    f.productionCompany
+                    f.productionCompany,
+                    f.updateAt
                 }, f => f.ID == film.ID);
             else
                 affected = await db.Films.UpdateAsync(film, f => new
@@ -357,7 +358,8 @@ namespace Data.BLL
                     f.countryId,
                     f.languageId,
                     f.releaseDate,
-                    f.productionCompany
+                    f.productionCompany,
+                    f.updateAt
                 }, f => f.ID == film.ID);
 
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
