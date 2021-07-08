@@ -260,7 +260,7 @@ namespace Data.BLL
             if (castId <= 0)
                 throw new Exception("");
 
-            long castOfFilmNumber = await db.CastOfFilm
+            long castOfFilmNumber = await db.CastOfFilms
                 .CountAsync(cf => cf.castId == castId);
             if (castOfFilmNumber > 0)
                 return StateOfDeletion.ConstraintExists;

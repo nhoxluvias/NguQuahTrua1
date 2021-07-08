@@ -20,7 +20,7 @@ namespace Data.DAL
         private SqlAccess<Director> directors;
         private SqlAccess<DirectorOfFilm> directorOfFilms;
         private SqlAccess<Cast> casts;
-        private SqlAccess<CastOfFilm> castOfFilm;
+        private SqlAccess<CastOfFilm> castOfFilms;
         private SqlAccess<Source> sources;
 
         public DBContext(ConnectionType connectionType)
@@ -40,7 +40,7 @@ namespace Data.DAL
             directors = null;
             directorOfFilms = null;
             casts = null;
-            castOfFilm = null;
+            castOfFilms = null;
             sources = null;
             disposed = false;
         }
@@ -55,11 +55,11 @@ namespace Data.DAL
         public SqlAccess<Film> Films { get { return InitSqlAccess<Film>(ref films); } }
         public SqlAccess<Language> Languages { get { return InitSqlAccess<Language>(ref languages); } }
         public SqlAccess<Country> Countries { get { return InitSqlAccess<Country>(ref countries); } }
-        public SqlAccess<CategoryDistribution> CategoryDistributons { get { return InitSqlAccess<CategoryDistribution>(ref categoryDistributions); } }
+        public SqlAccess<CategoryDistribution> CategoryDistributions { get { return InitSqlAccess<CategoryDistribution>(ref categoryDistributions); } }
         public SqlAccess<Director> Directors { get { return InitSqlAccess<Director>(ref directors); } }
         public SqlAccess<DirectorOfFilm> DirectorOfFilms { get { return InitSqlAccess<DirectorOfFilm>(ref directorOfFilms); } }
         public SqlAccess<Cast> Casts { get { return InitSqlAccess<Cast>(ref casts); } }
-        public SqlAccess<CastOfFilm> CastOfFilm { get { return InitSqlAccess<CastOfFilm>(ref castOfFilm); } }
+        public SqlAccess<CastOfFilm> CastOfFilms { get { return InitSqlAccess<CastOfFilm>(ref castOfFilms); } }
         public SqlAccess<Source> Sources { get { return InitSqlAccess<Source>(ref sources); } }
 
         protected override void Dispose(bool disposing)
@@ -83,6 +83,7 @@ namespace Data.DAL
                         DisposeSqlAccess<Director>(ref directors);
                         DisposeSqlAccess<DirectorOfFilm>(ref directorOfFilms);
                         DisposeSqlAccess<Cast>(ref casts);
+                        DisposeSqlAccess<CastOfFilm>(ref castOfFilms);
                     }
                     this.disposed = true;
                 }

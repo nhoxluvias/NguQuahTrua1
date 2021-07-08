@@ -59,6 +59,7 @@ namespace Data.BLL
                 createAt = film.createAt,
                 updateAt = film.updateAt,
                 Categories = new CategoryBLL(this, dataAccessLevel).GetCategoriesByFilmId(film.ID),
+                Tags = new TagBLL(this, dataAccessLevel).GetTagsByFilmId(film.ID),
                 Directors = new DirectorBLL(this, dataAccessLevel).GetDirectorsByFilmId(film.ID),
                 Casts = new CastBLL(this, dataAccessLevel).GetCastsByFilmId(film.ID)
             };
@@ -369,7 +370,7 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
                 throw new Exception("");
 
-            long checkExists = await db.CategoryDistributons
+            long checkExists = await db.CategoryDistributions
                 .CountAsync(cd => cd.filmId == filmId && cd.categoryId == categoryId);
             if (checkExists != 0)
                 return StateOfCreation.AlreadyExists;
@@ -382,7 +383,7 @@ namespace Data.BLL
                 updateAt = DateTime.Now
             };
 
-            int affected = await db.CategoryDistributons.InsertAsync(categoryDistribution);
+            int affected = await db.CategoryDistributions.InsertAsync(categoryDistribution);
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
@@ -391,7 +392,7 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
                 throw new Exception("");
 
-            int affected = await db.CategoryDistributons
+            int affected = await db.CategoryDistributions
                 .DeleteAsync(cd => cd.filmId == filmId && cd.categoryId == categoryId);
 
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
@@ -402,8 +403,142 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
-            int affected = await db.CategoryDistributons
+            int affected = await db.CategoryDistributions
                 .DeleteAsync(cd => cd.filmId == filmId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfCreation> AddTagAsync(string filmId, int tagId)
+        {
+            if (string.IsNullOrEmpty(filmId) || tagId <= 0)
+                throw new Exception("");
+
+            long checkExists = await db.TagDistributions
+                .CountAsync(td => td.filmId == filmId && td.tagId == tagId);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
+            TagDistribution tagDistribution = new TagDistribution
+            {
+                filmId = filmId,
+                tagId = tagId,
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now
+            };
+
+            int affected = await db.TagDistributions.InsertAsync(tagDistribution);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteTagAsync(string filmId, int tagId)
+        {
+            if (string.IsNullOrEmpty(filmId) || tagId <= 0)
+                throw new Exception("");
+
+            int affected = await db.TagDistributions
+                .DeleteAsync(td => td.filmId == filmId && td.tagId == tagId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteAllTagAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            int affected = await db.TagDistributions
+                .DeleteAsync(td => td.filmId == filmId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfCreation> AddDirectorAsync(string filmId, long directorId, string directorRole)
+        {
+            if (string.IsNullOrEmpty(filmId) || directorId <= 0 || string.IsNullOrEmpty(directorRole))
+                throw new Exception("");
+
+            long checkExists = await db.DirectorOfFilms
+                .CountAsync(df => df.filmId == filmId && df.directorId == directorId);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
+            DirectorOfFilm directorOfFilm = new DirectorOfFilm
+            {
+                filmId = filmId,
+                directorId = directorId,
+                role = directorRole,
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now
+            };
+
+            int affected = await db.DirectorOfFilms.InsertAsync(directorOfFilm);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteDirectorAsync(string filmId, long directorId)
+        {
+            if (string.IsNullOrEmpty(filmId) || directorId <= 0)
+                throw new Exception("");
+
+            int affected = await db.DirectorOfFilms
+                .DeleteAsync(df => df.filmId == filmId && df.directorId == directorId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteAllDirectorAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            int affected = await db.DirectorOfFilms
+                .DeleteAsync(df => df.filmId == filmId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfCreation> AddCastAsync(string filmId, long castId, string castRole)
+        {
+            if (string.IsNullOrEmpty(filmId) || castId <= 0 || string.IsNullOrEmpty(castRole))
+                throw new Exception("");
+
+            long checkExists = await db.CastOfFilms
+                .CountAsync(cf => cf.filmId == filmId && cf.castId == castId);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
+            CastOfFilm castOfFilm = new CastOfFilm
+            {
+                filmId = filmId,
+                castId = castId,
+                role = castRole,
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now
+            };
+
+            int affected = await db.CastOfFilms.InsertAsync(castOfFilm);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteCastAsync(string filmId, long castId)
+        {
+            if (string.IsNullOrEmpty(filmId) || castId <= 0)
+                throw new Exception("");
+
+            int affected = await db.CastOfFilms
+                .DeleteAsync(cf => cf.filmId == filmId && cf.castId == castId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteAllCastAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            int affected = await db.CastOfFilms
+                .DeleteAsync(cf => cf.filmId == filmId);
 
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }

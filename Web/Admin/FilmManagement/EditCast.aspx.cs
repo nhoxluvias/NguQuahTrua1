@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Web.Models;
+using Web.Validation;
 
 namespace Web.Admin.FilmManagement
 {
-    public partial class EditCategory : System.Web.UI.Page
+    public partial class EditCast : System.Web.UI.Page
     {
         private FilmBLL filmBLL;
+        private CustomValidation customValidation;
         protected string filmName;
-        protected List<CategoryInfo> categoriesByFilmId;
+        protected List<CastInfo> castsByFilmId;
         protected bool enableShowDetail;
         protected bool enableShowResult;
         protected string stateString;
@@ -25,14 +27,18 @@ namespace Web.Admin.FilmManagement
             {
                 enableShowDetail = false;
                 filmBLL = new FilmBLL(DataAccessLevel.Admin);
+                customValidation = new CustomValidation();
                 string id = GetFilmId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = id });
+                hyplnkEdit_Category.NavigateUrl = GetRouteUrl("Admin_EditCategory_Film", new { id = id });
                 hyplnkEdit_Tag.NavigateUrl = GetRouteUrl("Admin_EditTag_Film", new { id = id });
+                hyplnkEdit_Director.NavigateUrl = GetRouteUrl("Admin_EditDirector_Film", new { id = id });
                 hyplnkEdit_Image.NavigateUrl = GetRouteUrl("Admin_EditImage_Film", new { id = id });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
-                await LoadCategories();
+                InitValidation();
+                await LoadCasts();
                 if (!IsPostBack)
                 {
                     await LoadFilmInfo(id);
@@ -44,6 +50,29 @@ namespace Web.Admin.FilmManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private void InitValidation()
+        {
+            customValidation.Init(
+                cvFilmCast_Role,
+                "txtFilmCast_Role",
+                "Tên vai trò của đạo điễn không hợp lệ",
+                true,
+                null,
+                customValidation.ValidateCastRole
+            );
+        }
+
+        private void ValidateData()
+        {
+            cvFilmCast_Role.Validate();
+        }
+
+        private bool IsValidData()
+        {
+            ValidateData();
+            return cvFilmCast_Role.IsValid;
         }
 
         private string GetFilmId()
@@ -63,65 +92,69 @@ namespace Web.Admin.FilmManagement
             else
             {
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
-                if(filmInfo == null)
+                if (filmInfo == null)
                 {
                     Response.RedirectToRoute("Admin_FilmList", null);
                 }
                 else
                 {
                     enableShowDetail = true;
-                    categoriesByFilmId = filmInfo.Categories;
+                    castsByFilmId = filmInfo.Casts;
                     filmName = filmInfo.name;
                 }
             }
         }
 
-        private async Task LoadCategories()
+        private async Task LoadCasts()
         {
-            drdlFilmCategory.Items.Clear();
-            List<CategoryInfo> categoryInfos = await new CategoryBLL(filmBLL, DataAccessLevel.Admin).GetCategoriesAsync();
-            foreach (CategoryInfo categoryInfo in categoryInfos)
+            drdlFilmCast.Items.Clear();
+            List<CastInfo> castInfos = await new CastBLL(filmBLL, DataAccessLevel.Admin).GetCastsAsync();
+            foreach (CastInfo castInfo in castInfos)
             {
-                drdlFilmCategory.Items.Add(new ListItem(categoryInfo.name, categoryInfo.ID.ToString()));
+                drdlFilmCast.Items.Add(new ListItem(castInfo.name, castInfo.ID.ToString()));
             }
-            drdlFilmCategory.SelectedIndex = 0;
+            drdlFilmCast.SelectedIndex = 0;
         }
 
         protected async void btnAdd_Click(object sender, EventArgs e)
         {
             try
             {
-                string filmId = GetFilmId();
-                string strCategoryId = Request.Form[drdlFilmCategory.UniqueID];
-                if (strCategoryId == null)
+                if (IsValidData())
                 {
-                    Response.RedirectToRoute("Admin_FilmList", null);
-                }
-                else
-                {
-                    int categoryId = int.Parse(strCategoryId);
-                    StateOfCreation state = await filmBLL.AddCategoryAsync(filmId, categoryId);
-                    await LoadFilmInfo(GetFilmId());
-                    enableShowResult = true;
-                    if (state == StateOfCreation.Success)
+                    string filmId = GetFilmId();
+                    string strCastId = Request.Form[drdlFilmCast.UniqueID];
+                    string castRole = Request.Form[txtFilmCast_Role.UniqueID];
+                    if (strCastId == null)
                     {
-                        stateString = "Success";
-                        stateDetail = "Đã thêm thể loại vào phim thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm thể loại vào phim thất bại. Lý do: Đã tồn tại thể loại trong phim này";
+                        Response.RedirectToRoute("Admin_FilmList", null);
                     }
                     else
                     {
-                        stateString = "Failed";
-                        stateDetail = "Thêm thể loại vào phim thất bại";
+                        long castId = long.Parse(strCastId);
+                        StateOfCreation state = await filmBLL.AddCastAsync(filmId, castId, castRole);
+                        await LoadFilmInfo(GetFilmId());
+                        enableShowResult = true;
+                        if (state == StateOfCreation.Success)
+                        {
+                            stateString = "Success";
+                            stateDetail = "Đã thêm diễn viên vào phim thành công";
+                        }
+                        else if (state == StateOfCreation.AlreadyExists)
+                        {
+                            stateString = "AlreadyExists";
+                            stateDetail = "Thêm diễn viên vào phim thất bại. Lý do: Đã tồn tại diễn viên trong phim này";
+                        }
+                        else
+                        {
+                            stateString = "Failed";
+                            stateDetail = "Thêm diễn viên vào phim thất bại";
+                        }
                     }
                 }
                 filmBLL.Dispose();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
@@ -133,18 +166,18 @@ namespace Web.Admin.FilmManagement
             try
             {
                 string filmId = GetFilmId();
-                StateOfDeletion state = await filmBLL.DeleteAllCategoryAsync(filmId);
+                StateOfDeletion state = await filmBLL.DeleteAllCastAsync(filmId);
                 await LoadFilmInfo(GetFilmId());
                 enableShowResult = true;
                 if (state == StateOfDeletion.Success)
                 {
                     stateString = "Success";
-                    stateDetail = "Đã xóa tất cả thể loại của phim thành công";
+                    stateDetail = "Đã xóa tất cả diễn viên của phim thành công";
                 }
                 else
                 {
                     stateString = "Failed";
-                    stateDetail = "Xóa tất cả thể loại của phim thất bại";
+                    stateDetail = "Xóa tất cả diễn viên của phim thất bại";
                 }
                 filmBLL.Dispose();
             }

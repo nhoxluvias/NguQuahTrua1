@@ -9,11 +9,11 @@ using Web.Models;
 
 namespace Web.Admin.FilmManagement
 {
-    public partial class EditCategory : System.Web.UI.Page
+    public partial class EditTag : System.Web.UI.Page
     {
         private FilmBLL filmBLL;
         protected string filmName;
-        protected List<CategoryInfo> categoriesByFilmId;
+        protected List<TagInfo> tagsByFilmId;
         protected bool enableShowDetail;
         protected bool enableShowResult;
         protected string stateString;
@@ -28,11 +28,11 @@ namespace Web.Admin.FilmManagement
                 string id = GetFilmId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = id });
-                hyplnkEdit_Tag.NavigateUrl = GetRouteUrl("Admin_EditTag_Film", new { id = id });
+                hyplnkEdit_Category.NavigateUrl = GetRouteUrl("Admin_EditCategory_Film", new { id = id });
                 hyplnkEdit_Image.NavigateUrl = GetRouteUrl("Admin_EditImage_Film", new { id = id });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
-                await LoadCategories();
+                await LoadTags();
                 if (!IsPostBack)
                 {
                     await LoadFilmInfo(id);
@@ -63,28 +63,28 @@ namespace Web.Admin.FilmManagement
             else
             {
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
-                if(filmInfo == null)
+                if (filmInfo == null)
                 {
                     Response.RedirectToRoute("Admin_FilmList", null);
                 }
                 else
                 {
                     enableShowDetail = true;
-                    categoriesByFilmId = filmInfo.Categories;
+                    tagsByFilmId = filmInfo.Tags;
                     filmName = filmInfo.name;
                 }
             }
         }
 
-        private async Task LoadCategories()
+        private async Task LoadTags()
         {
-            drdlFilmCategory.Items.Clear();
-            List<CategoryInfo> categoryInfos = await new CategoryBLL(filmBLL, DataAccessLevel.Admin).GetCategoriesAsync();
-            foreach (CategoryInfo categoryInfo in categoryInfos)
+            drdlFilmTag.Items.Clear();
+            List<TagInfo> tagInfos = await new TagBLL(filmBLL, DataAccessLevel.Admin).GetTagsAsync();
+            foreach (TagInfo tagInfo in tagInfos)
             {
-                drdlFilmCategory.Items.Add(new ListItem(categoryInfo.name, categoryInfo.ID.ToString()));
+                drdlFilmTag.Items.Add(new ListItem(tagInfo.name, tagInfo.ID.ToString()));
             }
-            drdlFilmCategory.SelectedIndex = 0;
+            drdlFilmTag.SelectedIndex = 0;
         }
 
         protected async void btnAdd_Click(object sender, EventArgs e)
@@ -92,36 +92,36 @@ namespace Web.Admin.FilmManagement
             try
             {
                 string filmId = GetFilmId();
-                string strCategoryId = Request.Form[drdlFilmCategory.UniqueID];
-                if (strCategoryId == null)
+                string strTagId = Request.Form[drdlFilmTag.UniqueID];
+                if (strTagId == null)
                 {
                     Response.RedirectToRoute("Admin_FilmList", null);
                 }
                 else
                 {
-                    int categoryId = int.Parse(strCategoryId);
-                    StateOfCreation state = await filmBLL.AddCategoryAsync(filmId, categoryId);
+                    int tagId = int.Parse(strTagId);
+                    StateOfCreation state = await filmBLL.AddTagAsync(filmId, tagId);
                     await LoadFilmInfo(GetFilmId());
                     enableShowResult = true;
                     if (state == StateOfCreation.Success)
                     {
                         stateString = "Success";
-                        stateDetail = "Đã thêm thể loại vào phim thành công";
+                        stateDetail = "Đã thêm thẻ tag vào phim thành công";
                     }
                     else if (state == StateOfCreation.AlreadyExists)
                     {
                         stateString = "AlreadyExists";
-                        stateDetail = "Thêm thể loại vào phim thất bại. Lý do: Đã tồn tại thể loại trong phim này";
+                        stateDetail = "Thêm thẻ tag vào phim thất bại. Lý do: Đã tồn tại thẻ tag trong phim này";
                     }
                     else
                     {
                         stateString = "Failed";
-                        stateDetail = "Thêm thể loại vào phim thất bại";
+                        stateDetail = "Thêm thẻ tag vào phim thất bại";
                     }
                 }
                 filmBLL.Dispose();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
@@ -133,18 +133,18 @@ namespace Web.Admin.FilmManagement
             try
             {
                 string filmId = GetFilmId();
-                StateOfDeletion state = await filmBLL.DeleteAllCategoryAsync(filmId);
+                StateOfDeletion state = await filmBLL.DeleteAllTagAsync(filmId);
                 await LoadFilmInfo(GetFilmId());
                 enableShowResult = true;
                 if (state == StateOfDeletion.Success)
                 {
                     stateString = "Success";
-                    stateDetail = "Đã xóa tất cả thể loại của phim thành công";
+                    stateDetail = "Đã xóa tất cả thẻ tag của phim thành công";
                 }
                 else
                 {
                     stateString = "Failed";
-                    stateDetail = "Xóa tất cả thể loại của phim thất bại";
+                    stateDetail = "Xóa tất cả thẻ tag của phim thất bại";
                 }
                 filmBLL.Dispose();
             }
