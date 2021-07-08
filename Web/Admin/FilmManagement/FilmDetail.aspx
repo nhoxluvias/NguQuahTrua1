@@ -37,12 +37,27 @@
                             <td><% = filmInfo.Language.name %></td>
                         </tr>
                         <tr>
+                            <th>Năm phát hành</th>
+                            <td><% = filmInfo.releaseDate %></td>
+                        </tr>
+                        <tr>
                             <th>Thể loại</th>
                             <td>
                                 <ul>
                                     <% foreach (CategoryInfo categoryInfo in filmInfo.Categories)
                                         {%>
                                     <li><% = categoryInfo.name %></li>
+                                    <% } %>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Thẻ tag</th>
+                            <td>
+                                <ul>
+                                    <% foreach (TagInfo tagInfo in filmInfo.Tags)
+                                        {%>
+                                    <li><% = tagInfo.name %></li>
                                     <% } %>
                                 </ul>
                             </td>

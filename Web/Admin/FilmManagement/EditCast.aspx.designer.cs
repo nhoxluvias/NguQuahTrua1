@@ -11,26 +11,53 @@ namespace Web.Admin.FilmManagement
 {
 
 
-    public partial class EditCategory
+    public partial class EditCast
     {
 
         /// <summary>
-        /// lbFilmCategory control.
+        /// lbFilmCast control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbFilmCategory;
+        protected global::System.Web.UI.WebControls.Label lbFilmCast;
 
         /// <summary>
-        /// drdlFilmCategory control.
+        /// drdlFilmCast control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drdlFilmCategory;
+        protected global::System.Web.UI.WebControls.DropDownList drdlFilmCast;
+
+        /// <summary>
+        /// lbFilmCast_Role control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbFilmCast_Role;
+
+        /// <summary>
+        /// txtFilmCast_Role control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFilmCast_Role;
+
+        /// <summary>
+        /// cvFilmCast_Role control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvFilmCast_Role;
 
         /// <summary>
         /// btnAdd control.
@@ -69,6 +96,15 @@ namespace Web.Admin.FilmManagement
         protected global::System.Web.UI.WebControls.HyperLink hyplnkDetail;
 
         /// <summary>
+        /// hyplnkEdit_Category control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Category;
+
+        /// <summary>
         /// hyplnkEdit_Tag control.
         /// </summary>
         /// <remarks>
@@ -76,6 +112,15 @@ namespace Web.Admin.FilmManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Tag;
+
+        /// <summary>
+        /// hyplnkEdit_Director control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Director;
 
         /// <summary>
         /// hyplnkEdit_Image control.

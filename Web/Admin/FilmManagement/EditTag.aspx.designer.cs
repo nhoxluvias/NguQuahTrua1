@@ -11,26 +11,26 @@ namespace Web.Admin.FilmManagement
 {
 
 
-    public partial class EditCategory
+    public partial class EditTag
     {
 
         /// <summary>
-        /// lbFilmCategory control.
+        /// lbFilmTag control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbFilmCategory;
+        protected global::System.Web.UI.WebControls.Label lbFilmTag;
 
         /// <summary>
-        /// drdlFilmCategory control.
+        /// drdlFilmTag control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drdlFilmCategory;
+        protected global::System.Web.UI.WebControls.DropDownList drdlFilmTag;
 
         /// <summary>
         /// btnAdd control.
@@ -69,13 +69,13 @@ namespace Web.Admin.FilmManagement
         protected global::System.Web.UI.WebControls.HyperLink hyplnkDetail;
 
         /// <summary>
-        /// hyplnkEdit_Tag control.
+        /// hyplnkEdit_Category control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Tag;
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Category;
 
         /// <summary>
         /// hyplnkEdit_Image control.

@@ -260,7 +260,7 @@ namespace Data.BLL
             if (categoryId <= 0)
                 throw new Exception("");
 
-            long categoryDistributionNumber = await db.CategoryDistributons
+            long categoryDistributionNumber = await db.CategoryDistributions
                 .CountAsync(cd => cd.categoryId == categoryId);
             if (categoryDistributionNumber > 0)
                 return StateOfDeletion.ConstraintExists;

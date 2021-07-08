@@ -11,26 +11,53 @@ namespace Web.Admin.FilmManagement
 {
 
 
-    public partial class EditCategory
+    public partial class EditDirector
     {
 
         /// <summary>
-        /// lbFilmCategory control.
+        /// lbFilmDirector control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbFilmCategory;
+        protected global::System.Web.UI.WebControls.Label lbFilmDirector;
 
         /// <summary>
-        /// drdlFilmCategory control.
+        /// drdlFilmDirector control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList drdlFilmCategory;
+        protected global::System.Web.UI.WebControls.DropDownList drdlFilmDirector;
+
+        /// <summary>
+        /// lbFilmDirector_Role control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbFilmDirector_Role;
+
+        /// <summary>
+        /// txtFilmDirector_Role control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFilmDirector_Role;
+
+        /// <summary>
+        /// cvFilmDirector_Role control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CustomValidator cvFilmDirector_Role;
 
         /// <summary>
         /// btnAdd control.
@@ -69,6 +96,15 @@ namespace Web.Admin.FilmManagement
         protected global::System.Web.UI.WebControls.HyperLink hyplnkDetail;
 
         /// <summary>
+        /// hyplnkEdit_Category control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Category;
+
+        /// <summary>
         /// hyplnkEdit_Tag control.
         /// </summary>
         /// <remarks>
@@ -76,6 +112,15 @@ namespace Web.Admin.FilmManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Tag;
+
+        /// <summary>
+        /// hyplnkEdit_Cast control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Cast;
 
         /// <summary>
         /// hyplnkEdit_Image control.

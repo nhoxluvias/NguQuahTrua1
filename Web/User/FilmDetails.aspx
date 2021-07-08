@@ -74,6 +74,7 @@
                             <div class="tabs">
                                 <ul class="tab-links tabs-mv">
                                     <li class="active"><a href="#overview">Overview</a></li>
+                                    <title>Avenger: Endgame</title>
                                     <li><a href="#reviews">Reviews</a></li>
                                     <li><a href="#cast">Cast & Crew </a></li>
                                     <li><a href="#media">Media</a></li>
@@ -624,6 +625,7 @@
                                                     </div>
                                                     <div class="vd-infor">
                                                         <h6><a href="#">Trailer:  Watch New Scenes</a></h6>
+                                                        <a href="https://youtu.be/TcMBFSGVi1c"></a>
                                                         <p class="time">1: 31</p>
                                                     </div>
                                                 </div>
@@ -827,7 +829,7 @@
                                             </div>
                                             <div class="topbar-filter">
                                                 <label>Movies per page:</label>
-                                                <select>
+                                                <select style="width: 100px">
                                                     <option value="range">5 Movies</option>
                                                     <option value="saab">10 Movies</option>
                                                 </select>
