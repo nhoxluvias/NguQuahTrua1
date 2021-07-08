@@ -364,6 +364,50 @@ namespace Data.BLL
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
         }
 
+        public async Task<StateOfCreation> AddCategoryAsync(string filmId, int categoryId)
+        {
+            if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
+                throw new Exception("");
+
+            long checkExists = await db.CategoryDistributons
+                .CountAsync(cd => cd.filmId == filmId && cd.categoryId == categoryId);
+            if (checkExists != 0)
+                return StateOfCreation.AlreadyExists;
+
+            CategoryDistribution categoryDistribution = new CategoryDistribution
+            {
+                filmId = filmId,
+                categoryId = categoryId,
+                createAt = DateTime.Now,
+                updateAt = DateTime.Now
+            };
+
+            int affected = await db.CategoryDistributons.InsertAsync(categoryDistribution);
+            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteCategoryAsync(string filmId, int categoryId)
+        {
+            if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
+                throw new Exception("");
+
+            int affected = await db.CategoryDistributons
+                .DeleteAsync(cd => cd.filmId == filmId && cd.categoryId == categoryId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfDeletion> DeleteAllCategoryAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            int affected = await db.CategoryDistributons
+                .DeleteAsync(cd => cd.filmId == filmId);
+
+            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
         public async Task<long> CountAllAsync()
         {
             return await db.Films.CountAsync();

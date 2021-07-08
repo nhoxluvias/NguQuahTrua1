@@ -2,11 +2,10 @@
 using Data.DTO;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Web.Models;
 
 namespace Web.Admin.FilmManagement
 {
@@ -22,20 +21,29 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            enableShowDetail = false;
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
-            string id = GetFilmId();
-            await LoadCategories();
-            if (IsPostBack)
+            try
             {
-                await LoadFilmInfo(id);
+                enableShowDetail = false;
+                filmBLL = new FilmBLL(DataAccessLevel.Admin);
+                string id = GetFilmId();
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
+                hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = id });
+                hyplnkEdit_Category.NavigateUrl = GetRouteUrl("Admin_EditCategory_Film", new { id = id });
+                hyplnkEdit_Image.NavigateUrl = GetRouteUrl("Admin_EditImage_Film", new { id = id });
+                hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = id });
+                hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
+                await LoadCategories();
+                if (!IsPostBack)
+                {
+                    await LoadFilmInfo(id);
+                    filmBLL.Dispose();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                await LoadFilmInfo(id, true);
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
-            
-            filmBLL.Dispose();
         }
 
         private string GetFilmId()
@@ -46,7 +54,7 @@ namespace Web.Admin.FilmManagement
             return obj.ToString();
         }
 
-        private async Task LoadFilmInfo(string id, bool loadCategoryInfo = false)
+        private async Task LoadFilmInfo(string id)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -62,7 +70,7 @@ namespace Web.Admin.FilmManagement
                 else
                 {
                     enableShowDetail = true;
-                    categoriesByFilmId = (loadCategoryInfo) ? filmInfo.Categories : null;
+                    categoriesByFilmId = filmInfo.Categories;
                     filmName = filmInfo.name;
                 }
             }
@@ -70,8 +78,9 @@ namespace Web.Admin.FilmManagement
 
         private async Task LoadCategories()
         {
+            drdlFilmCategory.Items.Clear();
             List<CategoryInfo> categoryInfos = await new CategoryBLL(filmBLL, DataAccessLevel.Admin).GetCategoriesAsync();
-            foreach(CategoryInfo categoryInfo in categoryInfos)
+            foreach (CategoryInfo categoryInfo in categoryInfos)
             {
                 drdlFilmCategory.Items.Add(new ListItem(categoryInfo.name, categoryInfo.ID.ToString()));
             }
@@ -80,9 +89,70 @@ namespace Web.Admin.FilmManagement
 
         protected async void btnAddCategory_Click(object sender, EventArgs e)
         {
-            CategoryBLL categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
-            categoriesByFilmId = await categoryBLL.GetCategoriesByFilmIdAsync(GetFilmId());
-            categoryBLL.Dispose();
+            try
+            {
+                string filmId = GetFilmId();
+                string strCategoryId = Request.Form[drdlFilmCategory.UniqueID];
+                if (strCategoryId == null)
+                {
+                    Response.RedirectToRoute("Admin_FilmList", null);
+                }
+                else
+                {
+                    int categoryId = int.Parse(strCategoryId);
+                    StateOfCreation state = await filmBLL.AddCategoryAsync(filmId, categoryId);
+                    await LoadFilmInfo(GetFilmId());
+                    enableShowResult = true;
+                    if (state == StateOfCreation.Success)
+                    {
+                        stateString = "Success";
+                        stateDetail = "Đã thêm thể loại vào phim thành công";
+                    }
+                    else if (state == StateOfCreation.AlreadyExists)
+                    {
+                        stateString = "AlreadyExists";
+                        stateDetail = "Thêm thể loại vào phim thất bại. Lý do: Đã tồn tại thể loại trong phim này";
+                    }
+                    else
+                    {
+                        stateString = "Failed";
+                        stateDetail = "Thêm thể loại vào phim thất bại";
+                    }
+                }
+                filmBLL.Dispose();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
+        }
+
+        protected async void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string filmId = GetFilmId();
+                StateOfDeletion state = await filmBLL.DeleteAllCategoryAsync(filmId);
+                await LoadFilmInfo(GetFilmId());
+                enableShowResult = true;
+                if (state == StateOfDeletion.Success)
+                {
+                    stateString = "Success";
+                    stateDetail = "Đã xóa tất cả thể loại của phim thành công";
+                }
+                else
+                {
+                    stateString = "Failed";
+                    stateDetail = "Xóa tất cả thể loại của phim thất bại";
+                }
+                filmBLL.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
         }
     }
 }

@@ -71,9 +71,14 @@
                             <tr>
                                 <th>Thể loại <% = count++ %></th>
                                 <td><% = categoryInfo.name %></td>
-                                <td></td>
                             </tr>
                             <% } %>
+                            <tr>
+                                <th>Xóa thể loại</th>
+                                <td>
+                                    <asp:Button ID="btnDelete" CssClass="button-red" runat="server" Text="Xóa tất cả" OnClick="btnDelete_Click" />
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -81,6 +86,19 @@
         </div>
     </div>
     <% } %>
+
+    <div class="row grid-responsive">
+        <div class="column page-heading">
+            <div class="large-card">
+                <asp:HyperLink ID="hyplnkList" CssClass="button button-blue" runat="server">Quay về trang danh sách</asp:HyperLink>
+                <asp:HyperLink ID="hyplnkDetail" CssClass="button button-green" runat="server">Xem chi tiết</asp:HyperLink>
+                <asp:HyperLink ID="hyplnkEdit_Category" CssClass="button button-green" runat="server">Thêm/xóa thể loại</asp:HyperLink>
+                <asp:HyperLink ID="hyplnkEdit_Image" CssClass="button button-green" runat="server">Thêm/xóa hình ảnh</asp:HyperLink>
+                <asp:HyperLink ID="hyplnkEdit" CssClass="button button-green" runat="server">Chỉnh sửa</asp:HyperLink>
+                <asp:HyperLink ID="hyplnkDelete" CssClass="button button-red" runat="server">Xóa</asp:HyperLink>
+            </div>
+        </div>
+    </div>
 </asp:Content>
 
 <asp:Content ID="Content3" ContentPlaceHolderID="footer" runat="server">
