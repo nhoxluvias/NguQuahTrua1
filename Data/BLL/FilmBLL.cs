@@ -343,12 +343,21 @@ namespace Data.BLL
             if (film.description == null)
                 affected = await db.Films.UpdateAsync(film, f => new
                 {
-                    f.name, f.countryId, f.languageId, f.releaseDate, f.productionCompany
-                },f => f.ID == film.ID);
+                    f.name,
+                    f.countryId,
+                    f.languageId,
+                    f.releaseDate,
+                    f.productionCompany
+                }, f => f.ID == film.ID);
             else
                 affected = await db.Films.UpdateAsync(film, f => new
                 {
-                    f.name, f.description, f.countryId, f.languageId, f.releaseDate, f.productionCompany
+                    f.name,
+                    f.description,
+                    f.countryId,
+                    f.languageId,
+                    f.releaseDate,
+                    f.productionCompany
                 }, f => f.ID == film.ID);
 
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
@@ -541,6 +550,35 @@ namespace Data.BLL
                 .DeleteAsync(cf => cf.filmId == filmId);
 
             return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+        }
+
+        public async Task<StateOfUpdate> AddImageAsync(string filmId, string filePath)
+        {
+            if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(filePath))
+                throw new Exception("");
+
+            Film film = await db.Films.SingleOrDefaultAsync(f => new { f.ID, f.thumbnail }, f => f.ID == filmId);
+            if (film == null)
+                return StateOfUpdate.Failed;
+
+            if (!string.IsNullOrEmpty(film.thumbnail))
+                return StateOfUpdate.Failed;
+
+            int affected = await db.Films
+                .UpdateAsync(new Film { thumbnail = filePath }, f => new { f.thumbnail }, f => f.ID == film.ID);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+        }
+
+        public async Task<StateOfUpdate> DeleteImageAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            int affected = await db.Films
+                .UpdateAsync(new Film { thumbnail = null }, f => new { f.thumbnail }, f => f.ID == filmId);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
         public async Task<long> CountAllAsync()

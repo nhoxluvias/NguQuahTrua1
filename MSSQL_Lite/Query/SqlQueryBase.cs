@@ -380,7 +380,10 @@ namespace MSSQL_Lite.Query
 
             foreach (SqlQueryParameter sqlQueryParameter in sqlQueryParameters)
             {
-                sqlCommand.Parameters.Add(new SqlParameter(sqlQueryParameter.Name, sqlQueryParameter.Value));
+                sqlCommand.Parameters.Add(new SqlParameter(
+                    sqlQueryParameter.Name, 
+                    (sqlQueryParameter.Value == null) ? DBNull.Value : sqlQueryParameter.Value)
+                );
             }
             return sqlCommand;
         }

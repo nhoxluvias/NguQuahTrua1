@@ -101,7 +101,7 @@ namespace Web.Admin.FilmManagement
                 {
                     int tagId = int.Parse(strTagId);
                     StateOfCreation state = await filmBLL.AddTagAsync(filmId, tagId);
-                    await LoadFilmInfo(GetFilmId());
+                    await LoadFilmInfo(filmId);
                     enableShowResult = true;
                     if (state == StateOfCreation.Success)
                     {
@@ -134,7 +134,7 @@ namespace Web.Admin.FilmManagement
             {
                 string filmId = GetFilmId();
                 StateOfDeletion state = await filmBLL.DeleteAllTagAsync(filmId);
-                await LoadFilmInfo(GetFilmId());
+                await LoadFilmInfo(filmId);
                 enableShowResult = true;
                 if (state == StateOfDeletion.Success)
                 {

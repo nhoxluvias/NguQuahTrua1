@@ -120,9 +120,9 @@ namespace Web.Admin.FilmManagement
         {
             try
             {
+                string filmId = GetFilmId();
                 if (IsValidData())
                 {
-                    string filmId = GetFilmId();
                     string strCastId = Request.Form[drdlFilmCast.UniqueID];
                     string castRole = Request.Form[txtFilmCast_Role.UniqueID];
                     if (strCastId == null)
@@ -133,7 +133,6 @@ namespace Web.Admin.FilmManagement
                     {
                         long castId = long.Parse(strCastId);
                         StateOfCreation state = await filmBLL.AddCastAsync(filmId, castId, castRole);
-                        await LoadFilmInfo(GetFilmId());
                         enableShowResult = true;
                         if (state == StateOfCreation.Success)
                         {
@@ -152,6 +151,7 @@ namespace Web.Admin.FilmManagement
                         }
                     }
                 }
+                await LoadFilmInfo(filmId);
                 filmBLL.Dispose();
             }
             catch (Exception ex)
@@ -167,7 +167,7 @@ namespace Web.Admin.FilmManagement
             {
                 string filmId = GetFilmId();
                 StateOfDeletion state = await filmBLL.DeleteAllCastAsync(filmId);
-                await LoadFilmInfo(GetFilmId());
+                await LoadFilmInfo(filmId);
                 enableShowResult = true;
                 if (state == StateOfDeletion.Success)
                 {

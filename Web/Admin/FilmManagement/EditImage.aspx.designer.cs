@@ -33,22 +33,22 @@ namespace Web.Admin.FilmManagement
         protected global::System.Web.UI.WebControls.FileUpload fuFilmThumbnail;
 
         /// <summary>
-        /// rfvFilmThumbnail control.
+        /// btnAdd control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvFilmThumbnail;
+        protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
-        /// btnSubmit control.
+        /// btnDelete control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSubmit;
+        protected global::System.Web.UI.WebControls.Button btnDelete;
 
         /// <summary>
         /// hyplnkList control.
@@ -58,5 +58,68 @@ namespace Web.Admin.FilmManagement
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink hyplnkList;
+
+        /// <summary>
+        /// hyplnkDetail control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkDetail;
+
+        /// <summary>
+        /// hyplnkEdit_Category control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Category;
+
+        /// <summary>
+        /// hyplnkEdit_Tag control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Tag;
+
+        /// <summary>
+        /// hyplnkEdit_Cast control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Cast;
+
+        /// <summary>
+        /// hyplnkEdit_Director control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Director;
+
+        /// <summary>
+        /// hyplnkEdit control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit;
+
+        /// <summary>
+        /// hyplnkDelete control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkDelete;
     }
 }

@@ -101,7 +101,7 @@ namespace Web.Admin.FilmManagement
                 {
                     int categoryId = int.Parse(strCategoryId);
                     StateOfCreation state = await filmBLL.AddCategoryAsync(filmId, categoryId);
-                    await LoadFilmInfo(GetFilmId());
+                    await LoadFilmInfo(filmId);
                     enableShowResult = true;
                     if (state == StateOfCreation.Success)
                     {
@@ -134,7 +134,7 @@ namespace Web.Admin.FilmManagement
             {
                 string filmId = GetFilmId();
                 StateOfDeletion state = await filmBLL.DeleteAllCategoryAsync(filmId);
-                await LoadFilmInfo(GetFilmId());
+                await LoadFilmInfo(filmId);
                 enableShowResult = true;
                 if (state == StateOfDeletion.Success)
                 {
