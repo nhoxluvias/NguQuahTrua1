@@ -380,8 +380,19 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
-            int affected = await db.Films.DeleteAsync(f => f.ID == filmId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            StateOfDeletion state1 = await DeleteAllCategoryAsync(filmId);
+            StateOfDeletion state2 = await DeleteAllTagAsync(filmId);
+            StateOfDeletion state3 = await DeleteAllDirectorAsync(filmId);
+            StateOfDeletion state4 = await DeleteAllCastAsync(filmId);
+
+            if (state1 == StateOfDeletion.Success && state2 == StateOfDeletion.Success
+                && state3 == StateOfDeletion.Success && state4 == StateOfDeletion.Success)
+            {
+                int affected = await db.Films.DeleteAsync(f => f.ID == filmId);
+                return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            }
+
+            return StateOfDeletion.ConstraintExists;    
         }
 
         public async Task<StateOfCreation> AddCategoryAsync(string filmId, int categoryId)
