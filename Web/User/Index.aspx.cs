@@ -31,7 +31,7 @@ namespace Web.User
                     ID = f.ID,
                     name = f.name,
                     thumbnail = VirtualPathUtility.ToAbsolute("~/images/") + f.thumbnail,
-                    url = GetRouteUrl("User_FilmDetails", new { slug = f.name.TextToUrl(), id = f.ID }),
+                    url = GetRouteUrl("User_FilmDetail", new { slug = f.name.TextToUrl(), id = f.ID }),
                     Categories = f.Categories
                 }).ToList();
         }

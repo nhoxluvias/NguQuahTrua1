@@ -18,7 +18,6 @@ namespace Web.Admin.Layout
         protected string hyplnkDirectorList;
         protected string hyplnkUserList;
         protected string hyplnkCastList;
-        protected string hyplnkSourceList;
         protected string hyplnkFilmList;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -32,7 +31,6 @@ namespace Web.Admin.Layout
             hyplnkTagList = GetRouteUrl("Admin_TagList", null);
             hyplnkUserList = GetRouteUrl("Admin_UserList", null);
             hyplnkCastList = GetRouteUrl("Admin_CastList", null);
-            hyplnkSourceList = GetRouteUrl("Admin_SourceList", null);
             hyplnkFilmList = GetRouteUrl("Admin_FilmList", null);
         }
     }

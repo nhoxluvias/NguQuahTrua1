@@ -59,19 +59,13 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_TagDetail", "admin/tag/detail/{id}", "~/Admin/TagManagement/TagDetail.aspx");
             routes.MapPageRoute("Admin_CreateTag", "admin/tag/create", "~/Admin/TagManagement/CreateTag.aspx");
             routes.MapPageRoute("Admin_UpdateTag", "admin/tag/update/{id}", "~/Admin/TagManagement/UpdateTag.aspx");
-            routes.MapPageRoute("Admin_DeleteTag", "admin/tag/delete/{id}", "~/Admin/TagManagement/DeleteTag.aspx");
-            routes.MapPageRoute("Admin_SourceList", "admin/source/list", "~/Admin/SourceManagement/SourceList.aspx");
-            routes.MapPageRoute("Admin_SourceDetail", "admin/source/detail/{id}", "~/Admin/SourceManagement/SourceDetail.aspx");
-            routes.MapPageRoute("Admin_CreateSource", "admin/source/create", "~/Admin/SourceManagement/CreateSource.aspx");
-            routes.MapPageRoute("Admin_UpdateSource", "admin/source/update/{id}", "~/Admin/SourceManagement/UpdateSource.aspx");
-            routes.MapPageRoute("Admin_DeleteSource", "admin/source/delete/{id}", "~/Admin/SourceManagement/DeleteSource.aspx");
+            routes.MapPageRoute("Admin_DeleteTag", "admin/tag/delete/{id}", "~/Admin/TagManagement/DeleteTag.aspx");        
             routes.MapPageRoute("Admin_UserList", "admin/user/list", "~/Admin/UserManagement/UserList.aspx");
             routes.MapPageRoute("Admin_CreateUser", "admin/user/create", "~/Admin/UserManagement/CreateUser.aspx");
 
-
             routes.MapPageRoute("User_Home", "", "~/User/Index.aspx");
             routes.MapPageRoute("User_Category", "category/{id}", "~/User/Category.aspx");
-            routes.MapPageRoute("User_FilmDetails", "film-details/{slug}/{id}", "~/User/FilmDetails.aspx");
+            routes.MapPageRoute("User_FilmDetail", "film-detail/{slug}/{id}", "~/User/FilmDetail.aspx");
             routes.MapPageRoute("User_Watch", "watch/{slug}/{id}", "~/User/Watch.aspx");
 
             routes.MapPageRoute("Notification_Error", "notification/error", "~/Notification/Error.aspx");

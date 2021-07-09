@@ -13,7 +13,7 @@ using Common.Upload;
 
 namespace Web.User
 {
-    public partial class FilmDetails : System.Web.UI.Page
+    public partial class FilmDetail : System.Web.UI.Page
     {
      
         private FilmBLL filmBLL;
