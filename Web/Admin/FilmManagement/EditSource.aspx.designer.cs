@@ -105,6 +105,15 @@ namespace Web.Admin.FilmManagement
         protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Director;
 
         /// <summary>
+        /// hyplnkEdit_Image control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hyplnkEdit_Image;
+
+        /// <summary>
         /// hyplnkEdit control.
         /// </summary>
         /// <remarks>
