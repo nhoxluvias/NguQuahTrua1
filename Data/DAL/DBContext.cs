@@ -21,7 +21,6 @@ namespace Data.DAL
         private SqlAccess<DirectorOfFilm> directorOfFilms;
         private SqlAccess<Cast> casts;
         private SqlAccess<CastOfFilm> castOfFilms;
-        private SqlAccess<Source> sources;
 
         public DBContext(ConnectionType connectionType)
             : base(connectionType)
@@ -41,7 +40,6 @@ namespace Data.DAL
             directorOfFilms = null;
             casts = null;
             castOfFilms = null;
-            sources = null;
             disposed = false;
         }
 
@@ -60,7 +58,6 @@ namespace Data.DAL
         public SqlAccess<DirectorOfFilm> DirectorOfFilms { get { return InitSqlAccess<DirectorOfFilm>(ref directorOfFilms); } }
         public SqlAccess<Cast> Casts { get { return InitSqlAccess<Cast>(ref casts); } }
         public SqlAccess<CastOfFilm> CastOfFilms { get { return InitSqlAccess<CastOfFilm>(ref castOfFilms); } }
-        public SqlAccess<Source> Sources { get { return InitSqlAccess<Source>(ref sources); } }
 
         protected override void Dispose(bool disposing)
         {

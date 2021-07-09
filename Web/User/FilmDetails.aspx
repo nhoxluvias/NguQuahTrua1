@@ -115,14 +115,6 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-4 col-xs-12 col-sm-12">
-                                                <%--<div class="sb-it">
-                                                    <h6>Đạo diễn: </h6>
-                                                    <p><a href="#">Joss Whedon</a></p>
-                                                </div>                                          
-                                                <div class="sb-it">
-                                                    <h6>Diễn viên: </h6>
-                                                    <p><a href="#">Robert Downey Jr,</a> <a href="#">Chris Evans,</a> <a href="#">Mark Ruffalo,</a><a href="#"> Scarlett Johansson</a></p>
-                                                </div>--%>
                                                 <div class="sb-it">
                                                     <h6>Thể loại:</h6>
                                                     <p>

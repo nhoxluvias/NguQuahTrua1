@@ -51,7 +51,6 @@
     <Compile Include="BLL\FilmBLL.cs" />
     <Compile Include="BLL\LanguageBLL.cs" />
     <Compile Include="BLL\Migration\UserMigration.cs" />
-    <Compile Include="BLL\SourceBLL.cs" />
     <Compile Include="BLL\TagBLL.cs" />
     <Compile Include="Config\DatabaseConfig.cs" />
     <Compile Include="Config\MigrationConfig.cs" />
@@ -75,7 +74,6 @@
     <Compile Include="DAL\PaymentInfo.cs" />
     <Compile Include="DAL\PaymentMethod.cs" />
     <Compile Include="DAL\Role.cs" />
-    <Compile Include="DAL\Source.cs" />
     <Compile Include="DAL\Tag.cs" />
     <Compile Include="DAL\TagDistribution.cs" />
     <Compile Include="DAL\User.cs" />
@@ -88,7 +86,6 @@
     <Compile Include="DTO\PaymentInfoDTO.cs" />
     <Compile Include="DTO\PaymentMethodDTO.cs" />
     <Compile Include="DTO\RoleDTO.cs" />
-    <Compile Include="DTO\SourceDTO.cs" />
     <Compile Include="DTO\TagDTO.cs" />
     <Compile Include="DTO\UserDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

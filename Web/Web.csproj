@@ -110,10 +110,6 @@
     <Content Include="Admin\RoleManagement\RoleList.aspx" />
     <Content Include="Admin\CategoryManagement\UpdateCategory.aspx" />
     <Content Include="Admin\RoleManagement\UpdateRole.aspx" />
-    <Content Include="Admin\SourceManagement\CreateSource.aspx" />
-    <Content Include="Admin\SourceManagement\SourceDetail.aspx" />
-    <Content Include="Admin\SourceManagement\SourceList.aspx" />
-    <Content Include="Admin\SourceManagement\UpdateSource.aspx" />
     <Content Include="Admin\TagManagement\CreateTag.aspx" />
     <Content Include="Admin\TagManagement\DeleteTag.aspx" />
     <Content Include="Admin\TagManagement\TagDetail.aspx" />
@@ -531,34 +527,6 @@
     <Compile Include="Admin\RoleManagement\UpdateRole.aspx.designer.cs">
       <DependentUpon>UpdateRole.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Admin\SourceManagement\CreateSource.aspx.cs">
-      <DependentUpon>CreateSource.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\CreateSource.aspx.designer.cs">
-      <DependentUpon>CreateSource.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\SourceDetail.aspx.cs">
-      <DependentUpon>SourceDetail.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\SourceDetail.aspx.designer.cs">
-      <DependentUpon>SourceDetail.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\SourceList.aspx.cs">
-      <DependentUpon>SourceList.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\SourceList.aspx.designer.cs">
-      <DependentUpon>SourceList.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\UpdateSource.aspx.cs">
-      <DependentUpon>UpdateSource.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SourceManagement\UpdateSource.aspx.designer.cs">
-      <DependentUpon>UpdateSource.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Admin\TagManagement\CreateTag.aspx.cs">
       <DependentUpon>CreateTag.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -699,7 +667,7 @@
   <ItemGroup>
     <Folder Include="Control\" />
     <Folder Include="FileUpload\Images\Default\" />
-    <Folder Include="FileUpload\Videos\" />
+    <Folder Include="FileUpload\Videos\Default\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

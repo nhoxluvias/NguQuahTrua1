@@ -55,6 +55,8 @@ namespace Data.BLL
                 upvote = film.upvote,
                 downvote = film.downvote,
                 views = film.views,
+                duration = film.duration,
+                source = film.source,
                 createAt = film.createAt,
                 updateAt = film.updateAt,
                 Categories = new CategoryBLL(this, dataAccessLevel).GetCategoriesByFilmId(film.ID),
@@ -83,6 +85,8 @@ namespace Data.BLL
                 thumbnail = filmCreation.thumbnail,
                 languageId = filmCreation.languageId,
                 releaseDate = filmCreation.releaseDate,
+                duration = filmCreation.duration,
+                source = filmCreation.source,
                 views = 0,
                 downvote = 0,
                 upvote = 0,
@@ -105,6 +109,8 @@ namespace Data.BLL
                 thumbnail = filmUpdate.thumbnail,
                 languageId = filmUpdate.languageId,
                 releaseDate = filmUpdate.releaseDate,
+                duration = filmUpdate.duration,
+                source = filmUpdate.source,
                 updateAt = DateTime.Now
             };
         }
@@ -141,7 +147,9 @@ namespace Data.BLL
                                 f.thumbnail,
                                 f.upvote,
                                 f.downvote,
-                                f.views
+                                f.views,
+                                f.duration,
+                                f.source
                             })
                     ).Select(f => ToFilmInfo(f)).ToList();
 
@@ -169,7 +177,9 @@ namespace Data.BLL
                     f.thumbnail,
                     f.upvote,
                     f.downvote,
-                    f.views
+                    f.views,
+                    f.duration,
+                    f.source
                 }, f => f.ID == filmId);
 
             return ToFilmInfo(film);
@@ -195,7 +205,9 @@ namespace Data.BLL
                         f.thumbnail,
                         f.upvote,
                         f.downvote,
-                        f.views
+                        f.views,
+                        f.duration,
+                        f.source
                     }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
                 );
 
@@ -227,7 +239,9 @@ namespace Data.BLL
                         f.thumbnail,
                         f.upvote,
                         f.downvote,
-                        f.views
+                        f.views,
+                        f.duration,
+                        f.source
                     }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
                 );
 
@@ -260,7 +274,9 @@ namespace Data.BLL
                     f.thumbnail,
                     f.upvote,
                     f.downvote,
-                    f.views
+                    f.views,
+                    f.duration,
+                    f.source
                 }, f => f.ID == filmId);
 
             return ToFilmInfo(film);
@@ -281,7 +297,7 @@ namespace Data.BLL
                 sqlCommand.CommandText = @"Select [Film].[ID],[Film].[name],[Film].[description],
                                 [Film].[languageId],[Film].[countryId],[Film].[productionCompany],
                                 [Film].[releaseDate],[Film].[duration],[Film].[thumbnail],
-                                [Film].[upvote],[Film].[downvote],[Film].[views]
+                                [Film].[upvote],[Film].[downvote],[Film].[views], [Film].[source]
                             from [Film], [CategoryDistribution]
                             where [Film].[ID] = [CategoryDistribution].[filmId]
                                 and [CategoryDistribution].[categoryId] = @categoryId";
@@ -312,9 +328,9 @@ namespace Data.BLL
 
             int affected;
             if (film.description == null)
-                affected = await db.Films.InsertAsync(film, new List<string> { "description", "thumbnail" });
+                affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration", "thumbnail", "source" });
             else
-                affected = await db.Films.InsertAsync(film, new List<string> { "thumbnail" });
+                affected = await db.Films.InsertAsync(film, new List<string> { "duration", "thumbnail", "source" });
 
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
@@ -571,6 +587,35 @@ namespace Data.BLL
 
             int affected = await db.Films
                 .UpdateAsync(new Film { thumbnail = null }, f => new { f.thumbnail }, f => f.ID == filmId);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+        }
+
+        public async Task<StateOfUpdate> AddSourceAsync(string filmId, string filePath)
+        {
+            if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(filePath))
+                throw new Exception("");
+
+            Film film = await db.Films.SingleOrDefaultAsync(f => new { f.ID, f.source }, f => f.ID == filmId);
+            if (film == null)
+                return StateOfUpdate.Failed;
+
+            if (!string.IsNullOrEmpty(film.source))
+                return StateOfUpdate.Failed;
+
+            int affected = await db.Films
+                .UpdateAsync(new Film { source = filePath }, f => new { f.source }, f => f.ID == film.ID);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+        }
+
+        public async Task<StateOfUpdate> DeleteSourceAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            int affected = await db.Films
+                .UpdateAsync(new Film { source = null }, f => new { f.source }, f => f.ID == filmId);
 
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }

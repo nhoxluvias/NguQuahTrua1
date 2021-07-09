@@ -15,6 +15,8 @@ namespace Data.DTO
         public long downvote { get; set; }
         public long views { get; set; }
         public string url { get; set; }
+        public string duration { get; set; }
+        public string source { get; set; }
         public DateTime createAt { get; set; }
         public DateTime updateAt { get; set; }
 
@@ -36,6 +38,7 @@ namespace Data.DTO
         public string thumbnail { get; set; }
         public int languageId { get; set; }
         public string releaseDate { get; set; }
+        public string source { get; set; }
     }
 
     public class FilmUpdate
@@ -49,5 +52,6 @@ namespace Data.DTO
         public string thumbnail { get; set; }
         public int languageId { get; set; }
         public string releaseDate { get; set; }
+        public string source { get; set; }
     }
 }
