@@ -8,7 +8,8 @@ namespace Data.DTO
 {
     public class SourceInfo
     {
-        public string filmName { get; set; }
+        public string filmId { get; set; }
+        public string name { get; set; }
         public string mainSource { get; set; }
         public string secondarySource1 { get; set; }
         public string secondarySource2 { get; set; }

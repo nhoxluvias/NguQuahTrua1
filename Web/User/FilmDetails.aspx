@@ -75,7 +75,7 @@
                         <div class="movie-tabs">
                             <div class="tabs">
                                 <ul class="tab-links tabs-mv">
-                                    <li class="active"><a href="#overview">Tổng quan</a></li>                                  
+                                    <li class="active"><a href="#overview">Tổng quan</a></li>
                                     <li><a href="#moviesrelated">Phim liên quan</a></li>
                                 </ul>
                                 <div class="tab-content">
@@ -83,26 +83,56 @@
                                         <div class="row">
                                             <div class="col-md-8 col-sm-12 col-xs-12">
                                                 <p class="text-justif"><% = filmInfo.description %></p>
+                                                <div class="title-hd-sm">
+                                                    <h4>Đạo diễn</h4>
+                                                    <a href="#" class="time">Xem chi tiết<i class="ion-ios-arrow-right"></i></a>
+                                                </div>
+                                                <div class="mvcast-item">
+                                                    <% foreach (DirectorInfo directorInfo in filmInfo.Directors)
+                                                        { %>
+                                                    <div class="cast-it">
+                                                        <div class="cast-left">
+                                                            <img src="images/uploads/cast1.jpg" alt="">
+                                                            <a href="#"><% = directorInfo.name %></a>
+                                                        </div>
+                                                    </div>
+                                                    <%} %>
+                                                </div>
+                                                <div class="title-hd-sm">
+                                                    <h4>Diễn viên</h4>
+                                                    <a href="#" class="time">Xem chi tiết<i class="ion-ios-arrow-right"></i></a>
+                                                </div>
+                                                <div class="mvcast-item">
+                                                    <% foreach (CastInfo castInfo in filmInfo.Casts)
+                                                        { %>
+                                                    <div class="cast-it">
+                                                        <div class="cast-left">
+                                                            <img src="images/uploads/cast1.jpg" alt="">
+                                                            <a href="#"><% = castInfo.name %></a>
+                                                        </div>
+                                                    </div>
+                                                    <%} %>
+                                                </div>
                                             </div>
                                             <div class="col-md-4 col-xs-12 col-sm-12">
-                                                <div class="sb-it">
+                                                <%--<div class="sb-it">
                                                     <h6>Đạo diễn: </h6>
                                                     <p><a href="#">Joss Whedon</a></p>
                                                 </div>                                          
                                                 <div class="sb-it">
                                                     <h6>Diễn viên: </h6>
                                                     <p><a href="#">Robert Downey Jr,</a> <a href="#">Chris Evans,</a> <a href="#">Mark Ruffalo,</a><a href="#"> Scarlett Johansson</a></p>
-                                                </div>
+                                                </div>--%>
                                                 <div class="sb-it">
                                                     <h6>Thể loại:</h6>
                                                     <p>
                                                         <% foreach (CategoryInfo categoryInfo in filmInfo.Categories)
                                                             {
-                                                                %>
-                                                        <a href="#"> <% = categoryInfo.name %> </a>,   
+                                                        %>
+                                                        <a href="#"><% = categoryInfo.name %> </a>,   
                                                         <%} %>
-                                                    </p>                                
-                                                </div>                                             
+                                                    </p>
+                                                </div>
                                                 <div class="sb-it">
                                                     <h6>Ngày phát hành:</h6>
                                                     <p>
@@ -121,7 +151,7 @@
                                                         <% = filmInfo.Language.name %>
                                                     </p>
                                                 </div>
-                                                 <div class="sb-it">
+                                                <div class="sb-it">
                                                     <h6>Quốc gia:</h6>
                                                     <p>
                                                         <% = filmInfo.Country.name %>
@@ -132,8 +162,8 @@
                                                     <p class="tags">
                                                         <% foreach (TagInfo tagInfo in filmInfo.Tags)
                                                             {
-                                                                %>
-                                                        <span class="time"><a href="#"> <% = tagInfo.name %> </a></span> ,
+                                                        %>
+                                                        <span class="time"><a href="#"><% = tagInfo.name %> </a></span>,
                                                         <%} %>
                                                     </p>
                                                 </div>
@@ -142,7 +172,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                                                                             
+                                    </div>
                                     <div id="moviesrelated" class="tab">
                                         <div class="row">
                                             <h3>Related Movies To</h3>

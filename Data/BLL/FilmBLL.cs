@@ -45,7 +45,6 @@ namespace Data.BLL
                 ID = film.ID,
                 name = film.name,
                 description = film.description,
-                duration = film.duration,
                 Country = ((film.countryId != 0)
                     ? new CountryBLL(this, dataAccessLevel).GetCountry(film.countryId) : null),
                 productionCompany = film.productionCompany,
@@ -79,7 +78,6 @@ namespace Data.BLL
                 ID = filmId,
                 name = filmCreation.name,
                 description = filmCreation.description,
-                duration = filmCreation.duration,
                 countryId = filmCreation.countryId,
                 productionCompany = filmCreation.productionCompany,
                 thumbnail = filmCreation.thumbnail,
@@ -102,7 +100,6 @@ namespace Data.BLL
                 ID = filmUpdate.ID,
                 name = filmUpdate.name,
                 description = filmUpdate.description,
-                duration = filmUpdate.duration,
                 countryId = filmUpdate.countryId,
                 productionCompany = filmUpdate.productionCompany,
                 thumbnail = filmUpdate.thumbnail,
@@ -141,7 +138,6 @@ namespace Data.BLL
                                 f.countryId,
                                 f.productionCompany,
                                 f.releaseDate,
-                                f.duration,
                                 f.thumbnail,
                                 f.upvote,
                                 f.downvote,
@@ -170,7 +166,6 @@ namespace Data.BLL
                     f.countryId,
                     f.productionCompany,
                     f.releaseDate,
-                    f.duration,
                     f.thumbnail,
                     f.upvote,
                     f.downvote,
@@ -197,7 +192,6 @@ namespace Data.BLL
                         f.countryId,
                         f.productionCompany,
                         f.releaseDate,
-                        f.duration,
                         f.thumbnail,
                         f.upvote,
                         f.downvote,
@@ -230,7 +224,6 @@ namespace Data.BLL
                         f.countryId,
                         f.productionCompany,
                         f.releaseDate,
-                        f.duration,
                         f.thumbnail,
                         f.upvote,
                         f.downvote,
@@ -264,7 +257,6 @@ namespace Data.BLL
                     f.countryId,
                     f.productionCompany,
                     f.releaseDate,
-                    f.duration,
                     f.thumbnail,
                     f.upvote,
                     f.downvote,
@@ -320,9 +312,9 @@ namespace Data.BLL
 
             int affected;
             if (film.description == null)
-                affected = await db.Films.InsertAsync(film, new List<string> { "description", "duration", "thumbnail" });
+                affected = await db.Films.InsertAsync(film, new List<string> { "description", "thumbnail" });
             else
-                affected = await db.Films.InsertAsync(film, new List<string> { "duration", "thumbnail" });
+                affected = await db.Films.InsertAsync(film, new List<string> { "thumbnail" });
 
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }

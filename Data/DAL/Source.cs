@@ -9,6 +9,7 @@ namespace Data.DAL
     internal class Source
     {
         public string filmId { get; set; }
+        public string name { get; set; }
         public string mainSource { get; set; }
         public string secondarySource1 { get; set; }
         public string secondarySource2 { get; set; }

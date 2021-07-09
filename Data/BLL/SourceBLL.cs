@@ -37,7 +37,8 @@ namespace Data.BLL
                 return null;
             return new SourceInfo
             {
-                filmName = new FilmBLL(this, dataAccessLevel).GetFilm(source.filmId).name,
+                filmId = source.filmId,
+                name = source.name,
                 mainSource = source.mainSource,
                 secondarySource1 = source.secondarySource1,
                 secondarySource2 = source.secondarySource2,
@@ -222,6 +223,25 @@ namespace Data.BLL
             }
 
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                try
+                {
+                    if (disposing)
+                    {
+
+                    }
+                    this.disposed = true;
+                }
+                finally
+                {
+                    base.Dispose(disposing);
+                }
+            }
         }
 
     }

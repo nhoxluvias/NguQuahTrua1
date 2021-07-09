@@ -72,6 +72,7 @@ namespace Web.App_Start
             routes.MapPageRoute("User_Home", "", "~/User/Index.aspx");
             routes.MapPageRoute("User_Category", "category/{id}", "~/User/Category.aspx");
             routes.MapPageRoute("User_FilmDetails", "film-details/{slug}/{id}", "~/User/FilmDetails.aspx");
+            routes.MapPageRoute("User_Watch", "watch/{slug}/{id}", "~/User/Watch.aspx");
 
             routes.MapPageRoute("Notification_Error", "notification/error", "~/Notification/Error.aspx");
         }

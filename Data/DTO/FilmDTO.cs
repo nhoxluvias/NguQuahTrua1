@@ -8,7 +8,6 @@ namespace Data.DTO
         public string ID { get; set; }
         public string name { get; set; }
         public string description { get; set; }
-        public string duration { get; set; }
         public string productionCompany { get; set; }
         public string thumbnail { get; set; }
         public string releaseDate { get; set; }
