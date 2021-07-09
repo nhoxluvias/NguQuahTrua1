@@ -67,6 +67,9 @@ namespace Web.App_Start
             routes.MapPageRoute("User_Category", "category/{id}", "~/User/Category.aspx");
             routes.MapPageRoute("User_FilmDetail", "film-detail/{slug}/{id}", "~/User/FilmDetail.aspx");
             routes.MapPageRoute("User_Watch", "watch/{slug}/{id}", "~/User/Watch.aspx");
+            routes.MapHttpHandlerRoute("User_UpvoteFilm", "film/upvote", "~/User/UpvoteFilm.ashx");
+            routes.MapHttpHandlerRoute("User_DownvoteFilm", "film/downvote", "~/User/DownvoteFilm.ashx");
+            routes.MapHttpHandlerRoute("User_IncreaseView", "film/increase-view", "~/User/IncreaseView.ashx");
 
             routes.MapPageRoute("Notification_Error", "notification/error", "~/Notification/Error.aspx");
         }

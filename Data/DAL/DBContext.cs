@@ -75,6 +75,7 @@ namespace Data.DAL
                         DisposeSqlAccess<CategoryDistribution>(ref categoryDistributions);
                         DisposeSqlAccess<Tag>(ref tags);
                         DisposeSqlAccess<TagDistribution>(ref tagDistributions);
+                        DisposeSqlAccess<Film>(ref films);
                         DisposeSqlAccess<Language>(ref languages);
                         DisposeSqlAccess<Country>(ref countries);
                         DisposeSqlAccess<Director>(ref directors);

@@ -606,6 +606,9 @@
     <Compile Include="User\Article.aspx.designer.cs">
       <DependentUpon>Article.aspx</DependentUpon>
     </Compile>
+    <Compile Include="User\DownvoteFilm.ashx.cs">
+      <DependentUpon>DownvoteFilm.ashx</DependentUpon>
+    </Compile>
     <Compile Include="User\FilmDetail.aspx.cs">
       <DependentUpon>FilmDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -634,6 +637,9 @@
     <Compile Include="User\Search.aspx.designer.cs">
       <DependentUpon>Search.aspx</DependentUpon>
     </Compile>
+    <Compile Include="User\UpvoteFilm.ashx.cs">
+      <DependentUpon>UpvoteFilm.ashx</DependentUpon>
+    </Compile>
     <Compile Include="User\Watch.aspx.cs">
       <DependentUpon>Watch.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -657,6 +663,8 @@
     <Content Include="fonts\fontawesome\FontAwesome.otf" />
     <Content Include="Admin\Layout\AdminLayout.Master" />
     <Content Include="user_assets\fonts\fontawesome-webfont.woff2" />
+    <Content Include="User\UpvoteFilm.ashx" />
+    <Content Include="User\DownvoteFilm.ashx" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -397,6 +397,9 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddCategoryAsync(string filmId, int categoryId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
                 throw new Exception("");
 
@@ -419,6 +422,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteCategoryAsync(string filmId, int categoryId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
                 throw new Exception("");
 
@@ -430,6 +436,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllCategoryAsync(string filmId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -441,6 +450,9 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddTagAsync(string filmId, int tagId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || tagId <= 0)
                 throw new Exception("");
 
@@ -463,6 +475,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteTagAsync(string filmId, int tagId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || tagId <= 0)
                 throw new Exception("");
 
@@ -474,6 +489,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllTagAsync(string filmId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -485,6 +503,9 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddDirectorAsync(string filmId, long directorId, string directorRole)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || directorId <= 0 || string.IsNullOrEmpty(directorRole))
                 throw new Exception("");
 
@@ -508,6 +529,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteDirectorAsync(string filmId, long directorId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || directorId <= 0)
                 throw new Exception("");
 
@@ -519,6 +543,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllDirectorAsync(string filmId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -530,6 +557,9 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddCastAsync(string filmId, long castId, string castRole)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || castId <= 0 || string.IsNullOrEmpty(castRole))
                 throw new Exception("");
 
@@ -553,6 +583,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteCastAsync(string filmId, long castId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || castId <= 0)
                 throw new Exception("");
 
@@ -564,6 +597,9 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllCastAsync(string filmId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -575,6 +611,9 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> AddImageAsync(string filmId, string filePath)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(filePath))
                 throw new Exception("");
 
@@ -593,6 +632,9 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> DeleteImageAsync(string filmId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -604,6 +646,9 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> AddSourceAsync(string filmId, string filePath)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(filePath))
                 throw new Exception("");
 
@@ -622,11 +667,44 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> DeleteSourceAsync(string filmId)
         {
+            if (dataAccessLevel == DataAccessLevel.User)
+                throw new Exception("");
+
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
             int affected = await db.Films
                 .UpdateAsync(new Film { source = null }, f => new { f.source }, f => f.ID == filmId);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+        }
+
+        public StateOfUpdate Upvote(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            Film film = db.Films.SingleOrDefault(f => new { f.ID, f.upvote }, f => f.ID == filmId);
+            if (film == null)
+                return StateOfUpdate.Failed;
+
+            int affected = db.Films
+                .Update(new Film { upvote = film.upvote + 1 }, f => new { f.upvote }, f => f.ID == film.ID);
+
+            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+        }
+
+        public StateOfUpdate Downvote(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            Film film = db.Films.SingleOrDefault(f => new { f.ID, f.downvote }, f => f.ID == filmId);
+            if (film == null)
+                return StateOfUpdate.Failed;
+
+            int affected = db.Films
+                .Update(new Film { upvote = film.downvote + 1 }, f => new { f.downvote }, f => f.ID == film.ID);
 
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
