@@ -6,88 +6,136 @@
 <head runat="server">
     <title>Đã có lỗi xảy ra!</title>
     <style type="text/css">
-        html {
+        * {
+            -webkit-box-sizing: border-box;
             box-sizing: border-box;
         }
 
-        *,
-        *::before,
-        *::after {
-            box-sizing: inherit;
-        }
-
-        body * {
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font: normal 100%/1.15 "Merriweather", serif;
-            background-color: #7ed0f2;
-            color: #fff;
+            padding: 0;
+            margin: 0;
         }
 
-        .wrapper {
+        #notfound {
             position: relative;
-            max-width: 1298px;
-            height: auto;
-            margin: 2em auto 0 auto;
+            height: 100vh;
         }
 
-        /* https://www.flaticon.com/authors/vectors-market */
-        /* https://www.flaticon.com/authors/icomoon */
-        .box {
-            max-width: 70%;
-            min-height: auto;
-            margin: 0 auto;
-            padding: 1em 1em;
+            #notfound .notfound {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                -webkit-transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+
+        .notfound {
+            max-width: 460px;
+            width: 100%;
             text-align: center;
-            background: url("https://www.dropbox.com/s/xq0841cp3icnuqd/flame.png?raw=1") no-repeat top 10em center/128px 128px, transparent url("https://www.dropbox.com/s/w7qqrcvhlx3pwnf/desktop-pc.png?raw=1") no-repeat top 13em center/128px 128px;
+            line-height: 1.4;
         }
 
-        h1, p:not(:last-of-type) {
-            text-shadow: 0 0 6px #216f79;
-        }
-
-        h1 {
-            margin: 0 0 1rem 0;
-            font-size: 8em;
-        }
-
-        p {
-            margin-bottom: 0.5em;
-            font-size: 3em;
-        }
-
-            p:first-of-type {
-                margin-top: 4em;
+            .notfound .notfound-404 {
+                position: relative;
+                width: 180px;
+                height: 180px;
+                margin: 0px auto 50px;
             }
 
-            p > a {
-                border-bottom: 1px dashed #216f79;
-                font-style: italic;
-                text-decoration: none;
-                color: #216f79;
-            }
-
-                p > a:hover {
-                    text-shadow: 0 0 6px #216f79;
+                .notfound .notfound-404 > div:first-child {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    background: #ffa200;
+                    -webkit-transform: rotate(45deg);
+                    -ms-transform: rotate(45deg);
+                    transform: rotate(45deg);
+                    border: 5px dashed #000;
+                    border-radius: 5px;
                 }
 
-            p img {
-                vertical-align: bottom;
+                    .notfound .notfound-404 > div:first-child:before {
+                        content: '';
+                        position: absolute;
+                        left: -5px;
+                        right: -5px;
+                        bottom: -5px;
+                        top: -5px;
+                        -webkit-box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.1) inset;
+                        box-shadow: 0px 0px 0px 5px rgba(0, 0, 0, 0.1) inset;
+                        border-radius: 5px;
+                    }
+
+                .notfound .notfound-404 h1 {
+                    font-family: 'Cabin', sans-serif;
+                    color: #000;
+                    font-weight: 700;
+                    margin: 0;
+                    font-size: 90px;
+                    position: absolute;
+                    top: 50%;
+                    -webkit-transform: translate(-50%, -50%);
+                    -ms-transform: translate(-50%, -50%);
+                    transform: translate(-50%, -50%);
+                    left: 50%;
+                    text-align: center;
+                    height: 40px;
+                    line-height: 40px;
+                }
+
+            .notfound h2 {
+                font-family: 'Cabin', sans-serif;
+                font-size: 33px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 7px;
             }
+
+            .notfound p {
+                font-family: 'Cabin', sans-serif;
+                font-size: 16px;
+                color: #000;
+                font-weight: 400;
+            }
+
+            .notfound a {
+                font-family: 'Cabin', sans-serif;
+                display: inline-block;
+                padding: 10px 25px;
+                background-color: #8f8f8f;
+                border: none;
+                border-radius: 40px;
+                color: #fff;
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                text-decoration: none;
+                -webkit-transition: 0.2s all;
+                transition: 0.2s all;
+            }
+
+                .notfound a:hover {
+                    background-color: #2c2c2c;
+                }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="wrapper">
-            <div class="box">
-                <h1>O0PS!</h1>
-                <p><% = error.ErrorTitle %></p>
-                <p><a href="/"><% = error.ErrorDetail %></a></p>
-            </div>
-        </div>
+        <div id="notfound">
+		<div class="notfound">
+			<div class="notfound-404">
+				<div></div>
+				<h1>Lỗi!</h1>
+			</div>
+			<h2><% = error.ErrorTitle %></h2>
+			<p><% = error.ErrorDetail %></p>
+            <asp:HyperLink ID="hyplnkHome" runat="server">Trang chủ</asp:HyperLink>
+		</div>
+	</div>
     </form>
 </body>
 </html>

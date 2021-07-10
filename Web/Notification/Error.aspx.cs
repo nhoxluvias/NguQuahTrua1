@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Notification
@@ -14,13 +9,18 @@ namespace Web.Notification
         protected void Page_Load(object sender, EventArgs e)
         {
             GetError();
+            hyplnkHome.NavigateUrl = GetRouteUrl("User_Home", null);
         }
 
         private void GetError()
         {
             error = Session["error"] as ErrorModel;
             if (error == null)
-                error = new ErrorModel { ErrorTitle = "Lỗi!", ErrorDetail = "Lỗi không xác định" };
+                error = new ErrorModel
+                {
+                    ErrorTitle = "Không có lỗi!",
+                    ErrorDetail = "Đây là nội dung mặc định khi bạn cố truy cập vào trang này. Lỗi chi tiết sẽ hiện khi thực sự có lỗi xảy ra"
+                };
         }
     }
 }
