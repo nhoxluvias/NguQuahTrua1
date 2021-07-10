@@ -672,7 +672,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Control\" />
     <Folder Include="FileUpload\Images\Default\" />
     <Folder Include="FileUpload\Videos\Default\" />
   </ItemGroup>

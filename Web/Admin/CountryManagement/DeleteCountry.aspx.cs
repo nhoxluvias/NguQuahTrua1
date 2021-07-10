@@ -22,26 +22,44 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                countryBLL = new CountryBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await GetCountryInfo();
-                    countryBLL.Dispose();
+                    if (!IsPostBack)
+                    {
+                        await GetCountryInfo();
+                        countryBLL.Dispose();
+                    }
                 }
-                    
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }   
             }
             catch (Exception ex)
             {
+                countryBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetCountryId()
@@ -63,14 +81,9 @@ namespace Web.Admin.CountryManagement
             {
                 countryInfo = await countryBLL.GetCountryAsync(id);
                 if (countryInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_CountryList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -78,9 +91,6 @@ namespace Web.Admin.CountryManagement
         {
             int id = GetCountryId();
             StateOfDeletion state = await countryBLL.DeleteCountryAsync(id);
-            countryBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -96,6 +106,7 @@ namespace Web.Admin.CountryManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa quốc gia. Lý do: Quốc gia này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -109,6 +120,7 @@ namespace Web.Admin.CountryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            countryBLL.Dispose();
         }
     }
 }

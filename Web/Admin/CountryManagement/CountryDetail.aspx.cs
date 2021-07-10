@@ -19,22 +19,36 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                countryBLL = new CountryBLL(DataAccessLevel.Admin);
                 int id = GetCountryId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCountry", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", new { id = id });
-                await GetCountryInfo(id);
-                countryBLL.Dispose();
+
+                if (CheckLoggedIn())
+                    await GetCountryInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            countryBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetCountryId()
@@ -53,13 +67,11 @@ namespace Web.Admin.CountryManagement
             }
             else
             {
-                enableShowDetail = true;
                 countryInfo = await countryBLL.GetCountryAsync(id);
                 if (countryInfo == null)
-                {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_CountryList", null);
-                }
+                else
+                    enableShowDetail = true;
             }
         }
     }

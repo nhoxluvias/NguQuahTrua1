@@ -22,26 +22,44 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                filmBLL = new FilmBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
-                if (!IsPostBack)
-                {
-                    await GetFilmInfo();
-                    filmBLL.Dispose();
-                }
 
+                if (CheckLoggedIn())
+                {
+                    if (!IsPostBack)
+                    {
+                        await GetFilmInfo();
+                        filmBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
+                filmBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private string GetFilmId()
@@ -63,14 +81,9 @@ namespace Web.Admin.FilmManagement
             {
                 filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_FilmList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -78,8 +91,6 @@ namespace Web.Admin.FilmManagement
         {
             string id = GetFilmId();
             FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
-            enableShowResult = true;
-            enableShowInfo = false;
 
             StateOfDeletion state = await filmBLL.DeleteFilmAsync(id);
             if (state == StateOfDeletion.Success)
@@ -113,7 +124,7 @@ namespace Web.Admin.FilmManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa phim. Lý do: Tồn tại ràng buộc!";
             }
-            filmBLL.Dispose();
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -127,6 +138,7 @@ namespace Web.Admin.FilmManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
         }
     }
 }

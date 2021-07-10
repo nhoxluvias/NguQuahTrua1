@@ -15,22 +15,36 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                tagBLL = new TagBLL(DataAccessLevel.Admin);
                 long id = GetTagId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_TagList", null);
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateTag", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteTag", new { id = id });
-                await GetTagInfo(id);
-                tagBLL.Dispose();
+                
+                if(CheckLoggedIn())
+                    await GetTagInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            tagBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private long GetTagId()
@@ -49,13 +63,11 @@ namespace Web.Admin.TagManagement
             }
             else
             {
-                enableShowDetail = true;
                 tagInfo = await tagBLL.GetTagAsync(id);
                 if (tagInfo == null)
-                {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_TagList", null);
-                }
+                else
+                    enableShowDetail = true;
             }
         }
     }

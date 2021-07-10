@@ -98,6 +98,18 @@
                                 <img src="<% = filmInfo.thumbnail %>" width="150" height="240" /></td>
                         </tr>
                         <tr>
+                            <th>Lượt thích</th>
+                            <td><% = filmInfo.upvote %></td>
+                        </tr>
+                        <tr>
+                            <th>Lượt không thích</th>
+                            <td><% = filmInfo.downvote %></td>
+                        </tr>
+                        <tr>
+                            <th>Lượt xem</th>
+                            <td><% = filmInfo.views %></td>
+                        </tr>
+                        <tr>
                             <th>Ngày tạo của phim</th>
                             <td><% = filmInfo.createAt %></td>
                         </tr>

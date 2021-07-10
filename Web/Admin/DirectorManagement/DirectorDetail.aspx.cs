@@ -15,22 +15,36 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                directorBLL = new DirectorBLL(DataAccessLevel.Admin);
                 long id = GetDirectorId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateDirector", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteDirector", new { id = id });
-                await GetDirectorInfo(id);
-                directorBLL.Dispose();
+
+                if (CheckLoggedIn())
+                    await GetDirectorInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            directorBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private long GetDirectorId()
@@ -49,13 +63,11 @@ namespace Web.Admin.DirectorManagement
             }
             else
             {
-                enableShowDetail = true;
                 directorInfo = await directorBLL.GetDirectorAsync(id);
                 if (directorInfo == null)
-                {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_DirectorList", null);
-                }
+                else
+                    enableShowDetail = true;
             }
         }
     }

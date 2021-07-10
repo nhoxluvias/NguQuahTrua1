@@ -18,26 +18,44 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                tagBLL = new TagBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_TagList", null);
-                if (!IsPostBack)
-                {
-                    await GetTagInfo();
-                    tagBLL.Dispose();
-                }
 
+                if (CheckLoggedIn())
+                {
+                    if (!IsPostBack)
+                    {
+                        await GetTagInfo();
+                        tagBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
+                tagBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private long GetTagId()
@@ -59,14 +77,9 @@ namespace Web.Admin.TagManagement
             {
                 tagInfo = await tagBLL.GetTagAsync(id);
                 if (tagInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_TagList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -74,9 +87,6 @@ namespace Web.Admin.TagManagement
         {
             long id = GetTagId();
             StateOfDeletion state = await tagBLL.DeleteTagAsync(id);
-            tagBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -92,6 +102,7 @@ namespace Web.Admin.TagManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa thẻ tag. Lý do: Thẻ tag này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -105,6 +116,7 @@ namespace Web.Admin.TagManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            tagBLL.Dispose();
         }
     }
 }

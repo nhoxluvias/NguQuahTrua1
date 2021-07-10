@@ -18,26 +18,45 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                directorBLL = new DirectorBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
+                
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
-                if (!IsPostBack)
-                {
-                    await GetDirectorInfo();
-                    directorBLL.Dispose();
-                }
 
+                if (CheckLoggedIn())
+                {
+                    if (!IsPostBack)
+                    {
+                        await GetDirectorInfo();
+                        directorBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
+                directorBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetDirectorId()
@@ -59,14 +78,9 @@ namespace Web.Admin.DirectorManagement
             {
                 directorInfo = await directorBLL.GetDirectorAsync(id);
                 if (directorInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_DirectorList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -74,9 +88,6 @@ namespace Web.Admin.DirectorManagement
         {
             int id = GetDirectorId();
             StateOfDeletion state = await directorBLL.DeleteDirectorAsync(id);
-            directorBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -92,6 +103,7 @@ namespace Web.Admin.DirectorManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa đạo diễn. Lý do: Đạo diễn này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -105,6 +117,7 @@ namespace Web.Admin.DirectorManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            directorBLL.Dispose();
         }
     }
 }

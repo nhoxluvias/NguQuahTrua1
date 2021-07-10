@@ -18,25 +18,44 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                languageBLL = new LanguageBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await GetLanguageInfo();
-                    languageBLL.Dispose();
+                    if (!IsPostBack)
+                    {
+                        await GetLanguageInfo();
+                        languageBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
                 }
             }
             catch (Exception ex)
             {
+                languageBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetLanguageId()
@@ -58,24 +77,16 @@ namespace Web.Admin.LanguageManagement
             {
                 languageInfo = await languageBLL.GetLanguageAsync(id);
                 if (languageInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_LanguageList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
-        private async Task DeleteCategoryInfo()
+        private async Task DeleteLanguageInfo()
         {
             int id = GetLanguageId();
             StateOfDeletion state = await languageBLL.DeleteLanguageAsync(id);
-            languageBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -91,19 +102,21 @@ namespace Web.Admin.LanguageManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa ngôn ngữ. Lý do: Ngôn ngữ này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
         {
             try
             {
-                await DeleteCategoryInfo();
+                await DeleteLanguageInfo();
             }
             catch(Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            languageBLL.Dispose();
         }
     }
 }

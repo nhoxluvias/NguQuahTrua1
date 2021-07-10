@@ -18,26 +18,44 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CategoryList", null);
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await GetCategoryInfo();
-                    categoryBLL.Dispose();
+                    if (!IsPostBack)
+                    {
+                        await GetCategoryInfo();
+                        categoryBLL.Dispose();
+                    }
                 }
-                    
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }    
             }
             catch(Exception ex)
             {
+                categoryBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetCategoryId()
@@ -59,14 +77,9 @@ namespace Web.Admin.CategoryManagement
             {
                 categoryInfo = await categoryBLL.GetCategoryAsync(id);
                 if (categoryInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_CategoryList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -74,9 +87,6 @@ namespace Web.Admin.CategoryManagement
         {
             int id = GetCategoryId();
             StateOfDeletion state = await categoryBLL.DeleteCategoryAsync(id);
-            categoryBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -92,6 +102,7 @@ namespace Web.Admin.CategoryManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa thể loại. Lý do: Thể loại này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -105,6 +116,7 @@ namespace Web.Admin.CategoryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            categoryBLL.Dispose();
         }
     }
 }

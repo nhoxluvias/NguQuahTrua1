@@ -15,22 +15,36 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                roleBLL = new RoleBLL(DataAccessLevel.Admin);
                 string id = GetRoleId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateRole", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", new { id = id });
-                await GetRoleInfo(id);
-                roleBLL.Dispose();
+
+                if (CheckLoggedIn())
+                    await GetRoleInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            roleBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin");
         }
 
         private string GetRoleId()
@@ -49,13 +63,11 @@ namespace Web.Admin.RoleManagement
             }
             else
             {
-                enableShowDetail = true;
                 roleInfo = await roleBLL.GetRoleAsync(id);
                 if (roleInfo == null)
-                {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_RoleList", null);
-                }
+                else
+                    enableShowDetail = true;
             }
         }
     }

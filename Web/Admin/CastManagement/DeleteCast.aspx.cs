@@ -18,26 +18,44 @@ namespace Web.Admin.CastManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            castBLL = new CastBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                castBLL = new CastBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CastList", null);
-                if (!IsPostBack)
-                {
-                    await GetCastInfo();
-                    castBLL.Dispose();
-                }
 
+                if (CheckLoggedIn())
+                {
+                    if (!IsPostBack)
+                    {
+                        await GetCastInfo();
+                        castBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
+                castBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetCastId()
@@ -59,14 +77,9 @@ namespace Web.Admin.CastManagement
             {
                 castInfo = await castBLL.GetCastAsync(id);
                 if (castInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_CastList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -74,9 +87,6 @@ namespace Web.Admin.CastManagement
         {
             int id = GetCastId();
             StateOfDeletion state = await castBLL.DeleteCastAsync(id);
-            castBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -92,6 +102,7 @@ namespace Web.Admin.CastManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa diễn viên. Lý do: Diễn viên này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -105,6 +116,7 @@ namespace Web.Admin.CastManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            castBLL.Dispose();
         }
     }
 }

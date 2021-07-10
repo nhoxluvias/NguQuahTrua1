@@ -14,22 +14,36 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
                 int id = GetCategoryId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CategoryList", null);
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCategory", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", new { id = id });
-                await GetCategoryInfo(id);
-                categoryBLL.Dispose();
+
+                if (CheckLoggedIn())
+                    await GetCategoryInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch(Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
-            } 
+            }
+            categoryBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetCategoryId()
@@ -48,13 +62,11 @@ namespace Web.Admin.CategoryManagement
             }
             else
             {
-                enableShowDetail = true;
                 categoryInfo = await categoryBLL.GetCategoryAsync(id);
                 if (categoryInfo == null)
-                {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_CategoryList", null);
-                }
+                else
+                    enableShowDetail = true;
             }
         }
     }

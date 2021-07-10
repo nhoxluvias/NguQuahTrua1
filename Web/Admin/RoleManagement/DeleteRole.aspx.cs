@@ -22,25 +22,44 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            enableShowInfo = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                roleBLL = new RoleBLL(DataAccessLevel.Admin);
-                enableShowInfo = false;
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await GetRoleInfo();
-                    roleBLL.Dispose();
+                    if (!IsPostBack)
+                    {
+                        await GetRoleInfo();
+                        roleBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
                 }
             }
             catch (Exception ex)
             {
+                roleBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin");
         }
 
         private string GetRoleId()
@@ -62,14 +81,9 @@ namespace Web.Admin.RoleManagement
             {
                 roleInfo = await roleBLL.GetRoleAsync(id);
                 if (roleInfo == null)
-                {
-                    enableShowInfo = false;
                     Response.RedirectToRoute("Admin_RoleList", null);
-                }
                 else
-                {
                     enableShowInfo = true;
-                }
             }
         }
 
@@ -77,9 +91,6 @@ namespace Web.Admin.RoleManagement
         {
             string id = GetRoleId();
             StateOfDeletion state = await roleBLL.DeleteRoleAsync(id);
-            roleBLL.Dispose();
-            enableShowResult = true;
-            enableShowInfo = false;
             if (state == StateOfDeletion.Success)
             {
                 stateString = "Success";
@@ -95,6 +106,7 @@ namespace Web.Admin.RoleManagement
                 stateString = "ConstraintExists";
                 stateDetail = "Không thể xóa vai trò. Lý do: Vai trò này đang được sử dụng!";
             }
+            enableShowResult = true;
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -107,7 +119,8 @@ namespace Web.Admin.RoleManagement
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
-            } 
+            }
+            roleBLL.Dispose();
         }
     }
 }

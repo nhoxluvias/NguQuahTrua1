@@ -17,10 +17,10 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                filmBLL = new FilmBLL(DataAccessLevel.Admin);
                 string id = GetFilmId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
                 hyplnkEdit_Category.NavigateUrl = GetRouteUrl("Admin_EditCategory_Film", new { id = id });
@@ -31,14 +31,28 @@ namespace Web.Admin.FilmManagement
                 hyplnkEdit_Source.NavigateUrl = GetRouteUrl("Admin_EditSource_Film", new { id = id });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
-                await GetFilmInfo(id);
-                filmBLL.Dispose();
+
+                if (CheckLoggedIn())
+                    await GetFilmInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private string GetFilmId()
@@ -57,15 +71,14 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
-                enableShowDetail = true;
                 filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
                 {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_FilmList", null);
                 }
                 else
                 {
+                    enableShowDetail = true;
                     if (string.IsNullOrEmpty(filmInfo.thumbnail))
                         filmInfo.thumbnail = VirtualPathUtility
                             .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.ImageFilePath));

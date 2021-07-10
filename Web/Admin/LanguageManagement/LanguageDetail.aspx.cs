@@ -19,22 +19,36 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
             try
             {
-                enableShowDetail = false;
-                languageBLL = new LanguageBLL(DataAccessLevel.Admin);
                 int id = GetLanguageId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateLanguage", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteLanguage", new { id = id });
-                await GetLanguageInfo(id);
-                languageBLL.Dispose();
+
+                if (CheckLoggedIn())
+                    await GetLanguageInfo(id);
+                else
+                    Response.RedirectToRoute("Account_Login", null);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            languageBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetLanguageId()
@@ -53,13 +67,11 @@ namespace Web.Admin.LanguageManagement
             }
             else
             {
-                enableShowDetail = true;
                 languageInfo = await languageBLL.GetLanguageAsync(id);
                 if (languageInfo == null)
-                {
-                    enableShowDetail = false;
                     Response.RedirectToRoute("Admin_LanguageList", null);
-                }
+                else
+                    enableShowDetail = true;
             }
         }
     }
