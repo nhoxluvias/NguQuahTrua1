@@ -22,13 +22,39 @@ namespace Web.Admin.RoleManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
-            hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                await Create();
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
+                InitValidation();
+
+                if (CheckLoggedIn())
+                {
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
             roleBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin");
         }
 
         private void InitValidation()
@@ -64,36 +90,26 @@ namespace Web.Admin.RoleManagement
 
         public async Task Create()
         {
-            try
+            if (IsValidData())
             {
-                if (IsValidData())
+                RoleCreation role = GetRoleCreation();
+                StateOfCreation state = await roleBLL.CreateRoleAsync(role);
+                if (state == StateOfCreation.Success)
                 {
-                    RoleCreation role = GetRoleCreation();
-                    StateOfCreation state = await roleBLL.CreateRoleAsync(role);
-                    if (state == StateOfCreation.Success)
-                    {
-                        enableShowResult = true;
-                        stateString = "Success";
-                        stateDetail = "Đã thêm vai trò thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        enableShowResult = true;
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm vài trò thất bại. Lý do: Đã tồn tại vai trò này";
-                    }
-                    else
-                    {
-                        enableShowResult = true;
-                        stateString = "Failed";
-                        stateDetail = "Thêm vai trò thất bại";
-                    }
+                    stateString = "Success";
+                    stateDetail = "Đã thêm vai trò thành công";
                 }
-            }
-            catch (Exception ex)
-            {
-                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
-                Response.RedirectToRoute("Notification_Error", null);
+                else if (state == StateOfCreation.AlreadyExists)
+                {
+                    stateString = "AlreadyExists";
+                    stateDetail = "Thêm vài trò thất bại. Lý do: Đã tồn tại vai trò này";
+                }
+                else
+                {
+                    stateString = "Failed";
+                    stateDetail = "Thêm vai trò thất bại";
+                }
+                enableShowResult = true;
             }
         }
     }

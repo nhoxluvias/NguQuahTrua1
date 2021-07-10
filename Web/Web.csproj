@@ -119,9 +119,9 @@
     <Content Include="Admin\UserManagement\DeleteUser.aspx" />
     <Content Include="Admin\UserManagement\UserList.aspx" />
     <Content Include="admin_assets\css\addition.css" />
+    <Content Include="admin_assets\images\avatar.png" />
     <Content Include="admin_assets\images\favicon.png" />
     <Content Include="admin_assets\js\jquery.js" />
-    <Content Include="images\img1.jpg" />
     <Content Include="User\Article.aspx" />
     <Content Include="User\FilmDetail.aspx" />
     <Content Include="User\Search.aspx" />

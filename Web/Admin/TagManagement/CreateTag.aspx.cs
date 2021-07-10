@@ -17,26 +17,44 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                tagBLL = new TagBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_TagList", null);
                 InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await Create();
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
                 }
-                tagBLL.Dispose();
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            tagBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private void InitValidation()
@@ -77,7 +95,6 @@ namespace Web.Admin.TagManagement
             {
                 TagCreation tag = GetTagCreation();
                 StateOfCreation state = await tagBLL.CreateTagAsync(tag);
-                enableShowResult = true;
                 if (state == StateOfCreation.Success)
                 {
                     stateString = "Success";
@@ -93,6 +110,7 @@ namespace Web.Admin.TagManagement
                     stateString = "Failed";
                     stateDetail = "Thêm thẻ tag thất bại";
                 }
+                enableShowResult = true;
             }
         }
     }

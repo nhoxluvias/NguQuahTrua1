@@ -22,13 +22,39 @@ namespace Web.Admin.DirectorManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
-            hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                await Create();
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
+                InitValidation();
+
+                if (CheckLoggedIn())
+                {
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
             directorBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private void InitValidation()
@@ -65,36 +91,26 @@ namespace Web.Admin.DirectorManagement
 
         public async Task Create()
         {
-            try
+            if (IsValidData())
             {
-                if (IsValidData())
+                DirectorCreation director = GetDirectorCreation();
+                StateOfCreation state = await directorBLL.CreateDirectorAsync(director);
+                if (state == StateOfCreation.Success)
                 {
-                    DirectorCreation director = GetDirectorCreation();
-                    StateOfCreation state = await directorBLL.CreateDirectorAsync(director);
-                    if (state == StateOfCreation.Success)
-                    {
-                        enableShowResult = true;
-                        stateString = "Success";
-                        stateDetail = "Đã thêm đạo diễn thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        enableShowResult = true;
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm đạo diễn thất bại. Lý do: Đã tồn tại đạo diễn này";
-                    }
-                    else
-                    {
-                        enableShowResult = true;
-                        stateString = "Failed";
-                        stateDetail = "Thêm đạo diễn thất bại";
-                    }
+                    stateString = "Success";
+                    stateDetail = "Đã thêm đạo diễn thành công";
                 }
-            }
-            catch (Exception ex)
-            {
-                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
-                Response.RedirectToRoute("Notification_Error", null);
+                else if (state == StateOfCreation.AlreadyExists)
+                {
+                    stateString = "AlreadyExists";
+                    stateDetail = "Thêm đạo diễn thất bại. Lý do: Đã tồn tại đạo diễn này";
+                }
+                else
+                {
+                    stateString = "Failed";
+                    stateDetail = "Thêm đạo diễn thất bại";
+                }
+                enableShowResult = true;
             }
         }
     }

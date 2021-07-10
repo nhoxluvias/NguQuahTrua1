@@ -22,13 +22,39 @@ namespace Web.Admin.LanguageManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
-            hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                await Create();
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_LanguageList", null);
+                InitValidation();
+
+                if (CheckLoggedIn())
+                {
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
             languageBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private void InitValidation()
@@ -65,36 +91,26 @@ namespace Web.Admin.LanguageManagement
 
         public async Task Create()
         {
-            try
+            if (IsValidData())
             {
-                if (IsValidData())
+                LanguageCreation language = GetLanguageCreation();
+                StateOfCreation state = await languageBLL.CreateLanguageAsync(language);
+                if (state == StateOfCreation.Success)
                 {
-                    LanguageCreation language = GetLanguageCreation();
-                    StateOfCreation state = await languageBLL.CreateLanguageAsync(language);
-                    if (state == StateOfCreation.Success)
-                    {
-                        enableShowResult = true;
-                        stateString = "Success";
-                        stateDetail = "Đã thêm ngôn ngữ thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        enableShowResult = true;
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm ngôn ngữ thất bại. Lý do: Đã tồn tại ngôn ngữ này";
-                    }
-                    else
-                    {
-                        enableShowResult = true;
-                        stateString = "Failed";
-                        stateDetail = "Thêm ngôn ngữ thất bại";
-                    }
+                    stateString = "Success";
+                    stateDetail = "Đã thêm ngôn ngữ thành công";
                 }
-            }
-            catch (Exception ex)
-            {
-                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
-                Response.RedirectToRoute("Notification_Error", null);
+                else if (state == StateOfCreation.AlreadyExists)
+                {
+                    stateString = "AlreadyExists";
+                    stateDetail = "Thêm ngôn ngữ thất bại. Lý do: Đã tồn tại ngôn ngữ này";
+                }
+                else
+                {
+                    stateString = "Failed";
+                    stateDetail = "Thêm ngôn ngữ thất bại";
+                }
+                enableShowResult = true;
             }
         }
     }

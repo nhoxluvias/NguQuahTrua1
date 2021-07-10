@@ -41,10 +41,10 @@
                 <div class="column column-30">
                     <div class="user-section">
                         <a href="#">
-                            <img src="http://via.placeholder.com/50x50" alt="profile photo" class="circle float-left profile-photo" width="50" height="auto">
+                            <img src="<% = ResolveUrl("~/admin_assets/images/avatar.png") %>" alt="profile photo" class="circle float-left profile-photo" width="50" height="50">
                             <div class="username">
-                                <h4>Phan Xuân Chánh</h4>
-                                <p>Quản trị viên</p>
+                                <h4 id="txtUsername" runat="server">Phan Xuân Chánh</h4>
+                                <p id="txtRole" runat="server">Quản trị viên</p>
                             </div>
                         </a>
                     </div>

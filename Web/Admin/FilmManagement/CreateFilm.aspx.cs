@@ -19,28 +19,46 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                filmBLL = new FilmBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
+                InitValidation();
                 await LoadFilmCountries();
                 await LoadFilmLanguages();
-                InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await Create();
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
                 }
-                filmBLL.Dispose();
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private async Task LoadFilmCountries()
@@ -125,7 +143,6 @@ namespace Web.Admin.FilmManagement
             {
                 FilmCreation filmCreation = GetFilmCreation();
                 StateOfCreation state = await filmBLL.CreateFilmAsync(filmCreation);
-                enableShowResult = true;
                 if (state == StateOfCreation.Success)
                 {
                     stateString = "Success";
@@ -141,6 +158,7 @@ namespace Web.Admin.FilmManagement
                     stateString = "Failed";
                     stateDetail = "Thêm phim thất bại";
                 }
+                enableShowResult = true;
             }
         }
     }

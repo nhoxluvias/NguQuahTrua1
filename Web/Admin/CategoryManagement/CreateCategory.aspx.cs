@@ -17,26 +17,44 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                stateString = null;
-                stateDetail = null;
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CategoryList", null);
                 InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await Create();
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
                 }
-                categoryBLL.Dispose();
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            categoryBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private void InitValidation()
@@ -77,7 +95,6 @@ namespace Web.Admin.CategoryManagement
             {
                 CategoryCreation category = GetCategoryCreation();
                 StateOfCreation state = await categoryBLL.CreateCategoryAsync(category);
-                enableShowResult = true;
                 if (state == StateOfCreation.Success)
                 {
                     stateString = "Success";
@@ -93,6 +110,7 @@ namespace Web.Admin.CategoryManagement
                     stateString = "Failed";
                     stateDetail = "Thêm thể loại thất bại";
                 }
+                enableShowResult = true;
             }
         }
     }

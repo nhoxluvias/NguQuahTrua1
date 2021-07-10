@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
+using Web.Models;
 
 namespace Web.Admin.Layout
 {
@@ -32,6 +28,19 @@ namespace Web.Admin.Layout
             hyplnkUserList = GetRouteUrl("Admin_UserList", null);
             hyplnkCastList = GetRouteUrl("Admin_CastList", null);
             hyplnkFilmList = GetRouteUrl("Admin_FilmList", null);
+
+            object obj = Session["userSession"];
+            if(obj == null)
+            {
+                txtUsername.InnerText = "Anonymous";
+                txtRole.InnerText = "N/A";
+            }
+            else
+            {
+                UserSession userSession = (UserSession)obj;
+                txtUsername.InnerText = userSession.username;
+                txtRole.InnerText = userSession.role;
+            }
         }
     }
 }

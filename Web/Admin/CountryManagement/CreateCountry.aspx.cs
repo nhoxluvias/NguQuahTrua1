@@ -22,13 +22,39 @@ namespace Web.Admin.CountryManagement
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
-            hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
-            InitValidation();
-            if (IsPostBack)
+            try
             {
-                await Create();
+                hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
+                InitValidation();
+
+                if (CheckLoggedIn())
+                {
+                    if (IsPostBack)
+                    {
+                        await Create();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
             countryBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private void InitValidation()
@@ -65,36 +91,26 @@ namespace Web.Admin.CountryManagement
 
         public async Task Create()
         {
-            try
+            if (IsValidData())
             {
-                if (IsValidData())
+                CountryCreation country = GetCountryCreation();
+                StateOfCreation state = await countryBLL.CreateCountryAsync(country);
+                if (state == StateOfCreation.Success)
                 {
-                    CountryCreation country = GetCountryCreation();
-                    StateOfCreation state = await countryBLL.CreateCountryAsync(country);
-                    if (state == StateOfCreation.Success)
-                    {
-                        enableShowResult = true;
-                        stateString = "Success";
-                        stateDetail = "Đã thêm quốc gia thành công";
-                    }
-                    else if (state == StateOfCreation.AlreadyExists)
-                    {
-                        enableShowResult = true;
-                        stateString = "AlreadyExists";
-                        stateDetail = "Thêm quốc gia thất bại. Lý do: Đã tồn tại quốc gia này";
-                    }
-                    else
-                    {
-                        enableShowResult = true;
-                        stateString = "Failed";
-                        stateDetail = "Thêm quốc gia thất bại";
-                    }
+                    stateString = "Success";
+                    stateDetail = "Đã thêm quốc gia thành công";
                 }
-            }
-            catch (Exception ex)
-            {
-                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
-                Response.RedirectToRoute("Notification_Error", null);
+                else if (state == StateOfCreation.AlreadyExists)
+                {
+                    stateString = "AlreadyExists";
+                    stateDetail = "Thêm quốc gia thất bại. Lý do: Đã tồn tại quốc gia này";
+                }
+                else
+                {
+                    stateString = "Failed";
+                    stateDetail = "Thêm quốc gia thất bại";
+                }
+                enableShowResult = true;
             }
         }
     }
