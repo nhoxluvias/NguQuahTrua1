@@ -704,7 +704,7 @@ namespace Data.BLL
                 return StateOfUpdate.Failed;
 
             int affected = db.Films
-                .Update(new Film { upvote = film.downvote + 1 }, f => new { f.downvote }, f => f.ID == film.ID);
+                .Update(new Film { downvote = film.downvote + 1 }, f => new { f.downvote }, f => f.ID == film.ID);
 
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }

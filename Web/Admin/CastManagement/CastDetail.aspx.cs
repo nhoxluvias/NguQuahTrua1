@@ -28,6 +28,9 @@ namespace Web.Admin.CastManagement
             }
             catch (Exception ex)
             {
+                if(castBLL != null)
+                    castBLL.Dispose();
+
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }

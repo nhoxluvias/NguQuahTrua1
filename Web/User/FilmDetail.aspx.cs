@@ -10,6 +10,7 @@ using System.Web.UI;
 using Web.Models;
 using Data.DTO;
 using Common.Upload;
+using Common.Rating;
 
 namespace Web.User
 {
@@ -18,6 +19,7 @@ namespace Web.User
      
         private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
+
         protected async void Page_Load(object sender, EventArgs e)
         {
            
@@ -42,7 +44,10 @@ namespace Web.User
             }
             else
             {
-                filmInfo = await filmBLL.GetFilmAsync(id);            
+                filmInfo = await filmBLL.GetFilmAsync(id);
+                StarRating starRating = new StarRating(filmInfo.upvote, filmInfo.downvote);
+                filmInfo.starRating = starRating.SolveStar();
+
                 if (string.IsNullOrEmpty(filmInfo.thumbnail))
                     filmInfo.thumbnail = VirtualPathUtility
                         .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.ImageFilePath));

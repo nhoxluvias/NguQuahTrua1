@@ -14,21 +14,29 @@ namespace Web.User
 
         public void ProcessRequest(HttpContext context)
         {
-            string filmId = context.Request.Form["filmId"];
-
             context.Response.ContentType = "text/plain";
-            if (string.IsNullOrEmpty(filmId))
+            FilmBLL filmBLL = new FilmBLL(DataAccessLevel.User);
+
+            try
             {
-                context.Response.Write("Không thể thực hiện. Lý do: Dữ liệu đầu vào không hợp lệ");
-            }
-            else
-            {
-                FilmBLL filmBLL = new FilmBLL(DataAccessLevel.User);
-                StateOfUpdate state = filmBLL.Upvote(filmId);
-                if (state == StateOfUpdate.Success)
-                    context.Response.Write("Đánh giá (không thích) phim thành công");
+                string filmId = context.Request.Form["filmId"];
+                if (string.IsNullOrEmpty(filmId))
+                {
+                    context.Response.Write("Không thể thực hiện. Lý do: Dữ liệu đầu vào không hợp lệ");
+                }
                 else
-                    context.Response.Write("Đánh giá (không thích) phim thất bại");
+                {
+                    StateOfUpdate state = filmBLL.Downvote(filmId);
+                    if (state == StateOfUpdate.Success)
+                        context.Response.Write("Đánh giá (không thích) phim thành công");
+                    else
+                        context.Response.Write("Đánh giá (không thích) phim thất bại");
+                }
+            }
+            catch(Exception ex)
+            {
+                filmBLL.Dispose();
+                context.Response.Write(string.Format("Đã xảy ra ngoại lệ: {0}", ex.Message));
             }
         }
 

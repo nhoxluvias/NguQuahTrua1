@@ -61,15 +61,14 @@
                             </div>
                             <div class="rate-star">
                                 <p>Đánh giá: </p>
+                                <% for (int i = 0; i < filmInfo.starRating; i++)
+                                    { %>
                                 <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
-                                <i class="ion-ios-star"></i>
+                                <% } %>
+                                <% for (int i = 0; i < 10 - filmInfo.starRating; i++)
+                                    { %>
                                 <i class="ion-ios-star-outline"></i>
+                                <%} %>
                             </div>
                         </div>
                         <div class="movie-tabs">
