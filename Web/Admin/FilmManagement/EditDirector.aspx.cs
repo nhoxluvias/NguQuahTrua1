@@ -23,11 +23,14 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowDetail = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                enableShowDetail = false;
-                filmBLL = new FilmBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
                 string id = GetFilmId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = id });
@@ -39,18 +42,38 @@ namespace Web.Admin.FilmManagement
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
                 InitValidation();
-                await LoadDirectors();
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await LoadFilmInfo(id);
+                    await LoadDirectors();
+                    if (!IsPostBack)
+                    {
+                        await LoadFilmInfo(id);
+                        filmBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
                     filmBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                filmBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private void InitValidation()
@@ -134,7 +157,6 @@ namespace Web.Admin.FilmManagement
                     {
                         long directorId = long.Parse(strDirectorId);
                         StateOfCreation state = await filmBLL.AddDirectorAsync(filmId, directorId, directorRole);
-                        enableShowResult = true;
                         if (state == StateOfCreation.Success)
                         {
                             stateString = "Success";
@@ -150,16 +172,17 @@ namespace Web.Admin.FilmManagement
                             stateString = "Failed";
                             stateDetail = "Thêm đạo diễn vào phim thất bại";
                         }
+                        enableShowResult = true;
                     }
                 }
                 await LoadFilmInfo(filmId);
-                filmBLL.Dispose();
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -169,7 +192,6 @@ namespace Web.Admin.FilmManagement
                 string filmId = GetFilmId();
                 StateOfDeletion state = await filmBLL.DeleteAllDirectorAsync(filmId);
                 await LoadFilmInfo(filmId);
-                enableShowResult = true;
                 if (state == StateOfDeletion.Success)
                 {
                     stateString = "Success";
@@ -180,13 +202,14 @@ namespace Web.Admin.FilmManagement
                     stateString = "Failed";
                     stateDetail = "Xóa tất cả đạo diễn của phim thất bại";
                 }
-                filmBLL.Dispose();
+                enableShowResult = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
         }
     }
 }

@@ -21,10 +21,13 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            enableShowDetail = false;
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                enableShowDetail = false;
-                filmBLL = new FilmBLL(DataAccessLevel.Admin);
                 string id = GetFilmId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_FilmList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_FilmDetail", new { id = id });
@@ -35,17 +38,37 @@ namespace Web.Admin.FilmManagement
                 hyplnkEdit_Image.NavigateUrl = GetRouteUrl("Admin_EditImage_Film", new { id = id });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateFilm", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteFilm", new { id = id });
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await LoadFilmInfo(id);
+                    if (!IsPostBack)
+                    {
+                        await LoadFilmInfo(id);
+                        filmBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
                     filmBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                filmBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private string GetFilmId()
@@ -71,7 +94,6 @@ namespace Web.Admin.FilmManagement
                 }
                 else
                 {
-                    enableShowDetail = true;
                     if (string.IsNullOrEmpty(filmInfo.source))
                         film_Source = VirtualPathUtility
                         .ToAbsolute(string.Format("{0}/Default/default.mp4", FileUpload.VideoFilePath));
@@ -80,6 +102,7 @@ namespace Web.Admin.FilmManagement
                         .ToAbsolute(string.Format("{0}/{1}", FileUpload.VideoFilePath, filmInfo.source));
 
                     filmName = filmInfo.name;
+                    enableShowDetail = true;
                 }
             }
         }
@@ -99,7 +122,6 @@ namespace Web.Admin.FilmManagement
         {
             try
             {
-                enableShowResult = true;
                 HttpPostedFile httpPostedFile = GetPostedFile();
                 if (httpPostedFile.ContentLength == 0 || string.IsNullOrEmpty(httpPostedFile.FileName))
                 {
@@ -150,14 +172,15 @@ namespace Web.Admin.FilmManagement
                         }
                     }
                 }
+                enableShowResult = true;
                 await LoadFilmInfo(GetFilmId());
-                filmBLL.Dispose();
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
         }
 
         protected async void btnDelete_Click(object sender, EventArgs e)
@@ -166,7 +189,6 @@ namespace Web.Admin.FilmManagement
             {
                 string filmId = GetFilmId();
                 FilmInfo film = await filmBLL.GetFilmAsync(filmId);
-                enableShowResult = true;
                 if (string.IsNullOrEmpty(film.source))
                 {
                     stateString = "Failed";
@@ -195,14 +217,15 @@ namespace Web.Admin.FilmManagement
                         stateDetail = "Xóa video của phim thất bại";
                     }
                 }
-                await LoadFilmInfo(GetFilmId());
-                filmBLL.Dispose();
+                enableShowResult = true;
+                await LoadFilmInfo(filmId);
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            filmBLL.Dispose();
         }
     }
 }

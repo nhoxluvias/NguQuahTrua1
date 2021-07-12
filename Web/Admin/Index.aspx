@@ -5,6 +5,8 @@
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
+    <% if (enableShowDetail)
+        { %>
     <div class="row grid-responsive">
         <div class="column page-heading">
             <div class="large-card">
@@ -57,8 +59,9 @@
                         <tr>
                             <th>Path</th>
                             <td>
-                                <% foreach (string item in systemInfo.Path_EnvironmentVariable){ %>
-                                    <p class="m-0"><%= item %></p>
+                                <% foreach (string item in systemInfo.Path_EnvironmentVariable)
+                                    { %>
+                                <p class="m-0"><%= item %></p>
                                 <%} %>
                             </td>
                         </tr>
@@ -68,4 +71,5 @@
         </div>
     </div>
     <p class="credit">Trang quản trị -- <a href="#">Đồ án Lập trình Web</a></p>
+    <%} %>
 </asp:Content>

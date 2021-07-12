@@ -15,15 +15,25 @@ namespace Web.Admin
         protected long movieNumber;
         protected long categoryNumber;
         protected long tagNumber;
+        protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL(DataAccessLevel.Admin);
             pageVisitor = PageVisitor.Views;
+            enableShowDetail = false;
             try
             {
-                systemInfo = new SystemInfo();
-                await LoadOverview();
+                if (CheckLoggedIn())
+                {
+                    systemInfo = new SystemInfo();
+                    await LoadOverview();
+                    enableShowDetail = true;
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
             }
             catch(Exception ex)
             {
@@ -31,6 +41,16 @@ namespace Web.Admin
                 Response.RedirectToRoute("Notification_Error", null);
             }
             filmBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private async Task LoadOverview()

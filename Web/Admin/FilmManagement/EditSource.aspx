@@ -77,7 +77,7 @@
                             <tr>
                                 <th>Xóa nguồn video</th>
                                 <td>
-                                    <asp:Button ID="btnDelete" CssClass="button-red" runat="server" Text="Xóa tất cả" OnClick="btnDelete_Click" />
+                                    <asp:Button ID="btnDelete" CssClass="button-red" runat="server" Text="Xóa" OnClick="btnDelete_Click" />
                                 </td>
                             </tr>
                         </tbody>
