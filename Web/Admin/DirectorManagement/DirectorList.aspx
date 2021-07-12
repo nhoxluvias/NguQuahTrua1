@@ -1,4 +1,4 @@
-﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DirectorList.aspx.cs" Inherits="Web.Admin.DirectorManagement.DirectorList" %>
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/Admin/Layout/AdminLayout.Master" AutoEventWireup="true" CodeBehind="DirectorList.aspx.cs" Inherits="Web.Admin.DirectorManagement.DirectorList" MaintainScrollPositionOnPostback="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <title>Danh sách đạo diễn - Trang quản trị</title>
 </asp:Content>

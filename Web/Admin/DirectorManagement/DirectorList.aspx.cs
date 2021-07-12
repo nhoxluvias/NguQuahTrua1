@@ -16,23 +16,44 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                directorBLL = new DirectorBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateDirector", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvDirector();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvDirector();
+                        SetDrdlPage();
+                        directorBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    directorBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                directorBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,14 +68,13 @@ namespace Web.Admin.DirectorManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-
+            directorBLL.Dispose();
         }
 
         private async Task SetGrvDirector()
         {
             PagedList<DirectorInfo> directors = await directorBLL
                 .GetDirectorsAsync(drdlPage.SelectedIndex, 20);
-            directorBLL.Dispose();
             grvDirector.DataSource = directors.Items;
             grvDirector.DataBind();
 
@@ -83,18 +103,18 @@ namespace Web.Admin.DirectorManagement
             {
                 long key = (long)grvDirector.DataKeys[grvDirector.SelectedIndex].Value;
                 DirectorInfo directorInfo = await directorBLL.GetDirectorAsync(key);
-                directorBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", directorInfo.ID, directorInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_DirectorDetail", new { id = directorInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateDirector", new { id = directorInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteDirector", new { id = directorInfo.ID });
+                enableTool = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            directorBLL.Dispose();
         }
     }
 }

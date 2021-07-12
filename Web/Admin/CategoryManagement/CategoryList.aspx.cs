@@ -16,22 +16,44 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+                
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateCategory", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvCategory();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvCategory();
+                        SetDrdlPage();
+                        categoryBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    categoryBLL.Dispose();
                 }
             }catch(Exception ex)
             {
+                categoryBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -46,14 +68,13 @@ namespace Web.Admin.CategoryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            
+            categoryBLL.Dispose();
         }
 
         private async Task SetGrvCategory()
         {
             PagedList<CategoryInfo> categories = await categoryBLL
                 .GetCategoriesAsync(drdlPage.SelectedIndex, 20);
-            categoryBLL.Dispose();
             grvCategory.DataSource = categories.Items;
             grvCategory.DataBind();
 
@@ -82,18 +103,18 @@ namespace Web.Admin.CategoryManagement
             {
                 int key = (int)grvCategory.DataKeys[grvCategory.SelectedIndex].Value;
                 CategoryInfo categoryInfo = await categoryBLL.GetCategoryAsync(key);
-                categoryBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", categoryInfo.ID, categoryInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CategoryDetail", new { id = categoryInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCategory", new { id = categoryInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCategory", new { id = categoryInfo.ID });
+                enableTool = true;
             }
             catch(Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            categoryBLL.Dispose();
         }
     }
 }

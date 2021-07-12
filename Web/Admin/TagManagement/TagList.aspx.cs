@@ -16,23 +16,44 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                tagBLL = new TagBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateTag", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvTag();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvTag();
+                        SetDrdlPage();
+                        tagBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    tagBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                tagBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,14 +68,13 @@ namespace Web.Admin.TagManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-
+            tagBLL.Dispose();
         }
 
         private async Task SetGrvTag()
         {
             PagedList<TagInfo> categories = await tagBLL
                 .GetTagsAsync(drdlPage.SelectedIndex, 20);
-            tagBLL.Dispose();
             grvTag.DataSource = categories.Items;
             grvTag.DataBind();
 
@@ -83,18 +103,18 @@ namespace Web.Admin.TagManagement
             {
                 long key = (long)grvTag.DataKeys[grvTag.SelectedIndex].Value;
                 TagInfo tagInfo = await tagBLL.GetTagAsync(key);
-                tagBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", tagInfo.ID, tagInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_TagDetail", new { id = tagInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateTag", new { id = tagInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteTag", new { id = tagInfo.ID });
+                enableTool = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            tagBLL.Dispose();
         }
     }
 }

@@ -16,23 +16,44 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                countryBLL = new CountryBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateCountry", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvCountry();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvCountry();
+                        SetDrdlPage();
+                        countryBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    countryBLL.Dispose();
                 }
             }
             catch(Exception ex)
             {
+                countryBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,13 +68,13 @@ namespace Web.Admin.CountryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            countryBLL.Dispose();
         }
 
         private async Task SetGrvCountry()
         {
             PagedList<CountryInfo> countries = await countryBLL
                 .GetCountriesAsync(drdlPage.SelectedIndex, 20);
-            countryBLL.Dispose();
             grvCountry.DataSource = countries.Items;
             grvCountry.DataBind();
 
@@ -82,18 +103,18 @@ namespace Web.Admin.CountryManagement
             {
                 int key = (int)grvCountry.DataKeys[grvCountry.SelectedIndex].Value;
                 CountryInfo countryInfo = await countryBLL.GetCountryAsync(key);
-                countryBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", countryInfo.ID, countryInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CountryDetail", new { id = countryInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCountry", new { id = countryInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", new { id = countryInfo.ID });
+                enableTool = true;
             }
             catch(Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            countryBLL.Dispose();
         }
     }
 }

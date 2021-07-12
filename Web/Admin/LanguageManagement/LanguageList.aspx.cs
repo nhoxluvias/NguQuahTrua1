@@ -16,30 +16,51 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateLanguage", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvLanguage(0);
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvLanguage(0);
+                        SetDrdlPage();
+                        languageBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    languageBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                languageBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private async Task SetGrvLanguage(int pageIndex)
         {
             PagedList<LanguageInfo> languages = await languageBLL
                 .GetLanguagesAsync(drdlPage.SelectedIndex, 20);
-            languageBLL.Dispose();
             grvLanguage.DataSource = languages.Items;
             grvLanguage.DataBind();
 
@@ -68,18 +89,18 @@ namespace Web.Admin.LanguageManagement
             {
                 int key = (int)grvLanguage.DataKeys[grvLanguage.SelectedIndex].Value;
                 LanguageInfo languageInfo = await languageBLL.GetLanguageAsync(key);
-                languageBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", languageInfo.ID, languageInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_LanguageDetail", new { id = languageInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateLanguage", new { id = languageInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteLanguage", new { id = languageInfo.ID });
+                enableTool = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            languageBLL.Dispose();
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -94,6 +115,7 @@ namespace Web.Admin.LanguageManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            languageBLL.Dispose();
         }
     }
 }

@@ -16,23 +16,44 @@ namespace Web.Admin.UserManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                userBLL = new UserBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateUser", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvUser();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvUser();
+                        SetDrdlPage();
+                        userBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    userBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                userBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,14 +68,13 @@ namespace Web.Admin.UserManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-
+            userBLL.Dispose();
         }
 
         private async Task SetGrvUser()
         {
             PagedList<UserInfo> users = await userBLL
                 .GetUsersAsync(drdlPage.SelectedIndex, 20);
-            userBLL.Dispose();
             grvUser.DataSource = users.Items;
             grvUser.DataBind();
 
@@ -83,18 +103,18 @@ namespace Web.Admin.UserManagement
             {
                 string key = (string)grvUser.DataKeys[grvUser.SelectedIndex].Value;
                 UserInfo userInfo = await userBLL.GetUserAsync(key);
-                userBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", userInfo.ID, userInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_UserDetail", new { id = userInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateUser", new { id = userInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteUser", new { id = userInfo.ID });
+                enableTool = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            userBLL.Dispose();
         }
     }
 }

@@ -16,23 +16,44 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                roleBLL = new RoleBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateRole", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvRole();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvRole();
+                        SetDrdlPage();
+                        roleBLL.Dispose();
+                    }
+                }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                    roleBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
+                roleBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,14 +68,13 @@ namespace Web.Admin.RoleManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-
+            roleBLL.Dispose();
         }
 
         private async Task SetGrvRole()
         {
             PagedList<RoleInfo> roles = await roleBLL
                 .GetRolesAsync(drdlPage.SelectedIndex, 20);
-            roleBLL.Dispose();
             grvRole.DataSource = roles.Items;
             grvRole.DataBind();
 
@@ -83,18 +103,18 @@ namespace Web.Admin.RoleManagement
             {
                 string key = (string)grvRole.DataKeys[grvRole.SelectedIndex].Value;
                 RoleInfo roleInfo = await roleBLL.GetRoleAsync(key);
-                roleBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", roleInfo.ID, roleInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_RoleDetail", new { id = roleInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateRole", new { id = roleInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", new { id = roleInfo.ID });
+                enableTool = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            roleBLL.Dispose();
         }
     }
 }

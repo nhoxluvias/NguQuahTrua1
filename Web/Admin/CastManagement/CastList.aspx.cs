@@ -29,13 +29,14 @@ namespace Web.Admin.CastManagement
                     {
                         await SetGrvCast();
                         SetDrdlPage();
+                        castBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    castBLL.Dispose();
                 }
-                castBLL.Dispose();
             }
             catch (Exception ex)
             {
@@ -67,7 +68,7 @@ namespace Web.Admin.CastManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-
+            castBLL.Dispose();
         }
 
         private async Task SetGrvCast()
@@ -102,18 +103,18 @@ namespace Web.Admin.CastManagement
             {
                 long key = (long)grvCast.DataKeys[grvCast.SelectedIndex].Value;
                 CastInfo castInfo = await castBLL.GetCastAsync(key);
-                castBLL.Dispose();
-                enableTool = true;
                 toolDetail = string.Format("{0} -- {1}", castInfo.ID, castInfo.name);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CastDetail", new { id = castInfo.ID });
                 hyplnkEdit.NavigateUrl = GetRouteUrl("Admin_UpdateCast", new { id = castInfo.ID });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCast", new { id = castInfo.ID });
+                enableTool = true;
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            castBLL.Dispose();
         }
     }
 }
