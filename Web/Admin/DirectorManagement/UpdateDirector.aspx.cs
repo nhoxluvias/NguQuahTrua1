@@ -14,44 +14,60 @@ namespace Web.Admin.DirectorManagement
         protected DirectorInfo directorInfo;
         private CustomValidation customValidation;
         protected bool enableShowResult;
-        protected bool enableShowForm;
         protected string stateString;
         protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                directorBLL = new DirectorBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                enableShowForm = false;
-                stateString = null;
-                stateDetail = null;
                 long id = GetDirectorId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_DirectorDetail", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteDirector", new { id = id });
                 InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    if (IsValidData())
+                    if (IsPostBack)
                     {
-                        await Update();
+                        if (IsValidData())
+                        {
+                            await Update();
+                            await LoadDirectorInfo(id);
+                        }
+                    }
+                    else
+                    {
                         await LoadDirectorInfo(id);
                     }
                 }
                 else
                 {
-                    await LoadDirectorInfo(id);
+                    Response.RedirectToRoute("Account_Login", null);
                 }
-                directorBLL.Dispose();
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            directorBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private long GetDirectorId()
@@ -121,7 +137,6 @@ namespace Web.Admin.DirectorManagement
         {
             DirectorUpdate directorUpdate = GetDirectorUpdate();
             StateOfUpdate state = await directorBLL.UpdateDirectorAsync(directorUpdate);
-            enableShowResult = true;
             if (state == StateOfUpdate.Success)
             {
                 stateString = "Success";
@@ -132,6 +147,7 @@ namespace Web.Admin.DirectorManagement
                 stateString = "Failed";
                 stateDetail = "Cập nhật đạo diễn thất bại";
             }
+            enableShowResult = true;
         }
     }
 }

@@ -14,44 +14,60 @@ namespace Web.Admin.TagManagement
         protected TagInfo tagInfo;
         private CustomValidation customValidation;
         protected bool enableShowResult;
-        protected bool enableShowForm;
         protected string stateString;
         protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                tagBLL = new TagBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                enableShowForm = false;
-                stateString = null;
-                stateDetail = null;
                 long id = GetTagId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_TagList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_TagDetail", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteTag", new { id = id });
                 InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    if (IsValidData())
+                    if (IsPostBack)
                     {
-                        await Update();
+                        if (IsValidData())
+                        {
+                            await Update();
+                            await LoadTagInfo(id);
+                        }
+                    }
+                    else
+                    {
                         await LoadTagInfo(id);
                     }
                 }
                 else
                 {
-                    await LoadTagInfo(id);
+                    Response.RedirectToRoute("Account_Login", null);
                 }
-                tagBLL.Dispose();
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            tagBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private long GetTagId()
@@ -121,7 +137,6 @@ namespace Web.Admin.TagManagement
         {
             TagUpdate tagUpdate = GetTagUpdate();
             StateOfUpdate state = await tagBLL.UpdateTagAsync(tagUpdate);
-            enableShowResult = true;
             if (state == StateOfUpdate.Success)
             {
                 stateString = "Success";
@@ -132,6 +147,7 @@ namespace Web.Admin.TagManagement
                 stateString = "Failed";
                 stateDetail = "Cập nhật thẻ tag thất bại";
             }
+            enableShowResult = true;
         }
     }
 }

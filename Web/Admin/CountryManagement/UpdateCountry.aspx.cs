@@ -1,12 +1,8 @@
 ﻿using Data.BLL;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 using Web.Validation;
 
@@ -18,44 +14,60 @@ namespace Web.Admin.CountryManagement
         protected CountryInfo countryInfo;
         private CustomValidation customValidation;
         protected bool enableShowResult;
-        protected bool enableShowForm;
         protected string stateString;
         protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                countryBLL = new CountryBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                enableShowForm = false;
-                stateString = null;
-                stateDetail = null;
                 int id = GetCountryId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_CountryList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_CountryDetail", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteCountry", new { id = id });
                 InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    if (IsValidData())
+                    if (IsPostBack)
                     {
-                        await Update();
+                        if (IsValidData())
+                        {
+                            await Update();
+                            await LoadCountryInfo(id);
+                        }
+                    }
+                    else
+                    {
                         await LoadCountryInfo(id);
                     }
                 }
                 else
                 {
-                    await LoadCountryInfo(id);
+                    Response.RedirectToRoute("Account_Login", null);
                 }
-                countryBLL.Dispose();
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            countryBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         private int GetCountryId()
@@ -125,7 +137,6 @@ namespace Web.Admin.CountryManagement
         {
             CountryUpdate countryUpdate = GetCountryUpdate();
             StateOfUpdate state = await countryBLL.UpdateCountryAsync(countryUpdate);
-            enableShowResult = true;
             if (state == StateOfUpdate.Success)
             {
                 stateString = "Success";
@@ -136,6 +147,7 @@ namespace Web.Admin.CountryManagement
                 stateString = "Failed";
                 stateDetail = "Cập nhật quốc gia thất bại";
             }
+            enableShowResult = true;
         }
     }
 }

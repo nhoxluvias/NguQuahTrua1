@@ -14,44 +14,60 @@ namespace Web.Admin.RoleManagement
         protected RoleInfo roleInfo;
         private CustomValidation customValidation;
         protected bool enableShowResult;
-        protected bool enableShowForm;
         protected string stateString;
         protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateString = null;
+            stateDetail = null;
             try
             {
-                roleBLL = new RoleBLL(DataAccessLevel.Admin);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                enableShowForm = false;
-                stateString = null;
-                stateDetail = null;
                 string id = GetRoleId();
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_RoleList", null);
                 hyplnkDetail.NavigateUrl = GetRouteUrl("Admin_RoleDetail", new { id = id });
                 hyplnkDelete.NavigateUrl = GetRouteUrl("Admin_DeleteRole", new { id = id });
                 InitValidation();
-                if (IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    if (IsValidData())
+                    if (IsPostBack)
                     {
-                        await Update();
+                        if (IsValidData())
+                        {
+                            await Update();
+                            await LoadRoleInfo(id);
+                        }
+                    }
+                    else
+                    {
                         await LoadRoleInfo(id);
                     }
                 }
                 else
                 {
-                    await LoadRoleInfo(id);
+                    Response.RedirectToRoute("Account_Login", null);
                 }
-                roleBLL.Dispose();
             }
             catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            roleBLL.Dispose();
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin");
         }
 
         private string GetRoleId()
@@ -119,7 +135,6 @@ namespace Web.Admin.RoleManagement
         {
             RoleUpdate roleUpdate = GetRoleUpdate();
             StateOfUpdate state = await roleBLL.UpdateRoleAsync(roleUpdate);
-            enableShowResult = true;
             if (state == StateOfUpdate.Success)
             {
                 stateString = "Success";
@@ -130,6 +145,7 @@ namespace Web.Admin.RoleManagement
                 stateString = "Failed";
                 stateDetail = "Cập nhật vai trò thất bại";
             }
+            enableShowResult = true;
         }
     }
 }
