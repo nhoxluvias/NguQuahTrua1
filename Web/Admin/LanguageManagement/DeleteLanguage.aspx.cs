@@ -38,6 +38,7 @@ namespace Web.Admin.LanguageManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    languageBLL.Dispose();
                 }
             }
             catch (Exception ex)

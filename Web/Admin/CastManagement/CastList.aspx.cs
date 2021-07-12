@@ -16,23 +16,43 @@ namespace Web.Admin.CastManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            castBLL = new CastBLL(DataAccessLevel.Admin);
+            enableTool = false;
+            toolDetail = null;
             try
             {
-                castBLL = new CastBLL(DataAccessLevel.Admin);
                 hyplnkCreate.NavigateUrl = GetRouteUrl("Admin_CreateCast", null);
-                enableTool = false;
-                toolDetail = null;
-                if (!IsPostBack)
+
+                if (CheckLoggedIn())
                 {
-                    await SetGrvCast();
-                    SetDrdlPage();
+                    if (!IsPostBack)
+                    {
+                        await SetGrvCast();
+                        SetDrdlPage();
+                    }
                 }
+                else
+                {
+                    Response.RedirectToRoute("Account_Login", null);
+                }
+                castBLL.Dispose();
             }
             catch (Exception ex)
             {
+                castBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+        }
+
+        private bool CheckLoggedIn()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return false;
+
+            UserSession userSession = (UserSession)obj;
+            return (userSession.role == "Admin" || userSession.role == "Editor");
         }
 
         protected async void drdlPage_SelectedIndexChanged(object sender, EventArgs e)
@@ -54,7 +74,6 @@ namespace Web.Admin.CastManagement
         {
             PagedList<CastInfo> casts = await castBLL
                 .GetCastsAsync(drdlPage.SelectedIndex, 20);
-            castBLL.Dispose();
             grvCast.DataSource = casts.Items;
             grvCast.DataBind();
 

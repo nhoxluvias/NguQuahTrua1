@@ -38,6 +38,7 @@ namespace Web.Admin.CastManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    castBLL.Dispose();
                 }
             }
             catch (Exception ex)

@@ -39,6 +39,7 @@ namespace Web.Admin.DirectorManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    directorBLL.Dispose();
                 }
             }
             catch (Exception ex)

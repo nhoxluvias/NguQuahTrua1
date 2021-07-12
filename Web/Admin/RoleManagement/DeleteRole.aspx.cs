@@ -42,6 +42,7 @@ namespace Web.Admin.RoleManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    roleBLL.Dispose();
                 }
             }
             catch (Exception ex)

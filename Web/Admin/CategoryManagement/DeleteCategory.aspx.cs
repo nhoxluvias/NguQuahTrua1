@@ -38,6 +38,7 @@ namespace Web.Admin.CategoryManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    categoryBLL.Dispose();
                 }    
             }
             catch(Exception ex)

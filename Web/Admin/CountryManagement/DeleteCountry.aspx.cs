@@ -42,6 +42,7 @@ namespace Web.Admin.CountryManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    countryBLL.Dispose();
                 }   
             }
             catch (Exception ex)

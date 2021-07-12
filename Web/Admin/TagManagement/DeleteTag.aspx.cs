@@ -38,6 +38,7 @@ namespace Web.Admin.TagManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    tagBLL.Dispose();
                 }
             }
             catch (Exception ex)

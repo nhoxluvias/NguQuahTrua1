@@ -42,6 +42,7 @@ namespace Web.Admin.FilmManagement
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
+                    filmBLL.Dispose();
                 }
             }
             catch (Exception ex)
