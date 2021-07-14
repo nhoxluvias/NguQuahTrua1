@@ -1,8 +1,16 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Index.aspx.cs" Inherits="Web.User.Index" %>
+
 <%@ Import Namespace="Data.DTO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title>Trang chủ</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="profile" href="#">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="slider movie-items">
         <div class="container">
@@ -15,7 +23,7 @@
                     <a href="#"><i class="ion-social-youtube"></i></a>
                 </div>
                 <div class="slick-multiItemSlider">
-                    <% foreach(FilmInfo film in latestFilms)
+                    <% foreach (FilmInfo film in latestFilms)
                         { %>
                     <div class="movie-item">
                         <div class="mv-img">
@@ -28,7 +36,7 @@
                             <div class="cate">
                                 <% foreach (CategoryInfo categoryOfFilm in film.Categories)
                                     { %>
-                                    <span class="blue"><a href="#"><%= categoryOfFilm.name %></a></span> 
+                                <span class="blue"><a href="#"><%= categoryOfFilm.name %></a></span>
                                 <%} %>
                             </div>
                             <h6><a href="<% = film.url %>">Phim <% = film.name %></a></h6>
@@ -59,7 +67,7 @@
                                 <div class="row">
                                     <div class="slick-multiItem">
                                         <% for (int i = 0; i < 8; i++)
-                                        { %>
+                                            { %>
                                         <div class="slide-it">
                                             <div class="movie-item">
                                                 <div class="mv-img">
@@ -82,7 +90,7 @@
                                 <div class="row">
                                     <div class="slick-multiItem">
                                         <% for (int i = 0; i < 8; i++)
-                                        { %>
+                                            { %>
                                         <div class="slide-it">
                                             <div class="movie-item">
                                                 <div class="mv-img">
@@ -105,7 +113,7 @@
                                 <div class="row">
                                     <div class="slick-multiItem">
                                         <% for (int i = 0; i < 8; i++)
-                                        { %>
+                                            { %>
                                         <div class="slide-it">
                                             <div class="movie-item">
                                                 <div class="mv-img">
@@ -128,7 +136,7 @@
                                 <div class="row">
                                     <div class="slick-multiItem">
                                         <% for (int i = 0; i < 8; i++)
-                                        { %>
+                                            { %>
                                         <div class="slide-it">
                                             <div class="movie-item">
                                                 <div class="mv-img">

@@ -14,6 +14,7 @@ namespace Web.User.Layout
         {
             categoryBLL = new CategoryBLL(DataAccessLevel.User);
             GetCategories();
+            categoryBLL.Dispose();
         }
 
         private void GetCategories()
@@ -25,8 +26,6 @@ namespace Web.User.Layout
                     description = c.description,
                     url = GetRouteUrl("User_Category", new { id = c.ID })
                 }).ToList();
-
-            categoryBLL.Dispose();
         }
 
 
