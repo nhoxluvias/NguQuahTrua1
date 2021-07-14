@@ -19,40 +19,40 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.User);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateDetail = null;
             try
             {
-                userBLL = new UserBLL(DataAccessLevel.User);
-                customValidation = new CustomValidation();
-                enableShowResult = false;
-                stateDetail = null;
-                await SetDrdlPaymentMethod();
                 InitValidation();
 
                 if (CheckLoggedIn())
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else
                 {
+                    await SetDrdlPaymentMethod();
                     if (IsPostBack)
                     {
                         await RegisterAccount();
                     }
                 }
-                userBLL.Dispose();
             }
             catch(Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            userBLL.Dispose();
         }
 
         private async Task SetDrdlPaymentMethod()
         {
             List<PaymentMethodInfo> paymentMethods = await new PaymentMethodBLL(userBLL, DataAccessLevel.User)
                 .GetPaymentMethodsAsync();
-            foreach(PaymentMethodInfo paymentMethod in paymentMethods)
+            foreach (PaymentMethodInfo paymentMethod in paymentMethods)
             {
                 drdlPaymentMethod.Items.Add(new ListItem(paymentMethod.name, paymentMethod.ID.ToString()));
             }
@@ -210,11 +210,12 @@ namespace Web.Account
 
                 if (registerState == UserBLL.RegisterState.Failed || registerState == UserBLL.RegisterState.AlreadyExist)
                 {
-                    enableShowResult = true;
                     if (registerState == UserBLL.RegisterState.Failed)
                         stateDetail = "Đăng ký tài khoản thất bại";
                     else
                         stateDetail = "Đã tồn tại tài khoản có thông tin này";
+
+                    enableShowResult = true;
                 }
                 else
                 {

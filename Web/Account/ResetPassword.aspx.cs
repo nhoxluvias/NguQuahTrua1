@@ -17,15 +17,14 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.User);
+            customValidation = new CustomValidation();
             try
             {
-                customValidation = new CustomValidation();
                 InitValidation();
                 if (IsPostBack)
                 {
-                    userBLL = new UserBLL(DataAccessLevel.User);
                     await ResetPwd();
-                    userBLL.Dispose();
                 }
             }
             catch(Exception ex)
@@ -33,6 +32,7 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            userBLL.Dispose();
         }
 
         private void InitValidation()

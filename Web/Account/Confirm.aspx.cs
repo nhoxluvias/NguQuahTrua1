@@ -13,30 +13,29 @@ namespace Web.Account
     {
         private UserBLL userBLL;
         private CustomValidation customValidation;
+
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.User);
+            customValidation = new CustomValidation();
             try
             {
-                customValidation = new CustomValidation();
                 InitHyperlink();
                 InitValidation();
                 if (Session["confirmCode"] == null || Session["confirmToken"] == null)
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else if (!IsValidConfirmToken())
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else
                 {
-                    userBLL = new UserBLL(DataAccessLevel.User);
                     if (IsPostBack)
                         await ConfirmAccount();
                     else
                         await ReSendConfirmCode();
-
-                    userBLL.Dispose();
                 }
             }
             catch (Exception ex)
@@ -44,6 +43,7 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            userBLL.Dispose();
         }
 
         private void InitHyperlink()
@@ -144,16 +144,16 @@ namespace Web.Account
                     }
                     else
                     {
-                        Response.RedirectToRoute("Account_Login");
+                        Response.RedirectToRoute("Account_Login", null);
                     }
                 }
                 else if (activeUserState == UserBLL.ActiveUserState.NotExists)
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else
                 {
-                    Response.RedirectToRoute("Notification_Error");
+                    Response.RedirectToRoute("Notification_Error", null);
                 }
             }
             else if (IsResetPassword())

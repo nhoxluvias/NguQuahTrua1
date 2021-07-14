@@ -11,32 +11,28 @@ namespace Web.Account
     {
         private UserBLL userBLL;
         private CustomValidation customValidation;
-        protected bool enableShowResult;
-        protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.User);
+            customValidation = new CustomValidation();
             try
             {
-                customValidation = new CustomValidation();
                 InitValidation();
-                enableShowResult = true;
-                stateDetail = null;
+
                 if (Session["newPasswordToken"] == null)
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else if (!IsValidNewPasswordToken())
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else
                 {
                     if (IsPostBack)
                     {
-                        userBLL = new UserBLL(DataAccessLevel.User);
                         await CreateNewPassword();
-                        userBLL.Dispose();
                     }
                 }
             }
@@ -45,6 +41,7 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            userBLL.Dispose();
         }
 
         private void InitValidation()
@@ -99,11 +96,11 @@ namespace Web.Account
                 UserBLL.CreateNewPasswordState createNewPasswordState = await userBLL.CreateNewPasswordAsync(userId, password);
                 Session["newPasswordToken"] = null;
                 if (createNewPasswordState == UserBLL.CreateNewPasswordState.Success)
-                    Response.RedirectToRoute("Account_Login");
+                    Response.RedirectToRoute("Account_Login", null);
                 else if (createNewPasswordState == UserBLL.CreateNewPasswordState.NotExists)
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 else
-                    Response.RedirectToRoute("Notification_Error");
+                    Response.RedirectToRoute("Notification_Error", null);
             }
         }
     }
