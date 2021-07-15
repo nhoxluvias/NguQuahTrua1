@@ -17,24 +17,23 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
+            userBLL = new UserBLL(DataAccessLevel.User);
+            customValidation = new CustomValidation();
+            enableShowResult = false;
+            stateDetail = null;
             try
             {
-                customValidation = new CustomValidation();
                 InitHyperLink();
                 InitValidation();
-                enableShowResult = false;
-                stateDetail = null;
                 if (CheckLoggedIn())
                 {
-                    Response.RedirectToRoute("User_Home");
+                    Response.RedirectToRoute("User_Home", null);
                 }
                 else
                 {
                     if (IsPostBack)
                     {
-                        userBLL = new UserBLL(DataAccessLevel.User);
                         await LoginToAccount();
-                        userBLL.Dispose();
                     }
                 }
             }
@@ -43,6 +42,7 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
+            userBLL.Dispose();
         }
 
         private void InitHyperLink()
@@ -108,11 +108,12 @@ namespace Web.Account
                 UserBLL.LoginState loginState = await userBLL.LoginAsync(userLogin);
                 if(loginState == UserBLL.LoginState.NotExists || loginState == UserBLL.LoginState.WrongPassword)
                 {
-                    enableShowResult = true;
                     if (loginState == UserBLL.LoginState.NotExists)
                         stateDetail = "Không tồn tại tài khoản";
                     else
                         stateDetail = "Mật khẩu bạn nhập vào không đúng";
+
+                    enableShowResult = true;
                 }
                 else
                 {
@@ -121,9 +122,9 @@ namespace Web.Account
                     {
                         Session["userSession"] = new UserSession { username = userLogin.userName, role = userInfo.Role.name };
                         if (userInfo.Role.name == "User")
-                            Response.RedirectToRoute("User_Home");
+                            Response.RedirectToRoute("User_Home", null);
                         else
-                            Response.RedirectToRoute("Admin_Overview");
+                            Response.RedirectToRoute("Admin_Overview", null);
                     }
                     else
                     {

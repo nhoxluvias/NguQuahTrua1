@@ -11,15 +11,7 @@
 <![endif]-->
 <!--[if !(IE 7) | !(IE 8)  ]><!-->
 <html lang="en" class="no-js">
-<head>
-    <!-- Basic need -->
-    <title>Trang chính</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
-    <meta name="author" content="">
-    <link rel="profile" href="#">
-
+<head runat="server">
     <!--Google Font-->
     <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
     <!-- Mobile specific meta -->
@@ -30,6 +22,7 @@
     <link rel="stylesheet" href="<%= ResolveUrl("~/user_assets/css/plugins.css") %>">
     <link rel="stylesheet" href="<%= ResolveUrl("~/user_assets/css/style.css") %>">
 
+    <!--Basic need-->
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
@@ -37,7 +30,7 @@
     <form id="form1" runat="server">
         <!--preloading-->
         <div id="preloader">
-            <img class="logo" src="images/logo1.png" alt="" width="119" height="58">
+            <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt="" width="119" height="58">
             <div id="status">
                 <span></span>
                 <span></span>
@@ -59,7 +52,7 @@
                             </div>
                         </div>
                         <a href="index.html">
-                            <img class="logo" src="images/logo1.png" alt="" width="119" height="58"></a>
+                            <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt="" width="119" height="58"></a>
                     </div>
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
@@ -86,7 +79,7 @@
                                 <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">Bài viết<i class="fa fa-angle-down" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu level1">
-                                    <li><a href="celebritygrid01.html">Hướng dẫn</a></li>
+                                    <li><a href="#">Hướng dẫn</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown first">
@@ -99,7 +92,7 @@
                                 <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">Công cụ <i class="fa fa-angle-down" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu level1">
-                                    <li><a href="landing.html">API</a></li>
+                                    <li><a href="#">API</a></li>
                                 </ul>
                             </li>
                             <li><a href="#">Hỗ trợ</a></li>
@@ -181,7 +174,7 @@
             </div>
             <div class="ft-copyright">
                 <div class="ft-left">
-                    <p>© <% =DateTime.Now.ToString("yyyy") %> TP. Hồ Chí Minh . HUFI. Nhóm bài tập .</p>
+                    <p>© <% = DateTime.Now.ToString("yyyy") %> TP. Hồ Chí Minh . HUFI. Nhóm bài tập .</p>
                 </div>
                 <div class="backtotop">
                     <p><a href="#" id="back-to-top">Về đầu trang  <i class="ion-ios-arrow-thin-up"></i></a></p>

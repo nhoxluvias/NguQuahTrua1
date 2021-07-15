@@ -32,14 +32,5 @@
             </div>
         </div>
     </form>
-    <%--<% if (enableShowResult)
-        { %>
-        <script type="text/javascript">
-            var stateDetail = "<% = stateDetail %>";
-            setTimeout(function () {
-                alert(stateDetail);
-            }, 1500);
-        </script>
-    <%} %>--%>
 </body>
 </html>

@@ -3,7 +3,14 @@
 <%@ Import Namespace="Data.DTO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title><% = title_HeadTag %></title>
+    <meta charset="UTF-8">
+    <meta name="description" content="<% = description_MetaTag %>">
+    <meta name="keywords" content="<% = keywords_MetaTag %>">
+    <meta name="author" content="">
+    <link rel="profile" href="#">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="hero mv-single-hero">
         <div class="container">
@@ -18,6 +25,8 @@
             </div>
         </div>
     </div>
+    <% if (enableShowDetail)
+        { %>
     <div class="page-single movie-single movie_single">
         <div class="container">
             <div class="row ipad-width2">
@@ -258,4 +267,5 @@
             </div>
         </div>
     </div>
+    <%} %>
 </asp:Content>

@@ -1,6 +1,12 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Watch.aspx.cs" Inherits="Web.User.Watch" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="profile" href="#">
 
     <link href="<% = ResolveUrl("~/common_assets/video-js/video-js.min.css") %>" rel="stylesheet">
     <script src="<% = ResolveUrl("~/common_assets/video-js/video.js") %>"></script>
@@ -19,7 +25,7 @@
         </div>
     </div>
     <style type="text/css">
-        #vid{
+        #vid {
             width: 100% !important;
             height: 600px !important;
         }

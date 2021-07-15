@@ -45,7 +45,7 @@ namespace Data.BLL
                 description = user.description,
                 phoneNumber = user.phoneNumber,
                 email = user.email,
-                active = user.active,
+                activated = user.activated,
                 Role = ((user.roleId == null ) ? null : new RoleBLL(this, dataAccessLevel).GetRole(user.roleId)),
                 createAt = user.createAt,
                 updateAt = user.updateAt
@@ -72,7 +72,7 @@ namespace Data.BLL
                 password = hash.PBKDF2_Hash(userCreation.password, salt, 30),
                 salt = salt,
                 roleId = role.ID,
-                active = false,
+                activated = false,
                 createAt = DateTime.Now,
                 updateAt = DateTime.Now
             };
@@ -300,7 +300,7 @@ namespace Data.BLL
                 throw new Exception("");
 
             User user = await db.Users.SingleOrDefaultAsync(
-                    u => new { u.userName, u.password, u.salt, u.active }, 
+                    u => new { u.userName, u.password, u.salt, u.activated }, 
                     u => u.userName == userLogin.userName
                 );
             if (user == null)
@@ -310,7 +310,7 @@ namespace Data.BLL
             string passwordHashed = hash.PBKDF2_Hash(userLogin.password, user.salt, 30);
             if (user.password != passwordHashed)
                 return LoginState.WrongPassword;
-            if (!user.active)
+            if (!user.activated)
                 return LoginState.Unconfirmed;
             return LoginState.Success;
         }
@@ -318,7 +318,7 @@ namespace Data.BLL
         public async Task<bool> IsActiveAsync(string username)
         {
             return (await db.Users
-                .SingleOrDefaultAsync(u => new { u.active }, u => u.userName == username)).active;
+                .SingleOrDefaultAsync(u => new { u.activated }, u => u.userName == username)).activated;
         }
 
         public enum ActiveUserState { Success, Failed, NotExists }
@@ -333,9 +333,9 @@ namespace Data.BLL
                 return ActiveUserState.NotExists;
 
             int affected = await db.Users.UpdateAsync(new User { 
-                active = true, 
+                activated = true, 
                 updateAt = DateTime.Now 
-            }, u => new { u.active, u.updateAt }, u => u.ID == userId);
+            }, u => new { u.activated, u.updateAt }, u => u.ID == userId);
 
             return (affected == 0) ? ActiveUserState.Failed : ActiveUserState.Success;
         }
