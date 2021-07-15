@@ -123,6 +123,8 @@
     <Content Include="admin_assets\images\favicon.png" />
     <Content Include="admin_assets\js\jquery.js" />
     <Content Include="User\Article.aspx" />
+    <Content Include="User\Category.aspx" />
+    <Content Include="User\FilmByCategory.aspx" />
     <Content Include="User\FilmDetail.aspx" />
     <Content Include="User\Search.aspx" />
     <Content Include="User\Watch.aspx" />
@@ -606,8 +608,22 @@
     <Compile Include="User\Article.aspx.designer.cs">
       <DependentUpon>Article.aspx</DependentUpon>
     </Compile>
+    <Compile Include="User\Category.aspx.cs">
+      <DependentUpon>Category.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\Category.aspx.designer.cs">
+      <DependentUpon>Category.aspx</DependentUpon>
+    </Compile>
     <Compile Include="User\DownvoteFilm.ashx.cs">
       <DependentUpon>DownvoteFilm.ashx</DependentUpon>
+    </Compile>
+    <Compile Include="User\FilmByCategory.aspx.cs">
+      <DependentUpon>FilmByCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\FilmByCategory.aspx.designer.cs">
+      <DependentUpon>FilmByCategory.aspx</DependentUpon>
     </Compile>
     <Compile Include="User\FilmDetail.aspx.cs">
       <DependentUpon>FilmDetail.aspx</DependentUpon>
