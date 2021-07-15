@@ -17,10 +17,8 @@ namespace Data.DTO
         public string description { get; set; }
     }
 
-    public class DirectorUpdate
+    public class DirectorUpdate : DirectorCreation
     {
         public long ID { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
     }
 }

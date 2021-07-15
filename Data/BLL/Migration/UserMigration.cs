@@ -40,7 +40,7 @@ namespace Data.BLL.Migration
                     password = hash.PBKDF2_Hash("admin12341234", salt, 30),
                     salt = salt,
                     roleId = role.ID,
-                    active = true,
+                    activated = true,
                     createAt = DateTime.Now,
                     updateAt = DateTime.Now
                 });
@@ -72,7 +72,7 @@ namespace Data.BLL.Migration
                     password = hash.PBKDF2_Hash("admin12341234", salt, 30),
                     salt = salt,
                     roleId = role.ID,
-                    active = true,
+                    activated = true,
                     createAt = DateTime.Now,
                     updateAt = DateTime.Now
                 });

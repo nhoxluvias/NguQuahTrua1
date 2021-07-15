@@ -7,6 +7,7 @@ using Web.Models;
 using Data.DTO;
 using Common.Upload;
 using Common.Rating;
+using System.Text;
 
 namespace Web.User
 {
@@ -16,6 +17,9 @@ namespace Web.User
         private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
         protected bool enableShowDetail;
+        protected string title_HeadTag;
+        protected string keywords_MetaTag;
+        protected string description_MetaTag;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
@@ -24,6 +28,7 @@ namespace Web.User
             try
             {
                 await GetFilmById();
+                GenerateHeadTag();
             }
             catch(Exception ex)
             {
@@ -69,6 +74,22 @@ namespace Web.User
 
                     enableShowDetail = true;
                 }
+            }
+        }
+
+        private void GenerateHeadTag()
+        {
+            if (filmInfo != null)
+            {
+                title_HeadTag = filmInfo.name;
+                description_MetaTag = (string.Format("{0}...", filmInfo.description.TakeStr(100))).Replace("\n", " ");
+
+                StringBuilder stringBuilder = new StringBuilder();
+                foreach (TagInfo tagInfo in filmInfo.Tags)
+                {
+                    stringBuilder.Append(string.Format("{0}, ", tagInfo.name));
+                }
+                keywords_MetaTag = stringBuilder.ToString().TrimEnd(' ').TrimEnd(',');
             }
         }
     }

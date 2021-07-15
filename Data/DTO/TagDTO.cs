@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.DTO
 {
@@ -20,10 +16,8 @@ namespace Data.DTO
         public string description { get; set; }
     }
 
-    public class TagUpdate
+    public class TagUpdate : TagCreation
     {
         public long ID { get; set; }
-        public string name { get; set; }
-        public string description { get; set; }
     }
 }

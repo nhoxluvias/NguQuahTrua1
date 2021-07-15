@@ -16,9 +16,8 @@ namespace Data.DTO
         public string name { get; set; }
     }
 
-    public class RoleUpdate
+    public class RoleUpdate: RoleCreation
     {
-        public string ID { get; set; }
-        public string name { get; set; }
+
     }
 }

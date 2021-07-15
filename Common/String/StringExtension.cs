@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace System
 {
@@ -18,6 +14,15 @@ namespace System
                         .Replace("!", "").Replace("(", "").Replace(")", "").Replace(";", "-").Replace("/", "-")
                         .Replace("%", "ptram").Replace("&", "va").Replace("?", "").Replace('"', '-').Replace(' ', '-');
             return url;
+        }
+
+        public static string TakeStr(this string input, int count)
+        {
+            if (input == null)
+                return null;
+            if (input.Length <= count)
+                return input;
+            return input.Substring(0, count);
         }
     }
 }

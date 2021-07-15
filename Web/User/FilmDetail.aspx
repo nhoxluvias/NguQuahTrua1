@@ -3,10 +3,10 @@
 <%@ Import Namespace="Data.DTO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title></title>
+    <title><% = title_HeadTag %></title>
     <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <meta name="description" content="<% = description_MetaTag %>">
+    <meta name="keywords" content="<% = keywords_MetaTag %>">
     <meta name="author" content="">
     <link rel="profile" href="#">
 </asp:Content>
