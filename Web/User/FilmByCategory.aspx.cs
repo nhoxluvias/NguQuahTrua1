@@ -22,7 +22,7 @@ namespace Web.User
         protected string categoryName;
         protected async Task Page_LoadAsync(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.User);
+            categoryBLL = new CategoryBLL();
             await GetCategoryById();
         }
         

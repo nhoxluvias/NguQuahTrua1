@@ -19,7 +19,6 @@
                         <Columns>
                             <asp:BoundField DataField="ID" HeaderText="ID" />
                             <asp:BoundField DataField="name" HeaderText="Tên thẻ tag" />
-                            <asp:BoundField DataField="description" HeaderText="Mô tả thẻ tag" />
                             <asp:BoundField DataField="createAt" HeaderText="Ngày tạo" />
                             <asp:BoundField DataField="updateAt" HeaderText="Ngày cập nhật" />
                             <asp:CommandField AccessibleHeaderText="Chọn" ShowSelectButton="True" SelectText="Chọn thẻ tag" />

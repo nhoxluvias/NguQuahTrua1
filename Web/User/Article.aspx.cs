@@ -15,8 +15,8 @@ namespace Web.User
         {
             FilmBLL filmBLL = new FilmBLL();
 
-            CategoryBLL categoryBLL = new CategoryBLL();
-            TagBLL tagBLL = new TagBLL();
+            CategoryBLL categoryBLL = new CategoryBLL(filmBLL);
+            TagBLL tagBLL = new TagBLL(filmBLL);
 
             filmBLL.Dispose();
             List<CategoryInfo> categories = categoryBLL.GetCategories();
