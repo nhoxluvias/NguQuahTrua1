@@ -3,7 +3,6 @@ using Data.Config;
 using System;
 using System.Web.Routing;
 using Web.App_Start;
-using Web.Models;
 
 namespace Web
 {
