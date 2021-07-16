@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Common.Web;
+using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
@@ -14,43 +15,59 @@ namespace Data.BLL
 {
     public class CategoryBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
+        private bool includeDescription;
 
-        public CategoryBLL(DataAccessLevel dataAccessLevel)
+        public bool IncludeDescription { set { includeDescription = value; } }
+
+        public CategoryBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public CategoryBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public CategoryBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
+        }
+
+        public override void SetDefault()
+        {
+            base.SetDefault();
+            includeDescription = false;
         }
 
         private CategoryInfo ToCategoryInfo(Category category)
         {
             if (category == null)
                 return null;
-            return new CategoryInfo
+
+            CategoryInfo categoryInfo = new CategoryInfo();
+            categoryInfo.ID = category.ID;
+            categoryInfo.name = category.name;
+
+            if (includeDescription)
+                categoryInfo.description = category.description;
+
+            if (includeTimestamp)
             {
-                ID = category.ID,
-                name = category.name,
-                description = category.description,
-                createAt = category.createAt,
-                updateAt = category.updateAt
-            };
+                categoryInfo.createAt = category.createAt;
+                categoryInfo.updateAt = category.updateAt;
+            }
+
+            return categoryInfo;
         }
 
         private Category ToCategory(CategoryCreation categoryCreation)
         {
             if (categoryCreation == null)
                 throw new Exception("@'categoryCreation' must be not null");
+
             return new Category
             {
                 name = categoryCreation.name,
@@ -64,6 +81,7 @@ namespace Data.BLL
         {
             if (categoryUpdate == null)
                 throw new Exception("");
+
             return new Category
             {
                 ID = categoryUpdate.ID,
@@ -76,24 +94,38 @@ namespace Data.BLL
         public async Task<List<CategoryInfo>> GetCategoriesAsync()
         {
             List<CategoryInfo> categories = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if(includeDescription && includeTimestamp)
                 categories = (await db.Categories.ToListAsync())
                     .Select(c => ToCategoryInfo(c)).ToList();
-            else
+            else if(includeDescription)
                 categories = (await db.Categories.ToListAsync(c => new { c.ID, c.name, c.description }))
                     .Select(c => ToCategoryInfo(c)).ToList();
+            else if(includeTimestamp)
+                categories = (await db.Categories.ToListAsync(c => new { c.ID, c.name, c.createAt, c.updateAt }))
+                    .Select(c => ToCategoryInfo(c)).ToList();
+            else
+                categories = (await db.Categories.ToListAsync(c => new { c.ID, c.name }))
+                    .Select(c => ToCategoryInfo(c)).ToList();
+
             return categories;
         }
 
         public List<CategoryInfo> GetCategories()
         {
             List<CategoryInfo> categories = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 categories = db.Categories.ToList()
                     .Select(c => ToCategoryInfo(c)).ToList();
-            else
+            else if(includeDescription)
                 categories = db.Categories.ToList(c => new { c.ID, c.name, c.description })
                     .Select(c => ToCategoryInfo(c)).ToList();
+            else if(includeTimestamp)
+                categories = db.Categories.ToList(c => new { c.ID, c.name, c.createAt, c.updateAt })
+                    .Select(c => ToCategoryInfo(c)).ToList();
+            else
+                categories = db.Categories.ToList(c => new { c.ID, c.name })
+                    .Select(c => ToCategoryInfo(c)).ToList();
+
             return categories;
         }
 
@@ -101,13 +133,17 @@ namespace Data.BLL
         {
             SqlPagedList<Category> pagedList = null;
             Expression<Func<Category, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = await db.Categories.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeDescription)
+                pagedList = await db.Categories.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description },orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeTimestamp)
+                pagedList = await db.Categories.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.createAt, c.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Categories.ToPagedListAsync(
-                    c => new { c.ID, c.name, c.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<CategoryInfo>
             {
@@ -121,14 +157,18 @@ namespace Data.BLL
         {
             SqlPagedList<Category> pagedList = null;
             Expression<Func<Category, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = db.Categories.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeDescription)
+                pagedList = db.Categories.ToPagedList(
+                    c => new { c.ID, c.name, c.description }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeTimestamp)
+                pagedList = db.Categories.ToPagedList(
+                    c => new { c.ID, c.name, c.createAt, c.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Categories.ToPagedList(
-                    c => new { c.ID, c.name, c.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
-
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            
             return new PagedList<CategoryInfo>
             {
                 PageNumber = pagedList.PageNumber,
@@ -141,13 +181,19 @@ namespace Data.BLL
         {
             if (categoryId <= 0)
                 throw new Exception("");
+
             Category category = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                category = await db.Categories
-                     .SingleOrDefaultAsync(c => c.ID == categoryId);
-            else
+            if (includeDescription && includeTimestamp)
+                category = await db.Categories.SingleOrDefaultAsync(c => c.ID == categoryId);
+            else if(includeDescription)
                 category = await db.Categories
                     .SingleOrDefaultAsync(c => new { c.ID, c.name, c.description }, c => c.ID == categoryId);
+            else if(includeTimestamp)
+                category = await db.Categories
+                    .SingleOrDefaultAsync(c => new { c.ID, c.name, c.createAt, c.updateAt }, c => c.ID == categoryId);
+            else
+                category = await db.Categories
+                    .SingleOrDefaultAsync(c => new { c.ID, c.name }, c => c.ID == categoryId);
 
             return ToCategoryInfo(category);
         }
@@ -156,13 +202,19 @@ namespace Data.BLL
         {
             if (categoryId <= 0)
                 throw new Exception("");
+
             Category category = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                category = db.Categories
-                     .SingleOrDefault(c => c.ID == categoryId);
-            else
+            if (includeDescription && includeTimestamp)
+                category = db.Categories.SingleOrDefault(c => c.ID == categoryId);
+            else if(includeDescription)
                 category = db.Categories
                     .SingleOrDefault(c => new { c.ID, c.name, c.description }, c => c.ID == categoryId);
+            else if(includeTimestamp)
+                category = db.Categories
+                   .SingleOrDefault(c => new { c.ID, c.name, c.createAt, c.updateAt }, c => c.ID == categoryId);
+            else
+                category = db.Categories
+                   .SingleOrDefault(c => new { c.ID, c.name }, c => c.ID == categoryId);
 
             return ToCategoryInfo(category);
         }
@@ -173,14 +225,24 @@ namespace Data.BLL
                 throw new Exception("");
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Category].* from [CategoryDistribution], [Category]
-                                where [CategoryDistribution].[categoryID] = [Category].[ID]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
-            else
+            else if(includeDescription)
                 sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[description] 
                                 from [CategoryDistribution], [Category]
-                                where [CategoryDistribution].[categoryID] = [Category].[ID]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
+                                    and [CategoryDistribution].[filmId] = @filmId";
+            else if(includeTimestamp)
+                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[createAt], [Category].[updateAt] 
+                                from [CategoryDistribution], [Category]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
+                                    and [CategoryDistribution].[filmId] = @filmId";
+            else
+                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name] 
+                                from [CategoryDistribution], [Category]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
@@ -193,14 +255,24 @@ namespace Data.BLL
                 throw new Exception("");
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Category].* from [CategoryDistribution], [Category]
-                                where [CategoryDistribution].[categoryID] = [Category].[ID]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
-            else
+            else if (includeDescription)
                 sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[description] 
                                 from [CategoryDistribution], [Category]
-                                where [CategoryDistribution].[categoryID] = [Category].[ID]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
+                                    and [CategoryDistribution].[filmId] = @filmId";
+            else if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[createAt], [Category].[updateAt] 
+                                from [CategoryDistribution], [Category]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
+                                    and [CategoryDistribution].[filmId] = @filmId";
+            else
+                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name] 
+                                from [CategoryDistribution], [Category]
+                                where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
@@ -209,8 +281,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreateCategoryAsync(CategoryCreation categoryCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Category category = ToCategory(categoryCreation);
             if (category.name == null)
                 throw new Exception("");
@@ -230,8 +300,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> UpdateCategoryAsync(CategoryUpdate categoryUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Category category = ToCategory(categoryUpdate);
             if (category.name == null)
                 throw new Exception("");
@@ -255,8 +323,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteCategoryAsync(int categoryId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (categoryId <= 0)
                 throw new Exception("");
 

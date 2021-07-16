@@ -19,7 +19,7 @@ namespace Web.Admin
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             pageVisitor = PageVisitor.Views;
             enableShowDetail = false;
             try
@@ -56,8 +56,8 @@ namespace Web.Admin
         private async Task LoadOverview()
         {
             movieNumber = await filmBLL.CountAllAsync();
-            categoryNumber = await new CategoryBLL(filmBLL, DataAccessLevel.Admin).CountAllAsync();
-            tagNumber = await new TagBLL(filmBLL, DataAccessLevel.Admin).CountAllAsync();
+            categoryNumber = await new CategoryBLL(filmBLL).CountAllAsync();
+            tagNumber = await new TagBLL(filmBLL).CountAllAsync();
         }
     }
 }

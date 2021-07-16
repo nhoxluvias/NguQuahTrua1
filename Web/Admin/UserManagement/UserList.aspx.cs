@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.UserManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL(DataAccessLevel.Admin);
+            userBLL = new UserBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.UserManagement
 
         private async Task SetGrvUser()
         {
+            userBLL.IncludeTimestamp = true;
             PagedList<UserInfo> users = await userBLL
                 .GetUsersAsync(drdlPage.SelectedIndex, 20);
             grvUser.DataSource = users.Items;

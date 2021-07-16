@@ -124,7 +124,7 @@
                 <div class="flex-parent-ft">
                     <div class="flex-child-ft item1">
                         <a href="index.html">
-                            <img class="logo" src="images/logo1.png" alt=""></a>
+                            <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt=""></a>
                         <p>
                             140 Lê Trọng Tấn<br>
                             Tây Thạnh,Tân Phú, Việt Nam

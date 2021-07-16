@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            categoryBLL = new CategoryBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.CategoryManagement
 
         private async Task SetGrvCategory()
         {
+            categoryBLL.IncludeTimestamp = true;
             PagedList<CategoryInfo> categories = await categoryBLL
                 .GetCategoriesAsync(drdlPage.SelectedIndex, 20);
             grvCategory.DataSource = categories.Items;

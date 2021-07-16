@@ -18,7 +18,7 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            directorBLL = new DirectorBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;

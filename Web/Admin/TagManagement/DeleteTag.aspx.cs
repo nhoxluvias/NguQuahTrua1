@@ -18,7 +18,7 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            tagBLL = new TagBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;

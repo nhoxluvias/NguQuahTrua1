@@ -15,7 +15,7 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            tagBLL = new TagBLL();
             enableShowDetail = false;
             try
             {
@@ -63,6 +63,8 @@ namespace Web.Admin.TagManagement
             }
             else
             {
+                tagBLL.IncludeDescription = true;
+                tagBLL.IncludeTimestamp = true;
                 tagInfo = await tagBLL.GetTagAsync(id);
                 if (tagInfo == null)
                     Response.RedirectToRoute("Admin_TagList", null);

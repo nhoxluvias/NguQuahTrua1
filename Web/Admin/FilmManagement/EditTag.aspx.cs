@@ -21,7 +21,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             enableShowDetail = false;
             enableShowResult = false;
             stateString = null;
@@ -88,6 +88,7 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
+                filmBLL.IncludeTag = true;
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
                 {
@@ -105,7 +106,7 @@ namespace Web.Admin.FilmManagement
         private async Task LoadTags()
         {
             drdlFilmTag.Items.Clear();
-            List<TagInfo> tagInfos = await new TagBLL(filmBLL, DataAccessLevel.Admin).GetTagsAsync();
+            List<TagInfo> tagInfos = await new TagBLL(filmBLL).GetTagsAsync();
             foreach (TagInfo tagInfo in tagInfos)
             {
                 drdlFilmTag.Items.Add(new ListItem(tagInfo.name, tagInfo.ID.ToString()));

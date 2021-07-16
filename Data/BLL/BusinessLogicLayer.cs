@@ -4,10 +4,13 @@ using System;
 
 namespace Data.BLL
 {
-    public abstract class BusinessLogicLayer : IDisposable
+    public class BusinessLogicLayer : IDisposable
     {
         internal DBContext db;
         private bool disposedValue;
+        protected bool includeTimestamp;
+
+        public bool IncludeTimestamp { set { includeTimestamp = value; } }
 
         protected BusinessLogicLayer()
         {
@@ -23,6 +26,11 @@ namespace Data.BLL
         internal void InitDAL(DBContext db)
         {
             this.db = db;
+        }
+
+        public virtual void SetDefault()
+        {
+            includeTimestamp = false;
         }
 
         protected virtual void Dispose(bool disposing)

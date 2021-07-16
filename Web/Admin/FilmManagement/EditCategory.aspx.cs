@@ -21,7 +21,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             enableShowDetail = false;
             enableShowResult = false;
             stateString = null;
@@ -88,6 +88,7 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
+                filmBLL.IncludeCategory = true;
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
                 if(filmInfo == null)
                 {
@@ -105,7 +106,7 @@ namespace Web.Admin.FilmManagement
         private async Task LoadCategories()
         {
             drdlFilmCategory.Items.Clear();
-            List<CategoryInfo> categoryInfos = await new CategoryBLL(filmBLL, DataAccessLevel.Admin).GetCategoriesAsync();
+            List<CategoryInfo> categoryInfos = await new CategoryBLL(filmBLL).GetCategoriesAsync();
             foreach (CategoryInfo categoryInfo in categoryInfos)
             {
                 drdlFilmCategory.Items.Add(new ListItem(categoryInfo.name, categoryInfo.ID.ToString()));

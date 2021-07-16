@@ -15,7 +15,7 @@ namespace Web.User
         public void ProcessRequest(HttpContext context)
         {
             context.Response.ContentType = "text/plain";
-            FilmBLL filmBLL = new FilmBLL(DataAccessLevel.User);
+            FilmBLL filmBLL = new FilmBLL();
 
             try
             {

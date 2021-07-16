@@ -19,7 +19,7 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL(DataAccessLevel.User);
+            userBLL = new UserBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateDetail = null;
@@ -50,7 +50,7 @@ namespace Web.Account
 
         private async Task SetDrdlPaymentMethod()
         {
-            List<PaymentMethodInfo> paymentMethods = await new PaymentMethodBLL(userBLL, DataAccessLevel.User)
+            List<PaymentMethodInfo> paymentMethods = await new PaymentMethodBLL(userBLL)
                 .GetPaymentMethodsAsync();
             foreach (PaymentMethodInfo paymentMethod in paymentMethods)
             {

@@ -12,7 +12,7 @@ namespace Web.User.Layout
         protected List<CategoryInfo> categories;
         protected void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.User);
+            categoryBLL = new CategoryBLL();
             GetCategories();
             categoryBLL.Dispose();
         }

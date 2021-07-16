@@ -21,7 +21,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             enableShowDetail = false;
             enableShowResult = false;
             stateString = null;

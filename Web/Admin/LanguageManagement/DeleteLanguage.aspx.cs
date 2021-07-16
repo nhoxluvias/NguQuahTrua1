@@ -18,7 +18,7 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            languageBLL = new LanguageBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;

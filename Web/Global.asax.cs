@@ -3,6 +3,7 @@ using Data.Config;
 using System;
 using System.Web.Routing;
 using Web.App_Start;
+using Web.Models;
 
 namespace Web
 {
@@ -24,7 +25,7 @@ namespace Web
 
         protected void Application_BeginRequest(object sender, EventArgs e)
         {
-
+            
         }
 
         protected void Application_AuthenticateRequest(object sender, EventArgs e)

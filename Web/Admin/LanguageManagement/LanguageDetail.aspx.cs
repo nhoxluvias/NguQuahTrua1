@@ -19,7 +19,7 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            languageBLL = new LanguageBLL();
             enableShowDetail = false;
             try
             {
@@ -67,6 +67,8 @@ namespace Web.Admin.LanguageManagement
             }
             else
             {
+                languageBLL.IncludeDescription = true;
+                languageBLL.IncludeTimestamp = true;
                 languageInfo = await languageBLL.GetLanguageAsync(id);
                 if (languageInfo == null)
                     Response.RedirectToRoute("Admin_LanguageList", null);

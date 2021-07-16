@@ -1,4 +1,5 @@
 ﻿using Common.Hash;
+using Common.Web;
 using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
@@ -15,23 +16,44 @@ namespace Data.BLL
 {
     public class FilmBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
+        private bool includeCategory;
+        private bool includeTag;
+        private bool includeLanguage;
+        private bool includeCountry;
+        private bool includeCast;
+        private bool includeDirector;
 
-        public FilmBLL(DataAccessLevel dataAccessLevel)
+        public bool IncludeCategory { set { includeCategory = value; } }
+        public bool IncludeTag { set { includeTag = value; } }
+        public bool IncludeLanguage { set { includeLanguage = value; } }
+        public bool IncludeCountry { set { includeCountry = value; } }
+        public bool IncludeCast { set { includeCast = value; } }
+        public bool IncludeDirector { set { includeDirector = value; } }
+
+        public FilmBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
             disposed = false;
         }
 
-        public FilmBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public FilmBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
             disposed = false;
+        }
+
+        public override void SetDefault()
+        {
+            base.SetDefault();
+            includeCategory = false;
+            includeTag = false;
+            includeCountry = false;
+            includeLanguage = false;
+            includeCast = false;
+            includeDirector = false;
         }
 
         private FilmInfo ToFilmInfo(Film film)
@@ -39,30 +61,48 @@ namespace Data.BLL
             if (film == null)
                 return null;
 
-            return new FilmInfo
+            FilmInfo filmInfo = new FilmInfo()
             {
                 ID = film.ID,
                 name = film.name,
                 description = film.description,
-                Country = ((film.countryId != 0)
-                    ? new CountryBLL(this, dataAccessLevel).GetCountry(film.countryId) : null),
                 productionCompany = film.productionCompany,
                 thumbnail = film.thumbnail,
-                Language = ((film.languageId != 0)
-                    ? new LanguageBLL(this, dataAccessLevel).GetLanguage(film.languageId) : null),
                 releaseDate = film.releaseDate,
                 upvote = film.upvote,
                 downvote = film.downvote,
                 views = film.views,
                 duration = film.duration,
-                source = film.source,
-                createAt = film.createAt,
-                updateAt = film.updateAt,
-                Categories = new CategoryBLL(this, dataAccessLevel).GetCategoriesByFilmId(film.ID),
-                Tags = new TagBLL(this, dataAccessLevel).GetTagsByFilmId(film.ID),
-                Directors = new DirectorBLL(this, dataAccessLevel).GetDirectorsByFilmId(film.ID),
-                Casts = new CastBLL(this, dataAccessLevel).GetCastsByFilmId(film.ID)
+                source = film.source
             };
+
+            if (includeCategory)
+                filmInfo.Categories = new CategoryBLL(this).GetCategoriesByFilmId(film.ID);
+
+            if (includeTag)
+                filmInfo.Tags = new TagBLL(this).GetTagsByFilmId(film.ID);
+
+            if (includeDirector)
+                filmInfo.Directors = new DirectorBLL(this).GetDirectorsByFilmId(film.ID);
+
+            if (includeCast)
+                filmInfo.Casts = new CastBLL(this).GetCastsByFilmId(film.ID);
+
+            if (includeLanguage)
+                filmInfo.Language = ((film.languageId != 0)
+                    ? new LanguageBLL(this).GetLanguage(film.languageId) : null);
+
+            if (includeCountry)
+                filmInfo.Country = ((film.countryId != 0)
+                    ? new CountryBLL(this).GetCountry(film.countryId) : null);
+
+            if (includeTimestamp)
+            {
+                filmInfo.createAt = film.createAt;
+                filmInfo.updateAt = film.updateAt;
+            }
+
+            return filmInfo;
         }
 
         private Film ToFilm(FilmCreation filmCreation)
@@ -129,9 +169,8 @@ namespace Data.BLL
         public async Task<List<FilmInfo>> GetFilmsAsync()
         {
             List<FilmInfo> films = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                films = (await db.Films.ToListAsync())
-                    .Select(f => ToFilmInfo(f)).ToList();
+            if (includeTimestamp)
+                films = (await db.Films.ToListAsync()).Select(f => ToFilmInfo(f)).ToList();
             else
                 films = (await db.Films.ToListAsync(
                             f => new
@@ -161,7 +200,7 @@ namespace Data.BLL
                 throw new Exception("");
 
             Film film = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 film = await db.Films.SingleOrDefaultAsync(f => f.ID == filmId);
             else
                 film = await db.Films.SingleOrDefaultAsync(f => new
@@ -188,7 +227,7 @@ namespace Data.BLL
         {
             SqlPagedList<Film> pagedList = null;
             Expression<Func<Film, object>> orderBy = f => new { f.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 pagedList = await db.Films.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Films.ToPagedListAsync(
@@ -222,7 +261,7 @@ namespace Data.BLL
         {
             SqlPagedList<Film> pagedList = null;
             Expression<Func<Film, object>> orderBy = f => new { f.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 pagedList = db.Films.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Films.ToPagedList(
@@ -258,7 +297,7 @@ namespace Data.BLL
                 throw new Exception("");
 
             Film film = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 film = db.Films.SingleOrDefault(f => f.ID == filmId);
             else
                 film = db.Films.SingleOrDefault(f => new
@@ -288,7 +327,7 @@ namespace Data.BLL
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 sqlCommand.CommandText = @"Select [Film].* from [Film], [CategoryDistribution]
                             where [Film].[ID] = [CategoryDistribution].[filmId]
                                 and [CategoryDistribution].[categoryId] = @categoryId";
@@ -307,8 +346,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreateFilmAsync(FilmCreation filmCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Film film = ToFilm(filmCreation);
             if (string.IsNullOrEmpty(film.name) || film.languageId <= 0
                 || string.IsNullOrEmpty(film.productionCompany) || film.countryId <= 0
@@ -336,8 +373,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> UpdateFilmAsync(FilmUpdate filmUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Film film = ToFilm(filmUpdate);
             if (string.IsNullOrEmpty(film.name) || film.languageId <= 0
                 || string.IsNullOrEmpty(film.productionCompany) || film.countryId <= 0
@@ -374,8 +409,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteFilmAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -391,14 +424,11 @@ namespace Data.BLL
                 return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
             }
 
-            return StateOfDeletion.ConstraintExists;    
+            return StateOfDeletion.ConstraintExists;
         }
 
         public async Task<StateOfCreation> AddCategoryAsync(string filmId, int categoryId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
                 throw new Exception("");
 
@@ -421,9 +451,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteCategoryAsync(string filmId, int categoryId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || categoryId <= 0)
                 throw new Exception("");
 
@@ -435,9 +462,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllCategoryAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -449,9 +473,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddTagAsync(string filmId, int tagId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || tagId <= 0)
                 throw new Exception("");
 
@@ -474,9 +495,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteTagAsync(string filmId, int tagId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || tagId <= 0)
                 throw new Exception("");
 
@@ -488,9 +506,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllTagAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -502,9 +517,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddDirectorAsync(string filmId, long directorId, string directorRole)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || directorId <= 0 || string.IsNullOrEmpty(directorRole))
                 throw new Exception("");
 
@@ -528,9 +540,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteDirectorAsync(string filmId, long directorId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || directorId <= 0)
                 throw new Exception("");
 
@@ -542,9 +551,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllDirectorAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -556,9 +562,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> AddCastAsync(string filmId, long castId, string castRole)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || castId <= 0 || string.IsNullOrEmpty(castRole))
                 throw new Exception("");
 
@@ -582,9 +585,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteCastAsync(string filmId, long castId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || castId <= 0)
                 throw new Exception("");
 
@@ -596,9 +596,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteAllCastAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -610,9 +607,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> AddImageAsync(string filmId, string filePath)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(filePath))
                 throw new Exception("");
 
@@ -631,9 +625,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> DeleteImageAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 
@@ -645,9 +636,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> AddSourceAsync(string filmId, string filePath)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(filePath))
                 throw new Exception("");
 
@@ -666,9 +654,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> DeleteSourceAsync(string filmId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
-
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
 

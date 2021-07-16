@@ -17,7 +17,7 @@ namespace Web.User
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.User);
+            filmBLL = new FilmBLL();
             await GetFilmInfo();
             filmBLL.Dispose();
         }

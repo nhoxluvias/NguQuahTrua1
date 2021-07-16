@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Common.Web;
+using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
@@ -12,22 +13,21 @@ namespace Data.BLL
 {
     public class PaymentMethodBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
 
-        public PaymentMethodBLL(DataAccessLevel dataAccessLevel)
+        public PaymentMethodBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public PaymentMethodBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public PaymentMethodBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
@@ -35,19 +35,25 @@ namespace Data.BLL
         {
             if (paymentMethod == null)
                 return null;
-            return new PaymentMethodInfo
+
+            PaymentMethodInfo paymentMethodInfo = new PaymentMethodInfo();
+            paymentMethodInfo.ID = paymentMethod.ID;
+            paymentMethodInfo.name = paymentMethod.name;
+
+            if (includeTimestamp)
             {
-                ID = paymentMethod.ID,
-                name = paymentMethod.name,
-                createAt = paymentMethod.createAt,
-                updateAt = paymentMethod.updateAt
-            };
+                paymentMethodInfo.createAt = paymentMethod.createAt;
+                paymentMethodInfo.updateAt = paymentMethod.updateAt;
+            }
+
+            return paymentMethodInfo;
         }
 
         private PaymentMethod ToPaymentMethod(PaymentMethodCreation paymentMethodCreation)
         {
             if (paymentMethodCreation == null)
                 throw new Exception("");
+
             return new PaymentMethod
             {
                 name = paymentMethodCreation.name,
@@ -60,6 +66,7 @@ namespace Data.BLL
         {
             if (paymentMethodUpdate == null)
                 throw new Exception("");
+
             return new PaymentMethod
             {
                 name = paymentMethodUpdate.name,
@@ -71,12 +78,13 @@ namespace Data.BLL
         public async Task<List<PaymentMethodInfo>> GetPaymentMethodsAsync()
         {
             List<PaymentMethodInfo> paymentMethods = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 paymentMethods = (await db.PaymentMethods.ToListAsync())
                     .Select(p => ToPaymentMethodInfo(p)).ToList();
             else
                 paymentMethods = (await db.PaymentMethods.ToListAsync(c => new { c.ID, c.name }))
                     .Select(p => ToPaymentMethodInfo(p)).ToList();
+
             return paymentMethods;
         }
 
@@ -85,7 +93,7 @@ namespace Data.BLL
             if (paymemtMethodId <= 0)
                 throw new Exception("");
             PaymentMethod paymentMethod = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 paymentMethod = (await db.PaymentMethods.SingleOrDefaultAsync(p => p.ID == paymemtMethodId));
             else
                 paymentMethod = (await db.PaymentMethods
@@ -98,7 +106,7 @@ namespace Data.BLL
         {
             SqlPagedList<PaymentMethod> pagedList = null;
             Expression<Func<PaymentMethod, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 pagedList = db.PaymentMethods.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.PaymentMethods.ToPagedList(
@@ -118,7 +126,7 @@ namespace Data.BLL
         {
             SqlPagedList<PaymentMethod> pagedList = null;
             Expression<Func<PaymentMethod, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 pagedList = await db.PaymentMethods.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.PaymentMethods.ToPagedListAsync(
@@ -134,10 +142,8 @@ namespace Data.BLL
             };
         }
 
-        public async Task<StateOfCreation> CreateRoleAsync(PaymentMethodCreation paymentMethodCreation)
+        public async Task<StateOfCreation> CreatePaymentMethodAsync(PaymentMethodCreation paymentMethodCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             PaymentMethod paymentMethod = ToPaymentMethod(paymentMethodCreation);
             if (paymentMethod.name == null)
                 throw new Exception("");
@@ -147,10 +153,8 @@ namespace Data.BLL
             return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateRoleAsync(PaymentMethodUpdate paymentMethodUpdate)
+        public async Task<StateOfUpdate> UpdatePaymentMethodAsync(PaymentMethodUpdate paymentMethodUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             PaymentMethod paymentMethod = ToPaymentMethod(paymentMethodUpdate);
             if (paymentMethod.name == null)
                 throw new Exception("");
@@ -161,10 +165,8 @@ namespace Data.BLL
             return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteAsync(int paymentMethodId)
+        public async Task<StateOfDeletion> DeletePaymentMethodAsync(int paymentMethodId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (paymentMethodId <= 0)
                 throw new Exception("");
 

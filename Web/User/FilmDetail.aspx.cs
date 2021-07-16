@@ -23,7 +23,7 @@ namespace Web.User
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.User);
+            filmBLL = new FilmBLL();
             enableShowDetail = false;
             try
             {
@@ -55,6 +55,12 @@ namespace Web.User
             }
             else
             {
+                filmBLL.IncludeCategory = true;
+                filmBLL.IncludeTag = true;
+                filmBLL.IncludeCountry = true;
+                filmBLL.IncludeLanguage = true;
+                filmBLL.IncludeDirector = true;
+                filmBLL.IncludeCast = true;
                 filmInfo = await filmBLL.GetFilmAsync(id);
                 if(filmInfo == null)
                 {

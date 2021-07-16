@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BLL\AccessLevel.cs" />
     <Compile Include="BLL\BLLState.cs" />
     <Compile Include="BLL\BusinessLogicLayer.cs" />
     <Compile Include="BLL\CastBLL.cs" />
@@ -56,7 +55,6 @@
     <Compile Include="Config\MigrationConfig.cs" />
     <Compile Include="BLL\Migration\PaymentMethodMigration.cs" />
     <Compile Include="BLL\Migration\RoleMigration.cs" />
-    <Compile Include="BLL\PagedList.cs" />
     <Compile Include="BLL\PaymentInfoBLL.cs" />
     <Compile Include="BLL\PaymentMethodBLL.cs" />
     <Compile Include="BLL\RoleBLL.cs" />

@@ -23,7 +23,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             customValidation = new CustomValidation();
             enableShowDetail = false;
             enableShowResult = false;
@@ -115,6 +115,7 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
+                filmBLL.IncludeCast = true;
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
                 {
@@ -132,12 +133,12 @@ namespace Web.Admin.FilmManagement
         private async Task LoadCasts()
         {
             drdlFilmCast.Items.Clear();
-            List<CastInfo> castInfos = await new CastBLL(filmBLL, DataAccessLevel.Admin).GetCastsAsync();
+            List<CastInfo> castInfos = await new CastBLL(filmBLL).GetCastsAsync();
             foreach (CastInfo castInfo in castInfos)
             {
                 drdlFilmCast.Items.Add(new ListItem(castInfo.name, castInfo.ID.ToString()));
             }
-            drdlFilmCast.SelectedIndex = 0;
+            drdlFilmCast.SelectedIndex = 5;
         }
 
         protected async void btnAdd_Click(object sender, EventArgs e)

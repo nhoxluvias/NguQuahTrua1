@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Common.Web;
+using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
@@ -14,42 +15,59 @@ namespace Data.BLL
 {
     public class CastBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
-        public CastBLL(DataAccessLevel dataAccessLevel) 
+        private bool includeDescription;
+
+        public bool IncludeDescription { set { includeDescription = value; } }
+
+        public CastBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public CastBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel) 
+        public CastBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
+        }
+
+        public override void SetDefault()
+        {
+            base.SetDefault();
+            includeDescription = false;
         }
 
         private CastInfo ToCastInfo(Cast cast)
         {
             if (cast == null)
                 return null;
-            return new CastInfo
+
+            CastInfo castInfo = new CastInfo();
+            castInfo.ID = cast.ID;
+            castInfo.name = cast.name;
+
+            if (includeDescription)
+                castInfo.description = cast.description;
+
+            if (includeTimestamp)
             {
-                ID = cast.ID,
-                name = cast.name,
-                description = cast.description,
-                createAt = cast.createAt,
-                updateAt = cast.updateAt,
-            };
+                castInfo.createAt = cast.createAt;
+                castInfo.updateAt = cast.updateAt;
+            }
+
+            return castInfo;
         }
 
         private Cast ToCast(CastCreation castCreation)
         {
             if (castCreation == null)
                 throw new Exception("@'castCreation' must be not null");
+
             return new Cast
             {
                 name = castCreation.name,
@@ -62,7 +80,8 @@ namespace Data.BLL
         private Cast ToCast(CastUpdate castUpdate)
         {
             if (castUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'castUpdate' must be not null");
+
             return new Cast
             {
                 ID = castUpdate.ID,
@@ -72,27 +91,39 @@ namespace Data.BLL
             };
         }
 
-        public async Task<List<CastInfo>> GetCastsAsync() 
+        public async Task<List<CastInfo>> GetCastsAsync()
         {
             List<CastInfo> casts = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                casts = (await db.Casts.ToListAsync())
-                    .Select(c => ToCastInfo(c)).ToList();
-            else
+            if (includeDescription && includeTimestamp)
+                casts = (await db.Casts.ToListAsync()).Select(c => ToCastInfo(c)).ToList();
+            else if (includeDescription)
                 casts = (await db.Casts.ToListAsync(c => new { c.ID, c.name, c.description }))
                      .Select(c => ToCastInfo(c)).ToList();
+            else if (includeTimestamp)
+                casts = (await db.Casts.ToListAsync(c => new { c.ID, c.name, c.createAt, c.updateAt }))
+                     .Select(c => ToCastInfo(c)).ToList();
+            else
+                casts = (await db.Casts.ToListAsync(c => new { c.ID, c.name }))
+                     .Select(c => ToCastInfo(c)).ToList();
+
             return casts;
         }
 
         public List<CastInfo> GetCasts()
         {
             List<CastInfo> casts = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                casts = db.Casts.ToList()
-                    .Select(c => ToCastInfo(c)).ToList();
-            else
+            if (includeDescription && includeTimestamp)
+                casts = db.Casts.ToList().Select(c => ToCastInfo(c)).ToList();
+            else if (includeDescription)
                 casts = db.Casts.ToList(c => new { c.ID, c.name, c.description })
                      .Select(c => ToCastInfo(c)).ToList();
+            else if (includeTimestamp)
+                casts = db.Casts.ToList(c => new { c.ID, c.name, c.createAt, c.updateAt })
+                     .Select(c => ToCastInfo(c)).ToList();
+            else
+                casts = db.Casts.ToList(c => new { c.ID, c.name })
+                     .Select(c => ToCastInfo(c)).ToList();
+
             return casts;
         }
 
@@ -100,13 +131,17 @@ namespace Data.BLL
         {
             SqlPagedList<Cast> pagedList = null;
             Expression<Func<Cast, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = await db.Casts.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeDescription)
+                pagedList = await db.Casts.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeTimestamp)
+                pagedList = await db.Casts.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.createAt, c.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Casts.ToPagedListAsync(
-                    c => new { c.ID, c.name, c.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<CastInfo>
             {
@@ -120,13 +155,17 @@ namespace Data.BLL
         {
             SqlPagedList<Cast> pagedList = null;
             Expression<Func<Cast, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = db.Casts.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeDescription)
+                pagedList = db.Casts.ToPagedList(
+                    c => new { c.ID, c.name, c.description },orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeTimestamp)
+                pagedList = db.Casts.ToPagedList(
+                    c => new { c.ID, c.name, c.createAt, c.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Casts.ToPagedList(
-                    c => new { c.ID, c.name, c.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<CastInfo>
             {
@@ -141,12 +180,17 @@ namespace Data.BLL
             if (castId <= 0)
                 throw new Exception("");
             Cast cast = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                cast = await db.Casts
-                     .SingleOrDefaultAsync(c => c.ID == castId);
-            else
+            if (includeDescription && includeTimestamp)
+                cast = await db.Casts.SingleOrDefaultAsync(c => c.ID == castId);
+            else if(includeDescription)
                 cast = await db.Casts
                     .SingleOrDefaultAsync(c => new { c.ID, c.name, c.description }, c => c.ID == castId);
+            else if(includeTimestamp)
+                cast = await db.Casts
+                    .SingleOrDefaultAsync(c => new { c.ID, c.name, c.createAt, c.updateAt }, c => c.ID == castId);
+            else
+                cast = await db.Casts
+                    .SingleOrDefaultAsync(c => new { c.ID, c.name }, c => c.ID == castId);
 
             return ToCastInfo(cast);
         }
@@ -155,13 +199,19 @@ namespace Data.BLL
         {
             if (castId <= 0)
                 throw new Exception("");
+
             Cast cast = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                cast = db.Casts
-                     .SingleOrDefault(c => c.ID == castId);
-            else
+            if (includeDescription && includeTimestamp)
+                cast = db.Casts.SingleOrDefault(c => c.ID == castId);
+            else if(includeDescription)
                 cast = db.Casts
                     .SingleOrDefault(c => new { c.ID, c.name, c.description }, c => c.ID == castId);
+            else if(includeTimestamp)
+                cast = db.Casts
+                    .SingleOrDefault(c => new { c.ID, c.name, c.createAt, c.updateAt }, c => c.ID == castId);
+            else
+                cast = db.Casts
+                    .SingleOrDefault(c => new { c.ID, c.name }, c => c.ID == castId);
 
             return ToCastInfo(cast);
         }
@@ -172,14 +222,24 @@ namespace Data.BLL
                 throw new Exception("");
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Cast].* from [CastOfFilm], [Cast]
-                                where [CastOfFilm].[castID] = [Cast].[ID]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
-            else
+            else if(includeDescription)
                 sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
                                 from [CastOfFilm], [Cast]
-                                where [CastOfFilm].[categoryID] = [Cast].[ID]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
+                                    and [CastOfFilm].[filmId] = @filmId";
+            else if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[createAt], [Cast].[updateAt] 
+                                from [CastOfFilm], [Cast]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
+                                    and [CastOfFilm].[filmId] = @filmId";
+            else
+                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name] 
+                                from [CastOfFilm], [Cast]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
@@ -192,14 +252,24 @@ namespace Data.BLL
                 throw new Exception("");
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Cast].* from [CastOfFilm], [Cast]
-                                where [CastOfFilm].[castID] = [Cast].[ID]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
-            else
+            else if (includeDescription)
                 sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
                                 from [CastOfFilm], [Cast]
-                                where [CastOfFilm].[castID] = [Cast].[ID]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
+                                    and [CastOfFilm].[filmId] = @filmId";
+            else if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[createAt], [Cast].[updateAt] 
+                                from [CastOfFilm], [Cast]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
+                                    and [CastOfFilm].[filmId] = @filmId";
+            else
+                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name] 
+                                from [CastOfFilm], [Cast]
+                                where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
@@ -208,8 +278,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreateCastAsync(CastCreation castCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Cast cast = ToCast(castCreation);
             if (cast.name == null)
                 throw new Exception("");
@@ -229,8 +297,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> UpdateCastAsync(CastUpdate castUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Cast cast = ToCast(castUpdate);
             if (cast.name == null)
                 throw new Exception("");
@@ -254,8 +320,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteCastAsync(int castId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (castId <= 0)
                 throw new Exception("");
 

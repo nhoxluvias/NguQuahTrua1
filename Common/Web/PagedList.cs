@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Data.BLL
+namespace Common.Web
 {
     public class PagedList<T>
     {

@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Common.Web;
+using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
@@ -8,50 +9,65 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.BLL
 {
     public class TagBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
+        private bool includeDescription;
 
-        public TagBLL(DataAccessLevel dataAccessLevel)
+        public bool IncludeDescription { set { includeDescription = value; } }
+
+        public TagBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public TagBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public TagBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
+        }
+
+        public override void SetDefault()
+        {
+            base.SetDefault();
+            includeDescription = false;
         }
 
         private TagInfo ToTagInfo(Tag tag)
         {
             if (tag == null)
                 return null;
-            return new TagInfo
+
+            TagInfo tagInfo = new TagInfo();
+            tagInfo.ID = tag.ID;
+            tagInfo.name = tag.name;
+
+            if (includeDescription)
+                tagInfo.description = tag.description;
+
+            if (includeTimestamp)
             {
-                ID = tag.ID,
-                name = tag.name,
-                description = tag.description,
-                createAt = tag.createAt,
-                updateAt = tag.updateAt
-            };
+                tagInfo.createAt = tag.createAt;
+                tagInfo.updateAt = tag.updateAt;
+            }
+
+            return tagInfo;
         }
 
         private Tag ToTag(TagCreation tagCreation)
         {
             if (tagCreation == null)
-                throw new Exception("@'categoryCreation' must be not null");
+                throw new Exception("@'tagCreation' must be not null");
+
             return new Tag
             {
                 name = tagCreation.name,
@@ -64,7 +80,8 @@ namespace Data.BLL
         private Tag ToTag(TagUpdate tagUpdate)
         {
             if (tagUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'tagUpdate' must be not null");
+
             return new Tag
             {
                 ID = tagUpdate.ID,
@@ -78,24 +95,36 @@ namespace Data.BLL
         public async Task<List<TagInfo>> GetTagsAsync()
         {
             List<TagInfo> tags = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                tags = (await db.Tags.ToListAsync())
+            if (includeDescription && includeTimestamp)
+                tags = (await db.Tags.ToListAsync()).Select(t => ToTagInfo(t)).ToList();
+            else if (includeDescription)
+                tags = (await db.Tags.ToListAsync(t => new { t.ID, t.name, t.description }))
+                    .Select(t => ToTagInfo(t)).ToList();
+            else if (includeTimestamp)
+                tags = (await db.Tags.ToListAsync(t => new { t.ID, t.name, t.createAt, t.updateAt }))
                     .Select(t => ToTagInfo(t)).ToList();
             else
-                tags = (await db.Tags.ToListAsync())
+                tags = (await db.Tags.ToListAsync(t => new { t.ID, t.name }))
                     .Select(t => ToTagInfo(t)).ToList();
+
             return tags;
         }
 
         public List<TagInfo> GetTags()
         {
             List<TagInfo> tags = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                tags = db.Tags.ToList()
+            if (includeDescription && includeTimestamp)
+                tags = db.Tags.ToList().Select(t => ToTagInfo(t)).ToList();
+            else if (includeDescription)
+                tags = db.Tags.ToList(t => new { t.ID, t.name, t.description })
+                    .Select(t => ToTagInfo(t)).ToList();
+            else if (includeTimestamp)
+                tags = db.Tags.ToList(t => new { t.ID, t.name, t.createAt, t.updateAt })
                     .Select(t => ToTagInfo(t)).ToList();
             else
-                tags = db.Tags.ToList()
+                tags = db.Tags.ToList(t => new { t.ID, t.name })
                     .Select(t => ToTagInfo(t)).ToList();
+
             return tags;
         }
 
@@ -103,13 +132,17 @@ namespace Data.BLL
         {
             SqlPagedList<Tag> pagedList = null;
             Expression<Func<Tag, object>> orderBy = t => new { t.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = await db.Tags.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeDescription)
+                pagedList = await db.Tags.ToPagedListAsync(
+                    t => new { t.ID, t.name, t.description }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeTimestamp)
+                pagedList = await db.Tags.ToPagedListAsync(
+                    t => new { t.ID, t.name, t.createAt, t.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Tags.ToPagedListAsync(
-                    t => new { t.ID, t.name, t.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    t => new { t.ID, t.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<TagInfo>
             {
@@ -123,13 +156,17 @@ namespace Data.BLL
         {
             SqlPagedList<Tag> pagedList = null;
             Expression<Func<Tag, object>> orderBy = t => new { t.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = db.Tags.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeDescription)
+                pagedList = db.Tags.ToPagedList(
+                    t => new { t.ID, t.name, t.description }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeTimestamp)
+                pagedList = db.Tags.ToPagedList(
+                    t => new { t.ID, t.name, t.createAt, t.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Tags.ToPagedList(
-                    t => new { t.ID, t.name, t.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    t => new { t.ID, t.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<TagInfo>
             {
@@ -143,13 +180,18 @@ namespace Data.BLL
         {
             if (tagId <= 0)
                 throw new Exception("");
+
             Tag tag = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                tag = await db.Tags
-                     .SingleOrDefaultAsync(t => t.ID == tagId);
-            else
+            if (includeDescription && includeTimestamp)
+                tag = await db.Tags.SingleOrDefaultAsync(t => t.ID == tagId);
+            else if(includeDescription)
                 tag = await db.Tags
                     .SingleOrDefaultAsync(t => new { t.ID, t.name, t.description }, t => t.ID == tagId);
+            else if(includeTimestamp)
+                tag = await db.Tags
+                    .SingleOrDefaultAsync(t => new { t.ID, t.name, t.createAt, t.updateAt }, t => t.ID == tagId);
+            else
+                tag = await db.Tags.SingleOrDefaultAsync(t => new { t.ID, t.name }, t => t.ID == tagId);
 
             return ToTagInfo(tag);
         }
@@ -158,13 +200,18 @@ namespace Data.BLL
         {
             if (tagId <= 0)
                 throw new Exception("");
+
             Tag tag = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                tag = db.Tags
-                     .SingleOrDefault(t => t.ID == tagId);
-            else
+            if (includeDescription && includeTimestamp)
+                tag = db.Tags.SingleOrDefault(t => t.ID == tagId);
+            else if (includeDescription)
                 tag = db.Tags
                     .SingleOrDefault(t => new { t.ID, t.name, t.description }, t => t.ID == tagId);
+            else if (includeTimestamp)
+                tag = db.Tags
+                    .SingleOrDefault(t => new { t.ID, t.name, t.createAt, t.updateAt }, t => t.ID == tagId);
+            else
+                tag = db.Tags.SingleOrDefault(t => new { t.ID, t.name }, t => t.ID == tagId);
 
             return ToTagInfo(tag);
         }
@@ -173,15 +220,27 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Tag].* from [TagDistribution], [Tag]
-                                where [TagDistribution].[tagID] = [Tag].[ID]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
+                                    and [TagDistribution].[filmId] = @filmId";
+            else if(includeDescription)
+                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] 
+                                from [TagDistribution], [Tag]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
+                                    and [TagDistribution].[filmId] = @filmId";
+            else if(includeTimestamp)
+                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[createAt], [Tag].[updateAt] 
+                                from [TagDistribution], [Tag]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] from [TagDistribution], [Tag]
-                                where [TagDistribution].[tagID] = [Tag].[ID]
+                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name] 
+                                from [TagDistribution], [Tag]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
@@ -192,15 +251,27 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Tag].* from [TagDistribution], [Tag]
-                                where [TagDistribution].[tagID] = [Tag].[ID]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
+                                    and [TagDistribution].[filmId] = @filmId";
+            else if (includeDescription)
+                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] 
+                                from [TagDistribution], [Tag]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
+                                    and [TagDistribution].[filmId] = @filmId";
+            else if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[createAt], [Tag].[updateAt] 
+                                from [TagDistribution], [Tag]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] from [TagDistribution], [Tag]
-                                where [TagDistribution].[tagID] = [Tag].[ID]
+                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name] 
+                                from [TagDistribution], [Tag]
+                                where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
@@ -209,8 +280,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreateTagAsync(TagCreation tagCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Tag tag = ToTag(tagCreation);
             if (tag.name == null)
                 throw new Exception("");
@@ -230,8 +299,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> UpdateTagAsync(TagUpdate tagUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Tag tag = ToTag(tagUpdate);
             if (tag.name == null)
                 throw new Exception("");
@@ -255,8 +322,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteTagAsync(long tagId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (tagId <= 0)
                 throw new Exception("");
 

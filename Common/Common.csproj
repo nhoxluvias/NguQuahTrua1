@@ -57,6 +57,7 @@
     <Compile Include="SystemInformation\SystemInfo.cs" />
     <Compile Include="Upload\FileUpload.cs" />
     <Compile Include="Web\ConfirmCode.cs" />
+    <Compile Include="Web\PagedList.cs" />
     <Compile Include="Web\PageVisitor.cs" />
   </ItemGroup>
   <ItemGroup />

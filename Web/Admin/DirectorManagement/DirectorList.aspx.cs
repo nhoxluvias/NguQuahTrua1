@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            directorBLL = new DirectorBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.DirectorManagement
 
         private async Task SetGrvDirector()
         {
+            directorBLL.IncludeTimestamp = true;
             PagedList<DirectorInfo> directors = await directorBLL
                 .GetDirectorsAsync(drdlPage.SelectedIndex, 20);
             grvDirector.DataSource = directors.Items;

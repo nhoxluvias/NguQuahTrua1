@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Data.BLL;
+using Data.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +13,13 @@ namespace Web.User
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            FilmBLL filmBLL = new FilmBLL();
 
+            CategoryBLL categoryBLL = new CategoryBLL();
+            TagBLL tagBLL = new TagBLL();
+
+            filmBLL.Dispose();
+            List<CategoryInfo> categories = categoryBLL.GetCategories();
         }
     }
 }

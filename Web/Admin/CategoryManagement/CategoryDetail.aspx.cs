@@ -14,7 +14,7 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            categoryBLL = new CategoryBLL();
             enableShowDetail = false;
             try
             {
@@ -62,6 +62,8 @@ namespace Web.Admin.CategoryManagement
             }
             else
             {
+                categoryBLL.IncludeDescription = true;
+                categoryBLL.IncludeTimestamp = true;
                 categoryInfo = await categoryBLL.GetCategoryAsync(id);
                 if (categoryInfo == null)
                     Response.RedirectToRoute("Admin_CategoryList", null);

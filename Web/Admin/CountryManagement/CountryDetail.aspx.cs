@@ -1,12 +1,8 @@
 ﻿using Data.BLL;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Admin.CountryManagement
@@ -19,7 +15,7 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            countryBLL = new CountryBLL();
             enableShowDetail = false;
             try
             {
@@ -67,6 +63,8 @@ namespace Web.Admin.CountryManagement
             }
             else
             {
+                countryBLL.IncludeDescription = true;
+                countryBLL.IncludeTimestamp = true;
                 countryInfo = await countryBLL.GetCountryAsync(id);
                 if (countryInfo == null)
                     Response.RedirectToRoute("Admin_CountryList", null);

@@ -17,7 +17,7 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            countryBLL = new CountryBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;

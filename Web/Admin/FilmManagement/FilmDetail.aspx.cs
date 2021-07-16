@@ -17,7 +17,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             enableShowDetail = false;
             try
             {
@@ -71,6 +71,13 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
+                filmBLL.IncludeCategory = true;
+                filmBLL.IncludeTag = true;
+                filmBLL.IncludeLanguage = true;
+                filmBLL.IncludeCountry = true;
+                filmBLL.IncludeDirector = true;
+                filmBLL.IncludeCast = true;
+                filmBLL.IncludeTimestamp = true;
                 filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
                 {

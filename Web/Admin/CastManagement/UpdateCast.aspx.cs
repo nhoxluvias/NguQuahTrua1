@@ -19,7 +19,7 @@ namespace Web.Admin.CastManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            castBLL = new CastBLL(DataAccessLevel.Admin);
+            castBLL = new CastBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -86,6 +86,7 @@ namespace Web.Admin.CastManagement
             }
             else
             {
+                castBLL.IncludeDescription = true;
                 CastInfo castInfo = await castBLL.GetCastAsync(id);
                 if (castInfo == null)
                 {

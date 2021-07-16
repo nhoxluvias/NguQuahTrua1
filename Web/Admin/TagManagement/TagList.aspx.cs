@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            tagBLL = new TagBLL(DataAccessLevel.Admin);
+            tagBLL = new TagBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.TagManagement
 
         private async Task SetGrvTag()
         {
+            tagBLL.IncludeTimestamp = true;
             PagedList<TagInfo> categories = await tagBLL
                 .GetTagsAsync(drdlPage.SelectedIndex, 20);
             grvTag.DataSource = categories.Items;

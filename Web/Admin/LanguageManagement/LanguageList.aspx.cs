@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            languageBLL = new LanguageBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -59,6 +60,7 @@ namespace Web.Admin.LanguageManagement
 
         private async Task SetGrvLanguage(int pageIndex)
         {
+            languageBLL.IncludeTimestamp = true;
             PagedList<LanguageInfo> languages = await languageBLL
                 .GetLanguagesAsync(drdlPage.SelectedIndex, 20);
             grvLanguage.DataSource = languages.Items;

@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            roleBLL = new RoleBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.RoleManagement
 
         private async Task SetGrvRole()
         {
+            roleBLL.IncludeTimestamp = true;
             PagedList<RoleInfo> roles = await roleBLL
                 .GetRolesAsync(drdlPage.SelectedIndex, 20);
             grvRole.DataSource = roles.Items;

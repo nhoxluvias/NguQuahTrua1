@@ -1,4 +1,5 @@
-﻿using Data.DAL;
+﻿using Common.Web;
+using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
 using MSSQL_Lite.Query;
@@ -14,42 +15,59 @@ namespace Data.BLL
 {
     public class DirectorBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
-        public DirectorBLL(DataAccessLevel dataAccessLevel)
+        private bool includeDescription;
+
+        public bool IncludeDescription { set { includeDescription = value; } }
+
+        public DirectorBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public DirectorBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public DirectorBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
+        }
+
+        public override void SetDefault()
+        {
+            base.SetDefault();
+            includeDescription = false;
         }
 
         private DirectorInfo ToDirectorInfo(Director director)
         {
             if (director == null)
                 return null;
-            return new DirectorInfo
+
+            DirectorInfo directorInfo = new DirectorInfo();
+            directorInfo.ID = director.ID;
+            directorInfo.name = director.name;
+
+            if (includeDescription)
+                directorInfo.description = director.description;
+
+            if (includeTimestamp)
             {
-                ID = director.ID,
-                name = director.name,
-                description = director.description,
-                createAt = director.createAt,
-                updateAt = director.updateAt,
-            };
+                directorInfo.createAt = director.createAt;
+                directorInfo.updateAt = director.updateAt;
+            }
+
+            return directorInfo;
         }
 
         private Director ToDirector(DirectorCreation directorCreation)
         {
             if (directorCreation == null)
-                throw new Exception("");
+                throw new Exception("@'directorCreation' must be not null");
+
             return new Director
             {
                 name = directorCreation.name,
@@ -62,7 +80,8 @@ namespace Data.BLL
         private Director ToDirector(DirectorUpdate directorUpdate)
         {
             if (directorUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'directorCreation' must be not null");
+
             return new Director
             {
                 ID = directorUpdate.ID,
@@ -75,24 +94,36 @@ namespace Data.BLL
         public async Task<List<DirectorInfo>> GetDirectorsAsync()
         {
             List<DirectorInfo> directors = null;
-            if(dataAccessLevel == DataAccessLevel.Admin)
-                directors = (await db.Directors.ToListAsync())
-                    .Select(d => ToDirectorInfo(d)).ToList();
-            else
+            if (includeDescription && includeTimestamp)
+                directors = (await db.Directors.ToListAsync()).Select(d => ToDirectorInfo(d)).ToList();
+            else if (includeDescription)
                 directors = (await db.Directors.ToListAsync(c => new { c.ID, c.name, c.description }))
                     .Select(d => ToDirectorInfo(d)).ToList();
+            else if (includeTimestamp)
+                directors = (await db.Directors.ToListAsync(c => new { c.ID, c.name, c.createAt, c.updateAt }))
+                    .Select(d => ToDirectorInfo(d)).ToList();
+            else
+                directors = (await db.Directors.ToListAsync(c => new { c.ID, c.name }))
+                    .Select(d => ToDirectorInfo(d)).ToList();
+
             return directors;
         }
 
         public List<DirectorInfo> GetDirectors()
         {
             List<DirectorInfo> directors = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                directors = db.Directors.ToList()
-                    .Select(d => ToDirectorInfo(d)).ToList();
-            else
+            if (includeDescription && includeTimestamp)
+                directors = db.Directors.ToList().Select(d => ToDirectorInfo(d)).ToList();
+            else if (includeDescription)
                 directors = db.Directors.ToList(c => new { c.ID, c.name, c.description })
                     .Select(d => ToDirectorInfo(d)).ToList();
+            else if (includeTimestamp)
+                directors = db.Directors.ToList(c => new { c.ID, c.name, c.createAt, c.updateAt })
+                    .Select(d => ToDirectorInfo(d)).ToList();
+            else
+                directors = db.Directors.ToList(c => new { c.ID, c.name })
+                    .Select(d => ToDirectorInfo(d)).ToList();
+
             return directors;
         }
 
@@ -100,13 +131,17 @@ namespace Data.BLL
         {
             SqlPagedList<Director> pagedList = null;
             Expression<Func<Director, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = db.Directors.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeDescription)
+                pagedList = db.Directors.ToPagedList(
+                    c => new { c.ID, c.name, c.description }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if (includeTimestamp)
+                pagedList = db.Directors.ToPagedList(
+                    c => new { c.ID, c.name, c.createAt, c.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Directors.ToPagedList(
-                    c => new { c.ID, c.name, c.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<DirectorInfo>
             {
@@ -120,14 +155,18 @@ namespace Data.BLL
         {
             SqlPagedList<Director> pagedList = null;
             Expression<Func<Director, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 pagedList = await db.Directors.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeDescription)
+                pagedList = await db.Directors.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.description }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            else if(includeTimestamp)
+                pagedList = await db.Directors.ToPagedListAsync(
+                    c => new { c.ID, c.name, c.createAt, c.updateAt }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Directors.ToPagedListAsync(
-                    c => new { c.ID, c.name, c.description },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
-
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
+            
             return new PagedList<DirectorInfo>
             {
                 PageNumber = pagedList.PageNumber,
@@ -140,12 +179,20 @@ namespace Data.BLL
         {
             if (directorId <= 0)
                 throw new Exception("");
+
             Director director = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 director = await db.Directors.SingleOrDefaultAsync(d => d.ID == directorId);
-            else
+            else if(includeDescription)
                 director = await db.Directors
                     .SingleOrDefaultAsync(d => new { d.ID, d.name, d.description }, d => d.ID == directorId);
+            else if(includeTimestamp)
+                director = await db.Directors
+                    .SingleOrDefaultAsync(d => new { d.ID, d.name, d.createAt, d.updateAt }, d => d.ID == directorId);
+            else
+                director = await db.Directors
+                    .SingleOrDefaultAsync(d => new { d.ID, d.name }, d => d.ID == directorId);
+
             return ToDirectorInfo(director);
         }
 
@@ -153,12 +200,20 @@ namespace Data.BLL
         {
             if (directorId <= 0)
                 throw new Exception("");
+
             Director director = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 director = db.Directors.SingleOrDefault(d => d.ID == directorId);
-            else
+            else if(includeDescription)
                 director = db.Directors
                     .SingleOrDefault(d => new { d.ID, d.name, d.description }, d => d.ID == directorId);
+            else if(includeTimestamp)
+                director = db.Directors
+                    .SingleOrDefault(d => new { d.ID, d.name, d.createAt, d.updateAt }, d => d.ID == directorId);
+            else
+                director = db.Directors
+                    .SingleOrDefault(d => new { d.ID, d.name }, d => d.ID == directorId);
+
             return ToDirectorInfo(director);
         }
 
@@ -166,17 +221,28 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if(dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
-                                and [Director].[filmId] = @filmId";
-            else
+                                and [DirectorOfFilm].[filmId] = @filmId";
+            else if(includeDescription)
                 sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
-                                and [Director].[filmId] = @filmId";
+                                and [DirectorOfFilm].[filmId] = @filmId";
+            else if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[createAt], [Director].[updateAt] 
+                            from [Director], [DirectorOfFilm] 
+                            where [Director].[ID] = [DirectorOfFilm].[directorId]
+                                and [DirectorOfFilm].[filmId] = @filmId";
+            else
+                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name]
+                            from [Director], [DirectorOfFilm] 
+                            where [Director].[ID] = [DirectorOfFilm].[directorId]
+                                and [DirectorOfFilm].[filmId] = @filmId";
 
             sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
             return await db.ExecuteReaderAsync<List<DirectorInfo>>(sqlCommand);
@@ -186,14 +252,25 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeDescription && includeTimestamp)
                 sqlCommand.CommandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
-            else
+            else if (includeDescription)
                 sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
+                            from [Director], [DirectorOfFilm] 
+                            where [Director].[ID] = [DirectorOfFilm].[directorId]
+                                and [DirectorOfFilm].[filmId] = @filmId";
+            else if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[createAt], [Director].[updateAt] 
+                            from [Director], [DirectorOfFilm] 
+                            where [Director].[ID] = [DirectorOfFilm].[directorId]
+                                and [DirectorOfFilm].[filmId] = @filmId";
+            else
+                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name]
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
@@ -204,8 +281,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreateDirectorAsync(DirectorCreation directorCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Director director = ToDirector(directorCreation);
             if (director.name == null)
                 throw new Exception("");
@@ -225,8 +300,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> UpdateDirectorAsync(DirectorUpdate directorUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Director director = ToDirector(directorUpdate);
             if (director.name == null)
                 throw new Exception("");
@@ -250,8 +323,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteDirectorAsync(long directorId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (directorId <= 0)
                 throw new Exception("");
 

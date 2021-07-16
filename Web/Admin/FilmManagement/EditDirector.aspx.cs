@@ -23,7 +23,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             customValidation = new CustomValidation();
             enableShowDetail = false;
             enableShowResult = false;
@@ -115,6 +115,7 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
+                filmBLL.IncludeDirector = true;
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
                 {
@@ -132,7 +133,7 @@ namespace Web.Admin.FilmManagement
         private async Task LoadDirectors()
         {
             drdlFilmDirector.Items.Clear();
-            List<DirectorInfo> directorInfos = await new DirectorBLL(filmBLL, DataAccessLevel.Admin).GetDirectorsAsync();
+            List<DirectorInfo> directorInfos = await new DirectorBLL(filmBLL).GetDirectorsAsync();
             foreach (DirectorInfo directorInfo in directorInfos)
             {
                 drdlFilmDirector.Items.Add(new ListItem(directorInfo.name, directorInfo.ID.ToString()));

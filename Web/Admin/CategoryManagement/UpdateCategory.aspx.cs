@@ -19,7 +19,7 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            categoryBLL = new CategoryBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -86,6 +86,7 @@ namespace Web.Admin.CategoryManagement
             }
             else
             {
+                categoryBLL.IncludeDescription = true;
                 CategoryInfo categoryInfo = await categoryBLL.GetCategoryAsync(id);
                 if (categoryInfo == null)
                 {

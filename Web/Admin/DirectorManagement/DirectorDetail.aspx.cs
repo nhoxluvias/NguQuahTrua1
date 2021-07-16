@@ -15,7 +15,7 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            directorBLL = new DirectorBLL();
             enableShowDetail = false;
             try
             {
@@ -63,6 +63,8 @@ namespace Web.Admin.DirectorManagement
             }
             else
             {
+                directorBLL.IncludeDescription = true;
+                directorBLL.IncludeTimestamp = true;
                 directorInfo = await directorBLL.GetDirectorAsync(id);
                 if (directorInfo == null)
                     Response.RedirectToRoute("Admin_DirectorList", null);

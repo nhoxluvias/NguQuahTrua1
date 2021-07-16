@@ -1,4 +1,5 @@
 ﻿using Common.Hash;
+using Common.Web;
 using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
@@ -13,29 +14,39 @@ namespace Data.BLL
 {
     public class UserBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
-        public UserBLL(DataAccessLevel dataAccessLevel)
+        private bool includeRole;
+
+        public bool IncludeRole { set { includeRole = value; } }
+
+        public UserBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public UserBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public UserBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
+        }
+
+        public override void SetDefault()
+        {
+            base.SetDefault();
+            includeRole = false;
         }
 
         private UserInfo ToUserInfo(User user)
         {
             if (user == null)
                 return null;
-            return new UserInfo
+
+            UserInfo userInfo = new UserInfo
             {
                 ID = user.ID,
                 userName = user.userName,
@@ -45,11 +56,19 @@ namespace Data.BLL
                 description = user.description,
                 phoneNumber = user.phoneNumber,
                 email = user.email,
-                activated = user.activated,
-                Role = ((user.roleId == null ) ? null : new RoleBLL(this, dataAccessLevel).GetRole(user.roleId)),
-                createAt = user.createAt,
-                updateAt = user.updateAt
+                activated = user.activated
             };
+
+            if (includeRole)
+                userInfo.Role = new RoleBLL(this).GetRole(user.roleId);
+
+            if (includeTimestamp)
+            {
+                userInfo.createAt = user.createAt;
+                userInfo.updateAt = user.updateAt;
+            }
+
+            return userInfo;
         }
 
         private async Task<User> ToUser(UserCreation userCreation)
@@ -91,11 +110,11 @@ namespace Data.BLL
         public async Task<List<UserInfo>> GetUsersAsync()
         {
             List<UserInfo> users = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                users = (await db.Users.ToListAsync())
-                    .Select(u => ToUserInfo(u)).ToList();
-            else
-                users = (await db.Users.ToListAsync(u => new {
+            if (includeRole && includeTimestamp)
+                users = (await db.Users.ToListAsync()).Select(u => ToUserInfo(u)).ToList();
+            else if (includeRole)
+                users = (await db.Users.ToListAsync(u => new
+                {
                     u.ID,
                     u.userName,
                     u.surName,
@@ -106,17 +125,44 @@ namespace Data.BLL
                     u.phoneNumber,
                     u.roleId
                 })).Select(u => ToUserInfo(u)).ToList();
+            else if (includeTimestamp)
+                users = (await db.Users.ToListAsync(u => new
+                {
+                    u.ID,
+                    u.userName,
+                    u.surName,
+                    u.middleName,
+                    u.name,
+                    u.description,
+                    u.email,
+                    u.phoneNumber,
+                    u.createAt,
+                    u.updateAt
+                })).Select(u => ToUserInfo(u)).ToList();
+            else
+                users = (await db.Users.ToListAsync(u => new
+                {
+                    u.ID,
+                    u.userName,
+                    u.surName,
+                    u.middleName,
+                    u.name,
+                    u.description,
+                    u.email,
+                    u.phoneNumber
+                })).Select(u => ToUserInfo(u)).ToList();
+
             return users;
         }
 
         public List<UserInfo> GetUsers()
         {
             List<UserInfo> users = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
-                users = db.Users.ToList()
-                    .Select(u => ToUserInfo(u)).ToList();
-            else
-                users = db.Users.ToList(u => new {
+            if (includeRole && includeTimestamp)
+                users = db.Users.ToList().Select(u => ToUserInfo(u)).ToList();
+            else if (includeRole)
+                users = db.Users.ToList(u => new
+                {
                     u.ID,
                     u.userName,
                     u.surName,
@@ -127,6 +173,33 @@ namespace Data.BLL
                     u.phoneNumber,
                     u.roleId
                 }).Select(u => ToUserInfo(u)).ToList();
+            else if (includeTimestamp)
+                users = db.Users.ToList(u => new
+                {
+                    u.ID,
+                    u.userName,
+                    u.surName,
+                    u.middleName,
+                    u.name,
+                    u.description,
+                    u.email,
+                    u.phoneNumber,
+                    u.createAt,
+                    u.updateAt
+                }).Select(u => ToUserInfo(u)).ToList();
+            else
+                users = db.Users.ToList(u => new
+                {
+                    u.ID,
+                    u.userName,
+                    u.surName,
+                    u.middleName,
+                    u.name,
+                    u.description,
+                    u.email,
+                    u.phoneNumber
+                }).Select(u => ToUserInfo(u)).ToList();
+
             return users;
         }
 
@@ -134,11 +207,12 @@ namespace Data.BLL
         {
             SqlPagedList<User> pagedList = null;
             Expression<Func<User, object>> orderBy = u => new { u.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeRole && includeTimestamp)
                 pagedList = await db.Users.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
-            else
+            else if (includeRole)
                 pagedList = await db.Users.ToPagedListAsync(
-                    u => new {
+                    u => new
+                    {
                         u.ID,
                         u.userName,
                         u.surName,
@@ -148,6 +222,38 @@ namespace Data.BLL
                         u.email,
                         u.phoneNumber,
                         u.roleId
+                    },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+            else if (includeTimestamp)
+                pagedList = await db.Users.ToPagedListAsync(
+                    u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.createAt,
+                        u.updateAt
+                    },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+            else
+                pagedList = await db.Users.ToPagedListAsync(
+                    u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber
                     },
                     orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
                 );
@@ -164,11 +270,12 @@ namespace Data.BLL
         {
             SqlPagedList<User> pagedList = null;
             Expression<Func<User, object>> orderBy = u => new { u.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeRole && includeTimestamp)
                 pagedList = db.Users.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
-            else
+            else if (includeRole)
                 pagedList = db.Users.ToPagedList(
-                    u => new {
+                    u => new
+                    {
                         u.ID,
                         u.userName,
                         u.surName,
@@ -178,6 +285,38 @@ namespace Data.BLL
                         u.email,
                         u.phoneNumber,
                         u.roleId
+                    },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+            else if (includeTimestamp)
+                pagedList = db.Users.ToPagedList(
+                    u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.createAt,
+                        u.updateAt
+                    },
+                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
+                );
+            else
+                pagedList = db.Users.ToPagedList(
+                    u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber
                     },
                     orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
                 );
@@ -194,13 +333,14 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(userId))
                 throw new Exception("");
+
             User user = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeRole && includeTimestamp)
+                user = await db.Users.SingleOrDefaultAsync(u => u.ID == userId);
+            else if (includeRole)
                 user = await db.Users
-                     .SingleOrDefaultAsync(u => u.ID == userId);
-            else
-                user = await db.Users
-                    .SingleOrDefaultAsync(u => new {
+                    .SingleOrDefaultAsync(u => new
+                    {
                         u.ID,
                         u.userName,
                         u.surName,
@@ -211,6 +351,34 @@ namespace Data.BLL
                         u.phoneNumber,
                         u.roleId
                     }, u => u.ID == userId);
+            else if (includeTimestamp)
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.createAt,
+                        u.updateAt
+                    }, u => u.ID == userId);
+            else
+                user = await db.Users
+                   .SingleOrDefaultAsync(u => new
+                   {
+                       u.ID,
+                       u.userName,
+                       u.surName,
+                       u.middleName,
+                       u.name,
+                       u.description,
+                       u.email,
+                       u.phoneNumber
+                   }, u => u.ID == userId);
 
             return ToUserInfo(user);
         }
@@ -219,13 +387,14 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(userId))
                 throw new Exception("");
+
             User user = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeRole && includeTimestamp)
+                user = db.Users.SingleOrDefault(u => u.ID == userId);
+            else if (includeRole)
                 user = db.Users
-                     .SingleOrDefault(u => u.ID == userId);
-            else
-                user = db.Users
-                    .SingleOrDefault(u => new {
+                    .SingleOrDefault(u => new
+                    {
                         u.ID,
                         u.userName,
                         u.surName,
@@ -235,6 +404,34 @@ namespace Data.BLL
                         u.email,
                         u.phoneNumber,
                         u.roleId
+                    }, u => u.ID == userId);
+            else if (includeTimestamp)
+                user = db.Users
+                    .SingleOrDefault(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.createAt,
+                        u.updateAt
+                    }, u => u.ID == userId);
+            else
+                user = db.Users
+                    .SingleOrDefault(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber
                     }, u => u.ID == userId);
 
             return ToUserInfo(user);
@@ -244,13 +441,14 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(userName))
                 throw new Exception("");
+
             User user = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeRole && includeTimestamp)
+                user = await db.Users.SingleOrDefaultAsync(u => u.userName == userName);
+            else if (includeRole)
                 user = await db.Users
-                     .SingleOrDefaultAsync(u => u.userName == userName);
-            else
-                user = await db.Users
-                    .SingleOrDefaultAsync(u => new {
+                    .SingleOrDefaultAsync(u => new
+                    {
                         u.ID,
                         u.userName,
                         u.surName,
@@ -261,6 +459,34 @@ namespace Data.BLL
                         u.phoneNumber,
                         u.roleId
                     }, u => u.userName == userName);
+            else if (includeTimestamp)
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.createAt,
+                        u.updateAt
+                    }, u => u.userName == userName);
+            else
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber
+                    }, u => u.userName == userName);
 
             return ToUserInfo(user);
         }
@@ -270,12 +496,13 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(email))
                 throw new Exception("");
             User user = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeRole && includeTimestamp)
                 user = await db.Users
                      .SingleOrDefaultAsync(u => u.email == email);
-            else
+            else if (includeRole)
                 user = await db.Users
-                    .SingleOrDefaultAsync(u => new {
+                    .SingleOrDefaultAsync(u => new
+                    {
                         u.ID,
                         u.userName,
                         u.surName,
@@ -285,6 +512,34 @@ namespace Data.BLL
                         u.email,
                         u.phoneNumber,
                         u.roleId
+                    }, u => u.email == email);
+            else if (includeTimestamp)
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber,
+                        u.createAt,
+                        u.updateAt
+                    }, u => u.email == email);
+            else
+                user = await db.Users
+                    .SingleOrDefaultAsync(u => new
+                    {
+                        u.ID,
+                        u.userName,
+                        u.surName,
+                        u.middleName,
+                        u.name,
+                        u.description,
+                        u.email,
+                        u.phoneNumber
                     }, u => u.email == email);
 
             return ToUserInfo(user);
@@ -296,11 +551,12 @@ namespace Data.BLL
         {
             if (userLogin == null)
                 throw new Exception("");
+
             if (userLogin.userName == null || userLogin.password == null)
                 throw new Exception("");
 
             User user = await db.Users.SingleOrDefaultAsync(
-                    u => new { u.userName, u.password, u.salt, u.activated }, 
+                    u => new { u.userName, u.password, u.salt, u.activated },
                     u => u.userName == userLogin.userName
                 );
             if (user == null)
@@ -332,9 +588,10 @@ namespace Data.BLL
             if (count == 0)
                 return ActiveUserState.NotExists;
 
-            int affected = await db.Users.UpdateAsync(new User { 
-                activated = true, 
-                updateAt = DateTime.Now 
+            int affected = await db.Users.UpdateAsync(new User
+            {
+                activated = true,
+                updateAt = DateTime.Now
             }, u => new { u.activated, u.updateAt }, u => u.ID == userId);
 
             return (affected == 0) ? ActiveUserState.Failed : ActiveUserState.Success;
@@ -353,7 +610,8 @@ namespace Data.BLL
 
             HashFunction hash = new HashFunction();
             string salt = hash.MD5_Hash(new Random().NextString(25));
-            int affected = await db.Users.UpdateAsync(new User {
+            int affected = await db.Users.UpdateAsync(new User
+            {
                 password = hash.PBKDF2_Hash(newPassword, salt, 30),
                 salt = salt,
                 updateAt = DateTime.Now
@@ -370,7 +628,7 @@ namespace Data.BLL
                 throw new Exception("");
             if (
                 userCreation.userName == null || userCreation.password == null
-                ||userCreation.email == null || userCreation.phoneNumber == null
+                || userCreation.email == null || userCreation.phoneNumber == null
             )
             {
                 throw new Exception("");
@@ -393,7 +651,7 @@ namespace Data.BLL
 
             usr = await db.Users.SingleOrDefaultAsync(u => new { u.ID }, u => u.userName == userCreation.userName);
             userCreation.PaymentInfo.userId = usr.ID;
-            StateOfCreation state = await new PaymentInfoBLL(this, dataAccessLevel).CreatePaymentInfoAsync(userCreation.PaymentInfo);
+            StateOfCreation state = await new PaymentInfoBLL(this).CreatePaymentInfoAsync(userCreation.PaymentInfo);
             if (state == StateOfCreation.AlreadyExists || state == StateOfCreation.Failed)
                 return RegisterState.Success_NoPaymentInfo;
 

@@ -22,7 +22,7 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            countryBLL = new CountryBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;

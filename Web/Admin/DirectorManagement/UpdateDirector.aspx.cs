@@ -19,7 +19,7 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL(DataAccessLevel.Admin);
+            directorBLL = new DirectorBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -86,6 +86,7 @@ namespace Web.Admin.DirectorManagement
             }
             else
             {
+                directorBLL.IncludeDescription = true;
                 DirectorInfo directorInfo = await directorBLL.GetDirectorAsync(id);
                 if (directorInfo == null)
                 {

@@ -21,7 +21,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -94,6 +94,8 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
+                filmBLL.IncludeLanguage = true;
+                filmBLL.IncludeCountry = true;
                 FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
                 if (filmInfo == null)
                 {
@@ -108,7 +110,7 @@ namespace Web.Admin.FilmManagement
                     txtReleaseDate.Text = filmInfo.releaseDate;
 
                     drdlFilmCountry.Items.Clear();
-                    List<CountryInfo> countryInfos = await new CountryBLL(filmBLL, DataAccessLevel.Admin).GetCountriesAsync();
+                    List<CountryInfo> countryInfos = await new CountryBLL(filmBLL).GetCountriesAsync();
                     foreach (CountryInfo countryInfo in countryInfos)
                     {
                         drdlFilmCountry.Items.Add(new ListItem(countryInfo.name, countryInfo.ID.ToString()));
@@ -116,7 +118,7 @@ namespace Web.Admin.FilmManagement
                     drdlFilmCountry.Items.FindByValue(filmInfo.Country.ID.ToString()).Selected = true;
 
                     drdlFilmLanguage.Items.Clear();
-                    List<LanguageInfo> languageInfos = await new LanguageBLL(filmBLL, DataAccessLevel.Admin).GetLanguagesAsync();
+                    List<LanguageInfo> languageInfos = await new LanguageBLL(filmBLL).GetLanguagesAsync();
                     foreach (LanguageInfo languageInfo in languageInfos)
                     {
                         drdlFilmLanguage.Items.Add(new ListItem(languageInfo.name, languageInfo.ID.ToString()));

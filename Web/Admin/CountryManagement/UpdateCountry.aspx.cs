@@ -19,7 +19,7 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            countryBLL = new CountryBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -86,6 +86,7 @@ namespace Web.Admin.CountryManagement
             }
             else
             {
+                countryBLL.IncludeDescription = true;
                 CountryInfo countryInfo = await countryBLL.GetCountryAsync(id);
                 if (countryInfo == null)
                 {

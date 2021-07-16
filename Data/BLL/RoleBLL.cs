@@ -1,4 +1,5 @@
 ﻿using Common.Hash;
+using Common.Web;
 using Data.DAL;
 using Data.DTO;
 using MSSQL_Lite.Access;
@@ -13,22 +14,21 @@ namespace Data.BLL
 {
     public class RoleBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
 
-        public RoleBLL(DataAccessLevel dataAccessLevel)
+        public RoleBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public RoleBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public RoleBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
@@ -36,19 +36,25 @@ namespace Data.BLL
         {
             if (role == null)
                 return null;
-            return new RoleInfo
+
+            RoleInfo roleInfo = new RoleInfo();
+            roleInfo.ID = role.ID;
+            roleInfo.name = role.name;
+
+            if (includeTimestamp)
             {
-                ID = role.ID,
-                name = role.name,
-                createAt = role.createAt,
-                updateAt = role.updateAt
-            };
+                roleInfo.createAt = role.createAt;
+                roleInfo.updateAt = role.updateAt;
+            }
+
+            return roleInfo;
         }
 
         private Role ToRole(RoleCreation roleCreation)
         {
             if (roleCreation == null)
-                throw new Exception("");
+                throw new Exception("@'roleCreation' must be not null");
+
             return new Role
             {
                 ID = roleCreation.ID,
@@ -61,7 +67,8 @@ namespace Data.BLL
         private Role ToRole(RoleUpdate roleUpdate)
         {
             if (roleUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'roleUpdate' must be not null");
+
             return new Role
             {
                 ID = roleUpdate.ID,
@@ -73,12 +80,12 @@ namespace Data.BLL
         public async Task<List<RoleInfo>> GetRolesAsync()
         {
             List<RoleInfo> roles = null;
-            if(dataAccessLevel == DataAccessLevel.Admin)
-                roles = (await db.Roles.ToListAsync())
-                    .Select(c => ToRoleInfo(c)).ToList();
+            if (includeTimestamp)
+                roles = (await db.Roles.ToListAsync()).Select(c => ToRoleInfo(c)).ToList();
             else
-                roles = (await db.Roles.ToListAsync(c => new { c.name }))
+                roles = (await db.Roles.ToListAsync(c => new { c.ID, c.name }))
                     .Select(c => ToRoleInfo(c)).ToList();
+
             return roles;
         }
 
@@ -87,10 +94,10 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(roleId))
                 throw new Exception("");
             Role role = null;
-            if(dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 role = (await db.Roles.SingleOrDefaultAsync(c => c.ID == roleId));
             else
-                role = (await db.Roles.SingleOrDefaultAsync(c => new { c.name }, c => c.ID == roleId));
+                role = (await db.Roles.SingleOrDefaultAsync(c => new { c.ID, c.name }, c => c.ID == roleId));
 
             return ToRoleInfo(role);
         }
@@ -99,11 +106,12 @@ namespace Data.BLL
         {
             if (string.IsNullOrEmpty(roleId))
                 throw new Exception("");
+
             Role role = null;
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 role = (db.Roles.SingleOrDefault(c => c.ID == roleId));
             else
-                role = (db.Roles.SingleOrDefault(c => new { c.name }, c => c.ID == roleId));
+                role = (db.Roles.SingleOrDefault(c => new { c.ID, c.name }, c => c.ID == roleId));
 
             return ToRoleInfo(role);
         }
@@ -112,13 +120,11 @@ namespace Data.BLL
         {
             SqlPagedList<Role> pagedList = null;
             Expression<Func<Role, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 pagedList = db.Roles.ToPagedList(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = db.Roles.ToPagedList(
-                    c => new { c.name },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<RoleInfo>
             {
@@ -132,13 +138,11 @@ namespace Data.BLL
         {
             SqlPagedList<Role> pagedList = null;
             Expression<Func<Role, object>> orderBy = c => new { c.ID };
-            if (dataAccessLevel == DataAccessLevel.Admin)
+            if (includeTimestamp)
                 pagedList = await db.Roles.ToPagedListAsync(orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
             else
                 pagedList = await db.Roles.ToPagedListAsync(
-                    c => new { c.name },
-                    orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize
-                );
+                    c => new { c.ID, c.name }, orderBy, SqlOrderByOptions.Asc, pageIndex, pageSize);
 
             return new PagedList<RoleInfo>
             {
@@ -150,8 +154,6 @@ namespace Data.BLL
 
         public async Task<StateOfCreation> CreateRoleAsync(RoleCreation roleCreation)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Role role = ToRole(roleCreation);
             if (role.name == null)
                 throw new Exception("");
@@ -169,8 +171,6 @@ namespace Data.BLL
 
         public async Task<StateOfUpdate> UpdateRoleAsync(RoleUpdate roleUpdate)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             Role role = ToRole(roleUpdate);
             if (role.name == null)
                 throw new Exception("");
@@ -183,8 +183,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeleteRoleAsync(string roleId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (string.IsNullOrEmpty(roleId))
                 throw new Exception("");
 

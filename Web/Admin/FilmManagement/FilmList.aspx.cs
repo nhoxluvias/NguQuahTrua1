@@ -1,4 +1,5 @@
 ﻿using Common.Upload;
+using Common.Web;
 using Data.BLL;
 using Data.DTO;
 using System;
@@ -19,7 +20,7 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.Admin);
+            filmBLL = new FilmBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -76,6 +77,7 @@ namespace Web.Admin.FilmManagement
 
         private async Task SetGrvFilm()
         {
+            filmBLL.IncludeTimestamp = true;
             PagedList<FilmInfo> films = await filmBLL
                 .GetFilmsAsync(drdlPage.SelectedIndex, 20);
             foreach(FilmInfo film in films.Items)

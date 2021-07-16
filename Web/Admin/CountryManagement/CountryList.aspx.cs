@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL(DataAccessLevel.Admin);
+            countryBLL = new CountryBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.CountryManagement
 
         private async Task SetGrvCountry()
         {
+            countryBLL.IncludeTimestamp = true;
             PagedList<CountryInfo> countries = await countryBLL
                 .GetCountriesAsync(drdlPage.SelectedIndex, 20);
             grvCountry.DataSource = countries.Items;

@@ -18,7 +18,8 @@ namespace Web.User
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL(DataAccessLevel.User);
+            filmBLL = new FilmBLL();
+            filmBLL.IncludeCategory = true;
             await GetLatestFilm();
             await GetFilmsByCategory();
         }
@@ -38,7 +39,7 @@ namespace Web.User
 
         private async Task GetFilmsByCategory()
         {
-            List<CategoryInfo> categories = await new CategoryBLL(filmBLL, DataAccessLevel.User).GetCategoriesAsync();
+            List<CategoryInfo> categories = await new CategoryBLL(filmBLL).GetCategoriesAsync();
             filmsByCategory = new List<List<FilmInfo>>();
             foreach(CategoryInfo category in categories)
             {

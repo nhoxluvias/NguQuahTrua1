@@ -18,7 +18,7 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL(DataAccessLevel.Admin);
+            categoryBLL = new CategoryBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;

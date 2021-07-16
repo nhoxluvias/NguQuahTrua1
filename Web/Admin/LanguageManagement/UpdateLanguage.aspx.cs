@@ -19,7 +19,7 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL(DataAccessLevel.Admin);
+            languageBLL = new LanguageBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -86,6 +86,7 @@ namespace Web.Admin.LanguageManagement
             }
             else
             {
+                languageBLL.IncludeDescription = true;
                 LanguageInfo languageInfo = await languageBLL.GetLanguageAsync(id);
                 if (languageInfo == null)
                 {

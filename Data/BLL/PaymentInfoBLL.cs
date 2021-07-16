@@ -7,22 +7,21 @@ namespace Data.BLL
 {
     public class PaymentInfoBLL : BusinessLogicLayer
     {
-        private DataAccessLevel dataAccessLevel;
         private bool disposed;
 
-        public PaymentInfoBLL(DataAccessLevel dataAccessLevel)
+        public PaymentInfoBLL()
             : base()
         {
             InitDAL();
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
-        public PaymentInfoBLL(BusinessLogicLayer bll, DataAccessLevel dataAccessLevel)
+        public PaymentInfoBLL(BusinessLogicLayer bll)
             : base()
         {
             InitDAL(bll.db);
-            this.dataAccessLevel = dataAccessLevel;
+            SetDefault();
             disposed = false;
         }
 
@@ -30,23 +29,31 @@ namespace Data.BLL
         {
             if (paymentInfo == null)
                 return null;
-            return new PaymentInfoDTO
+
+            PaymentInfoDTO paymentInfoDTO = new PaymentInfoDTO
             {
                 paymentMethodId = paymentInfo.paymentMethodId,
                 userId = paymentInfo.userId,
                 cardNumber = paymentInfo.cardNumber,
                 cvv = paymentInfo.cvv,
                 owner = paymentInfo.owner,
-                expirationDate = paymentInfo.expirationDate,
-                createAt = paymentInfo.createAt,
-                updateAt = paymentInfo.updateAt
+                expirationDate = paymentInfo.expirationDate
             };
+
+            if (includeTimestamp)
+            {
+                paymentInfoDTO.createAt = paymentInfo.createAt;
+                paymentInfoDTO.updateAt = paymentInfo.updateAt;
+            }
+
+            return paymentInfoDTO;
         }
 
         private PaymentInfo ToPaymentInfo(PaymentInfoCreation paymentInfoCreation)
         {
             if (paymentInfoCreation == null)
                 throw new Exception("@'paymentInfoCreation' must be not null");
+
             return new PaymentInfo
             {
                 paymentMethodId = paymentInfoCreation.paymentMethodId,
@@ -64,6 +71,7 @@ namespace Data.BLL
         {
             if (paymentInfoUpdate == null)
                 throw new Exception("@'paymentInfoUpdate' must be not null");
+
             return new PaymentInfo
             {
                 paymentMethodId = paymentInfoUpdate.paymentMethodId,
@@ -124,8 +132,6 @@ namespace Data.BLL
 
         public async Task<StateOfDeletion> DeletePaymentInfoAsync(string userId, int paymentMethodId)
         {
-            if (dataAccessLevel == DataAccessLevel.User)
-                throw new Exception("");
             if (string.IsNullOrEmpty(userId) || paymentMethodId <= 0)
                 throw new Exception("");
 

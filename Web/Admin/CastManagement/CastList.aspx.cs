@@ -1,4 +1,5 @@
-﻿using Data.BLL;
+﻿using Common.Web;
+using Data.BLL;
 using Data.DTO;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace Web.Admin.CastManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            castBLL = new CastBLL(DataAccessLevel.Admin);
+            castBLL = new CastBLL();
             enableTool = false;
             toolDetail = null;
             try
@@ -73,6 +74,7 @@ namespace Web.Admin.CastManagement
 
         private async Task SetGrvCast()
         {
+            castBLL.IncludeTimestamp = true;
             PagedList<CastInfo> casts = await castBLL
                 .GetCastsAsync(drdlPage.SelectedIndex, 20);
             grvCast.DataSource = casts.Items;

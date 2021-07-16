@@ -15,7 +15,7 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            roleBLL = new RoleBLL();
             enableShowDetail = false;
             try
             {
@@ -63,6 +63,7 @@ namespace Web.Admin.RoleManagement
             }
             else
             {
+                roleBLL.IncludeTimestamp = true;
                 roleInfo = await roleBLL.GetRoleAsync(id);
                 if (roleInfo == null)
                     Response.RedirectToRoute("Admin_RoleList", null);

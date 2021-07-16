@@ -16,7 +16,7 @@ namespace Web.Account
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL(DataAccessLevel.User);
+            userBLL = new UserBLL();
             customValidation = new CustomValidation();
             try
             {

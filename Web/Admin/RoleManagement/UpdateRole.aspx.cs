@@ -19,7 +19,7 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL(DataAccessLevel.Admin);
+            roleBLL = new RoleBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
