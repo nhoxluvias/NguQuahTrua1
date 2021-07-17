@@ -1,10 +1,10 @@
 ﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Watch.aspx.cs" Inherits="Web.User.Watch" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title></title>
+    <title><% = title_HeadTag %> - Trang xem phim</title>
     <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta name="keywords" content="">
+    <meta name="description" content="<% = description_MetaTag %>">
+    <meta name="keywords" content="<% = keywords_MetaTag %>">
     <meta name="author" content="">
     <link rel="profile" href="#">
 

@@ -3,7 +3,7 @@
 <%@ Import Namespace="Data.DTO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title><% = title_HeadTag %></title>
+    <title><% = title_HeadTag %> - Trang chi tiết</title>
     <meta charset="UTF-8">
     <meta name="description" content="<% = description_MetaTag %>">
     <meta name="keywords" content="<% = keywords_MetaTag %>">
@@ -35,12 +35,8 @@
                         <img src="<% = filmInfo.thumbnail %>" alt="">
                         <div class="movie-btn">
                             <div class="btn-transform transform-vertical red">
-                                <div><a href="#" class="item item-1 redbtn"><i class="ion-play"></i>Watch Trailer</a></div>
-                                <div><a href="https://www.youtube.com/embed/o-0hcF97wy0" class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i></a></div>
-                            </div>
-                            <div class="btn-transform transform-vertical">
-                                <div><a href="#" class="item item-1 yellowbtn"><i class="ion-card"></i>Buy ticket</a></div>
-                                <div><a href="#" class="item item-2 yellowbtn"><i class="ion-card"></i></a></div>
+                                <div><a href="#" class="item item-1 redbtn"><i class="ion-play"></i>Xem phim</a></div>
+                                <div><a href="<% = filmInfo.url %>" class="item item-2 redbtn"><i class="ion-play"></i>Xem ngay</a></div>
                             </div>
                         </div>
                     </div>
@@ -64,7 +60,7 @@
                             <div class="rate">
                                 <i class="ion-android-star"></i>
                                 <p>
-                                    <span>8.1</span> /10<br>
+                                    <span><% = string.Format("{0:0.00}", filmInfo.scoreRating) %></span> /10<br>
                                     <span class="rv"><% = filmInfo.views %> lượt xem</span>
                                 </p>
                             </div>

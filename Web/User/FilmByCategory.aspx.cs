@@ -10,7 +10,7 @@ using System.Web.UI;
 using Web.Models;
 using Data.DTO;
 using Common.Upload;
-using Common.Rating;
+using Common;
 
 
 namespace Web.User

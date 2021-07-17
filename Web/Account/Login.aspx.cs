@@ -121,7 +121,7 @@ namespace Web.Account
                     UserInfo userInfo = await userBLL.GetUserByUserNameAsync(userLogin.userName);
                     if (loginState == UserBLL.LoginState.Success)
                     {
-                        Session["userSession"] = new UserSession { username = userLogin.userName, role = userInfo.Role.name };
+                        Session["userSession"] = new UserSession { userId = userInfo.ID, username = userInfo.userName, role = userInfo.Role.name };
                         if (userInfo.Role.name == "User")
                             Response.RedirectToRoute("User_Home", null);
                         else

@@ -6,7 +6,7 @@ using System.Web.UI;
 using Web.Models;
 using Data.DTO;
 using Common.Upload;
-using Common.Rating;
+using Common;
 using System.Text;
 
 namespace Web.User
@@ -68,8 +68,9 @@ namespace Web.User
                 }
                 else
                 {
-                    StarRating starRating = new StarRating(filmInfo.upvote, filmInfo.downvote);
-                    filmInfo.starRating = starRating.SolveStar();
+                    Rating rating = new Rating(filmInfo.upvote, filmInfo.downvote);
+                    filmInfo.starRating = rating.SolveStar();
+                    filmInfo.scoreRating = rating.SolveScore();
 
                     if (string.IsNullOrEmpty(filmInfo.thumbnail))
                         filmInfo.thumbnail = VirtualPathUtility
@@ -78,6 +79,7 @@ namespace Web.User
                         filmInfo.thumbnail = VirtualPathUtility
                             .ToAbsolute(string.Format("{0}/{1}", FileUpload.ImageFilePath, filmInfo.thumbnail));
 
+                    filmInfo.url = GetRouteUrl("User_Watch", new { slug = filmInfo.name.TextToUrl(), id = filmInfo.ID });
                     enableShowDetail = true;
                 }
             }

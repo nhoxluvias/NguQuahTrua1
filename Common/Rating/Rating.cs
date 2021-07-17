@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Common.Rating
+namespace Common
 {
-    public class StarRating
+    public class Rating
     {
         private long upvote;
         private long downvote;
 
-        public StarRating(long upvote, long downvote)
+        public Rating(long upvote, long downvote)
         {
             if (upvote < 0 || downvote < 0)
                 throw new Exception("");
@@ -51,6 +51,9 @@ namespace Common.Rating
                 return 0;
         }
 
-
+        public double SolveScore()
+        { 
+            return SovleUpvotePercent() / 10;
+        }
     }
 }

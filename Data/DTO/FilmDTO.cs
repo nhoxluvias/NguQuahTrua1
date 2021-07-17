@@ -15,6 +15,7 @@ namespace Data.DTO
         public long downvote { get; set; }
         public long views { get; set; }
         public string url { get; set; }
+        public double scoreRating { get; set; }
         public int starRating { get; set; }
         public string duration { get; set; }
         public string source { get; set; }

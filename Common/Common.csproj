@@ -43,15 +43,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Command\Cmd.cs" />
-    <Compile Include="FFMPEG\FFMPEGExecution.cs" />
-    <Compile Include="FFMPEG\FFMPEGStatement.cs" />
-    <Compile Include="FFMPEG\Model\VideoInfo.cs" />
     <Compile Include="Hash\HashFunction.cs" />
     <Compile Include="Mail\EMail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random\RandomExtension.cs" />
-    <Compile Include="Rating\StarRating.cs" />
+    <Compile Include="Rating\Rating.cs" />
     <Compile Include="Routing\HttpHandlerRoute.cs" />
     <Compile Include="String\StringExtension.cs" />
     <Compile Include="SystemInformation\SystemInfo.cs" />

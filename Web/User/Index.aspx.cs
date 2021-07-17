@@ -1,12 +1,13 @@
 ﻿using Data.BLL;
 using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.UI.WebControls;
 using Data.DTO;
+using Common.Upload;
+using Web.Models;
+using System.Linq;
+using Common;
 
 namespace Web.User
 {
@@ -14,39 +15,79 @@ namespace Web.User
     {
         private FilmBLL filmBLL;
         protected List<FilmInfo> latestFilms;
-        protected List<List<FilmInfo>> filmsByCategory; 
+        protected List<CategoryInfo> categoryInfos;
+        protected Dictionary<CategoryInfo, List<FilmInfo>> films_CategoryDict;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL();
-            filmBLL.IncludeCategory = true;
-            await GetLatestFilm();
-            await GetFilmsByCategory();
+            films_CategoryDict = new Dictionary<CategoryInfo, List<FilmInfo>>();
+            try
+            {
+                await GetLatestFilm();
+                await GetCategories();
+                await GetFilmsByCategory();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
+            filmBLL.Dispose();
         }
 
         private async Task GetLatestFilm()
         {
-            latestFilms = (await filmBLL.GetLatestFilmAsync())
-                .Select(f => new FilmInfo
+            filmBLL.IncludeCategory = true;
+            latestFilms = await filmBLL.GetLatestFilmAsync();
+            foreach (FilmInfo filmInfo in latestFilms)
+            {
+                if (string.IsNullOrEmpty(filmInfo.thumbnail))
+                    filmInfo.thumbnail = VirtualPathUtility
+                        .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.ImageFilePath));
+                else
+                    filmInfo.thumbnail = VirtualPathUtility
+                        .ToAbsolute(string.Format("{0}/{1}", FileUpload.ImageFilePath, filmInfo.thumbnail));
+
+                Rating rating = new Rating(filmInfo.upvote, filmInfo.downvote);
+                filmInfo.scoreRating = rating.SolveScore();
+                filmInfo.url = GetRouteUrl("User_FilmDetail", new { slug = filmInfo.name.TextToUrl(), id = filmInfo.ID });
+            }
+        }
+
+        private async Task GetCategories()
+        {
+            categoryInfos = (await new CategoryBLL(filmBLL).GetCategoriesAsync())
+                .Select(c => new CategoryInfo
                 {
-                    ID = f.ID,
-                    name = f.name,
-                    thumbnail = VirtualPathUtility.ToAbsolute("~/images/") + f.thumbnail,
-                    url = GetRouteUrl("User_FilmDetail", new { slug = f.name.TextToUrl(), id = f.ID }),
-                    Categories = f.Categories
+                    ID = c.ID,
+                    name = c.name,
+                    description = c.description,
+                    url = GetRouteUrl("User_Category", new { id = c.ID })
                 }).ToList();
         }
 
         private async Task GetFilmsByCategory()
         {
-            List<CategoryInfo> categories = await new CategoryBLL(filmBLL).GetCategoriesAsync();
-            filmsByCategory = new List<List<FilmInfo>>();
-            foreach(CategoryInfo category in categories)
+            filmBLL.IncludeCategory = false;
+            foreach(CategoryInfo categoryInfo in categoryInfos)
             {
-                filmsByCategory.Add(await filmBLL.GetFilmsByCategoryIdAsync(category.ID));
-            }
+                List<FilmInfo> filmInfos = await filmBLL.GetFilmsByCategoryIdAsync(categoryInfo.ID);
+                foreach (FilmInfo filmInfo in filmInfos)
+                {
+                    if (string.IsNullOrEmpty(filmInfo.thumbnail))
+                        filmInfo.thumbnail = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.ImageFilePath));
+                    else
+                        filmInfo.thumbnail = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/{1}", FileUpload.ImageFilePath, filmInfo.thumbnail));
 
-            filmBLL.Dispose();
+                    Rating rating = new Rating(filmInfo.upvote, filmInfo.downvote);
+                    filmInfo.scoreRating = rating.SolveScore();
+                    filmInfo.url = GetRouteUrl("User_FilmDetail", new { slug = filmInfo.name.TextToUrl(), id = filmInfo.ID });
+                }
+                films_CategoryDict.Add(categoryInfo, filmInfos);
+            }
         }
     }
 }
