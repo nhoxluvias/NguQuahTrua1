@@ -137,8 +137,8 @@ namespace Web.Admin.CastManagement
         private async Task Update()
         {
             CastUpdate castUpdate = GetCastUpdate();
-            StateOfUpdate state = await castBLL.UpdateCastAsync(castUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await castBLL.UpdateCastAsync(castUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật diễn viên thành công";

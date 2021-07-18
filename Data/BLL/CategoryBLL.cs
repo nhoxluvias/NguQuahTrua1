@@ -279,7 +279,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<CategoryInfo>>(sqlCommand);
         }
 
-        public async Task<StateOfCreation> CreateCategoryAsync(CategoryCreation categoryCreation)
+        public async Task<CreationState> CreateCategoryAsync(CategoryCreation categoryCreation)
         {
             Category category = ToCategory(categoryCreation);
             if (category.name == null)
@@ -287,7 +287,7 @@ namespace Data.BLL
 
             int checkExists = (int)await db.Categories.CountAsync(c => c.name == category.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected;
             if (category.description == null)
@@ -295,10 +295,10 @@ namespace Data.BLL
             else
                 affected = await db.Categories.InsertAsync(category, new List<string> { "ID" });
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateCategoryAsync(CategoryUpdate categoryUpdate)
+        public async Task<UpdateState> UpdateCategoryAsync(CategoryUpdate categoryUpdate)
         {
             Category category = ToCategory(categoryUpdate);
             if (category.name == null)
@@ -318,10 +318,10 @@ namespace Data.BLL
                     c => c.ID == category.ID
                 );
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteCategoryAsync(int categoryId)
+        public async Task<DeletionState> DeleteCategoryAsync(int categoryId)
         {
             if (categoryId <= 0)
                 throw new Exception("");
@@ -329,10 +329,10 @@ namespace Data.BLL
             long categoryDistributionNumber = await db.CategoryDistributions
                 .CountAsync(cd => cd.categoryId == categoryId);
             if (categoryDistributionNumber > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Categories.DeleteAsync(c => c.ID == categoryId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

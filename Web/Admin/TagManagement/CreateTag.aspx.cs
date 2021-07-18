@@ -94,13 +94,13 @@ namespace Web.Admin.TagManagement
             if (IsValidData())
             {
                 TagCreation tag = GetTagCreation();
-                StateOfCreation state = await tagBLL.CreateTagAsync(tag);
-                if (state == StateOfCreation.Success)
+                CreationState state = await tagBLL.CreateTagAsync(tag);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm thẻ tag thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm thẻ tag thất bại. Lý do: Đã tồn tại thẻ tag này";

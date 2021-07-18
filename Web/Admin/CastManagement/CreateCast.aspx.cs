@@ -94,13 +94,13 @@ namespace Web.Admin.CastManagement
             if (IsValidData())
             {
                 CastCreation cast = GetCastCreation();
-                StateOfCreation state = await castBLL.CreateCastAsync(cast);
-                if (state == StateOfCreation.Success)
+                CreationState state = await castBLL.CreateCastAsync(cast);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm diễn viên thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm diễn viên thất bại. Lý do: Đã tồn tại diễn viên này";

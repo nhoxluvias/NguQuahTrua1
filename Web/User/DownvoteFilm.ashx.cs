@@ -39,8 +39,8 @@ namespace Web.User
                         bool upvoteResult = userReactionBLL.Downvote(filmId, userId);
                         if (upvoteResult)
                         {
-                            StateOfUpdate state = filmBLL.Downvote(filmId);
-                            if (state == StateOfUpdate.Success)
+                            UpdateState state = filmBLL.Downvote(filmId);
+                            if (state == UpdateState.Success)
                                 context.Response.Write("Đánh giá (không thích) phim thành công");
                             else
                                 context.Response.Write("Đánh giá (không thích) phim thành công, tuy nhiên đã xảy lỗi nhỏ");

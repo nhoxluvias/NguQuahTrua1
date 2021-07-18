@@ -91,13 +91,13 @@ namespace Web.Admin.CountryManagement
         private async Task DeleteCountryInfo()
         {
             int id = GetCountryId();
-            StateOfDeletion state = await countryBLL.DeleteCountryAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await countryBLL.DeleteCountryAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa quốc gia thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa quốc gia thất bại";

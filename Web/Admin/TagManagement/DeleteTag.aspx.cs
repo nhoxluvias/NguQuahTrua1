@@ -87,13 +87,13 @@ namespace Web.Admin.TagManagement
         private async Task DeleteTagInfo()
         {
             long id = GetTagId();
-            StateOfDeletion state = await tagBLL.DeleteTagAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await tagBLL.DeleteTagAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa thẻ tag thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa thẻ tag thất bại";

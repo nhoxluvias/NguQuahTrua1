@@ -651,8 +651,8 @@ namespace Data.BLL
 
             usr = await db.Users.SingleOrDefaultAsync(u => new { u.ID }, u => u.userName == userCreation.userName);
             userCreation.PaymentInfo.userId = usr.ID;
-            StateOfCreation state = await new PaymentInfoBLL(this).CreatePaymentInfoAsync(userCreation.PaymentInfo);
-            if (state == StateOfCreation.AlreadyExists || state == StateOfCreation.Failed)
+            CreationState state = await new PaymentInfoBLL(this).CreatePaymentInfoAsync(userCreation.PaymentInfo);
+            if (state == CreationState.AlreadyExists || state == CreationState.Failed)
                 return RegisterState.Success_NoPaymentInfo;
 
             return RegisterState.Success;

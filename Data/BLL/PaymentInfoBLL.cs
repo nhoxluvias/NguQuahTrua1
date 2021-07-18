@@ -84,7 +84,7 @@ namespace Data.BLL
             };
         }
 
-        public async Task<StateOfCreation> CreatePaymentInfoAsync(PaymentInfoCreation paymentInfoCreation)
+        public async Task<CreationState> CreatePaymentInfoAsync(PaymentInfoCreation paymentInfoCreation)
         {
             PaymentInfo paymentInfo = ToPaymentInfo(paymentInfoCreation);
             if (
@@ -99,13 +99,13 @@ namespace Data.BLL
             int checkExists = (int)await db.PaymentInfos
                 .CountAsync(p => p.userId == paymentInfo.userId && p.paymentMethodId == paymentInfo.paymentMethodId);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected = await db.PaymentInfos.InsertAsync(paymentInfo);
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        //public async Task<StateOfUpdate> UpdatePaymentInfoAsync(PaymentInfoUpdate paymentInfoUpdate)
+        //public async Task<UpdateState> UpdatePaymentInfoAsync(PaymentInfoUpdate paymentInfoUpdate)
         //{
         //    if (dataAccessLevel == DataAccessLevel.User)
         //        throw new Exception("");
@@ -127,16 +127,16 @@ namespace Data.BLL
         //            p =>p.ID == PaymentInfo.ID
         //        );
 
-        //    return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+        //    return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         //}
 
-        public async Task<StateOfDeletion> DeletePaymentInfoAsync(string userId, int paymentMethodId)
+        public async Task<DeletionState> DeletePaymentInfoAsync(string userId, int paymentMethodId)
         {
             if (string.IsNullOrEmpty(userId) || paymentMethodId <= 0)
                 throw new Exception("");
 
             int affected = await db.PaymentInfos.DeleteAsync(p => p.paymentMethodId == paymentMethodId && p.userId == userId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         protected override void Dispose(bool disposing)

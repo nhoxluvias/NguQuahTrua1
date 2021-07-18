@@ -137,8 +137,8 @@ namespace Web.Admin.CategoryManagement
         private async Task Update()
         {
             CategoryUpdate categoryUpdate = GetCategoryUpdate();
-            StateOfUpdate state = await categoryBLL.UpdateCategoryAsync(categoryUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await categoryBLL.UpdateCategoryAsync(categoryUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật thể loại thành công";

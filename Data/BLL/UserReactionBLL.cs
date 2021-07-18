@@ -28,14 +28,14 @@ namespace Data.BLL
 
         public bool Upvote(string filmId, string userId)
         {
-            StateOfCreation creationState = AddUserReaction(filmId, userId, true);
-            if (creationState == StateOfCreation.Failed)
+            CreationState creationState = AddUserReaction(filmId, userId, true);
+            if (creationState == CreationState.Failed)
                 return false;
 
-            if (creationState == StateOfCreation.AlreadyExists)
+            if (creationState == CreationState.AlreadyExists)
             {
-                StateOfUpdate updateState = UpdateUserReaction(filmId, userId, true);
-                if (updateState == StateOfUpdate.Success)
+                UpdateState updateState = UpdateUserReaction(filmId, userId, true);
+                if (updateState == UpdateState.Success)
                     return true;
                 return false;
             }
@@ -45,14 +45,14 @@ namespace Data.BLL
 
         public bool Downvote(string filmId, string userId)
         {
-            StateOfCreation creationState = AddUserReaction(filmId, userId, false);
-            if (creationState == StateOfCreation.Failed)
+            CreationState creationState = AddUserReaction(filmId, userId, false);
+            if (creationState == CreationState.Failed)
                 return false;
 
-            if (creationState == StateOfCreation.AlreadyExists)
+            if (creationState == CreationState.AlreadyExists)
             {
-                StateOfUpdate updateState = UpdateUserReaction(filmId, userId, false);
-                if (updateState == StateOfUpdate.Success)
+                UpdateState updateState = UpdateUserReaction(filmId, userId, false);
+                if (updateState == UpdateState.Success)
                     return true;
                 return false;
             }
@@ -60,14 +60,14 @@ namespace Data.BLL
             return true;
         }
 
-        public StateOfCreation AddUserReaction(string filmId, string userId, bool isUpvote)
+        public CreationState AddUserReaction(string filmId, string userId, bool isUpvote)
         {
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(userId))
                 throw new Exception("");
 
             UserReaction userReaction = db.UserReactions.SingleOrDefault(ur => ur.filmId == filmId && ur.userId == userId);
             if (userReaction != null)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             userReaction = new UserReaction
             {
@@ -90,19 +90,19 @@ namespace Data.BLL
 
             int affected = db.UserReactions.Insert(userReaction);
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public StateOfDeletion DeleteUserReaction(string filmId, string userId)
+        public DeletionState DeleteUserReaction(string filmId, string userId)
         {
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(userId))
                 throw new Exception("");
 
             int affected = db.UserReactions.Delete(ur => ur.filmId == filmId && ur.userId == userId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
-        public StateOfUpdate UpdateUserReaction(string filmId, string userId, bool isUpvote)
+        public UpdateState UpdateUserReaction(string filmId, string userId, bool isUpvote)
         {
             if (string.IsNullOrEmpty(filmId) || string.IsNullOrEmpty(userId))
                 throw new Exception("");
@@ -126,7 +126,7 @@ namespace Data.BLL
                 userReaction, ur => new { ur.upvoted, ur.downvoted, ur.updateAt },
                 ur => ur.filmId == filmId && ur.userId == userId);
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
         protected override void Dispose(bool disposing)

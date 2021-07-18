@@ -157,13 +157,13 @@ namespace Web.Admin.FilmManagement
                     else
                     {
                         long directorId = long.Parse(strDirectorId);
-                        StateOfCreation state = await filmBLL.AddDirectorAsync(filmId, directorId, directorRole);
-                        if (state == StateOfCreation.Success)
+                        CreationState state = await filmBLL.AddDirectorAsync(filmId, directorId, directorRole);
+                        if (state == CreationState.Success)
                         {
                             stateString = "Success";
                             stateDetail = "Đã thêm đạo diễn vào phim thành công";
                         }
-                        else if (state == StateOfCreation.AlreadyExists)
+                        else if (state == CreationState.AlreadyExists)
                         {
                             stateString = "AlreadyExists";
                             stateDetail = "Thêm đạo diễn vào phim thất bại. Lý do: Đã tồn tại đạo diễn trong phim này";
@@ -191,9 +191,9 @@ namespace Web.Admin.FilmManagement
             try
             {
                 string filmId = GetFilmId();
-                StateOfDeletion state = await filmBLL.DeleteAllDirectorAsync(filmId);
+                DeletionState state = await filmBLL.DeleteAllDirectorAsync(filmId);
                 await LoadFilmInfo(filmId);
-                if (state == StateOfDeletion.Success)
+                if (state == DeletionState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã xóa tất cả đạo diễn của phim thành công";

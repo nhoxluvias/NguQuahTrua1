@@ -279,7 +279,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<DirectorInfo>>(sqlCommand);
         }
 
-        public async Task<StateOfCreation> CreateDirectorAsync(DirectorCreation directorCreation)
+        public async Task<CreationState> CreateDirectorAsync(DirectorCreation directorCreation)
         {
             Director director = ToDirector(directorCreation);
             if (director.name == null)
@@ -287,7 +287,7 @@ namespace Data.BLL
 
             long checkExists = await db.Directors.CountAsync(c => c.name == director.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected;
             if (director.description == null)
@@ -295,10 +295,10 @@ namespace Data.BLL
             else
                 affected = await db.Directors.InsertAsync(director, new List<string> { "ID" });
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateDirectorAsync(DirectorUpdate directorUpdate)
+        public async Task<UpdateState> UpdateDirectorAsync(DirectorUpdate directorUpdate)
         {
             Director director = ToDirector(directorUpdate);
             if (director.name == null)
@@ -318,20 +318,20 @@ namespace Data.BLL
                     d => d.ID == director.ID
                 );
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteDirectorAsync(long directorId)
+        public async Task<DeletionState> DeleteDirectorAsync(long directorId)
         {
             if (directorId <= 0)
                 throw new Exception("");
 
             long directorOfFilmNumber = await db.DirectorOfFilms.CountAsync(df => df.directorId == directorId);
             if (directorOfFilmNumber > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Directors.DeleteAsync(d => d.ID == directorId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<long> CountAllAsync()

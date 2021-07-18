@@ -38,8 +38,8 @@ namespace Web.User
                         bool upvoteResult = userReactionBLL.Upvote(filmId, userId);
                         if (upvoteResult)
                         {
-                            StateOfUpdate state = filmBLL.Upvote(filmId);
-                            if (state == StateOfUpdate.Success)
+                            UpdateState state = filmBLL.Upvote(filmId);
+                            if (state == UpdateState.Success)
                                 context.Response.Write("Đánh giá (thích) phim thành công");
                             else
                                 context.Response.Write("Đánh giá (thích) phim thành công, tuy nhiên đã xảy lỗi nhỏ");

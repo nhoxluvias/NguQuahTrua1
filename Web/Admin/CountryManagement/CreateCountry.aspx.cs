@@ -94,13 +94,13 @@ namespace Web.Admin.CountryManagement
             if (IsValidData())
             {
                 CountryCreation country = GetCountryCreation();
-                StateOfCreation state = await countryBLL.CreateCountryAsync(country);
-                if (state == StateOfCreation.Success)
+                CreationState state = await countryBLL.CreateCountryAsync(country);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm quốc gia thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm quốc gia thất bại. Lý do: Đã tồn tại quốc gia này";

@@ -93,13 +93,13 @@ namespace Web.Admin.RoleManagement
             if (IsValidData())
             {
                 RoleCreation role = GetRoleCreation();
-                StateOfCreation state = await roleBLL.CreateRoleAsync(role);
-                if (state == StateOfCreation.Success)
+                CreationState state = await roleBLL.CreateRoleAsync(role);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm vai trò thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm vài trò thất bại. Lý do: Đã tồn tại vai trò này";

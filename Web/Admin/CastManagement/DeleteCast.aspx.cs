@@ -87,13 +87,13 @@ namespace Web.Admin.CastManagement
         private async Task DeleteCastInfo()
         {
             int id = GetCastId();
-            StateOfDeletion state = await castBLL.DeleteCastAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await castBLL.DeleteCastAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa diễn viên thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa diễn viên thất bại";

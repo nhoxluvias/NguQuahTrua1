@@ -94,13 +94,13 @@ namespace Web.Admin.CategoryManagement
             if (IsValidData())
             {
                 CategoryCreation category = GetCategoryCreation();
-                StateOfCreation state = await categoryBLL.CreateCategoryAsync(category);
-                if (state == StateOfCreation.Success)
+                CreationState state = await categoryBLL.CreateCategoryAsync(category);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm thể loại thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm thể loại thất bại. Lý do: Đã tồn tại thể loại này";

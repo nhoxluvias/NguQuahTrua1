@@ -142,13 +142,13 @@ namespace Web.Admin.FilmManagement
             if (IsValidData())
             {
                 FilmCreation filmCreation = GetFilmCreation();
-                StateOfCreation state = await filmBLL.CreateFilmAsync(filmCreation);
-                if (state == StateOfCreation.Success)
+                CreationState state = await filmBLL.CreateFilmAsync(filmCreation);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm phim thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm phim thất bại. Lý do: Đã tồn tại phim này";

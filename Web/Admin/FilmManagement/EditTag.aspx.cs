@@ -127,14 +127,14 @@ namespace Web.Admin.FilmManagement
                 else
                 {
                     int tagId = int.Parse(strTagId);
-                    StateOfCreation state = await filmBLL.AddTagAsync(filmId, tagId);
+                    CreationState state = await filmBLL.AddTagAsync(filmId, tagId);
                     await LoadFilmInfo(filmId);
-                    if (state == StateOfCreation.Success)
+                    if (state == CreationState.Success)
                     {
                         stateString = "Success";
                         stateDetail = "Đã thêm thẻ tag vào phim thành công";
                     }
-                    else if (state == StateOfCreation.AlreadyExists)
+                    else if (state == CreationState.AlreadyExists)
                     {
                         stateString = "AlreadyExists";
                         stateDetail = "Thêm thẻ tag vào phim thất bại. Lý do: Đã tồn tại thẻ tag trong phim này";
@@ -160,9 +160,9 @@ namespace Web.Admin.FilmManagement
             try
             {
                 string filmId = GetFilmId();
-                StateOfDeletion state = await filmBLL.DeleteAllTagAsync(filmId);
+                DeletionState state = await filmBLL.DeleteAllTagAsync(filmId);
                 await LoadFilmInfo(filmId);
-                if (state == StateOfDeletion.Success)
+                if (state == DeletionState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã xóa tất cả thẻ tag của phim thành công";

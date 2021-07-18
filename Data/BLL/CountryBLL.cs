@@ -215,7 +215,7 @@ namespace Data.BLL
             return ToCountryInfo(country);
         }
 
-        public async Task<StateOfCreation> CreateCountryAsync(CountryCreation countryCreation)
+        public async Task<CreationState> CreateCountryAsync(CountryCreation countryCreation)
         {
             Country country = ToCountry(countryCreation);
             if (country.name == null)
@@ -223,7 +223,7 @@ namespace Data.BLL
 
             int checkExists = (int)await db.Countries.CountAsync(c => c.name == country.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected;
             if (country.description == null)
@@ -231,10 +231,10 @@ namespace Data.BLL
             else
                 affected = await db.Countries.InsertAsync(country, new List<string> { "ID" });
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateCountryAsync(CountryUpdate countryUpdate)
+        public async Task<UpdateState> UpdateCountryAsync(CountryUpdate countryUpdate)
         {
             Country country = ToCountry(countryUpdate);
             if (country.name == null)
@@ -254,20 +254,20 @@ namespace Data.BLL
                     c => c.ID == country.ID
                 );
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteCountryAsync(int countryId)
+        public async Task<DeletionState> DeleteCountryAsync(int countryId)
         {
             if (countryId <= 0)
                 throw new Exception("");
 
             long filmNumberOfCountryId = await db.Films.CountAsync(f => f.countryId == countryId);
             if (filmNumberOfCountryId > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Countries.DeleteAsync(c => c.ID == countryId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

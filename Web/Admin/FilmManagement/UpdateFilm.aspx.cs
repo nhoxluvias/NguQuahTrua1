@@ -186,8 +186,8 @@ namespace Web.Admin.FilmManagement
         private async Task Update()
         {
             FilmUpdate filmUpdate = GetFilmUpdate();
-            StateOfUpdate state = await filmBLL.UpdateFilmAsync(filmUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await filmBLL.UpdateFilmAsync(filmUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật phim thành công";

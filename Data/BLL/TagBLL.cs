@@ -278,7 +278,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<TagInfo>>(sqlCommand);
         }
 
-        public async Task<StateOfCreation> CreateTagAsync(TagCreation tagCreation)
+        public async Task<CreationState> CreateTagAsync(TagCreation tagCreation)
         {
             Tag tag = ToTag(tagCreation);
             if (tag.name == null)
@@ -286,7 +286,7 @@ namespace Data.BLL
 
             int checkExists = (int)await db.Tags.CountAsync(t => t.name == tag.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected;
             if (tag.description == null)
@@ -294,10 +294,10 @@ namespace Data.BLL
             else
                 affected = await db.Tags.InsertAsync(tag, new List<string> { "ID" });
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateTagAsync(TagUpdate tagUpdate)
+        public async Task<UpdateState> UpdateTagAsync(TagUpdate tagUpdate)
         {
             Tag tag = ToTag(tagUpdate);
             if (tag.name == null)
@@ -317,10 +317,10 @@ namespace Data.BLL
                     t => t.ID == tag.ID
                 );
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteTagAsync(long tagId)
+        public async Task<DeletionState> DeleteTagAsync(long tagId)
         {
             if (tagId <= 0)
                 throw new Exception("");
@@ -328,10 +328,10 @@ namespace Data.BLL
             long tagDistributionNumber = await db.TagDistributions
                 .CountAsync(td => td.tagId == tagId);
             if (tagDistributionNumber > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Tags.DeleteAsync(t => t.ID == tagId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

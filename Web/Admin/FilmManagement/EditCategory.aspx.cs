@@ -127,14 +127,14 @@ namespace Web.Admin.FilmManagement
                 else
                 {
                     int categoryId = int.Parse(strCategoryId);
-                    StateOfCreation state = await filmBLL.AddCategoryAsync(filmId, categoryId);
+                    CreationState state = await filmBLL.AddCategoryAsync(filmId, categoryId);
                     await LoadFilmInfo(filmId);
-                    if (state == StateOfCreation.Success)
+                    if (state == CreationState.Success)
                     {
                         stateString = "Success";
                         stateDetail = "Đã thêm thể loại vào phim thành công";
                     }
-                    else if (state == StateOfCreation.AlreadyExists)
+                    else if (state == CreationState.AlreadyExists)
                     {
                         stateString = "AlreadyExists";
                         stateDetail = "Thêm thể loại vào phim thất bại. Lý do: Đã tồn tại thể loại trong phim này";
@@ -160,9 +160,9 @@ namespace Web.Admin.FilmManagement
             try
             {
                 string filmId = GetFilmId();
-                StateOfDeletion state = await filmBLL.DeleteAllCategoryAsync(filmId);
+                DeletionState state = await filmBLL.DeleteAllCategoryAsync(filmId);
                 await LoadFilmInfo(filmId);
-                if (state == StateOfDeletion.Success)
+                if (state == DeletionState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã xóa tất cả thể loại của phim thành công";

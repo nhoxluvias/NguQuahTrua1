@@ -137,8 +137,8 @@ namespace Web.Admin.TagManagement
         private async Task Update()
         {
             TagUpdate tagUpdate = GetTagUpdate();
-            StateOfUpdate state = await tagBLL.UpdateTagAsync(tagUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await tagBLL.UpdateTagAsync(tagUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật thẻ tag thành công";

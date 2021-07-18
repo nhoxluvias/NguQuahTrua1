@@ -137,8 +137,8 @@ namespace Web.Admin.DirectorManagement
         private async Task Update()
         {
             DirectorUpdate directorUpdate = GetDirectorUpdate();
-            StateOfUpdate state = await directorBLL.UpdateDirectorAsync(directorUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await directorBLL.UpdateDirectorAsync(directorUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật đạo diễn thành công";

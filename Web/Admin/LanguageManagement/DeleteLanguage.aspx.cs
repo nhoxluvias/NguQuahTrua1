@@ -87,13 +87,13 @@ namespace Web.Admin.LanguageManagement
         private async Task DeleteLanguageInfo()
         {
             int id = GetLanguageId();
-            StateOfDeletion state = await languageBLL.DeleteLanguageAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await languageBLL.DeleteLanguageAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa ngôn ngữ thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa ngôn ngữ thất bại";

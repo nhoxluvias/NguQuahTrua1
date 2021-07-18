@@ -137,8 +137,8 @@ namespace Web.Admin.CountryManagement
         private async Task Update()
         {
             CountryUpdate countryUpdate = GetCountryUpdate();
-            StateOfUpdate state = await countryBLL.UpdateCountryAsync(countryUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await countryBLL.UpdateCountryAsync(countryUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật quốc gia thành công";

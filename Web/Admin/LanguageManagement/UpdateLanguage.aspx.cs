@@ -137,8 +137,8 @@ namespace Web.Admin.LanguageManagement
         private async Task Update()
         {
             LanguageUpdate languageUpdate = GetLanguageUpdate();
-            StateOfUpdate state = await languageBLL.UpdateLanguageAsync(languageUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await languageBLL.UpdateLanguageAsync(languageUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật ngôn ngữ thành công";

@@ -214,7 +214,7 @@ namespace Data.BLL
             return ToLanguageInfo(language);
         }
 
-        public async Task<StateOfCreation> CreateLanguageAsync(LanguageCreation languageCreation)
+        public async Task<CreationState> CreateLanguageAsync(LanguageCreation languageCreation)
         {
             Language language = ToLanguage(languageCreation);
             if (language.name == null)
@@ -222,7 +222,7 @@ namespace Data.BLL
 
             int checkExists = (int)await db.Languages.CountAsync(l => l.name == language.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected;
             if (language.description == null)
@@ -230,10 +230,10 @@ namespace Data.BLL
             else
                 affected = await db.Languages.InsertAsync(language, new List<string> { "ID" });
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateLanguageAsync(LanguageUpdate languageUpdate)
+        public async Task<UpdateState> UpdateLanguageAsync(LanguageUpdate languageUpdate)
         {
             Language language = ToLanguage(languageUpdate);
             if (language.name == null)
@@ -253,20 +253,20 @@ namespace Data.BLL
                     l => l.ID == language.ID
                 );
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteLanguageAsync(int languageId)
+        public async Task<DeletionState> DeleteLanguageAsync(int languageId)
         {
             if (languageId <= 0)
                 throw new Exception("");
 
             long filmNumberOfLanguageId = await db.Films.CountAsync(f => f.languageId == languageId);
             if (filmNumberOfLanguageId > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Languages.DeleteAsync(l => l.ID == languageId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

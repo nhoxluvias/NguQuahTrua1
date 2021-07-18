@@ -276,7 +276,7 @@ namespace Data.BLL
             return db.ExecuteReader<List<CastInfo>>(sqlCommand);
         }
 
-        public async Task<StateOfCreation> CreateCastAsync(CastCreation castCreation)
+        public async Task<CreationState> CreateCastAsync(CastCreation castCreation)
         {
             Cast cast = ToCast(castCreation);
             if (cast.name == null)
@@ -284,7 +284,7 @@ namespace Data.BLL
 
             int checkExists = (int)await db.Casts.CountAsync(c => c.name == cast.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             int affected;
             if (cast.description == null)
@@ -292,10 +292,10 @@ namespace Data.BLL
             else
                 affected = await db.Casts.InsertAsync(cast, new List<string> { "ID" });
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateCastAsync(CastUpdate castUpdate)
+        public async Task<UpdateState> UpdateCastAsync(CastUpdate castUpdate)
         {
             Cast cast = ToCast(castUpdate);
             if (cast.name == null)
@@ -315,10 +315,10 @@ namespace Data.BLL
                     c => c.ID == cast.ID
                 );
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteCastAsync(int castId)
+        public async Task<DeletionState> DeleteCastAsync(int castId)
         {
             if (castId <= 0)
                 throw new Exception("");
@@ -326,10 +326,10 @@ namespace Data.BLL
             long castOfFilmNumber = await db.CastOfFilms
                 .CountAsync(cf => cf.castId == castId);
             if (castOfFilmNumber > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Casts.DeleteAsync(c => c.ID == castId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

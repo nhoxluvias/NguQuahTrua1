@@ -91,13 +91,13 @@ namespace Web.Admin.RoleManagement
         private async Task DeleteRoleInfo()
         {
             string id = GetRoleId();
-            StateOfDeletion state = await roleBLL.DeleteRoleAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await roleBLL.DeleteRoleAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa vai trò thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa vai trò thất bại";

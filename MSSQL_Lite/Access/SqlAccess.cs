@@ -33,7 +33,6 @@ namespace MSSQL_Lite.Access
             if (connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             sqlCommand.Dispose();
-            sqlCommand = null;
             return items;
         }
 

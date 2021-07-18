@@ -143,8 +143,8 @@ namespace Web.Admin.FilmManagement
                         FileUpload.UploadState uploadState = UploadImage(httpPostedFile, ref filePath);
                         if (uploadState == FileUpload.UploadState.Success)
                         {
-                            StateOfUpdate state = await filmBLL.AddImageAsync(filmId, filePath);
-                            if (state == StateOfUpdate.Success)
+                            UpdateState state = await filmBLL.AddImageAsync(filmId, filePath);
+                            if (state == UpdateState.Success)
                             {
                                 stateString = "Success";
                                 stateDetail = "Cập nhật hình ảnh cho phim thành công";
@@ -196,8 +196,8 @@ namespace Web.Admin.FilmManagement
                 }
                 else
                 {
-                    StateOfUpdate state = await filmBLL.DeleteImageAsync(filmId);
-                    if (state == StateOfUpdate.Success)
+                    UpdateState state = await filmBLL.DeleteImageAsync(filmId);
+                    if (state == UpdateState.Success)
                     {   
                         FileUpload fileUpload = new FileUpload();
                         if (fileUpload.RemoveImage(film.thumbnail))

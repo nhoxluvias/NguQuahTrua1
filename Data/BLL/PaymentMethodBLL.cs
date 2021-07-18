@@ -142,7 +142,7 @@ namespace Data.BLL
             };
         }
 
-        public async Task<StateOfCreation> CreatePaymentMethodAsync(PaymentMethodCreation paymentMethodCreation)
+        public async Task<CreationState> CreatePaymentMethodAsync(PaymentMethodCreation paymentMethodCreation)
         {
             PaymentMethod paymentMethod = ToPaymentMethod(paymentMethodCreation);
             if (paymentMethod.name == null)
@@ -150,10 +150,10 @@ namespace Data.BLL
 
             int affected = await db.PaymentMethods.InsertAsync(paymentMethod);
 
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdatePaymentMethodAsync(PaymentMethodUpdate paymentMethodUpdate)
+        public async Task<UpdateState> UpdatePaymentMethodAsync(PaymentMethodUpdate paymentMethodUpdate)
         {
             PaymentMethod paymentMethod = ToPaymentMethod(paymentMethodUpdate);
             if (paymentMethod.name == null)
@@ -162,10 +162,10 @@ namespace Data.BLL
             int affected = await db.PaymentMethods
                 .UpdateAsync(paymentMethod, p => new { p.name, p.updateAt }, p => p.ID == paymentMethod.ID);
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeletePaymentMethodAsync(int paymentMethodId)
+        public async Task<DeletionState> DeletePaymentMethodAsync(int paymentMethodId)
         {
             if (paymentMethodId <= 0)
                 throw new Exception("");
@@ -173,10 +173,10 @@ namespace Data.BLL
             long paymentInfoNumber = await db.PaymentInfos
                 .CountAsync(p => p.paymentMethodId == paymentMethodId);
             if (paymentInfoNumber > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.PaymentMethods.DeleteAsync(p => p.ID == paymentMethodId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

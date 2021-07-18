@@ -143,8 +143,8 @@ namespace Web.Admin.FilmManagement
                         FileUpload.UploadState uploadState = UploadVideo(httpPostedFile, ref filePath);
                         if (uploadState == FileUpload.UploadState.Success)
                         {
-                            StateOfUpdate state = await filmBLL.AddSourceAsync(filmId, filePath);
-                            if (state == StateOfUpdate.Success)
+                            UpdateState state = await filmBLL.AddSourceAsync(filmId, filePath);
+                            if (state == UpdateState.Success)
                             {
                                 stateString = "Success";
                                 stateDetail = "Cập nhật video cho phim thành công";
@@ -196,8 +196,8 @@ namespace Web.Admin.FilmManagement
                 }
                 else
                 {
-                    StateOfUpdate state = await filmBLL.DeleteSourceAsync(filmId);
-                    if (state == StateOfUpdate.Success)
+                    UpdateState state = await filmBLL.DeleteSourceAsync(filmId);
+                    if (state == UpdateState.Success)
                     {
                         FileUpload fileUpload = new FileUpload();
                         if (fileUpload.RemoveVideo(film.source))

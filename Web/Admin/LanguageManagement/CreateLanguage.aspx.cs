@@ -94,13 +94,13 @@ namespace Web.Admin.LanguageManagement
             if (IsValidData())
             {
                 LanguageCreation language = GetLanguageCreation();
-                StateOfCreation state = await languageBLL.CreateLanguageAsync(language);
-                if (state == StateOfCreation.Success)
+                CreationState state = await languageBLL.CreateLanguageAsync(language);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm ngôn ngữ thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm ngôn ngữ thất bại. Lý do: Đã tồn tại ngôn ngữ này";

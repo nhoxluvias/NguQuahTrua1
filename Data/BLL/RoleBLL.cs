@@ -152,7 +152,7 @@ namespace Data.BLL
             };
         }
 
-        public async Task<StateOfCreation> CreateRoleAsync(RoleCreation roleCreation)
+        public async Task<CreationState> CreateRoleAsync(RoleCreation roleCreation)
         {
             Role role = ToRole(roleCreation);
             if (role.name == null)
@@ -160,16 +160,16 @@ namespace Data.BLL
 
             int checkExists = (int)await db.Roles.CountAsync(r => r.name == role.name);
             if (checkExists != 0)
-                return StateOfCreation.AlreadyExists;
+                return CreationState.AlreadyExists;
 
             Random random = new Random();
             HashFunction hash = new HashFunction();
             role.ID = hash.MD5_Hash(random.NextString(10));
             int affected = await db.Roles.InsertAsync(role);
-            return (affected == 0) ? StateOfCreation.Failed : StateOfCreation.Success;
+            return (affected == 0) ? CreationState.Failed : CreationState.Success;
         }
 
-        public async Task<StateOfUpdate> UpdateRoleAsync(RoleUpdate roleUpdate)
+        public async Task<UpdateState> UpdateRoleAsync(RoleUpdate roleUpdate)
         {
             Role role = ToRole(roleUpdate);
             if (role.name == null)
@@ -178,20 +178,20 @@ namespace Data.BLL
             int affected = await db.Roles
                 .UpdateAsync(role, r => new { r.name, r.updateAt }, r => r.ID == role.ID);
 
-            return (affected == 0) ? StateOfUpdate.Failed : StateOfUpdate.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
-        public async Task<StateOfDeletion> DeleteRoleAsync(string roleId)
+        public async Task<DeletionState> DeleteRoleAsync(string roleId)
         {
             if (string.IsNullOrEmpty(roleId))
                 throw new Exception("");
 
             long userNumberOfRoleId = await db.Users.CountAsync(r => r.roleId == roleId);
             if (userNumberOfRoleId > 0)
-                return StateOfDeletion.ConstraintExists;
+                return DeletionState.ConstraintExists;
 
             int affected = await db.Roles.DeleteAsync(r => r.ID == roleId);
-            return (affected == 0) ? StateOfDeletion.Failed : StateOfDeletion.Success;
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
 
         public async Task<int> CountAllAsync()

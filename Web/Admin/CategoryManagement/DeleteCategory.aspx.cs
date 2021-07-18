@@ -87,13 +87,13 @@ namespace Web.Admin.CategoryManagement
         private async Task DeleteCategoryInfo()
         {
             int id = GetCategoryId();
-            StateOfDeletion state = await categoryBLL.DeleteCategoryAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await categoryBLL.DeleteCategoryAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa thể loại thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa thể loại thất bại";

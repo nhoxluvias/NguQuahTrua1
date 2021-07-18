@@ -93,8 +93,8 @@ namespace Web.Admin.FilmManagement
             string id = GetFilmId();
             FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
 
-            StateOfDeletion state = await filmBLL.DeleteFilmAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await filmBLL.DeleteFilmAsync(id);
+            if (state == DeletionState.Success)
             {
                 FileUpload fileUpload = new FileUpload();
                 bool delImage = fileUpload.RemoveImage(filmInfo.thumbnail);
@@ -115,7 +115,7 @@ namespace Web.Admin.FilmManagement
                     stateDetail = "Đã xóa phim thành công, tuy nhiên tập tin hình ảnh vẫn chưa được xóa";
                 }
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa phim thất bại";

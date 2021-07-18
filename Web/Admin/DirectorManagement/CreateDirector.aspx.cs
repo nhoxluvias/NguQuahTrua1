@@ -94,13 +94,13 @@ namespace Web.Admin.DirectorManagement
             if (IsValidData())
             {
                 DirectorCreation director = GetDirectorCreation();
-                StateOfCreation state = await directorBLL.CreateDirectorAsync(director);
-                if (state == StateOfCreation.Success)
+                CreationState state = await directorBLL.CreateDirectorAsync(director);
+                if (state == CreationState.Success)
                 {
                     stateString = "Success";
                     stateDetail = "Đã thêm đạo diễn thành công";
                 }
-                else if (state == StateOfCreation.AlreadyExists)
+                else if (state == CreationState.AlreadyExists)
                 {
                     stateString = "AlreadyExists";
                     stateDetail = "Thêm đạo diễn thất bại. Lý do: Đã tồn tại đạo diễn này";

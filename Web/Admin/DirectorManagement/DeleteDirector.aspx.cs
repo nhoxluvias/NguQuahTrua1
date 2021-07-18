@@ -88,13 +88,13 @@ namespace Web.Admin.DirectorManagement
         private async Task DeleteDirectorInfo()
         {
             int id = GetDirectorId();
-            StateOfDeletion state = await directorBLL.DeleteDirectorAsync(id);
-            if (state == StateOfDeletion.Success)
+            DeletionState state = await directorBLL.DeleteDirectorAsync(id);
+            if (state == DeletionState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã xóa đạo diễn thành công";
             }
-            else if (state == StateOfDeletion.Failed)
+            else if (state == DeletionState.Failed)
             {
                 stateString = "Failed";
                 stateDetail = "Xóa đạo diễn thất bại";

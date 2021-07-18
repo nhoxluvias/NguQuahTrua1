@@ -134,8 +134,8 @@ namespace Web.Admin.RoleManagement
         private async Task Update()
         {
             RoleUpdate roleUpdate = GetRoleUpdate();
-            StateOfUpdate state = await roleBLL.UpdateRoleAsync(roleUpdate);
-            if (state == StateOfUpdate.Success)
+            UpdateState state = await roleBLL.UpdateRoleAsync(roleUpdate);
+            if (state == UpdateState.Success)
             {
                 stateString = "Success";
                 stateDetail = "Đã cập nhật vai trò thành công";
