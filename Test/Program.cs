@@ -28,7 +28,8 @@ namespace Test
         {
             //2002
             DBContext db = new DBContext(MSSQL_Lite.Connection.ConnectionType.DisconnectAfterCompletion);
-            await db.Films.UpdateAsync(new Film { updateAt = DateTime.Now }, f => new { f.updateAt }, f => f.ID == "77f7a818b85480c8f6b7c53a5aab1361");
+            List<Film> films = await db.Films.ToListAsync();
+            //await db.Films.UpdateAsync(new Film { updateAt = DateTime.Now }, f => new { f.updateAt }, f => f.ID == "77f7a818b85480c8f6b7c53a5aab1361");
         }
     }
 }

@@ -8,11 +8,11 @@ namespace MSSQL_Lite.Reflection
 {
     using CustomAttribute = CustomAttributeData;
     using NamedArgument = CustomAttributeNamedArgument;
-    public class Obj : IDisposable
+    public class ObjReflection : IDisposable
     {
         private bool disposedValue;
 
-        public Obj()
+        public ObjReflection()
         {
             disposedValue = false;
         }
@@ -333,7 +333,7 @@ namespace MSSQL_Lite.Reflection
                 disposedValue = true;
             }
         }
-        ~Obj()
+        ~ObjReflection()
         {
             Dispose(disposing: false);
         }

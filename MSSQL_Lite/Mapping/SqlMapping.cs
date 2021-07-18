@@ -6,12 +6,12 @@ namespace MSSQL_Lite.Mapping
 {
     public class SqlMapping : IDisposable
     {
-        private Obj objReflection;
+        private ObjReflection objReflection;
         private bool disposedValue;
 
         public SqlMapping()
         {
-            objReflection = new Obj();
+            objReflection = new ObjReflection();
             disposedValue = false;
         }
 

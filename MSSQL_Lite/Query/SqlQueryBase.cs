@@ -12,16 +12,16 @@ namespace MSSQL_Lite.Query
 {
     public class SqlQueryBase : IDisposable
     {
-        private ExpresstionExtension expresstionExtension;
+        private ExpressionExtension expressionExtension;
         private SqlMapping sqlMapping;
-        private Obj objReflection;
+        private ObjReflection objReflection;
         private bool disposedValue;
 
         public SqlQueryBase()
         {
-            expresstionExtension = new ExpresstionExtension();
+            expressionExtension = new ExpressionExtension();
             sqlMapping = new SqlMapping();
-            objReflection = new Obj();
+            objReflection = new ObjReflection();
             disposedValue = false;
         }
 
@@ -124,7 +124,7 @@ namespace MSSQL_Lite.Query
             {
                 string left = GetWherePatternStatement(expressionTree.Left, enclosedInSquareBrackets);
                 string right = GetWherePatternStatement(expressionTree.Right, enclosedInSquareBrackets);
-                string nodeType = expresstionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
+                string nodeType = expressionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
                 return string.Format("({0} {1} {2})", left, nodeType, right);
             }
             else if (IsComparisonOperator(expressionData.NodeType))
@@ -132,7 +132,7 @@ namespace MSSQL_Lite.Query
                 if (expressionData.Key == null)
                     throw new Exception("");
                 string propName = (enclosedInSquareBrackets) ? string.Format("[{0}]", expressionData.Key) : expressionData.Key;
-                string nodeType = expresstionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
+                string nodeType = expressionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
                 return string.Format("({0} {1} {2})", propName, nodeType, string.Format("@{0}_where", expressionData.Key));
             }
             return null;
@@ -402,8 +402,8 @@ namespace MSSQL_Lite.Query
             {
                 if (disposing)
                 {
-                    expresstionExtension.Dispose();
-                    expresstionExtension = null;
+                    expressionExtension.Dispose();
+                    expressionExtension = null;
                     sqlMapping.Dispose();
                     sqlMapping = null;
                     objReflection.Dispose();

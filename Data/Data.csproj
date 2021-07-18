@@ -51,6 +51,7 @@
     <Compile Include="BLL\LanguageBLL.cs" />
     <Compile Include="BLL\Migration\UserMigration.cs" />
     <Compile Include="BLL\TagBLL.cs" />
+    <Compile Include="BLL\UserReactionBLL.cs" />
     <Compile Include="Config\DatabaseConfig.cs" />
     <Compile Include="Config\MigrationConfig.cs" />
     <Compile Include="BLL\Migration\PaymentMethodMigration.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="DAL\Tag.cs" />
     <Compile Include="DAL\TagDistribution.cs" />
     <Compile Include="DAL\User.cs" />
+    <Compile Include="DAL\UserReaction.cs" />
     <Compile Include="DTO\CastDTO.cs" />
     <Compile Include="DTO\CategoryDTO.cs" />
     <Compile Include="DTO\CountryDTO.cs" />

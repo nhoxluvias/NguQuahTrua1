@@ -54,7 +54,7 @@
     <Compile Include="Execution\SqlExecution.cs" />
     <Compile Include="LambdaExpression\ExpressionData.cs" />
     <Compile Include="LambdaExpression\ExpressionTree.cs" />
-    <Compile Include="LambdaExpression\ExpresstionExtension.cs" />
+    <Compile Include="LambdaExpression\ExpressionExtension.cs" />
     <Compile Include="Mapping\SqlConvert.cs" />
     <Compile Include="Mapping\SqlMapping.cs" />
     <Compile Include="Migration\ISqlMigration.cs" />
@@ -65,7 +65,7 @@
     <Compile Include="Query\SqlQuery.cs" />
     <Compile Include="Query\SqlQueryBase.cs" />
     <Compile Include="Query\SqlQueryData.cs" />
-    <Compile Include="Reflection\Obj.cs" />
+    <Compile Include="Reflection\ObjReflection.cs" />
     <Compile Include="String\StringExtension.cs" />
   </ItemGroup>
   <ItemGroup />

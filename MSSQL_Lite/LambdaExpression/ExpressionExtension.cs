@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 
 namespace MSSQL_Lite.LambdaExpression
 {
-    public class ExpresstionExtension : IDisposable
+    public class ExpressionExtension : IDisposable
     {
         private bool disposedValue;
 
-        public ExpresstionExtension()
+        public ExpressionExtension()
         {
             disposedValue = false;
         }
@@ -43,7 +43,7 @@ namespace MSSQL_Lite.LambdaExpression
             }
         }
 
-        ~ExpresstionExtension()
+        ~ExpressionExtension()
         {
             Dispose(disposing: false);
         }

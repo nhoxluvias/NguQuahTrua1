@@ -32,6 +32,8 @@ namespace MSSQL_Lite.Access
             List<T> items = sqlData.ToList<T>();
             if (connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
+            sqlCommand.Dispose();
+            sqlCommand = null;
             return items;
         }
 

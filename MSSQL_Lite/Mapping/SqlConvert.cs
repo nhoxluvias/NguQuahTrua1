@@ -11,12 +11,12 @@ namespace MSSQL_Lite.Mapping
 {
     public class SqlConvert : IDisposable
     {
-        private Obj objReflection;
+        private ObjReflection objReflection;
         private bool disposedValue;
 
         public SqlConvert()
         {
-            objReflection = new Obj();
+            objReflection = new ObjReflection();
             disposedValue = false;
         }
 
