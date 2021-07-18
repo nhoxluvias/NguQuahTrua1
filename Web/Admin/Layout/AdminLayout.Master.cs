@@ -18,28 +18,36 @@ namespace Web.Admin.Layout
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            hyplnkOverview = GetRouteUrl("Admin_Overview", null);
-            hyplnkCategoryList = GetRouteUrl("Admin_CategoryList", null);
-            hyplnkCountryList = GetRouteUrl("Admin_CountryList", null);
-            hyplnkLanguageList = GetRouteUrl("Admin_LanguageList", null);
-            hyplnkRoleList = GetRouteUrl("Admin_RoleList", null);
-            hyplnkDirectorList = GetRouteUrl("Admin_DirectorList", null);
-            hyplnkTagList = GetRouteUrl("Admin_TagList", null);
-            hyplnkUserList = GetRouteUrl("Admin_UserList", null);
-            hyplnkCastList = GetRouteUrl("Admin_CastList", null);
-            hyplnkFilmList = GetRouteUrl("Admin_FilmList", null);
+            try
+            {
+                hyplnkOverview = GetRouteUrl("Admin_Overview", null);
+                hyplnkCategoryList = GetRouteUrl("Admin_CategoryList", null);
+                hyplnkCountryList = GetRouteUrl("Admin_CountryList", null);
+                hyplnkLanguageList = GetRouteUrl("Admin_LanguageList", null);
+                hyplnkRoleList = GetRouteUrl("Admin_RoleList", null);
+                hyplnkDirectorList = GetRouteUrl("Admin_DirectorList", null);
+                hyplnkTagList = GetRouteUrl("Admin_TagList", null);
+                hyplnkUserList = GetRouteUrl("Admin_UserList", null);
+                hyplnkCastList = GetRouteUrl("Admin_CastList", null);
+                hyplnkFilmList = GetRouteUrl("Admin_FilmList", null);
 
-            object obj = Session["userSession"];
-            if(obj == null)
-            {
-                txtUsername.InnerText = "Anonymous";
-                txtRole.InnerText = "N/A";
+                object obj = Session["userSession"];
+                if (obj == null)
+                {
+                    txtUsername.InnerText = "Anonymous";
+                    txtRole.InnerText = "N/A";
+                }
+                else
+                {
+                    UserSession userSession = (UserSession)obj;
+                    txtUsername.InnerText = userSession.username;
+                    txtRole.InnerText = userSession.role;
+                }
             }
-            else
+            catch(Exception ex)
             {
-                UserSession userSession = (UserSession)obj;
-                txtUsername.InnerText = userSession.username;
-                txtRole.InnerText = userSession.role;
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
             }
         }
     }

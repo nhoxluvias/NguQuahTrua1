@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Data.DTO;
 using System.Linq;
+using Web.Models;
 
 namespace Web.User.Layout
 {
@@ -13,7 +14,15 @@ namespace Web.User.Layout
         protected void Page_Load(object sender, EventArgs e)
         {
             categoryBLL = new CategoryBLL();
-            GetCategories();
+            try
+            {
+                GetCategories();
+            }
+            catch(Exception ex)
+            {
+                Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
+                Response.RedirectToRoute("Notification_Error", null);
+            }
             categoryBLL.Dispose();
         }
 

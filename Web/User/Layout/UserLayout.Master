@@ -68,11 +68,15 @@
                                 <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">Thể loại<i class="fa fa-angle-down" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu level1">
-                                    <% foreach(CategoryInfo category in categories){ %>
-                                        <li>
-                                            <a href="<%= category.url %>"><% = category.name %></a>
-                                        </li>
-                                    <% } %>
+                                    <% if (categories != null)
+                                        {
+                                            foreach (CategoryInfo category in categories)
+                                            { %>
+                                    <li>
+                                        <a href="<%= category.url %>"><% = category.name %></a>
+                                    </li>
+                                    <% }
+                                        } %>
                                 </ul>
                             </li>
                             <li class="dropdown first">
@@ -109,6 +113,7 @@
                         <option value="united">Phim chiếu rạp</option>
                         <option value="saab">Phim bộ</option>
                     </select>
+                    <%--<asp:TextBox ID="txtSearch" placeholder="Nhập tên phim mà bạn muốn tìm...." runat="server"></asp:TextBox>--%>
                     <input type="text" placeholder="Nhập tên phim mà bạn muốn tìm....">
                 </div>
             </div>

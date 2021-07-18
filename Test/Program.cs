@@ -29,6 +29,11 @@ namespace Test
             //2002
             DBContext db = new DBContext(MSSQL_Lite.Connection.ConnectionType.DisconnectAfterCompletion);
             List<Film> films = await db.Films.ToListAsync();
+
+            foreach(Film film in films)
+            {
+                Console.WriteLine($"{film.name} -- {film.createAt}");
+            }
             //await db.Films.UpdateAsync(new Film { updateAt = DateTime.Now }, f => new { f.updateAt }, f => f.ID == "77f7a818b85480c8f6b7c53a5aab1361");
         }
     }

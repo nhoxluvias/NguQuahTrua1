@@ -154,14 +154,36 @@ namespace Data.BLL
             };
         }
 
+        public async Task<List<FilmInfo>> SeachAsync(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new Exception("");
+
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.CommandType = CommandType.Text;
+            if (includeTimestamp)
+                sqlCommand.CommandText = @"Select [Film].* from [Film]
+                            where [Film].[name] like @name";
+            else
+                sqlCommand.CommandText = @"Select [Film].[ID],[Film].[name],[Film].[description],
+                                [Film].[languageId],[Film].[countryId],[Film].[productionCompany],
+                                [Film].[releaseDate],[Film].[duration],[Film].[thumbnail],
+                                [Film].[upvote],[Film].[downvote],[Film].[views], [Film].[source]
+                            from [Film]
+                            where [Film].[name] like @name";
+
+            sqlCommand.Parameters.Add(new SqlParameter("@name", string.Format("%{0}%", name)));
+            return await db.ExecuteReaderAsync<List<FilmInfo>>(sqlCommand);
+        }
+
         public async Task<List<FilmInfo>> GetLatestFilmAsync(int count = 12)
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = string.Format(@"select top {0} 
+            sqlCommand.CommandText = string.Format(@"Select top {0} 
                                 [Film].[ID], [Film].[name], [Film].[thumbnail], [Film].[countryId]
                             from [Film] order by [createAt] desc", count);
-            List<Film> t = await db.ExecuteReaderAsync<List<Film>>(sqlCommand);
+
             return (await db.ExecuteReaderAsync<List<Film>>(sqlCommand))
                 .Select(f => ToFilmInfo(f)).ToList();
         }
