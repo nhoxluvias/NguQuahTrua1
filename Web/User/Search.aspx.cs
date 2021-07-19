@@ -14,12 +14,15 @@ namespace Web.User
     {
         private FilmBLL filmBLL;
         protected List<FilmInfo> filmInfos;
+        protected string keyword;
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL();
             try
             {
-                await GetFilmsBySearchQueryString();
+                string searchContent = Request.QueryString["input"];
+                keyword = searchContent;
+                await SearchFilms(searchContent);
             }catch(Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
@@ -28,16 +31,16 @@ namespace Web.User
             filmBLL.Dispose();
         }
 
-        public async Task GetFilmsBySearchQueryString()
+        public async Task SearchFilms(string searchContent)
         {
-            string searchQuery = Request.QueryString["input"];
-            if (string.IsNullOrEmpty(searchQuery))
+            
+            if (string.IsNullOrEmpty(searchContent))
             {
                 Response.RedirectToRoute("User_Home", null);
             }
             else
             {
-                filmInfos = await filmBLL.SeachAsync(searchQuery);
+                filmInfos = await filmBLL.SeachFilmsAsync(searchContent);
                 foreach(FilmInfo filmInfo in filmInfos)
                 {
                     if (string.IsNullOrEmpty(filmInfo.thumbnail))

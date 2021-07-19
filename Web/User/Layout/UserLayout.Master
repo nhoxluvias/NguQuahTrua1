@@ -28,7 +28,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <!--preloading-->
+        <%--<!--preloading-->
         <div id="preloader">
             <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt="" width="119" height="58">
             <div id="status">
@@ -36,7 +36,7 @@
                 <span></span>
             </div>
         </div>
-        <!--end of preloading-->
+        <!--end of preloading-->--%>
         <!-- BEGIN | Header -->
         <header class="ht-header">
             <div class="container">
@@ -51,7 +51,7 @@
                                 <span></span>
                             </div>
                         </div>
-                        <a href="index.html">
+                        <a href="<% = hyplnkHome %>">
                             <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt="" width="119" height="58"></a>
                     </div>
                     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -61,7 +61,7 @@
                                 <a href="#page-top"></a>
                             </li>
                             <li class="dropdown first">
-                                <a class="btn btn-default">Trang chủ
+                                <a class="btn btn-default" href="<% = hyplnkHome %>">Trang chủ
                                 </a>
                             </li>
                             <li class="dropdown first">
@@ -100,8 +100,7 @@
                                 </ul>
                             </li>
                             <li><a href="#">Hỗ trợ</a></li>
-                            <li class="loginLink"><a href="#">Đăng nhập</a></li>
-                            <li class="btn signupLink"><a href="#">Đăng ký</a></li>
+                            <li class="btn"><a id="hyplnkAccount" href="#" runat="server"></a></li>
                         </ul>
                     </div>
                     <!-- /.navbar-collapse -->
@@ -113,8 +112,7 @@
                         <option value="united">Phim chiếu rạp</option>
                         <option value="saab">Phim bộ</option>
                     </select>
-                    <%--<asp:TextBox ID="txtSearch" placeholder="Nhập tên phim mà bạn muốn tìm...." runat="server"></asp:TextBox>--%>
-                    <input type="text" placeholder="Nhập tên phim mà bạn muốn tìm....">
+                    <input id="search-input" type="text" placeholder="Nhập tên phim mà bạn muốn tìm....">
                 </div>
             </div>
         </header>
@@ -192,5 +190,12 @@
     <script src="<%= ResolveUrl("~/user_assets/js/plugins.js") %>"></script>
     <script src="<%= ResolveUrl("~/user_assets/js/plugins2.js") %>"></script>
     <script src="<%= ResolveUrl("~/user_assets/js/custom.js") %>"></script>
+    <script type="text/javascript">
+        $("#search-input").keypress(function (e) {
+            if (e.which == 13 || e.keyCode == 13) {
+                window.location.href = "<% = hyplnkSearch %>?input=" + $("#search-input").val();
+            }
+        });
+    </script>
 </body>
 </html>

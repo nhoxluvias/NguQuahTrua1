@@ -154,7 +154,7 @@ namespace Data.BLL
             };
         }
 
-        public async Task<List<FilmInfo>> SeachAsync(string name)
+        public async Task<List<FilmInfo>> SeachFilmsAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new Exception("");

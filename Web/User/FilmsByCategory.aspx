@@ -1,12 +1,11 @@
-﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="Search.aspx.cs" Inherits="Web.User.Search" %>
-
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayout.Master" AutoEventWireup="true" CodeBehind="FilmsByCategory.aspx.cs" Inherits="Web.User.FilmsByCategory" %>
 <%@ Import Namespace="Data.DTO" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title> Từ khóa: <% = keyword %> - Trang tìm kiếm</title>
+    <title>Thể loại: <% = categoryName %> -- Trang xem theo thể loại</title>
     <meta charset="UTF-8">
-    <meta name="description" content="trang tìm kiếm phim">
-    <meta name="keywords" content="tìm kiếm phim hay">
+    <meta name="description" content="trang phim theo thể loại">
+    <meta name="keywords" content="phim theo thể loại">
     <meta name="author" content="">
     <link rel="profile" href="#">
 </asp:Content>
@@ -17,7 +16,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="hero-ct">
-                        <h1>Trang tìm kiếm</h1>
+                        <h1>Phim theo thể loại</h1>
                         <%--<ul class="breadcumb">
                             <li class="active"><a href="#">Home</a></li>
                             <li><span class="ion-ios-arrow-right"></span>movie listing</li>
@@ -35,7 +34,7 @@
                     { %>
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="topbar-filter">
-                        <p>Tìm thấy:  <span><% = filmInfos.Count %></span> phim với từ khóa này "<% = keyword %>"</p>
+                        <p>Tìm thấy:  <span><% = filmInfos.Count %></span> phim với thể loại này "<% = categoryName %>"</p>
                     </div>
                     <div class="flex-wrap-movielist">
                         <% foreach (FilmInfo filmInfo in filmInfos)

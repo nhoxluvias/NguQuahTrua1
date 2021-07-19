@@ -11,11 +11,27 @@ namespace Web.User.Layout
     {
         private CategoryBLL categoryBLL;
         protected List<CategoryInfo> categories;
+        protected string hyplnkSearch;
+        protected string hyplnkHome;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             categoryBLL = new CategoryBLL();
             try
             {
+                object obj = Session["userSession"];
+                if (obj == null)
+                {
+                    hyplnkAccount.HRef = GetRouteUrl("Account_Login", null);
+                    hyplnkAccount.InnerText = "Đăng nhập / Đăng ký";
+                }
+                else
+                {
+                    hyplnkAccount.HRef = GetRouteUrl("Account_Logout", null);
+                    hyplnkAccount.InnerText = "Đăng xuất";
+                }
+                hyplnkSearch = GetRouteUrl("User_Search", null);
+                hyplnkHome = GetRouteUrl("User_Home", null);
                 GetCategories();
             }
             catch(Exception ex)
@@ -33,7 +49,7 @@ namespace Web.User.Layout
                     ID = c.ID, 
                     name = c.name, 
                     description = c.description,
-                    url = GetRouteUrl("User_Category", new { id = c.ID })
+                    url = GetRouteUrl("User_FilmsByCategory", new { slug = c.name.TextToUrl(), id = c.ID })
                 }).ToList();
         }
 

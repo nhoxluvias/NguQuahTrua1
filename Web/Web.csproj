@@ -122,10 +122,9 @@
     <Content Include="admin_assets\images\avatar.png" />
     <Content Include="admin_assets\images\favicon.png" />
     <Content Include="admin_assets\js\jquery.js" />
-    <Content Include="User\Article.aspx" />
     <Content Include="User\Category.aspx" />
-    <Content Include="User\FilmByCategory.aspx" />
     <Content Include="User\FilmDetail.aspx" />
+    <Content Include="User\FilmsByCategory.aspx" />
     <Content Include="User\Search.aspx" />
     <Content Include="User\Watch.aspx" />
     <Content Include="user_assets\css\plugins.css" />
@@ -607,13 +606,6 @@
       <DependentUpon>Error.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="User\Article.aspx.cs">
-      <DependentUpon>Article.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User\Article.aspx.designer.cs">
-      <DependentUpon>Article.aspx</DependentUpon>
-    </Compile>
     <Compile Include="User\Category.aspx.cs">
       <DependentUpon>Category.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -624,19 +616,19 @@
     <Compile Include="User\DownvoteFilm.ashx.cs">
       <DependentUpon>DownvoteFilm.ashx</DependentUpon>
     </Compile>
-    <Compile Include="User\FilmByCategory.aspx.cs">
-      <DependentUpon>FilmByCategory.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="User\FilmByCategory.aspx.designer.cs">
-      <DependentUpon>FilmByCategory.aspx</DependentUpon>
-    </Compile>
     <Compile Include="User\FilmDetail.aspx.cs">
       <DependentUpon>FilmDetail.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="User\FilmDetail.aspx.designer.cs">
       <DependentUpon>FilmDetail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\FilmsByCategory.aspx.cs">
+      <DependentUpon>FilmsByCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\FilmsByCategory.aspx.designer.cs">
+      <DependentUpon>FilmsByCategory.aspx</DependentUpon>
     </Compile>
     <Compile Include="User\Index.aspx.cs">
       <DependentUpon>Index.aspx</DependentUpon>

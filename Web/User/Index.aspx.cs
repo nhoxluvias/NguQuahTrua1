@@ -63,7 +63,7 @@ namespace Web.User
                     ID = c.ID,
                     name = c.name,
                     description = c.description,
-                    url = GetRouteUrl("User_Category", new { id = c.ID })
+                    url = GetRouteUrl("User_FilmsByCategory", new { slug = c.name.TextToUrl(), id = c.ID })
                 }).ToList();
         }
 

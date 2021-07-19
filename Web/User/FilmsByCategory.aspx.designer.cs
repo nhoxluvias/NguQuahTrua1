@@ -10,7 +10,7 @@
 
 namespace Web.User
 {
-    public partial class FilmByCategory
+    public partial class FilmsByCategory
     {
     }
 }

@@ -58,16 +58,11 @@
                         { %>
                     <div class="title-hd">
                         <h2><% = filmOfCategory.Key.name %></h2>
-                        <a href="#" class="viewall">Xem tất cả <i class="ion-ios-arrow-right"></i></a>
+                        <a href="<% = filmOfCategory.Key.url %>" class="viewall">Xem tất cả <i class="ion-ios-arrow-right"></i></a>
                     </div>
                     <div class="tabs">
-                        <ul class="tab-links">
-                            <li class="active"><a href="#tab1">Phổ biến nhất</a></li>
-                            <li><a href="#tab2">Đánh giá cao</a></li>
-                            <li><a href="#tab3">Xem nhiều nhất</a></li>
-                        </ul>
                         <div class="tab-content">
-                            <div id="tab1" class="tab active">
+                            <div class="tab active">
                                 <div class="row">
                                     <div class="slick-multiItem">
                                         <% foreach (FilmInfo filmInfo in filmOfCategory.Value)
@@ -75,7 +70,7 @@
                                         <div class="slide-it">
                                             <div class="movie-item">
                                                 <div class="mv-img">
-                                                    <img src="<% = filmInfo.thumbnail %>" alt="<% = filmInfo.name %>" style="width:185px; height:284px;">
+                                                    <img src="<% = filmInfo.thumbnail %>" alt="<% = filmInfo.name %>" width="185" height="284">
                                                 </div>
                                                 <div class="hvr-inner">
                                                     <a href="<% = filmInfo.url %>">Xem thêm <i class="ion-android-arrow-dropright"></i></a>

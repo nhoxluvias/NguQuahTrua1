@@ -16,7 +16,6 @@ namespace Web.User
      
         private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
-        protected bool enableShowDetail;
         protected string title_HeadTag;
         protected string keywords_MetaTag;
         protected string description_MetaTag;
@@ -24,7 +23,6 @@ namespace Web.User
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL();
-            enableShowDetail = false;
             try
             {
                 await GetFilmById();
@@ -80,7 +78,6 @@ namespace Web.User
                             .ToAbsolute(string.Format("{0}/{1}", FileUpload.ImageFilePath, filmInfo.thumbnail));
 
                     filmInfo.url = GetRouteUrl("User_Watch", new { slug = filmInfo.name.TextToUrl(), id = filmInfo.ID });
-                    enableShowDetail = true;
                 }
             }
         }
