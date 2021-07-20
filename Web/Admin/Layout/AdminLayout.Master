@@ -73,7 +73,7 @@
             </section>
         </div>
     </form>
-    <asp:ContentPlaceHolder ID="footer" runat="server">
+    <asp:ContentPlaceHolder ID="foot" runat="server">
     </asp:ContentPlaceHolder>
 </body>
 </html>

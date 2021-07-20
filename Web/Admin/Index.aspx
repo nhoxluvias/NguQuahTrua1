@@ -73,3 +73,6 @@
     <p class="credit">Trang quản trị -- <a href="#">Đồ án Lập trình Web</a></p>
     <%} %>
 </asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="foot" runat="server">
+</asp:Content>
