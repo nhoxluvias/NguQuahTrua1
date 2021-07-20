@@ -18,9 +18,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone-no">
 
+    <link rel="icon" type="image/png" href="<% = ResolveUrl("~/user_assets/images/favicon.png") %>"/>
+
     <!-- CSS files -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/user_assets/css/plugins.css") %>">
     <link rel="stylesheet" href="<%= ResolveUrl("~/user_assets/css/style.css") %>">
+
+    <script src="<%= ResolveUrl("~/user_assets/js/jquery.js") %>"></script>
 
     <!--Basic need-->
     <asp:ContentPlaceHolder ID="head" runat="server">
@@ -28,15 +32,6 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <%--<!--preloading-->
-        <div id="preloader">
-            <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt="" width="119" height="58">
-            <div id="status">
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-        <!--end of preloading-->--%>
         <!-- BEGIN | Header -->
         <header class="ht-header">
             <div class="container">
@@ -60,10 +55,7 @@
                             <li class="hidden">
                                 <a href="#page-top"></a>
                             </li>
-                            <li class="dropdown first">
-                                <a class="btn btn-default" href="<% = hyplnkHome %>">Trang chủ
-                                </a>
-                            </li>
+                            <li><a class="btn btn-default" href="<% = hyplnkHome %>">Trang chủ</a></li>
                             <li class="dropdown first">
                                 <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">Thể loại<i class="fa fa-angle-down" aria-hidden="true"></i>
                                 </a>
@@ -79,16 +71,13 @@
                                         } %>
                                 </ul>
                             </li>
+                            <li><a class="btn btn-default" href="<% = hyplnkWatchedList %>">Lịch sử</a></li>
                             <li class="dropdown first">
                                 <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">Bài viết<i class="fa fa-angle-down" aria-hidden="true"></i>
                                 </a>
                                 <ul class="dropdown-menu level1">
                                     <li><a href="#">Hướng dẫn</a></li>
                                 </ul>
-                            </li>
-                            <li class="dropdown first">
-                                <a class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">Giới thiệu <i class="fa fa-angle-down" aria-hidden="true"></i>
-                                </a>
                             </li>
                         </ul>
                         <ul class="nav navbar-nav flex-child-menu menu-right">
@@ -118,7 +107,7 @@
         </header>
         <!-- END | Header -->
 
-        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        <asp:ContentPlaceHolder ID="mainContent" runat="server">
         </asp:ContentPlaceHolder>
 
         <!-- footer section-->
@@ -186,7 +175,6 @@
         </footer>
         <!-- end of footer section-->
     </form>
-    <script src="<%= ResolveUrl("~/user_assets/js/jquery.js") %>"></script>
     <script src="<%= ResolveUrl("~/user_assets/js/plugins.js") %>"></script>
     <script src="<%= ResolveUrl("~/user_assets/js/plugins2.js") %>"></script>
     <script src="<%= ResolveUrl("~/user_assets/js/custom.js") %>"></script>
@@ -197,5 +185,7 @@
             }
         });
     </script>
+    <asp:ContentPlaceHolder ID="foot" runat="server">
+    </asp:ContentPlaceHolder>
 </body>
 </html>

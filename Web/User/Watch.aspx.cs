@@ -2,6 +2,7 @@
 using Data.BLL;
 using Data.DTO;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -17,16 +18,35 @@ namespace Web.User
         protected string title_HeadTag;
         protected string keywords_MetaTag;
         protected string description_MetaTag;
+        protected string hyplnkIncreaseView;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL();
             try
             {
+                hyplnkIncreaseView = GetRouteUrl("User_IncreaseView", null);
                 await GetFilmInfo();
                 GenerateHeadTag();
+                object obj = Session["userSession"];
+                if (obj != null && filmInfo != null)
+                {
+                    UserSession userSession = (UserSession)obj;
+                    if (userSession.Histories == null)
+                    {
+                        userSession.Histories = new List<History>();
+                    }
+                    userSession.Histories.Add(new History
+                    {
+                        filmId = filmInfo.ID,
+                        name = filmInfo.name,
+                        thumbnail = filmInfo.thumbnail,
+                        url = filmInfo.url,
+                        timestamp = DateTime.Now
+                    });
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
@@ -53,12 +73,28 @@ namespace Web.User
             {
                 filmBLL.IncludeTag = true;
                 filmInfo = await filmBLL.GetFilmAsync(id);
-                if (string.IsNullOrEmpty(filmInfo.source))
-                    filmInfo.source = VirtualPathUtility
-                        .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.VideoFilePath));
+                if (filmInfo == null)
+                {
+                    Response.RedirectToRoute("User_Home", null);
+                }
                 else
-                    filmInfo.source = VirtualPathUtility
-                        .ToAbsolute(string.Format("{0}/{1}", FileUpload.VideoFilePath, filmInfo.source));
+                {
+                    if (string.IsNullOrEmpty(filmInfo.thumbnail))
+                        filmInfo.thumbnail = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/Default/default.png", FileUpload.ImageFilePath));
+                    else
+                        filmInfo.thumbnail = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/{1}", FileUpload.ImageFilePath, filmInfo.thumbnail));
+
+                    if (string.IsNullOrEmpty(filmInfo.source))
+                        filmInfo.source = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/Default/default.mp4", FileUpload.VideoFilePath));
+                    else
+                        filmInfo.source = VirtualPathUtility
+                            .ToAbsolute(string.Format("{0}/{1}", FileUpload.VideoFilePath, filmInfo.source));
+
+                    filmInfo.url = GetRouteUrl("User_FilmDetail", new { slug = filmInfo.name.TextToUrl(), id = filmInfo.ID });
+                }
             }
         }
 

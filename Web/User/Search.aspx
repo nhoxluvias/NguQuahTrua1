@@ -11,7 +11,7 @@
     <link rel="profile" href="#">
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <div class="hero common-hero">
         <div class="container">
             <div class="row">
@@ -75,4 +75,7 @@
             </div>
         </div>
     </div>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="foot" runat="server">
 </asp:Content>

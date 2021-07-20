@@ -154,6 +154,18 @@ namespace Data.BLL
             };
         }
 
+        public async Task<object> CountFilmByCategoryAsync()
+        {
+            SqlCommand sqlCommand = new SqlCommand();
+            sqlCommand.CommandType = CommandType.Text;
+            sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], 
+                                        (select count([filmId]) from[CategoryDistribution] 
+                                            where[CategoryDistribution].[categoryId] = [Category].[ID]) as 'count'
+                                      from Category";
+
+            return await db.ExecuteReaderAsync(sqlCommand);
+        }
+
         public async Task<List<FilmInfo>> SeachFilmsAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -723,6 +735,19 @@ namespace Data.BLL
             int affected = db.ExecuteNonQuery(sqlCommand);
 
             return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
+        }
+
+        public UpdateState IncreaseView(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("");
+
+            Film film = db.Films.SingleOrDefault(f => new { f.ID, f.views }, f => f.ID == filmId);
+            if (film == null)
+                return UpdateState.Failed;
+
+            int affected = db.Films.Update(new Film { views = film.views + 1 }, f => new { f.views }, f => f.ID == filmId);
+            return UpdateState.Success;
         }
 
         public async Task<long> CountAllAsync()

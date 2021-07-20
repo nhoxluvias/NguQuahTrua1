@@ -19,13 +19,19 @@ namespace Web.User
         protected string title_HeadTag;
         protected string keywords_MetaTag;
         protected string description_MetaTag;
+        protected string hyplnkUpvote;
+        protected string hyplnkDownvote;
+        protected string userId;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
             filmBLL = new FilmBLL();
             try
             {
+                hyplnkUpvote = GetRouteUrl("User_UpvoteFilm", null);
+                hyplnkDownvote = GetRouteUrl("User_DownvoteFilm", null);
                 await GetFilmById();
+                userId = GetUserId();
                 GenerateHeadTag();
             }
             catch(Exception ex)
@@ -42,6 +48,16 @@ namespace Web.User
             if (obj == null)
                 return null;
             return obj.ToString();
+        }
+
+        private string GetUserId()
+        {
+            object obj = Session["userSession"];
+            if (obj == null)
+                return null;
+
+            UserSession userSession = (UserSession)obj;
+            return userSession.userId;
         }
 
         private async Task GetFilmById()

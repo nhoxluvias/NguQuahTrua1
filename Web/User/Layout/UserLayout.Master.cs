@@ -12,6 +12,7 @@ namespace Web.User.Layout
         private CategoryBLL categoryBLL;
         protected List<CategoryInfo> categories;
         protected string hyplnkSearch;
+        protected string hyplnkWatchedList;
         protected string hyplnkHome;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -31,6 +32,7 @@ namespace Web.User.Layout
                     hyplnkAccount.InnerText = "Đăng xuất";
                 }
                 hyplnkSearch = GetRouteUrl("User_Search", null);
+                hyplnkWatchedList = GetRouteUrl("User_WatchedList", null);
                 hyplnkHome = GetRouteUrl("User_Home", null);
                 GetCategories();
             }

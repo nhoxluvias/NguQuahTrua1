@@ -17,6 +17,7 @@ namespace Web.User
         protected List<FilmInfo> latestFilms;
         protected List<CategoryInfo> categoryInfos;
         protected Dictionary<CategoryInfo, List<FilmInfo>> films_CategoryDict;
+        protected string hyplnkCategoryList;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
@@ -24,6 +25,7 @@ namespace Web.User
             films_CategoryDict = new Dictionary<CategoryInfo, List<FilmInfo>>();
             try
             {
+                hyplnkCategoryList = GetRouteUrl("User_CategoryList", null);
                 await GetLatestFilm();
                 await GetCategories();
                 await GetFilmsByCategory();

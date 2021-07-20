@@ -11,7 +11,7 @@
     <link rel="profile" href="#">
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <div class="slider movie-items">
         <div class="container">
             <div class="row">
@@ -111,11 +111,14 @@
                             </div>
                             <%}
                                 }%>
-                            <a href="#" class="btn">Xem tất cả thể loại<i class="ion-ios-arrow-right"></i></a>
+                            <a href="<% = hyplnkCategoryList %>" class="btn">Xem tất cả thể loại<i class="ion-ios-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="foot" runat="server">
 </asp:Content>

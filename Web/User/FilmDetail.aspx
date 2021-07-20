@@ -11,7 +11,7 @@
     <link rel="profile" href="#">
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <div class="hero mv-single-hero">
         <div class="container">
             <div class="row">
@@ -40,7 +40,11 @@
                     <div class="movie-single-ct main-content">
                         <h1 class="bd-hd"><% = filmInfo.name %><span><% = filmInfo.releaseDate %></span></h1>
                         <div class="social-btn">
-                            <a href="#" class="parent-btn"><i class="ion-heart"></i>Thêm vào phim yêu thích</a>
+                            <% if (userId != null)
+                                { %>
+                            <a href="#" class="parent-btn" onclick="upvote();"><i class="ion-heart"></i>Thích</a>
+                            <a href="#" class="parent-btn" onclick="downvote();"><i class="ion-heart"></i>Không thích</a>
+                            <%} %>
                             <div class="hover-bnt">
                                 <a href="#" class="parent-btn"><i class="ion-android-share-alt"></i>Chia sẻ</a>
                                 <div class="hvr-item">
@@ -91,7 +95,7 @@
                                                         { %>
                                                     <div class="cast-it">
                                                         <div class="cast-left">
-                                                            <img src="images/uploads/cast1.jpg" alt="">
+                                                            <%--<img src="images/uploads/cast1.jpg" alt="">--%>
                                                             <a href="#"><% = directorInfo.name %></a>
                                                         </div>
                                                     </div>
@@ -106,7 +110,7 @@
                                                         { %>
                                                     <div class="cast-it">
                                                         <div class="cast-left">
-                                                            <img src="images/uploads/cast1.jpg" alt="">
+                                                            <%--<img src="images/uploads/cast1.jpg" alt="">--%>
                                                             <a href="#"><% = castInfo.name %></a>
                                                         </div>
                                                     </div>
@@ -159,7 +163,7 @@
                                                     </p>
                                                 </div>
                                                 <div class="ads">
-                                                    <img src="images/uploads/ads1.png" alt="">
+                                                    <img src="<% = ResolveUrl("~/user_assets/images/uploads/banner_img.jpg") %>" alt="">
                                                 </div>
                                             </div>
                                         </div>
@@ -215,4 +219,33 @@
         </div>
     </div>
     <%} %>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="foot" runat="server">
+    <% if (filmInfo != null && hyplnkUpvote != null && hyplnkDownvote != null && userId != null)
+        { %>
+    <script type="text/javascript">
+        function upvote() {
+            $(document).ready(function (e) {
+                $.post("<% = hyplnkUpvote %>", {
+                    filmId: "<% = filmInfo.ID %>",
+                    userId: "<% = userId %>",
+                }, function (data) {
+                    alert(data);
+                });
+            });
+        }
+
+        function downvote() {
+            $(document).ready(function (e) {
+                $.post("<% = hyplnkDownvote %>", {
+                    filmId: "<% = filmInfo.ID %>",
+                    userId: "<% = userId %>",
+                }, function (data) {
+                    alert(data);
+                });
+            });
+        }
+    </script>
+    <% } %>
 </asp:Content>

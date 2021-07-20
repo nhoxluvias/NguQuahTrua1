@@ -64,10 +64,11 @@ namespace Web.App_Start
             routes.MapPageRoute("Admin_CreateUser", "admin/user/create", "~/Admin/UserManagement/CreateUser.aspx");
 
             routes.MapPageRoute("User_Home", "", "~/User/Index.aspx");
-            routes.MapPageRoute("User_Category", "category/{id}", "~/User/Category.aspx");
+            routes.MapPageRoute("User_CategoryList", "category-list", "~/User/CategoryList.aspx");
             routes.MapPageRoute("User_FilmDetail", "film-detail/{slug}/{id}", "~/User/FilmDetail.aspx");
             routes.MapPageRoute("User_Watch", "watch/{slug}/{id}", "~/User/Watch.aspx");
             routes.MapPageRoute("User_Search", "search/", "~/User/Search.aspx");
+            routes.MapPageRoute("User_WatchedList", "watched-list", "~/User/WatchedList.aspx");
             routes.MapPageRoute("User_FilmsByCategory", "films-by-category/{slug}/{id}", "~/User/FilmsByCategory.aspx");
             routes.MapHttpHandlerRoute("User_UpvoteFilm", "film/upvote", "~/User/UpvoteFilm.ashx");
             routes.MapHttpHandlerRoute("User_DownvoteFilm", "film/downvote", "~/User/DownvoteFilm.ashx");

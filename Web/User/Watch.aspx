@@ -12,10 +12,27 @@
     <script src="<% = ResolveUrl("~/common_assets/video-js/video.js") %>"></script>
 </asp:Content>
 
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
+    <% if (filmInfo != null)
+        { %>
+    <div class="hero common-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="hero-ct">
+                        <h1>Bạn đang xem: <% = filmInfo.name %></h1>
+                        <%--<ul class="breadcumb">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><span class="ion-ios-arrow-right"></span>movie listing</li>
+                        </ul>--%>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="page-single">
         <div class="container">
-            <div class="col-lg-12 col-md-12 col-sm-12" style="height: 150px;"></div>
             <div class="col-lg-12 col-md-12 col-sm-12" style="height: 600px;">
                 <video id="vid" class="video-js vjs-default-skin" controls preload="auto" data-setup="{}">
                     <source src="<% = filmInfo.source %>" type="video/mp4">
@@ -30,4 +47,22 @@
             height: 600px !important;
         }
     </style>
+    <%} %>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="foot" runat="server">
+    <% if (hyplnkIncreaseView != null && filmInfo != null)
+        { %>
+    <script type="text/javascript">
+        setTimeout(function () {
+            $(document).ready(function (e) {
+                $.post("<% = hyplnkIncreaseView %>", {
+                    filmId: "<% = filmInfo.ID %>"
+                }, function (data) {
+                    console.log(data);
+                });
+            });
+        }, 30000);
+    </script>
+    <%} %>
 </asp:Content>
