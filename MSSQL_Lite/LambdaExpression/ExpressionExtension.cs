@@ -3,13 +3,11 @@ using System.Linq.Expressions;
 
 namespace MSSQL_Lite.LambdaExpression
 {
-    public class ExpressionExtension : IDisposable
+    public class ExpressionExtension
     {
-        private bool disposedValue;
-
         public ExpressionExtension()
         {
-            disposedValue = false;
+
         }
 
         public string ConvertExpressionTypeToString(ExpressionType expressionType)
@@ -29,29 +27,6 @@ namespace MSSQL_Lite.LambdaExpression
                 case ExpressionType.Not: return "not";
                 default: return null;
             }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-
-                }
-                disposedValue = true;
-            }
-        }
-
-        ~ExpressionExtension()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

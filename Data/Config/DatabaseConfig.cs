@@ -1,4 +1,5 @@
 ﻿using MSSQL_Lite.Access;
+using MSSQL_Lite.Config;
 using MSSQL_Lite.Connection;
 
 namespace Data.Config
@@ -23,7 +24,8 @@ namespace Data.Config
 
         private static void SetObjectReceivingData()
         {
-            SqlData.objectReceivingData = ObjectReceivingData.DataSet;
+            SqlConfig.objectReceivingData = ObjectReceivingData.DataSet;
+            SqlConfig.Configure();
         }
     }
 }

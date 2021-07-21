@@ -14,7 +14,7 @@ namespace MSSQL_Lite.Access
         private ConnectionType connectionType;
         private bool disposedValue;
 
-        public SqlAccess(ConnectionType connectionType, SqlData sqlData)
+        internal SqlAccess(ConnectionType connectionType, SqlData sqlData)
         {
             sqlQuery = new SqlQuery();
             this.sqlData = sqlData;

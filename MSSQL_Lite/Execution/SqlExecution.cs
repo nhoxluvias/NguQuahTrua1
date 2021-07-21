@@ -2,52 +2,43 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Execution
 {
-    internal class SqlExecution : Connection.SqlConnection
+    internal partial class SqlExecution : IDisposable
     {
-        private SqlConvert sqlConvert;
-        private bool disposed;
+        private SqlConnection sqlConnection;
+        protected SqlConvert sqlConvert;
+        private bool disposedValue;
 
-        public SqlExecution(string connectionString)
-            : base(connectionString)
+        public SqlExecution(string sqlConnectionString)
         {
+            sqlConnection = new SqlConnection(sqlConnectionString);
             sqlConvert = new SqlConvert();
-            disposed = false;
+            disposedValue = false;
         }
 
-        public void InitSqlCommand(SqlCommand sqlCommand)
+        public void Connect()
         {
-            sqlCommand.Connection = base.connection;
+            if (sqlConnection.State == ConnectionState.Closed)
+                sqlConnection.Open();
         }
 
-        public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
+        public void Disconnect()
         {
-            this.InitSqlCommand(sqlCommand);
-            return await sqlCommand.ExecuteNonQueryAsync();
+            if (sqlConnection.State == ConnectionState.Open)
+                sqlConnection.Close();
+        }
+
+        private void InitSqlCommand(SqlCommand sqlCommand)
+        {
+            sqlCommand.Connection = sqlConnection;
         }
 
         public int ExecuteNonQuery(SqlCommand sqlCommand)
         {
-            this.InitSqlCommand(sqlCommand);
+            InitSqlCommand(sqlCommand);
             return sqlCommand.ExecuteNonQuery();
-        }
-
-        public async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)
-        {
-            Type type = typeof(T);
-            if (type.Name != "SqlDataReader" && type.Name != "DataSet")
-                throw new Exception("Invalid type, must be @'SqlDataReader' or @'DataSet'");
-            this.InitSqlCommand(sqlCommand);
-            if (type.Name == "SqlDataReader")
-            {
-                SqlDataReader reader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection);
-                return (T)Convert.ChangeType(reader, type);
-            }
-            DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
-            return (T)Convert.ChangeType(dataSet, type);
         }
 
         public T ExecuteReader<T>(SqlCommand sqlCommand)
@@ -55,7 +46,8 @@ namespace MSSQL_Lite.Execution
             Type type = typeof(T);
             if (type.Name != "SqlDataReader" && type.Name != "DataSet")
                 throw new Exception("Invalid type, must be @'SqlDataReader' or @'DataSet'");
-            this.InitSqlCommand(sqlCommand);
+
+            InitSqlCommand(sqlCommand);
             if (type.Name == "SqlDataReader")
             {
                 SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
@@ -65,35 +57,35 @@ namespace MSSQL_Lite.Execution
             return (T)Convert.ChangeType(dataSet, type);
         }
 
-        public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
-        {
-            this.InitSqlCommand(sqlCommand);
-            return await sqlCommand.ExecuteScalarAsync();
-        }
-
         public object ExecuteScalar(SqlCommand sqlCommand)
         {
-            this.InitSqlCommand(sqlCommand);
+            InitSqlCommand(sqlCommand);
             return sqlCommand.ExecuteScalar();
         }
-        protected override void Dispose(bool disposing)
+
+        protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposedValue)
             {
-                try
+                if (disposing)
                 {
-                    if (disposing)
-                    {
-                        sqlConvert.Dispose();
-                        sqlConvert = null;
-                    }
-                    this.disposed = true;
+                    sqlConnection.Dispose();
+                    sqlConnection = null;
+                    sqlConvert.Dispose();
+                    sqlConvert = null;
                 }
-                finally
-                {
-                    base.Dispose(disposing);
-                }
+                disposedValue = true;
             }
+        }
+        ~SqlExecution()
+        {
+            Dispose(disposing: false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 }

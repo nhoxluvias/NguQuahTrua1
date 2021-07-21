@@ -13,15 +13,17 @@ namespace MSSQL_Lite.Query
     public class SqlQueryBase : IDisposable
     {
         private ExpressionExtension expressionExtension;
-        private SqlMapping sqlMapping;
+        protected SqlMapping sqlMapping;
         private ObjReflection objReflection;
+        private bool enclosedInSquareBrackets;
         private bool disposedValue;
 
-        public SqlQueryBase()
+        public SqlQueryBase(bool enclosedInSquareBrackets)
         {
             expressionExtension = new ExpressionExtension();
             sqlMapping = new SqlMapping();
             objReflection = new ObjReflection();
+            this.enclosedInSquareBrackets = enclosedInSquareBrackets;
             disposedValue = false;
         }
 
@@ -113,7 +115,7 @@ namespace MSSQL_Lite.Query
             };
         }
 
-        protected string GetWherePatternStatement(ExpressionTree expressionTree, bool enclosedInSquareBrackets)
+        protected string GetWherePatternStatement(ExpressionTree expressionTree)
         {
             if (expressionTree == null)
                 return null;
@@ -122,8 +124,8 @@ namespace MSSQL_Lite.Query
                 throw new Exception("");
             if (IsLogicalOperator(expressionData.NodeType))
             {
-                string left = GetWherePatternStatement(expressionTree.Left, enclosedInSquareBrackets);
-                string right = GetWherePatternStatement(expressionTree.Right, enclosedInSquareBrackets);
+                string left = GetWherePatternStatement(expressionTree.Left);
+                string right = GetWherePatternStatement(expressionTree.Right);
                 string nodeType = expressionExtension.ConvertExpressionTypeToString(expressionData.NodeType);
                 return string.Format("({0} {1} {2})", left, nodeType, right);
             }
@@ -167,15 +169,15 @@ namespace MSSQL_Lite.Query
             return null;
         }
 
-        protected SqlQueryData GetWhereStatement<T>(Expression<Func<T, bool>> where, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetWhereStatement<T>(Expression<Func<T, bool>> where)
         {
             ExpressionTree expressionTree = GetExpressionTree<T>(where);
-            string whereStatement = GetWherePatternStatement(expressionTree, enclosedInSquareBrackets);
+            string whereStatement = GetWherePatternStatement(expressionTree);
             List<SqlQueryParameter> sqlParameters = GetKeyAndValueOfExpressionTree(expressionTree);
             return new SqlQueryData { Statement = string.Format("where {0}", whereStatement), SqlQueryParameters = sqlParameters };
         }
 
-        protected string GetInsertPattern<T>(T model, bool enclosedInSquareBrackets)
+        protected string GetInsertPattern<T>(T model)
         {
             string query = string.Format("Insert into {0}(", sqlMapping.GetTableName<T>(enclosedInSquareBrackets));
             PropertyInfo[] props = objReflection.GetProperties(model);
@@ -191,7 +193,7 @@ namespace MSSQL_Lite.Query
             return string.Format("{0} {1}) values ({2})", query, into, values);
         }
 
-        protected string GetInsertPattern<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
+        protected string GetInsertPattern<T>(T model, List<string> excludeProperties)
         {
             if (excludeProperties == null)
                 throw new Exception("");
@@ -213,7 +215,7 @@ namespace MSSQL_Lite.Query
             return string.Format("{0} {1}) values ({2})", query, into, values);
         }
 
-        protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, bool enclosedInSquareBracket)
+        protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model)
         {
             PropertyInfo[] props = objReflection.GetProperties(model);
             List<SqlQueryParameter> sqlQueryParameters = new List<SqlQueryParameter>();
@@ -228,7 +230,7 @@ namespace MSSQL_Lite.Query
             return sqlQueryParameters;
         }
 
-        protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, List<string> excludeProperties, bool enclosedInSquareBracket)
+        protected List<SqlQueryParameter> GetParameterOfInsertQuery<T>(T model, List<string> excludeProperties)
         {
             if (excludeProperties == null)
                 throw new Exception("");
@@ -249,25 +251,25 @@ namespace MSSQL_Lite.Query
             return sqlQueryParameters;
         }
 
-        protected SqlQueryData GetInsertQueryData<T>(T model, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetInsertQueryData<T>(T model)
         {
             return new SqlQueryData
             {
-                Statement = GetInsertPattern<T>(model, enclosedInSquareBrackets),
-                SqlQueryParameters = GetParameterOfInsertQuery<T>(model, enclosedInSquareBrackets)
+                Statement = GetInsertPattern<T>(model),
+                SqlQueryParameters = GetParameterOfInsertQuery<T>(model)
             };
         }
 
-        protected SqlQueryData GetInsertQueryData<T>(T model, List<string> excludeProperties, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetInsertQueryData<T>(T model, List<string> excludeProperties)
         {
             return new SqlQueryData
             {
-                Statement = GetInsertPattern<T>(model, excludeProperties, enclosedInSquareBrackets),
-                SqlQueryParameters = GetParameterOfInsertQuery<T>(model, excludeProperties, enclosedInSquareBrackets)
+                Statement = GetInsertPattern<T>(model, excludeProperties),
+                SqlQueryParameters = GetParameterOfInsertQuery<T>(model, excludeProperties)
             };
         }
 
-        protected string GetSelectStatement<T>(Expression<Func<T, object>> select, bool enclosedInSquareBrackets)
+        protected string GetSelectStatement<T>(Expression<Func<T, object>> select)
         {
             string selectStatement = "Select ";
             if (select.ToString().Contains("<>f__AnonymousType"))
@@ -292,7 +294,7 @@ namespace MSSQL_Lite.Query
             return selectStatement;
         }
 
-        protected string GetOrderByStatement<T>(Expression<Func<T, object>> selectedProperty, SqlOrderByOptions sqlOrderByOption, bool enclosedInSquareBrackets)
+        protected string GetOrderByStatement<T>(Expression<Func<T, object>> selectedProperty, SqlOrderByOptions sqlOrderByOption)
         {
             string orderbyStatement = "order by ";
             if (selectedProperty.ToString().Contains("<>f__AnonymousType"))
@@ -321,7 +323,7 @@ namespace MSSQL_Lite.Query
             return orderbyStatement;
         }
 
-        protected SqlQueryData GetSetStatement<T>(T model, Expression<Func<T, object>> set, bool enclosedInSquareBrackets)
+        protected SqlQueryData GetSetStatement<T>(T model, Expression<Func<T, object>> set)
         {
             string setStatement = "set ";
             Func<T, object> func = set.Compile();
@@ -402,11 +404,8 @@ namespace MSSQL_Lite.Query
             {
                 if (disposing)
                 {
-                    expressionExtension.Dispose();
                     expressionExtension = null;
-                    sqlMapping.Dispose();
                     sqlMapping = null;
-                    objReflection.Dispose();
                     objReflection = null;
                 }
                 disposedValue = true;

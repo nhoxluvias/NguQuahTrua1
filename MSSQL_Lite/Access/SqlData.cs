@@ -9,72 +9,27 @@ using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Access
 {
-    public class SqlData : IDisposable
+    internal partial class SqlData : SqlExecution
     {
         private object data;
-        private SqlExecution sqlExecution;
-        private SqlConvert sqlConvert;
+        private bool disposed;
         public static ObjectReceivingData objectReceivingData = ObjectReceivingData.SqlDataReader;
-        private bool disposedValue;
 
         public SqlData()
+            : base(SqlConnectInfo.GetConnectionString())
         {
             data = null;
-            sqlExecution = new SqlExecution(SqlConnectInfo.GetConnectionString());
-            sqlConvert = new SqlConvert();
-            disposedValue = false;
-        }
-
-        public void Connect()
-        {
-            sqlExecution.Connect();
-        }
-
-        public async Task ConnectAsync()
-        {
-            await sqlExecution.ConnectAsync();
-        }
-
-        public void Disconnect()
-        {
-            sqlExecution.Disconnect();
-        }
-
-        public async Task ExecuteReaderAsync(SqlCommand sqlCommand)
-        {
-            if (objectReceivingData == ObjectReceivingData.SqlDataReader)
-                data = await sqlExecution.ExecuteReaderAsync<SqlDataReader>(sqlCommand);
-            else
-                data = await sqlExecution.ExecuteReaderAsync<DataSet>(sqlCommand);
+            disposed = false;
         }
 
         public void ExecuteReader(SqlCommand sqlCommand)
         {
             if (objectReceivingData == ObjectReceivingData.SqlDataReader)
-                data = sqlExecution.ExecuteReader<SqlDataReader>(sqlCommand);
+                data = ExecuteReader<SqlDataReader>(sqlCommand);
             else
-                data = sqlExecution.ExecuteReader<DataSet>(sqlCommand);
+                data = ExecuteReader<DataSet>(sqlCommand);
         }
 
-        public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
-        {
-            return await sqlExecution.ExecuteNonQueryAsync(sqlCommand);
-        }
-
-        public int ExecuteNonQuery(SqlCommand sqlCommand)
-        {
-            return sqlExecution.ExecuteNonQuery(sqlCommand);
-        }
-
-        public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
-        {
-            return await sqlExecution.ExecuteScalarAsync(sqlCommand);
-        }
-
-        public object ExecuteScalar(SqlCommand sqlCommand)
-        {
-            return sqlExecution.ExecuteScalar(sqlCommand);
-        }
 
         public Dictionary<string, object> ToDictionary()
         {
@@ -117,30 +72,26 @@ namespace MSSQL_Lite.Access
             return data;
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!disposed)
             {
-                if (disposing)
+                try
                 {
-                    sqlConvert.Dispose();
-                    sqlConvert = null;
-                    sqlExecution.Dispose();
-                    sqlExecution = null;
-                    data = null;
+                    if (disposing)
+                    {
+                        if (data is DataSet)
+                            ((DataSet)data).Dispose();
+                        if (data is SqlDataReader)
+                            ((DataSet)data).Dispose();
+                    }
+                    disposed = true;
                 }
-                disposedValue = true;
+                finally
+                {
+                    base.Dispose(disposing);
+                }
             }
-        }
-        ~SqlData()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -8,13 +8,11 @@ namespace MSSQL_Lite.Reflection
 {
     using CustomAttribute = CustomAttributeData;
     using NamedArgument = CustomAttributeNamedArgument;
-    public class ObjReflection : IDisposable
+    public class ObjReflection
     {
-        private bool disposedValue;
-
         public ObjReflection()
         {
-            disposedValue = false;
+
         }
 
         public T CreateInstance<T>()
@@ -320,28 +318,6 @@ namespace MSSQL_Lite.Reflection
                     propertyInfo.SetValue(model, property.Value);
             }
             return model;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-
-                }
-                disposedValue = true;
-            }
-        }
-        ~ObjReflection()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -4,15 +4,13 @@ using System.Reflection;
 
 namespace MSSQL_Lite.Mapping
 {
-    public class SqlMapping : IDisposable
+    public class SqlMapping
     {
         private ObjReflection objReflection;
-        private bool disposedValue;
 
         public SqlMapping()
         {
             objReflection = new ObjReflection();
-            disposedValue = false;
         }
 
         public string GetTableName<T>(bool enclosedInSquareBrackets = false)
@@ -38,30 +36,6 @@ namespace MSSQL_Lite.Mapping
         public string GetPropertyName(PropertyInfo propertyInfo, bool enclosedInSquareBrackets = false)
         {
             return (enclosedInSquareBrackets) ? "[" + propertyInfo.Name + "]" : propertyInfo.Name;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    objReflection.Dispose();
-                    objReflection = null;
-                }
-                disposedValue = true;
-            }
-        }
-
-        ~SqlMapping()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -134,7 +134,6 @@ namespace MSSQL_Lite.Mapping
                 return default(T);
 
             string pattern = "(^.)[a-zA-Z0-9]{1,}[.]{1}[a-zA-Z0-9]{1,}$";
-            string bonus = "[.]{1}[a-zA-Z0-9]{1,}";
             int count = 0;
             while (count < 1)
             {
@@ -198,7 +197,6 @@ namespace MSSQL_Lite.Mapping
             {
                 if (disposing)
                 {
-                    objReflection.Dispose();
                     objReflection = null;
                 }
                 disposedValue = true;
