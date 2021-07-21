@@ -1770,6 +1770,8 @@
     <Content Include="admin_assets\images\avatar.png" />
     <Content Include="admin_assets\images\favicon.png" />
     <Content Include="admin_assets\js\jquery.js" />
+    <Content Include="FileUpload\Images\Default\default.png" />
+    <Content Include="FileUpload\Videos\Default\default.mp4" />
     <Content Include="User\CategoryList.aspx" />
     <Content Include="User\FilmDetail.aspx" />
     <Content Include="User\FilmsByCategory.aspx" />
@@ -1778,6 +1780,7 @@
     <Content Include="User\WatchedList.aspx" />
     <Content Include="user_assets\css\plugins.css" />
     <Content Include="user_assets\css\style.css" />
+    <Content Include="user_assets\fonts\fontawesome-webfont.svg" />
     <Content Include="user_assets\images\uploads\banner_img.jpg" />
     <Content Include="user_assets\images\uploads\drop-icon.png" />
     <Content Include="user_assets\images\uploads\film-icon.png" />
@@ -2395,6 +2398,9 @@
     <Content Include="account_assets\fonts\fontawesome\webfonts\fa-solid-900.ttf" />
     <Content Include="account_assets\fonts\fontawesome\webfonts\fa-solid-900.woff" />
     <Content Include="account_assets\fonts\fontawesome\webfonts\fa-solid-900.woff2" />
+    <Content Include="user_assets\fonts\fontawesome-webfont.eot" />
+    <Content Include="user_assets\fonts\fontawesome-webfont.ttf" />
+    <Content Include="user_assets\fonts\fontawesome-webfont.woff" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2402,10 +2408,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FileUpload\Images\Default\" />
-    <Folder Include="FileUpload\Videos\Default\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{2bafd121-9a00-48e8-921a-fb250b8f81ca}</Project>
