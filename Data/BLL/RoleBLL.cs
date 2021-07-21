@@ -53,7 +53,7 @@ namespace Data.BLL
         private Role ToRole(RoleCreation roleCreation)
         {
             if (roleCreation == null)
-                throw new Exception("@'roleCreation' must be not null");
+                throw new Exception("@'roleCreation' must not be null");
 
             return new Role
             {
@@ -67,7 +67,7 @@ namespace Data.BLL
         private Role ToRole(RoleUpdate roleUpdate)
         {
             if (roleUpdate == null)
-                throw new Exception("@'roleUpdate' must be not null");
+                throw new Exception("@'roleUpdate' must not be null");
 
             return new Role
             {
@@ -92,7 +92,8 @@ namespace Data.BLL
         public async Task<RoleInfo> GetRoleAsync(string roleId)
         {
             if (string.IsNullOrEmpty(roleId))
-                throw new Exception("");
+                throw new Exception("@'roleId' must not be null or empty");
+
             Role role = null;
             if (includeTimestamp)
                 role = (await db.Roles.SingleOrDefaultAsync(c => c.ID == roleId));
@@ -105,7 +106,7 @@ namespace Data.BLL
         public RoleInfo GetRole(string roleId)
         {
             if (string.IsNullOrEmpty(roleId))
-                throw new Exception("");
+                throw new Exception("@'roleId' must not be null or empty");
 
             Role role = null;
             if (includeTimestamp)
@@ -156,7 +157,7 @@ namespace Data.BLL
         {
             Role role = ToRole(roleCreation);
             if (role.name == null)
-                throw new Exception("");
+                throw new Exception("@'role.name' must not be null");
 
             int checkExists = (int)await db.Roles.CountAsync(r => r.name == role.name);
             if (checkExists != 0)
@@ -173,7 +174,7 @@ namespace Data.BLL
         {
             Role role = ToRole(roleUpdate);
             if (role.name == null)
-                throw new Exception("");
+                throw new Exception("@'role.name' must not be null");
 
             int affected = await db.Roles
                 .UpdateAsync(role, r => new { r.name, r.updateAt }, r => r.ID == role.ID);
@@ -184,7 +185,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteRoleAsync(string roleId)
         {
             if (string.IsNullOrEmpty(roleId))
-                throw new Exception("");
+                throw new Exception("@'roleId' must not be null or empty");
 
             long userNumberOfRoleId = await db.Users.CountAsync(r => r.roleId == roleId);
             if (userNumberOfRoleId > 0)

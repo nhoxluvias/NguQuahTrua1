@@ -52,7 +52,7 @@ namespace Data.BLL
         private PaymentInfo ToPaymentInfo(PaymentInfoCreation paymentInfoCreation)
         {
             if (paymentInfoCreation == null)
-                throw new Exception("@'paymentInfoCreation' must be not null");
+                throw new Exception("@'paymentInfoCreation' must not be null");
 
             return new PaymentInfo
             {
@@ -70,7 +70,7 @@ namespace Data.BLL
         private PaymentInfo ToPaymentInfo(PaymentInfoUpdate paymentInfoUpdate)
         {
             if (paymentInfoUpdate == null)
-                throw new Exception("@'paymentInfoUpdate' must be not null");
+                throw new Exception("@'paymentInfoUpdate' must not be null");
 
             return new PaymentInfo
             {

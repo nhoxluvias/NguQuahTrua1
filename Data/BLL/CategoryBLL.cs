@@ -66,7 +66,7 @@ namespace Data.BLL
         private Category ToCategory(CategoryCreation categoryCreation)
         {
             if (categoryCreation == null)
-                throw new Exception("@'categoryCreation' must be not null");
+                throw new Exception("@'categoryCreation' must not be null");
 
             return new Category
             {
@@ -80,7 +80,7 @@ namespace Data.BLL
         private Category ToCategory(CategoryUpdate categoryUpdate)
         {
             if (categoryUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'categoryUpdate' must not be null");
 
             return new Category
             {
@@ -180,7 +180,7 @@ namespace Data.BLL
         public async Task<CategoryInfo> GetCategoryAsync(int categoryId)
         {
             if (categoryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'categoryId' must be greater than 0");
 
             Category category = null;
             if (includeDescription && includeTimestamp)
@@ -201,7 +201,7 @@ namespace Data.BLL
         public CategoryInfo GetCategory(int categoryId)
         {
             if (categoryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'categoryId' must be greater than 0");
 
             Category category = null;
             if (includeDescription && includeTimestamp)
@@ -222,7 +222,8 @@ namespace Data.BLL
         public async Task<List<CategoryInfo>> GetCategoriesByFilmIdAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
             if (includeDescription && includeTimestamp)
@@ -252,7 +253,8 @@ namespace Data.BLL
         public List<CategoryInfo> GetCategoriesByFilmId(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
             if (includeDescription && includeTimestamp)
@@ -283,7 +285,7 @@ namespace Data.BLL
         {
             Category category = ToCategory(categoryCreation);
             if (category.name == null)
-                throw new Exception("");
+                throw new Exception("@'category.name' must not be null");
 
             int checkExists = (int)await db.Categories.CountAsync(c => c.name == category.name);
             if (checkExists != 0)
@@ -302,7 +304,7 @@ namespace Data.BLL
         {
             Category category = ToCategory(categoryUpdate);
             if (category.name == null)
-                throw new Exception("");
+                throw new Exception("@'category.name' must not be null");
 
             int affected;
             if (category.description == null)
@@ -324,7 +326,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteCategoryAsync(int categoryId)
         {
             if (categoryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'categoryId' must be greater than 0");
 
             long categoryDistributionNumber = await db.CategoryDistributions
                 .CountAsync(cd => cd.categoryId == categoryId);

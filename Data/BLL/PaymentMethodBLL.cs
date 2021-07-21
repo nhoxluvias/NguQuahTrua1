@@ -52,7 +52,7 @@ namespace Data.BLL
         private PaymentMethod ToPaymentMethod(PaymentMethodCreation paymentMethodCreation)
         {
             if (paymentMethodCreation == null)
-                throw new Exception("");
+                throw new Exception("@'paymentMethodCreation' must not be null");
 
             return new PaymentMethod
             {
@@ -65,7 +65,7 @@ namespace Data.BLL
         private PaymentMethod ToPaymentMethod(PaymentMethodUpdate paymentMethodUpdate)
         {
             if (paymentMethodUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'paymentMethodUpdate' must not be null");
 
             return new PaymentMethod
             {
@@ -91,7 +91,8 @@ namespace Data.BLL
         public async Task<PaymentMethodInfo> GetMethodInfoAsync(int paymemtMethodId)
         {
             if (paymemtMethodId <= 0)
-                throw new Exception("");
+                throw new Exception("@'paymentMethodId' must be greater than 0");
+
             PaymentMethod paymentMethod = null;
             if (includeTimestamp)
                 paymentMethod = (await db.PaymentMethods.SingleOrDefaultAsync(p => p.ID == paymemtMethodId));
@@ -146,7 +147,7 @@ namespace Data.BLL
         {
             PaymentMethod paymentMethod = ToPaymentMethod(paymentMethodCreation);
             if (paymentMethod.name == null)
-                throw new Exception("");
+                throw new Exception("@'paymentMethod.name' must not be null");
 
             int affected = await db.PaymentMethods.InsertAsync(paymentMethod);
 
@@ -157,7 +158,7 @@ namespace Data.BLL
         {
             PaymentMethod paymentMethod = ToPaymentMethod(paymentMethodUpdate);
             if (paymentMethod.name == null)
-                throw new Exception("");
+                throw new Exception("@'paymentMethod.name' must not be null");
 
             int affected = await db.PaymentMethods
                 .UpdateAsync(paymentMethod, p => new { p.name, p.updateAt }, p => p.ID == paymentMethod.ID);
@@ -168,7 +169,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeletePaymentMethodAsync(int paymentMethodId)
         {
             if (paymentMethodId <= 0)
-                throw new Exception("");
+                throw new Exception("@'paymentMethodId' must be greater than 0");
 
             long paymentInfoNumber = await db.PaymentInfos
                 .CountAsync(p => p.paymentMethodId == paymentMethodId);

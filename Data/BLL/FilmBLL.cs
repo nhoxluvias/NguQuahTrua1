@@ -108,7 +108,7 @@ namespace Data.BLL
         private Film ToFilm(FilmCreation filmCreation)
         {
             if (filmCreation == null)
-                throw new Exception("");
+                throw new Exception("@'filmCreation' must not be null");
 
             HashFunction hash = new HashFunction();
             string filmId = hash.MD5_Hash(string
@@ -137,7 +137,8 @@ namespace Data.BLL
         private Film ToFilm(FilmUpdate filmUpdate)
         {
             if (filmUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'filmUpdate' must not be null");
+
             return new Film
             {
                 ID = filmUpdate.ID,
@@ -169,7 +170,7 @@ namespace Data.BLL
         public async Task<List<FilmInfo>> SeachFilmsAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
-                throw new Exception("");
+                throw new Exception("@'name' must not be null");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -231,7 +232,7 @@ namespace Data.BLL
         public async Task<FilmInfo> GetFilmAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             Film film = null;
             if (includeTimestamp)
@@ -328,7 +329,7 @@ namespace Data.BLL
         public FilmInfo GetFilm(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             Film film = null;
             if (includeTimestamp)
@@ -357,7 +358,7 @@ namespace Data.BLL
         public async Task<List<FilmInfo>> GetFilmsByCategoryIdAsync(int categoryId, int count = 12)
         {
             if (categoryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'categoryId' must be greater than 0");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -444,7 +445,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteFilmAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             DeletionState state1 = await DeleteAllCategoryAsync(filmId);
             DeletionState state2 = await DeleteAllTagAsync(filmId);
@@ -497,7 +498,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteAllCategoryAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             int affected = await db.CategoryDistributions
                 .DeleteAsync(cd => cd.filmId == filmId);
@@ -541,7 +542,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteAllTagAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             int affected = await db.TagDistributions
                 .DeleteAsync(td => td.filmId == filmId);
@@ -586,7 +587,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteAllDirectorAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             int affected = await db.DirectorOfFilms
                 .DeleteAsync(df => df.filmId == filmId);
@@ -631,7 +632,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteAllCastAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             int affected = await db.CastOfFilms
                 .DeleteAsync(cf => cf.filmId == filmId);
@@ -660,7 +661,7 @@ namespace Data.BLL
         public async Task<UpdateState> DeleteImageAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             int affected = await db.Films
                 .UpdateAsync(new Film { thumbnail = null }, f => new { f.thumbnail }, f => f.ID == filmId);
@@ -689,7 +690,7 @@ namespace Data.BLL
         public async Task<UpdateState> DeleteSourceAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             int affected = await db.Films
                 .UpdateAsync(new Film { source = null }, f => new { f.source }, f => f.ID == filmId);
@@ -700,7 +701,7 @@ namespace Data.BLL
         public UpdateState Upvote(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -720,7 +721,7 @@ namespace Data.BLL
         public UpdateState Downvote(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -740,7 +741,7 @@ namespace Data.BLL
         public UpdateState IncreaseView(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             Film film = db.Films.SingleOrDefault(f => new { f.ID, f.views }, f => f.ID == filmId);
             if (film == null)

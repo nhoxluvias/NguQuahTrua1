@@ -64,7 +64,7 @@ namespace Data.BLL
         private Country ToCountry(CountryCreation countryCreation)
         {
             if (countryCreation == null)
-                throw new Exception("@'countryCreation' must be not null");
+                throw new Exception("@'countryCreation' must not be null");
 
             return new Country
             {
@@ -78,7 +78,7 @@ namespace Data.BLL
         private Country ToCountry(CountryUpdate countryUpdate)
         {
             if (countryUpdate == null)
-                throw new Exception("@'countryUpdate' must be not null");
+                throw new Exception("@'countryUpdate' must not be null");
 
             return new Country
             {
@@ -176,7 +176,7 @@ namespace Data.BLL
         public async Task<CountryInfo> GetCountryAsync(int countryId)
         {
             if (countryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'countryId' must be greater than 0");
 
             Country country = null;
             if (includeDescription && includeTimestamp)
@@ -197,7 +197,7 @@ namespace Data.BLL
         public CountryInfo GetCountry(int countryId)
         {
             if (countryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'countryId' must be greater than 0");
 
             Country country = null;
             if (includeDescription && includeTimestamp)
@@ -219,7 +219,7 @@ namespace Data.BLL
         {
             Country country = ToCountry(countryCreation);
             if (country.name == null)
-                throw new Exception("");
+                throw new Exception("@'country.name' must not be null");
 
             int checkExists = (int)await db.Countries.CountAsync(c => c.name == country.name);
             if (checkExists != 0)
@@ -238,7 +238,7 @@ namespace Data.BLL
         {
             Country country = ToCountry(countryUpdate);
             if (country.name == null)
-                throw new Exception("");
+                throw new Exception("@'country.name' must not be null");
 
             int affected;
             if (country.description == null)
@@ -260,7 +260,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteCountryAsync(int countryId)
         {
             if (countryId <= 0)
-                throw new Exception("");
+                throw new Exception("@'countryId' must be greater than");
 
             long filmNumberOfCountryId = await db.Films.CountAsync(f => f.countryId == countryId);
             if (filmNumberOfCountryId > 0)

@@ -66,7 +66,7 @@ namespace Data.BLL
         private Tag ToTag(TagCreation tagCreation)
         {
             if (tagCreation == null)
-                throw new Exception("@'tagCreation' must be not null");
+                throw new Exception("@'tagCreation' must not be null");
 
             return new Tag
             {
@@ -80,7 +80,7 @@ namespace Data.BLL
         private Tag ToTag(TagUpdate tagUpdate)
         {
             if (tagUpdate == null)
-                throw new Exception("@'tagUpdate' must be not null");
+                throw new Exception("@'tagUpdate' must not be null");
 
             return new Tag
             {
@@ -179,7 +179,7 @@ namespace Data.BLL
         public async Task<TagInfo> GetTagAsync(long tagId)
         {
             if (tagId <= 0)
-                throw new Exception("");
+                throw new Exception("@'tagId' must be greater than 0");
 
             Tag tag = null;
             if (includeDescription && includeTimestamp)
@@ -199,7 +199,7 @@ namespace Data.BLL
         public TagInfo GetTag(long tagId)
         {
             if (tagId <= 0)
-                throw new Exception("");
+                throw new Exception("@'tagId' must be greater than 0");
 
             Tag tag = null;
             if (includeDescription && includeTimestamp)
@@ -219,7 +219,7 @@ namespace Data.BLL
         public async Task<List<TagInfo>> GetTagsByFilmIdAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -250,7 +250,7 @@ namespace Data.BLL
         public List<TagInfo> GetTagsByFilmId(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -282,7 +282,7 @@ namespace Data.BLL
         {
             Tag tag = ToTag(tagCreation);
             if (tag.name == null)
-                throw new Exception("");
+                throw new Exception("@'tag.name' must not be null");
 
             int checkExists = (int)await db.Tags.CountAsync(t => t.name == tag.name);
             if (checkExists != 0)
@@ -301,7 +301,7 @@ namespace Data.BLL
         {
             Tag tag = ToTag(tagUpdate);
             if (tag.name == null)
-                throw new Exception("");
+                throw new Exception("@'tag.name' must not be null");
 
             int affected;
             if (tag.description == null)
@@ -323,7 +323,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteTagAsync(long tagId)
         {
             if (tagId <= 0)
-                throw new Exception("");
+                throw new Exception("@'tagId' must be greater than 0");
 
             long tagDistributionNumber = await db.TagDistributions
                 .CountAsync(td => td.tagId == tagId);

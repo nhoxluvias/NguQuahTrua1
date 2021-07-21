@@ -66,7 +66,7 @@ namespace Data.BLL
         private Cast ToCast(CastCreation castCreation)
         {
             if (castCreation == null)
-                throw new Exception("@'castCreation' must be not null");
+                throw new Exception("@'castCreation' must not be null");
 
             return new Cast
             {
@@ -80,7 +80,7 @@ namespace Data.BLL
         private Cast ToCast(CastUpdate castUpdate)
         {
             if (castUpdate == null)
-                throw new Exception("@'castUpdate' must be not null");
+                throw new Exception("@'castUpdate' must not be null");
 
             return new Cast
             {
@@ -178,7 +178,8 @@ namespace Data.BLL
         public async Task<CastInfo> GetCastAsync(long castId)
         {
             if (castId <= 0)
-                throw new Exception("");
+                throw new Exception("@'castId' must be greater than 0");
+
             Cast cast = null;
             if (includeDescription && includeTimestamp)
                 cast = await db.Casts.SingleOrDefaultAsync(c => c.ID == castId);
@@ -198,7 +199,7 @@ namespace Data.BLL
         public CastInfo GetCast(long castId)
         {
             if (castId <= 0)
-                throw new Exception("");
+                throw new Exception("@'castId' must be greater than 0");
 
             Cast cast = null;
             if (includeDescription && includeTimestamp)
@@ -219,7 +220,8 @@ namespace Data.BLL
         public async Task<List<CastInfo>> GetCastsByFilmIdAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
             if (includeDescription && includeTimestamp)
@@ -249,7 +251,8 @@ namespace Data.BLL
         public List<CastInfo> GetCastsByFilmId(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
+
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
             if (includeDescription && includeTimestamp)
@@ -280,7 +283,7 @@ namespace Data.BLL
         {
             Cast cast = ToCast(castCreation);
             if (cast.name == null)
-                throw new Exception("");
+                throw new Exception("@'cast.name' must not be null");
 
             int checkExists = (int)await db.Casts.CountAsync(c => c.name == cast.name);
             if (checkExists != 0)
@@ -299,7 +302,7 @@ namespace Data.BLL
         {
             Cast cast = ToCast(castUpdate);
             if (cast.name == null)
-                throw new Exception("");
+                throw new Exception("@'cast.name' must not be null");
 
             int affected;
             if (cast.description == null)
@@ -321,7 +324,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteCastAsync(int castId)
         {
             if (castId <= 0)
-                throw new Exception("");
+                throw new Exception("@'castId' must be greater than 0");
 
             long castOfFilmNumber = await db.CastOfFilms
                 .CountAsync(cf => cf.castId == castId);

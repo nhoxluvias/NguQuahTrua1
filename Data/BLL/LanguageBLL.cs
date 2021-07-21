@@ -64,7 +64,7 @@ namespace Data.BLL
         private Language ToLanguage(LanguageCreation languageCreation)
         {
             if (languageCreation == null)
-                throw new Exception("@'languageCreation' must be not null");
+                throw new Exception("@'languageCreation' must not be null");
 
             return new Language
             {
@@ -78,7 +78,7 @@ namespace Data.BLL
         private Language ToLanguage(LanguageUpdate languageUpdate)
         {
             if (languageUpdate == null)
-                throw new Exception("@'languageUpdate' must be not null");
+                throw new Exception("@'languageUpdate' must not be null");
 
             return new Language
             {
@@ -177,7 +177,8 @@ namespace Data.BLL
         public async Task<LanguageInfo> GetLanguageAsync(int languageId)
         {
             if (languageId <= 0)
-                throw new Exception("");
+                throw new Exception("@'languageId' must be greater than 0");
+
             Language language = null;
             if (includeDescription && includeTimestamp)
                 language = (await db.Languages.SingleOrDefaultAsync(l => l.ID == languageId));
@@ -197,7 +198,8 @@ namespace Data.BLL
         public LanguageInfo GetLanguage(int languageId)
         {
             if (languageId <= 0)
-                throw new Exception("");
+                throw new Exception("@'languageId' must be greater than 0");
+
             Language language = null;
             if (includeDescription && includeTimestamp)
                 language = db.Languages.SingleOrDefault(l => l.ID == languageId);
@@ -218,7 +220,7 @@ namespace Data.BLL
         {
             Language language = ToLanguage(languageCreation);
             if (language.name == null)
-                throw new Exception("");
+                throw new Exception("@'language.name' must not be null");
 
             int checkExists = (int)await db.Languages.CountAsync(l => l.name == language.name);
             if (checkExists != 0)
@@ -237,7 +239,7 @@ namespace Data.BLL
         {
             Language language = ToLanguage(languageUpdate);
             if (language.name == null)
-                throw new Exception("");
+                throw new Exception("@'language.name' must not be null");
 
             int affected;
             if (language.description == null)
@@ -259,7 +261,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteLanguageAsync(int languageId)
         {
             if (languageId <= 0)
-                throw new Exception("");
+                throw new Exception("@'languageId' must be greater than 0");
 
             long filmNumberOfLanguageId = await db.Films.CountAsync(f => f.languageId == languageId);
             if (filmNumberOfLanguageId > 0)

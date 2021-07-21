@@ -74,13 +74,13 @@ namespace Data.BLL
         private async Task<User> ToUser(UserCreation userCreation)
         {
             if (userCreation == null)
-                throw new Exception("");
+                throw new Exception("@'userCreation' must not be null");
 
             HashFunction hash = new HashFunction();
             string salt = hash.MD5_Hash(new Random().NextString(25));
             Role role = await db.Roles.SingleOrDefaultAsync(r => new { r.ID }, r => r.name == "User");
             if (role == null)
-                throw new Exception("");
+                throw new Exception("@'role' must not be null");
 
             return new User
             {
@@ -100,7 +100,8 @@ namespace Data.BLL
         private User ToUser(UserUpdate userUpdate)
         {
             if (userUpdate == null)
-                throw new Exception("");
+                throw new Exception("@'userUpdate' must not be null");
+
             return new User
             {
 
@@ -332,7 +333,7 @@ namespace Data.BLL
         public async Task<UserInfo> GetUserAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
-                throw new Exception("");
+                throw new Exception("@'userId' must not be null or empty");
 
             User user = null;
             if (includeRole && includeTimestamp)
@@ -386,7 +387,7 @@ namespace Data.BLL
         public UserInfo GetUser(string userId)
         {
             if (string.IsNullOrEmpty(userId))
-                throw new Exception("");
+                throw new Exception("@'userId' must not be null or empty");
 
             User user = null;
             if (includeRole && includeTimestamp)
@@ -440,7 +441,7 @@ namespace Data.BLL
         public async Task<UserInfo> GetUserByUserNameAsync(string userName)
         {
             if (string.IsNullOrEmpty(userName))
-                throw new Exception("");
+                throw new Exception("@'userName' must not be null or empty");
 
             User user = null;
             if (includeRole && includeTimestamp)
@@ -494,7 +495,8 @@ namespace Data.BLL
         public async Task<UserInfo> GetUserByEmailAsync(string email)
         {
             if (string.IsNullOrEmpty(email))
-                throw new Exception("");
+                throw new Exception("@'email' must not be null or empty");
+
             User user = null;
             if (includeRole && includeTimestamp)
                 user = await db.Users
@@ -550,7 +552,7 @@ namespace Data.BLL
         public async Task<LoginState> LoginAsync(UserLogin userLogin)
         {
             if (userLogin == null)
-                throw new Exception("");
+                throw new Exception("@'userLogin' must not be null");
 
             if (userLogin.userName == null || userLogin.password == null)
                 throw new Exception("");
@@ -582,7 +584,7 @@ namespace Data.BLL
         public async Task<ActiveUserState> ActiveUserAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
-                throw new Exception("");
+                throw new Exception("@'userId' must not be null or empty");
 
             long count = await db.Users.CountAsync(u => u.ID == userId);
             if (count == 0)
@@ -625,7 +627,8 @@ namespace Data.BLL
         public async Task<RegisterState> RegisterAsync(UserCreation userCreation)
         {
             if (userCreation == null)
-                throw new Exception("");
+                throw new Exception("@'userCreation' must not be null");
+
             if (
                 userCreation.userName == null || userCreation.password == null
                 || userCreation.email == null || userCreation.phoneNumber == null

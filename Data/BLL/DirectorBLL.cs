@@ -66,7 +66,7 @@ namespace Data.BLL
         private Director ToDirector(DirectorCreation directorCreation)
         {
             if (directorCreation == null)
-                throw new Exception("@'directorCreation' must be not null");
+                throw new Exception("@'directorCreation' must not be null");
 
             return new Director
             {
@@ -80,7 +80,7 @@ namespace Data.BLL
         private Director ToDirector(DirectorUpdate directorUpdate)
         {
             if (directorUpdate == null)
-                throw new Exception("@'directorCreation' must be not null");
+                throw new Exception("@'directorUpdate' must not be null");
 
             return new Director
             {
@@ -178,7 +178,7 @@ namespace Data.BLL
         public async Task<DirectorInfo> GetDirectorAsync(long directorId)
         {
             if (directorId <= 0)
-                throw new Exception("");
+                throw new Exception("@'directorId' must be greater than 0");
 
             Director director = null;
             if (includeDescription && includeTimestamp)
@@ -199,7 +199,7 @@ namespace Data.BLL
         public DirectorInfo GetDirector(long directorId)
         {
             if (directorId <= 0)
-                throw new Exception("");
+                throw new Exception("@'directorId' must be greater than 0");
 
             Director director = null;
             if (includeDescription && includeTimestamp)
@@ -220,7 +220,7 @@ namespace Data.BLL
         public async Task<List<DirectorInfo>> GetDirectorsByFilmIdAsync(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -251,7 +251,7 @@ namespace Data.BLL
         public List<DirectorInfo> GetDirectorsByFilmId(string filmId)
         {
             if (string.IsNullOrEmpty(filmId))
-                throw new Exception("");
+                throw new Exception("@'filmId' must not be null or empty");
 
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
@@ -283,7 +283,7 @@ namespace Data.BLL
         {
             Director director = ToDirector(directorCreation);
             if (director.name == null)
-                throw new Exception("");
+                throw new Exception("@'director.name' must not be null");
 
             long checkExists = await db.Directors.CountAsync(c => c.name == director.name);
             if (checkExists != 0)
@@ -302,7 +302,7 @@ namespace Data.BLL
         {
             Director director = ToDirector(directorUpdate);
             if (director.name == null)
-                throw new Exception("");
+                throw new Exception("@'director.name' must not be null");
 
             int affected;
             if (director.description == null)
@@ -324,7 +324,7 @@ namespace Data.BLL
         public async Task<DeletionState> DeleteDirectorAsync(long directorId)
         {
             if (directorId <= 0)
-                throw new Exception("");
+                throw new Exception("@'directorId' must be greater than 0");
 
             long directorOfFilmNumber = await db.DirectorOfFilms.CountAsync(df => df.directorId == directorId);
             if (directorOfFilmNumber > 0)
