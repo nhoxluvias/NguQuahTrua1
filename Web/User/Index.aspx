@@ -61,6 +61,9 @@
                         <a href="<% = filmOfCategory.Key.url %>" class="viewall">Xem tất cả <i class="ion-ios-arrow-right"></i></a>
                     </div>
                     <div class="tabs">
+                        <ul class="tab-links">
+                            <li class="active"><p>Có thể bạn nên xem</p></li>
+                        </ul>
                         <div class="tab-content">
                             <div class="tab active">
                                 <div class="row">

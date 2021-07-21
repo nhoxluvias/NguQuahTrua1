@@ -192,8 +192,8 @@ namespace Data.BLL
         {
             SqlCommand sqlCommand = new SqlCommand();
             sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = string.Format(@"Select top {0} 
-                                [Film].[ID], [Film].[name], [Film].[thumbnail], [Film].[countryId]
+            sqlCommand.CommandText = string.Format(@"Select top {0} [Film].[ID], [Film].[name], 
+                                [Film].[thumbnail], [Film].[countryId], [Film].[upvote], [Film].[downvote]
                             from [Film] order by [createAt] desc", count);
 
             return (await db.ExecuteReaderAsync<List<Film>>(sqlCommand))
