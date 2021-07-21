@@ -6,16 +6,16 @@
 <head runat="server">
     <title>Xác minh tài khoản</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="<% = ResolveUrl("~/account_assets/images/favicon.png") %>" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/confirm.css") %>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <form id="frmConfirm" runat="server">
-       <div class="confirm-form">
+        <div class="confirm-form">
             <div class="confirm-form-title">
                 <h3>Xác minh tài khoản</h3>
                 <p>Bước cuối cùng để truy cập tài khoản</p>
-                <hr/>
+                <hr />
             </div>
             <div class="confirm-form-data">
                 <div class="confirm-form-group">
@@ -29,7 +29,7 @@
             <div class="confirm-form-submit">
                 <asp:Button ID="btnConfirm" CssClass="button button-red button-confirm" runat="server" Text="Xác nhận" />
             </div>
-           <div class="confirm-form-support">
+            <div class="confirm-form-support">
                 <p>
                     <asp:HyperLink ID="hylnkReConfirm" runat="server">Gửi lại mã xác nhận</asp:HyperLink>
                 </p>

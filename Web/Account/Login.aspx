@@ -6,14 +6,15 @@
 <head runat="server">
     <title>Đăng nhập</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="<% = ResolveUrl("~/account_assets/images/favicon.png") %>" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/login.css") %>">
     <script type="text/javascript" src="<%= ResolveUrl("~/common_assets/js/video.js") %>"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="<% = ResolveUrl("~/account_assets/fonts/fontawesome/css/all.min.css") %>">
 </head>
 <body>
     <form id="frmLogin" method="post" runat="server">
         <video id="backgroundVideo" class="background-video" autoplay>
-            <source src="https://www.phanxuanchanh.com/trailer.mp4" type='video/mp4'>
+            <source src="<% = ResolveUrl("~/account_assets/videos/Loki_OfficalTrailer.mp4") %>" type='video/mp4'>
             <p>Không thể phát video</p>
         </video>
         <div class="audio-tool">
@@ -43,11 +44,12 @@
                 <hr />
             </div>
             <div class="notify-list">
-                <% for (int i = 0; i < 5; i++) { %>
-                    <div class="notify-item">
-                        <h5>Phim <%= i %></h5>
-                        <p>Mô tả phim <%= i %></p>
-                    </div>
+                <% for (int i = 0; i < 5; i++)
+                    { %>
+                <div class="notify-item">
+                    <h5>Phim <%= i %></h5>
+                    <p>Mô tả phim <%= i %></p>
+                </div>
                 <% } %>
             </div>
         </div>

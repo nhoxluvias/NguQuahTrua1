@@ -6,8 +6,8 @@
 <head runat="server">
     <title>Đăng ký tài khoản</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="<% = ResolveUrl("~/account_assets/images/favicon.png") %>" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/register.css") %>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <form id="frmRegister" method="post" runat="server">
@@ -80,12 +80,12 @@
     </form>
     <% if (enableShowResult)
         { %>
-        <script type="text/javascript">
-            var stateDetail = "<% = stateDetail %>";
-            setTimeout(function () {
-                alert(stateDetail);
-            }, 1500);
-        </script>
+    <script type="text/javascript">
+        var stateDetail = "<% = stateDetail %>";
+        setTimeout(function () {
+            alert(stateDetail);
+        }, 1500);
+    </script>
     <%} %>
 </body>
 </html>

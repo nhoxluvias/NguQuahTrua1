@@ -6,6 +6,7 @@
 <head runat="server">
     <title>Lấy lại mật khẩu</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="<% = ResolveUrl("~/account_assets/images/favicon.png") %>" />
     <link rel="stylesheet" href="<%= ResolveUrl("~/account_assets/css/reset-password.css") %>">
 </head>
 <body>
@@ -14,7 +15,7 @@
             <div class="reset-password-form-title">
                 <h3>Đặt lại mật khẩu</h3>
                 <p>Lấy lại mật khẩu để truy cập lại tài khoản</p>
-                <hr/>
+                <hr />
             </div>
             <div class="reset-password-form-data">
                 <div class="reset-password-form-group">
