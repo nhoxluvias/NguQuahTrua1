@@ -1,11 +1,10 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Config;
+using MSSQL_Lite.Connection;
 using MSSQL_Lite.Execution;
-using MSSQL_Lite.Mapping;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Access
 {
@@ -13,7 +12,7 @@ namespace MSSQL_Lite.Access
     {
         private object data;
         private bool disposed;
-        public static ObjectReceivingData objectReceivingData = ObjectReceivingData.SqlDataReader;
+        public static ObjectReceivingData objectReceivingData = SqlConfig.objectReceivingData;
 
         public SqlData()
             : base(SqlConnectInfo.GetConnectionString())

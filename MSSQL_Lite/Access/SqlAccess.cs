@@ -381,7 +381,6 @@ namespace MSSQL_Lite.Access
             {
                 if (disposing)
                 {
-                    sqlQuery.Dispose();
                     sqlQuery = null;
                 }
                 disposedValue = true;

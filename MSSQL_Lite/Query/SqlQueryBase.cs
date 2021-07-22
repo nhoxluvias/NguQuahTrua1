@@ -10,13 +10,12 @@ using System.Reflection;
 
 namespace MSSQL_Lite.Query
 {
-    public class SqlQueryBase : IDisposable
+    internal class SqlQueryBase
     {
         private ExpressionExtension expressionExtension;
         protected SqlMapping sqlMapping;
         private ObjReflection objReflection;
         private bool enclosedInSquareBrackets;
-        private bool disposedValue;
 
         public SqlQueryBase(bool enclosedInSquareBrackets)
         {
@@ -24,7 +23,6 @@ namespace MSSQL_Lite.Query
             sqlMapping = new SqlMapping();
             objReflection = new ObjReflection();
             this.enclosedInSquareBrackets = enclosedInSquareBrackets;
-            disposedValue = false;
         }
 
         protected bool IsComparisonOperator(ExpressionType expressionType)
@@ -396,31 +394,6 @@ namespace MSSQL_Lite.Query
             sqlCommand = new SqlCommand();
             sqlCommand.CommandText = commandText;
             return sqlCommand;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    expressionExtension = null;
-                    sqlMapping = null;
-                    objReflection = null;
-                }
-                disposedValue = true;
-            }
-        }
-
-        ~SqlQueryBase()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

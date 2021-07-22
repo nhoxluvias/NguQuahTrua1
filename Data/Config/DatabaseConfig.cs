@@ -25,7 +25,7 @@ namespace Data.Config
         private static void SetObjectReceivingData()
         {
             SqlConfig.objectReceivingData = ObjectReceivingData.DataSet;
-            SqlConfig.Configure();
+
         }
     }
 }

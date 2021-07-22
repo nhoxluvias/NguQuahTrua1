@@ -6,15 +6,14 @@ using System.Linq.Expressions;
 
 namespace MSSQL_Lite.Query
 {
-    public class SqlQuery : SqlQueryBase
+    internal class SqlQuery : SqlQueryBase
     {
         public static bool EnclosedInSquareBrackets = true;
-        private bool disposed;
 
         public SqlQuery()
             : base(EnclosedInSquareBrackets)
         {
-            disposed = false;
+
         }
 
         public SqlCommand CreateDatabase(string databaseName)
@@ -394,25 +393,6 @@ namespace MSSQL_Lite.Query
             string query = string
                 .Format("Delete from {0} {1}", sqlMapping.GetTableName<T>(EnclosedInSquareBrackets), sqlQueryData.Statement);
             return InitSqlCommand(query, sqlQueryData.SqlQueryParameters);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (!this.disposed)
-            {
-                try
-                {
-                    if (disposing)
-                    {
-                        sqlMapping = null;
-                    }
-                    this.disposed = true;
-                }
-                finally
-                {
-                    base.Dispose(disposing);
-                }
-            }
         }
     }
 }

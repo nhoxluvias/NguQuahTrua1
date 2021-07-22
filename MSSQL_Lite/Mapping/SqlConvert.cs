@@ -9,15 +9,13 @@ using System.Text.RegularExpressions;
 
 namespace MSSQL_Lite.Mapping
 {
-    public class SqlConvert : IDisposable
+    public class SqlConvert
     {
         private ObjReflection objReflection;
-        private bool disposedValue;
 
         public SqlConvert()
         {
             objReflection = new ObjReflection();
-            disposedValue = false;
         }
 
         public DataTable GetDataTableFromDataSet(DataSet dataSet)
@@ -181,7 +179,7 @@ namespace MSSQL_Lite.Mapping
             return To<T>(ToDictionary(reader));
         }
 
-        public  List<T> ToList<T>(SqlDataReader reader)
+        public List<T> ToList<T>(SqlDataReader reader)
         {
             List<T> list = new List<T>();
             foreach (Dictionary<string, object> pairs in ToDictionaryList(reader))
@@ -189,29 +187,6 @@ namespace MSSQL_Lite.Mapping
                 list.Add(To<T>(pairs));
             }
             return list;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    objReflection = null;
-                }
-                disposedValue = true;
-            }
-        }
-
-        ~SqlConvert()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }

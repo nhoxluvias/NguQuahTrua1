@@ -71,7 +71,6 @@ namespace MSSQL_Lite.Execution
                 {
                     sqlConnection.Dispose();
                     sqlConnection = null;
-                    sqlConvert.Dispose();
                     sqlConvert = null;
                 }
                 disposedValue = true;

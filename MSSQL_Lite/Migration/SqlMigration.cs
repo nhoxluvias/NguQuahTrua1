@@ -28,7 +28,6 @@ namespace MSSQL_Lite.Migration
             {
                 SqlQuery sqlQuery = new SqlQuery();
                 sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item));
-                sqlQuery.Dispose();
                 sqlQuery = null;
             }
             sqlData.Disconnect();
@@ -41,7 +40,6 @@ namespace MSSQL_Lite.Migration
             {
                 SqlQuery sqlQuery = new SqlQuery();
                 await sqlData.ExecuteNonQueryAsync(sqlQuery.Insert<T>(item));
-                sqlQuery.Dispose();
                 sqlQuery = null;
             }
             sqlData.Disconnect();
@@ -54,7 +52,6 @@ namespace MSSQL_Lite.Migration
             {
                 SqlQuery sqlQuery = new SqlQuery();
                 sqlData.ExecuteNonQuery(sqlQuery.Insert<T>(item, excludeProperties));
-                sqlQuery.Dispose();
                 sqlQuery = null;
             }
             sqlData.Disconnect();
@@ -67,7 +64,6 @@ namespace MSSQL_Lite.Migration
             {
                 SqlQuery sqlQuery = new SqlQuery();
                 await sqlData.ExecuteNonQueryAsync(sqlQuery.Insert<T>(item, excludeProperties));
-                sqlQuery.Dispose();
                 sqlQuery = null;
             }
             sqlData.Disconnect();
