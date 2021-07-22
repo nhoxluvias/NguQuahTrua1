@@ -6,23 +6,17 @@ namespace Data.Config
 {
     public static class DatabaseConfig
     {
-        public static void ManualConfig(string dataSource, string initialCatalog, string userId, string password)
+        public static void CreateConnectionString(string dataSource, string initialCatalog, string userId, string password)
         {
-            SqlConnectInfo.DataSource = dataSource;
-            SqlConnectInfo.InitialCatalog = initialCatalog;
-            SqlConnectInfo.UserID = userId;
-            SqlConnectInfo.Password = password;
-
-            SetObjectReceivingData();
+            SqlConnectInfo.CreateConnectionString(dataSource, initialCatalog, userId, password);
         }
 
-        public static void ReadFromConfigFile(string connectionName)
+        public static void ReadFromConfigFile(string connectionStringName)
         {
-            SqlConnectInfo.ReadFromConfigFile(connectionName);
-            SetObjectReceivingData();
+            SqlConnectInfo.ReadFromConfigFile(connectionStringName);
         }
 
-        private static void SetObjectReceivingData()
+        public static void OtherSettings()
         {
             SqlConfig.objectReceivingData = ObjectReceivingData.DataSet;
             SqlConfig.connectionType = ConnectionType.ManuallyDisconnect;
