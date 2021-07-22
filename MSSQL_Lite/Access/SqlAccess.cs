@@ -31,128 +31,199 @@ namespace MSSQL_Lite.Access
             List<T> items = sqlData.ToList<T>();
             if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
-            sqlCommand.Dispose();
             return items;
         }
 
         public List<T> ToList()
         {
-            return ToList(sqlQuery.Select<T>());
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>())
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
-            return ToList(sqlQuery.Select<T>(orderBy, sqlOrderByOptions));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(orderBy, sqlOrderByOptions))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(int top)
         {
-            return ToList(sqlQuery.Select<T>(top));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(top))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
-            return ToList(sqlQuery.Select<T>(top, orderBy, sqlOrderByOptions));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(top, orderBy, sqlOrderByOptions))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where)
         {
-            return ToList(sqlQuery.Select<T>(where));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(where, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
-            return ToList(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where, int top)
         {
-            return ToList(sqlQuery.Select<T>(where, top));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, top))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
-            return ToList(sqlQuery.Select<T>(where, top, orderBy, sqlOrderByOptions));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, top, orderBy, sqlOrderByOptions))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> set)
         {
-            return ToList(sqlQuery.Select<T>(set));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(set))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(select, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
         {
-            return ToList(sqlQuery.Select<T>(select, orderBy, sqlOrderByOption));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, orderBy, sqlOrderByOption))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(select, orderBy, sqlOrderByOption, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, orderBy, sqlOrderByOption, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, int top)
         {
-            return ToList(sqlQuery.Select<T>(select, top));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, top))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOption)
         {
-            return ToList(sqlQuery.Select<T>(select, top, orderBy, sqlOrderByOption));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, top, orderBy, sqlOrderByOption))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where)
         {
-            return ToList(sqlQuery.Select<T>(select, where));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(select, where, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
-            return ToList(sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions, long skip, long take)
         {
-            return ToList(sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions, skip, take));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions, skip, take))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int top)
         {
-            return ToList(sqlQuery.Select<T>(select, where, top));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, top))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public List<T> ToList(Expression<Func<T, object>> select, Expression<Func<T, bool>> where, int top, Expression<Func<T, object>> orderBy, SqlOrderByOptions sqlOrderByOptions)
         {
-            return ToList(sqlQuery.Select<T>(select, where, top, orderBy, sqlOrderByOptions));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, top, orderBy, sqlOrderByOptions))
+            {
+                return ToList(sqlCommand);
+            }
         }
 
         public SqlPagedList<T> ToPagedList(long pageIndex, long pageSize)
@@ -240,22 +311,34 @@ namespace MSSQL_Lite.Access
 
         public T SingleOrDefault()
         {
-            return SingleOrDefault(sqlQuery.Select<T>(1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(1))
+            {
+                return SingleOrDefault(sqlCommand);
+            }
         }
 
         public T SingleOrDefault(Expression<Func<T, bool>> where)
         {
-            return SingleOrDefault(sqlQuery.Select<T>(where, 1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, 1))
+            {
+                return SingleOrDefault(sqlCommand);
+            }
         }
 
         public T SingleOrDefault(Expression<Func<T, object>> set)
         {
-            return SingleOrDefault(sqlQuery.Select<T>(set, 1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, 1))
+            {
+                return SingleOrDefault(sqlCommand);
+            }
         }
 
         public T SingleOrDefault(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
         {
-            return SingleOrDefault(sqlQuery.Select<T>(set, where, 1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, where, 1))
+            {
+                return SingleOrDefault(sqlCommand);
+            }
         }
 
         private T FirstOrDefault(SqlCommand sqlCommand)
@@ -271,22 +354,34 @@ namespace MSSQL_Lite.Access
 
         public T FirstOrDefault()
         {
-            return FirstOrDefault(sqlQuery.Select<T>(1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(1))
+            {
+                return FirstOrDefault(sqlCommand);
+            }
         }
 
         public T FirstOrDefault(Expression<Func<T, bool>> where)
         {
-            return FirstOrDefault(sqlQuery.Select<T>(where, 1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, 1))
+            {
+                return FirstOrDefault(sqlCommand);
+            }
         }
 
         public T FirstOrDefault(Expression<Func<T, object>> set)
         {
-            return FirstOrDefault(sqlQuery.Select<T>(set, 1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, 1))
+            {
+                return FirstOrDefault(sqlCommand);
+            }
         }
 
         public T FirstOrDefault(Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
         {
-            return FirstOrDefault(sqlQuery.Select<T>(set, where, 1));
+            using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, where, 1))
+            {
+                return FirstOrDefault(sqlCommand);
+            }
         }
 
         private int Delete(SqlCommand sqlCommand)
@@ -301,12 +396,18 @@ namespace MSSQL_Lite.Access
 
         public int Delete()
         {
-            return Delete(sqlQuery.Delete<T>());
+            using(SqlCommand sqlCommand = sqlQuery.Delete<T>())
+            {
+                return Delete(sqlCommand);
+            }
         }
 
         public int Delete(Expression<Func<T, bool>> where)
         {
-            return Delete(sqlQuery.Delete<T>(where));
+            using(SqlCommand sqlCommand = sqlQuery.Delete<T>(where))
+            {
+                return Delete(sqlCommand);
+            }
         }
 
         private int Update(SqlCommand sqlCommand)
@@ -321,12 +422,18 @@ namespace MSSQL_Lite.Access
 
         public int Update(T model, Expression<Func<T, object>> set)
         {
-            return Update(sqlQuery.Update<T>(model, set));
+            using(SqlCommand sqlCommand = sqlQuery.Update<T>(model, set))
+            {
+                return Update(sqlCommand);
+            }
         }
 
         public int Update(T model, Expression<Func<T, object>> set, Expression<Func<T, bool>> where)
         {
-            return Update(sqlQuery.Update<T>(model, set, where));
+            using(SqlCommand sqlCommand = sqlQuery.Update<T>(model, set, where))
+            {
+                return Update(sqlCommand);
+            }
         }
 
         private int Insert(SqlCommand sqlCommand)
@@ -341,12 +448,18 @@ namespace MSSQL_Lite.Access
 
         public int Insert(T model)
         {
-            return Insert(sqlQuery.Insert<T>(model));
+            using(SqlCommand sqlCommand = sqlQuery.Insert<T>(model))
+            {
+                return Insert(sqlCommand);
+            }
         }
 
         public int Insert(T model, List<string> excludeProperties)
         {
-            return Insert(sqlQuery.Insert<T>(model, excludeProperties));
+            using(SqlCommand sqlCommand = sqlQuery.Insert<T>(model, excludeProperties))
+            {
+                return Insert(sqlCommand);
+            }
         }
 
         private long Count(SqlCommand sqlCommand)
@@ -361,17 +474,26 @@ namespace MSSQL_Lite.Access
 
         public long Count()
         {
-            return Count(sqlQuery.Count<T>());
+            using (SqlCommand sqlCommand = sqlQuery.Count<T>())
+            {
+                return Count(sqlCommand);
+            }
         }
 
         public long Count(Expression<Func<T, bool>> where)
         {
-            return Count(sqlQuery.Count<T>(where));
+            using (SqlCommand sqlCommand = sqlQuery.Count<T>(where))
+            {
+                return Count(sqlCommand);
+            }
         }
 
         public long Count(string propertyName, Expression<Func<T, bool>> where)
         {
-            return Count(sqlQuery.Count<T>(propertyName, where));
+            using(SqlCommand sqlCommand = sqlQuery.Count<T>(propertyName, where))
+            {
+                return Count(sqlCommand);
+            }
         }
 
         protected virtual void Dispose(bool disposing)
