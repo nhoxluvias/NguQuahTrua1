@@ -23,8 +23,8 @@ namespace Data.DAL
         private SqlAccess<CastOfFilm> castOfFilms;
         private SqlAccess<UserReaction> userReactions;
 
-        public DBContext(ConnectionType connectionType)
-            : base(connectionType)
+        public DBContext()
+            : base()
         {
             roles = null;
             users = null;

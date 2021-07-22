@@ -66,7 +66,7 @@ namespace MSSQL_Lite.Reflection
             if (propertyInfo == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'propertyInfo' must be not null");
+                    throw new Exception("@'propertyInfo' must not be null");
                 return null;
             }
             return propertyInfo.CustomAttributes.Where(predicate).ToArray();
@@ -77,7 +77,7 @@ namespace MSSQL_Lite.Reflection
             if (propertyInfo == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'propertyInfo' must be not null");
+                    throw new Exception("@'propertyInfo' must not be null");
                 return null;
             }
             return propertyInfo.CustomAttributes.ToArray();
@@ -89,7 +89,7 @@ namespace MSSQL_Lite.Reflection
             if (propertyInfo == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'propertyInfo' must be not null");
+                    throw new Exception("@'propertyInfo' must not be null");
                 return null;
             }
             return propertyInfo.CustomAttributes.SingleOrDefault(predicate);
@@ -102,7 +102,7 @@ namespace MSSQL_Lite.Reflection
             if (customAttributeData == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'customAttributeData' must be not null");
+                    throw new Exception("@'customAttributeData' must not be null");
                 return null;
             }
             return customAttributeData.NamedArguments.ToArray();
@@ -115,7 +115,7 @@ namespace MSSQL_Lite.Reflection
             if (customAttributeData == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'customAttributeData' must be not null");
+                    throw new Exception("@'customAttributeData' must not be null");
                 return null;
             }
             return customAttributeData.NamedArguments.Where(predicate2).ToArray();
@@ -128,7 +128,7 @@ namespace MSSQL_Lite.Reflection
             if (customAttributeData == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'customAttributeData' must be not null");
+                    throw new Exception("@'customAttributeData' must not be null");
                 return null;
             }
             return customAttributeData.NamedArguments.ToArray();
@@ -141,7 +141,7 @@ namespace MSSQL_Lite.Reflection
             if (customAttributeData == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'customAttributeData' must be not null");
+                    throw new Exception("@'customAttributeData' must not be null");
                 return null;
             }
             return customAttributeData.NamedArguments.Where(predicate2).ToArray();
@@ -154,7 +154,7 @@ namespace MSSQL_Lite.Reflection
             if (customAttributeData == null)
             {
                 if (throwExceptionIfNull)
-                    throw new Exception("@'customAttributeData' must be not null");
+                    throw new Exception("@'customAttributeData' must not be null");
                 return default(NamedArgument);
             }
             return customAttributeData.NamedArguments.SingleOrDefault(predicate2);

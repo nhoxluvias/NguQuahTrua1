@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Config;
+using MSSQL_Lite.Connection;
 using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
@@ -12,11 +13,11 @@ namespace MSSQL_Lite.Access
     {
         private async Task<List<T>> ToListAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             List<T> items = sqlData.ToList<T>();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             sqlCommand.Dispose();
             return items;
@@ -216,11 +217,11 @@ namespace MSSQL_Lite.Access
 
         public async Task<T> SingleOrDefaultAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             T item = sqlData.To<T>();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return item;
         }
@@ -247,11 +248,11 @@ namespace MSSQL_Lite.Access
 
         private async Task<T> FirstOrDefaultAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             T item = sqlData.To<T>();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return item;
         }
@@ -278,10 +279,10 @@ namespace MSSQL_Lite.Access
 
         private async Task<int> DeleteAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -298,10 +299,10 @@ namespace MSSQL_Lite.Access
 
         private async Task<int> UpdateAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -318,10 +319,10 @@ namespace MSSQL_Lite.Access
 
         private async Task<int> InsertAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -338,10 +339,10 @@ namespace MSSQL_Lite.Access
 
         private async Task<long> CountAsync(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             long result = long.Parse((string)await sqlData.ExecuteScalarAsync(sqlCommand));
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return result;
         }

@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Config;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,10 +13,10 @@ namespace MSSQL_Lite.Access
         public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -23,11 +24,11 @@ namespace MSSQL_Lite.Access
         public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             object obj = sqlData.ToOriginalData();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return obj;
         }
@@ -35,7 +36,7 @@ namespace MSSQL_Lite.Access
         public async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
             Type type = typeof(T);
@@ -58,7 +59,7 @@ namespace MSSQL_Lite.Access
             {
                 data = sqlData.To<T>();
             }
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return (T)data;
         }
@@ -66,10 +67,10 @@ namespace MSSQL_Lite.Access
         public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             object obj = await sqlData.ExecuteScalarAsync(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return obj;
         }

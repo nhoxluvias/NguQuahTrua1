@@ -64,7 +64,7 @@ namespace MSSQL_Lite.Query
         protected ExpressionTree GetExpressionTree(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
-                throw new Exception("@'binaryExpression' must be not null");
+                throw new Exception("@'binaryExpression' must not be null");
             if (IsLogicalOperator(binaryExpression.NodeType))
             {
                 ExpressionTree expressionTreeLeft = GetExpressionTree(binaryExpression.Left as BinaryExpression);
@@ -92,7 +92,7 @@ namespace MSSQL_Lite.Query
         protected ExpressionData GetExpressionData(BinaryExpression binaryExpression)
         {
             if (binaryExpression == null)
-                throw new Exception("@'binaryExpression' must be not null");
+                throw new Exception("@'binaryExpression' must not be null");
 
             Expression expressionLeft = binaryExpression.Left;
             Expression expressionRight = binaryExpression.Right;

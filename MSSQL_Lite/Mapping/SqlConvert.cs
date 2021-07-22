@@ -21,14 +21,14 @@ namespace MSSQL_Lite.Mapping
         public DataTable GetDataTableFromDataSet(DataSet dataSet)
         {
             if (dataSet == null)
-                throw new Exception("@'dataSet' must be not null");
+                throw new Exception("@'dataSet' must not be null");
             return dataSet.Tables[0];
         }
 
         public DataSet GetDataSetFromSqlDataAdapter(SqlDataAdapter sqlDataAdapter)
         {
             if (sqlDataAdapter == null)
-                throw new Exception("@'sqlDataAdapter' must be not null");
+                throw new Exception("@'sqlDataAdapter' must not be null");
             DataSet dataSet = new DataSet();
             sqlDataAdapter.Fill(dataSet);
             return dataSet;

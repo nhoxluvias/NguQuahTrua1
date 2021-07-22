@@ -12,7 +12,6 @@ namespace MSSQL_Lite.Access
     {
         private object data;
         private bool disposed;
-        public static ObjectReceivingData objectReceivingData = SqlConfig.objectReceivingData;
 
         public SqlData()
             : base(SqlConnectInfo.GetConnectionString())
@@ -23,12 +22,11 @@ namespace MSSQL_Lite.Access
 
         public void ExecuteReader(SqlCommand sqlCommand)
         {
-            if (objectReceivingData == ObjectReceivingData.SqlDataReader)
+            if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
                 data = ExecuteReader<SqlDataReader>(sqlCommand);
             else
                 data = ExecuteReader<DataSet>(sqlCommand);
         }
-
 
         public Dictionary<string, object> ToDictionary()
         {

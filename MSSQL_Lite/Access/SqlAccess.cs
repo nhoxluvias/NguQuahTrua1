@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Config;
+using MSSQL_Lite.Connection;
 using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
@@ -11,26 +12,24 @@ namespace MSSQL_Lite.Access
     {
         private SqlQuery sqlQuery;
         private SqlData sqlData;
-        private ConnectionType connectionType;
         private bool disposedValue;
 
-        internal SqlAccess(ConnectionType connectionType, SqlData sqlData)
+        internal SqlAccess(SqlData sqlData)
         {
             sqlQuery = new SqlQuery();
             this.sqlData = sqlData;
             disposedValue = false;
-            this.connectionType = connectionType;
-            if (connectionType == ConnectionType.ManuallyDisconnect)
+            if (SqlConfig.connectionType == ConnectionType.ManuallyDisconnect)
                 sqlData.Connect();
         }
 
         private List<T> ToList(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             List<T> items = sqlData.ToList<T>();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             sqlCommand.Dispose();
             return items;
@@ -230,11 +229,11 @@ namespace MSSQL_Lite.Access
 
         public T SingleOrDefault(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             T item = sqlData.To<T>();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return item;
         }
@@ -261,11 +260,11 @@ namespace MSSQL_Lite.Access
 
         private T FirstOrDefault(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             T item = sqlData.To<T>();
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return item;
         }
@@ -292,10 +291,10 @@ namespace MSSQL_Lite.Access
 
         private int Delete(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -312,10 +311,10 @@ namespace MSSQL_Lite.Access
 
         private int Update(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -332,10 +331,10 @@ namespace MSSQL_Lite.Access
 
         private int Insert(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -352,10 +351,10 @@ namespace MSSQL_Lite.Access
 
         private long Count(SqlCommand sqlCommand)
         {
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             long result = long.Parse((string)sqlData.ExecuteScalar(sqlCommand));
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return result;
         }

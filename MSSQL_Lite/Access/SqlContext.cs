@@ -1,4 +1,5 @@
-﻿using MSSQL_Lite.Connection;
+﻿using MSSQL_Lite.Config;
+using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -11,21 +12,20 @@ namespace MSSQL_Lite.Access
     {
         private bool disposedValue;
         private SqlData sqlData;
-        private ConnectionType connectionType;
 
-        public SqlContext(ConnectionType connectionType)
+        public SqlContext()
         {
-            this.connectionType = connectionType;
             sqlData = new SqlData();
-            if (this.connectionType == ConnectionType.ManuallyDisconnect)
+            if (SqlConfig.connectionType == ConnectionType.ManuallyDisconnect)
                 sqlData.Connect();
+
             disposedValue = false;
         }
 
         protected SqlAccess<T> InitSqlAccess<T>(ref SqlAccess<T> sqlAccess)
         {
             if (sqlAccess == null)
-                sqlAccess = new SqlAccess<T>(connectionType, sqlData);
+                sqlAccess = new SqlAccess<T>(sqlData);
             return sqlAccess;
         }
 
@@ -41,18 +41,18 @@ namespace MSSQL_Lite.Access
         private void ThrowExceptionOfQueryString(string queryString)
         {
             if (queryString == null)
-                throw new Exception("@'queryString' must be not null");
+                throw new Exception("@'queryString' must not be null");
             if (queryString == "")
-                throw new Exception("@'queryString' must be not empty");
+                throw new Exception("@'queryString' must not be empty");
         }
 
         public int ExecuteNonQuery(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if(connectionType == ConnectionType.DisconnectAfterCompletion)
+            if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if(connectionType == ConnectionType.DisconnectAfterCompletion)
+            if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return affected;
         }
@@ -60,11 +60,11 @@ namespace MSSQL_Lite.Access
         public object ExecuteReader(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if(connectionType == ConnectionType.DisconnectAfterCompletion)
+            if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             object obj = sqlData.ToOriginalData();
-            if(connectionType == ConnectionType.DisconnectAfterCompletion)
+            if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return obj;
         }
@@ -94,7 +94,7 @@ namespace MSSQL_Lite.Access
             {
                 data = sqlData.To<T>();
             }
-            if (connectionType == ConnectionType.DisconnectAfterCompletion)
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return (T)data;
         }
@@ -102,10 +102,10 @@ namespace MSSQL_Lite.Access
         public object ExecuteScalar(SqlCommand sqlCommand)
         {
             ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            if(connectionType == ConnectionType.DisconnectAfterCompletion)
+            if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             object obj = sqlData.ExecuteScalar(sqlCommand);
-            if(connectionType == ConnectionType.DisconnectAfterCompletion)
+            if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return obj;
         }

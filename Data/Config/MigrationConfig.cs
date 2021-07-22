@@ -1,4 +1,5 @@
 ﻿using Data.BLL.Migration;
+using System.Threading.Tasks;
 
 namespace Data.Config
 {
@@ -6,18 +7,16 @@ namespace Data.Config
     {
         public static void Migrate()
         {
-            RoleMigration roleMigration = new RoleMigration(); ;
-            PaymentMethodMigration paymentMethodMigration = new PaymentMethodMigration();
-            UserMigration userMigration = new UserMigration();
-            roleMigration.AddDataAndRun();
-            paymentMethodMigration.AddDataAndRun();
-            userMigration.AddDataAndRun();
-            roleMigration.Dispose();
-            paymentMethodMigration.Dispose();
-            userMigration.Dispose();
-            roleMigration = null;
-            paymentMethodMigration = null;
-            userMigration = null;
+            RoleMigration.Migrate();
+            PaymentMethodMigration.Migrate();
+            UserMigration.Migrate();
+        }
+
+        public static async Task MigrateAsync()
+        {
+            await RoleMigration.MigrateAsync();
+            await PaymentMethodMigration.MigrateAsync();
+            await UserMigration.MigrateAsync();
         }
     }
 }

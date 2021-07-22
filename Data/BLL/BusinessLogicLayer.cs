@@ -20,7 +20,7 @@ namespace Data.BLL
 
         internal void InitDAL()
         {
-            db = new DBContext(ConnectionType.ManuallyDisconnect);
+            db = new DBContext();
         }
 
         internal void InitDAL(DBContext db)
