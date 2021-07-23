@@ -224,30 +224,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Category].* from [CategoryDistribution], [Category]
+                commandText = @"Select [Category].* from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
             else if(includeDescription)
-                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[description] 
+                commandText = @"Select [Category].[ID], [Category].[name], [Category].[description] 
                                 from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
             else if(includeTimestamp)
-                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[createAt], [Category].[updateAt] 
+                commandText = @"Select [Category].[ID], [Category].[name], [Category].[createAt], [Category].[updateAt] 
                                 from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name] 
+                commandText = @"Select [Category].[ID], [Category].[name] 
                                 from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return await db.ExecuteReaderAsync<List<CategoryInfo>>(sqlCommand);
+            return await db.ExecuteReaderAsync<List<CategoryInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<CategoryInfo> GetCategoriesByFilmId(string filmId)
@@ -255,30 +253,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Category].* from [CategoryDistribution], [Category]
+                commandText = @"Select [Category].* from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
             else if (includeDescription)
-                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[description] 
+                commandText = @"Select [Category].[ID], [Category].[name], [Category].[description] 
                                 from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
             else if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], [Category].[createAt], [Category].[updateAt] 
+                commandText = @"Select [Category].[ID], [Category].[name], [Category].[createAt], [Category].[updateAt] 
                                 from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name] 
+                commandText = @"Select [Category].[ID], [Category].[name] 
                                 from [CategoryDistribution], [Category]
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return db.ExecuteReader<List<CategoryInfo>>(sqlCommand);
+            return db.ExecuteReader<List<CategoryInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateCategoryAsync(CategoryCreation categoryCreation)

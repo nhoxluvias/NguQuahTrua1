@@ -2,6 +2,7 @@
 using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -38,17 +39,8 @@ namespace MSSQL_Lite.Access
             }
         }
 
-        private void ThrowExceptionOfQueryString(string queryString)
+        private int ExecuteNonQuery(SqlCommand sqlCommand)
         {
-            if (queryString == null)
-                throw new Exception("@'queryString' must not be null");
-            if (queryString == "")
-                throw new Exception("@'queryString' must not be empty");
-        }
-
-        public int ExecuteNonQuery(SqlCommand sqlCommand)
-        {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             int affected = sqlData.ExecuteNonQuery(sqlCommand);
@@ -57,9 +49,8 @@ namespace MSSQL_Lite.Access
             return affected;
         }
 
-        public object ExecuteReader(SqlCommand sqlCommand)
+        private object ExecuteReader(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
@@ -69,10 +60,10 @@ namespace MSSQL_Lite.Access
             return obj;
         }
 
-        public T ExecuteReader<T>(SqlCommand sqlCommand)
+        private T ExecuteReader<T>(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
-            SqlData sqlData = new SqlData();
+            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
+                sqlData.Connect();
             sqlData.ExecuteReader(sqlCommand);
             Type type = typeof(T);
             object data = null;
@@ -99,15 +90,122 @@ namespace MSSQL_Lite.Access
             return (T)data;
         }
 
-        public object ExecuteScalar(SqlCommand sqlCommand)
+        private object ExecuteScalar(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Connect();
             object obj = sqlData.ExecuteScalar(sqlCommand);
             if(SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return obj;
+        }
+
+        public int ExecuteNonQuery(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using(SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return ExecuteNonQuery(sqlCommand);
+            }
+        }
+
+        public int ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using(SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return ExecuteNonQuery(sqlCommand);
+            }
+        }
+
+        public object ExecuteReader(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return ExecuteReader(sqlCommand);
+            }
+        }
+
+        public object ExecuteReader(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return ExecuteReader(sqlCommand);
+            }
+        }
+
+        public T ExecuteReader<T>(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return ExecuteReader<T>(sqlCommand);
+            }
+        }
+
+        public T ExecuteReader<T>(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return ExecuteReader<T>(sqlCommand);
+            }
+        }
+
+        public object ExecuteScalar(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return ExecuteScalar(sqlCommand);
+            }
+        }
+
+        public object ExecuteScalar(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return ExecuteScalar(sqlCommand);
+            }
         }
 
         protected virtual void Dispose(bool disposing)
@@ -123,6 +221,7 @@ namespace MSSQL_Lite.Access
                 disposedValue = true;
             }
         }
+
         ~SqlContext()
         {
             Dispose(disposing: false);

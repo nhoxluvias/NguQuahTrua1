@@ -222,30 +222,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Cast].* from [CastOfFilm], [Cast]
+                commandText = @"Select [Cast].* from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
             else if(includeDescription)
-                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
+                commandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
                                 from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
             else if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[createAt], [Cast].[updateAt] 
+                commandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[createAt], [Cast].[updateAt] 
                                 from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name] 
+                commandText = @"Select [Cast].[ID], [Cast].[name] 
                                 from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return await db.ExecuteReaderAsync<List<CastInfo>>(sqlCommand);
+            return await db.ExecuteReaderAsync<List<CastInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<CastInfo> GetCastsByFilmId(string filmId)
@@ -253,30 +251,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Cast].* from [CastOfFilm], [Cast]
+                commandText = @"Select [Cast].* from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
             else if (includeDescription)
-                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
+                commandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[description] 
                                 from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
             else if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[createAt], [Cast].[updateAt] 
+                commandText = @"Select [Cast].[ID], [Cast].[name], [Cast].[createAt], [Cast].[updateAt] 
                                 from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Cast].[ID], [Cast].[name] 
+                commandText = @"Select [Cast].[ID], [Cast].[name] 
                                 from [CastOfFilm], [Cast]
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return db.ExecuteReader<List<CastInfo>>(sqlCommand);
+            return db.ExecuteReader<List<CastInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateCastAsync(CastCreation castCreation)

@@ -157,14 +157,12 @@ namespace Data.BLL
 
         public async Task<object> CountFilmByCategoryAsync()
         {
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = @"Select [Category].[ID], [Category].[name], 
-                                        (select count([filmId]) from[CategoryDistribution] 
-                                            where[CategoryDistribution].[categoryId] = [Category].[ID]) as 'count'
-                                      from Category";
+            string commandText = @"Select [Category].[ID], [Category].[name], 
+                                    (select count([filmId]) from[CategoryDistribution] 
+                                    where[CategoryDistribution].[categoryId] = [Category].[ID]) as 'count'
+                                from Category";
 
-            return await db.ExecuteReaderAsync(sqlCommand);
+            return await db.ExecuteReaderAsync(commandText, CommandType.Text);
         }
 
         public async Task<List<FilmInfo>> SeachFilmsAsync(string name)
@@ -172,32 +170,29 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(name))
                 throw new Exception("@'name' must not be null");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Film].* from [Film]
+                commandText = @"Select [Film].* from [Film]
                             where [Film].[name] like @name";
             else
-                sqlCommand.CommandText = @"Select [Film].[ID],[Film].[name],[Film].[description],
+                commandText = @"Select [Film].[ID],[Film].[name],[Film].[description],
                                 [Film].[languageId],[Film].[countryId],[Film].[productionCompany],
                                 [Film].[releaseDate],[Film].[duration],[Film].[thumbnail],
                                 [Film].[upvote],[Film].[downvote],[Film].[views], [Film].[source]
                             from [Film]
                             where [Film].[name] like @name";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@name", string.Format("%{0}%", name)));
-            return await db.ExecuteReaderAsync<List<FilmInfo>>(sqlCommand);
+            return await db.ExecuteReaderAsync<List<FilmInfo>>(
+                commandText, CommandType.Text, new SqlParameter("@name", string.Format("%{0}%", name)));
         }
 
         public async Task<List<FilmInfo>> GetLatestFilmAsync(int count = 12)
         {
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = string.Format(@"Select top {0} [Film].[ID], [Film].[name], 
+            string commandText = string.Format(@"Select top {0} [Film].[ID], [Film].[name], 
                                 [Film].[thumbnail], [Film].[countryId], [Film].[upvote], [Film].[downvote]
                             from [Film] order by [createAt] desc", count);
 
-            return (await db.ExecuteReaderAsync<List<Film>>(sqlCommand))
+            return (await db.ExecuteReaderAsync<List<Film>>(commandText, CommandType.Text))
                 .Select(f => ToFilmInfo(f)).ToList();
         }
 
@@ -360,14 +355,13 @@ namespace Data.BLL
             if (categoryId <= 0)
                 throw new Exception("@'categoryId' must be greater than 0");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeTimestamp)
-                sqlCommand.CommandText = string.Format(@"Select top {0} [Film].* from [Film], [CategoryDistribution]
+                commandText = string.Format(@"Select top {0} [Film].* from [Film], [CategoryDistribution]
                             where [Film].[ID] = [CategoryDistribution].[filmId]
                                 and [CategoryDistribution].[categoryId] = @categoryId", count);
             else
-                sqlCommand.CommandText = string.Format(@"Select top {0} [Film].[ID],[Film].[name],[Film].[description],
+                commandText = string.Format(@"Select top {0} [Film].[ID],[Film].[name],[Film].[description],
                                 [Film].[languageId],[Film].[countryId],[Film].[productionCompany],
                                 [Film].[releaseDate],[Film].[duration],[Film].[thumbnail],
                                 [Film].[upvote],[Film].[downvote],[Film].[views], [Film].[source]
@@ -375,8 +369,7 @@ namespace Data.BLL
                             where [Film].[ID] = [CategoryDistribution].[filmId]
                                 and [CategoryDistribution].[categoryId] = @categoryId", count);
 
-            sqlCommand.Parameters.Add(new SqlParameter("@categoryId", categoryId));
-            return await db.ExecuteReaderAsync<List<FilmInfo>>(sqlCommand);
+            return await db.ExecuteReaderAsync<List<FilmInfo>>(commandText, CommandType.Text, new SqlParameter("@categoryId", categoryId));
         }
 
         public async Task<CreationState> CreateFilmAsync(FilmCreation filmCreation)
@@ -703,18 +696,15 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = @"Update [Film] set [upvote] = (
+            string commandText = @"Update [Film] set [upvote] = (
                                             Select count([userId]) from [UserReaction] 
                                             where [filmId] = @filmId and [upvoted] = 1),
                                         [downvote] = (
                                             Select count([userId]) from [UserReaction] 
                                             where [filmId] = @filmId and [downvoted] = 1)
                                         where [Film].[ID] = @filmId";
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            int affected = db.ExecuteNonQuery(sqlCommand);
 
+            int affected = db.ExecuteNonQuery(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
             return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
@@ -723,18 +713,15 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
-            sqlCommand.CommandText = @"Update [Film] set [downvote] = (
+            string commandText = @"Update [Film] set [downvote] = (
                                             Select count([userId]) from [UserReaction] 
                                             where [filmId] = @filmId and [downvoted] = 1),
                                         [upvote] = (
                                             Select count([userId]) from [UserReaction] 
                                             where [filmId] = @filmId and [upvoted] = 1)
                                         where [Film].[ID] = @filmId";
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            int affected = db.ExecuteNonQuery(sqlCommand);
 
+            int affected = db.ExecuteNonQuery(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
             return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 

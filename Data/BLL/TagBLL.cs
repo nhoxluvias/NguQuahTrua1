@@ -221,30 +221,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Tag].* from [TagDistribution], [Tag]
+                commandText = @"Select [Tag].* from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else if(includeDescription)
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] 
+                commandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] 
                                 from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else if(includeTimestamp)
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[createAt], [Tag].[updateAt] 
+                commandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[createAt], [Tag].[updateAt] 
                                 from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name] 
+                commandText = @"Select [Tag].[ID], [Tag].[name] 
                                 from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return await db.ExecuteReaderAsync<List<TagInfo>>(sqlCommand);
+            return await db.ExecuteReaderAsync<List<TagInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<TagInfo> GetTagsByFilmId(string filmId)
@@ -252,30 +250,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Tag].* from [TagDistribution], [Tag]
+                commandText = @"Select [Tag].* from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else if (includeDescription)
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] 
+                commandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[description] 
                                 from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[createAt], [Tag].[updateAt] 
+                commandText = @"Select [Tag].[ID], [Tag].[name], [Tag].[createAt], [Tag].[updateAt] 
                                 from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Tag].[ID], [Tag].[name] 
+                commandText = @"Select [Tag].[ID], [Tag].[name] 
                                 from [TagDistribution], [Tag]
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return db.ExecuteReader<List<TagInfo>>(sqlCommand);
+            return db.ExecuteReader<List<TagInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateTagAsync(TagCreation tagCreation)

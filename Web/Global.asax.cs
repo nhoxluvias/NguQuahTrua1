@@ -12,7 +12,8 @@ namespace Web
         protected void Application_Start(object sender, EventArgs e)
         {
             RouteConfig.RegisterRoutes(RouteTable.Routes);
-            DatabaseConfig.ManualConfig(@"LAPTOP-B78E1G5S\MSSQLSERVER2019", "Movie", "sa", "123456789");
+            DatabaseConfig.CreateConnectionString(@"LAPTOP-B78E1G5S\MSSQLSERVER2019", "Movie", "sa", "123456789");
+            DatabaseConfig.OtherSettings();
             MigrationConfig.Migrate();
             EmailConfig.RegisterEmail();
         }

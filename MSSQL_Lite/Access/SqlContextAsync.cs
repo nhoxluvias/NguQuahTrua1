@@ -2,6 +2,7 @@
 using MSSQL_Lite.Connection;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -10,9 +11,8 @@ namespace MSSQL_Lite.Access
 {
     public partial class SqlContext
     {
-        public async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
+        private async Task<int> ExecuteNonQueryAsync(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             int affected = await sqlData.ExecuteNonQueryAsync(sqlCommand);
@@ -21,9 +21,8 @@ namespace MSSQL_Lite.Access
             return affected;
         }
 
-        public async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand)
+        private async Task<object> ExecuteReaderAsync(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
@@ -33,9 +32,8 @@ namespace MSSQL_Lite.Access
             return obj;
         }
 
-        public async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)
+        private async Task<T> ExecuteReaderAsync<T>(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             await sqlData.ExecuteReaderAsync(sqlCommand);
@@ -64,15 +62,122 @@ namespace MSSQL_Lite.Access
             return (T)data;
         }
 
-        public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
+        private async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)
         {
-            ThrowExceptionOfQueryString(sqlCommand.CommandText);
             if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 await sqlData.ConnectAsync();
             object obj = await sqlData.ExecuteScalarAsync(sqlCommand);
             if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
                 sqlData.Disconnect();
             return obj;
+        }
+
+        public async Task<int> ExecuteNonQueryAsync(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return await ExecuteNonQueryAsync(sqlCommand);
+            }
+        }
+
+        public async Task<int> ExecuteNonQueryAsync(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return await ExecuteNonQueryAsync(sqlCommand);
+            }
+        }
+
+        public async Task<object> ExecuteReaderAsync(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return await ExecuteReaderAsync(sqlCommand);
+            }
+        }
+
+        public async Task<object> ExecuteReaderAsync(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return await ExecuteReaderAsync(sqlCommand);
+            }
+        }
+
+        public async Task<T> ExecuteReaderAsync<T>(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return await ExecuteReaderAsync<T>(sqlCommand);
+            }
+        }
+
+        public async Task<T> ExecuteReaderAsync<T>(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return await ExecuteReaderAsync<T>(sqlCommand);
+            }
+        }
+
+        public async Task<object> ExecuteScalarAsync(string commandText, CommandType commandType)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                return await ExecuteScalarAsync(sqlCommand);
+            }
+        }
+
+        public async Task<object> ExecuteScalarAsync(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
+        {
+            if (string.IsNullOrEmpty(commandText))
+                throw new Exception("@'commandText' must not be null or empty");
+
+            using (SqlCommand sqlCommand = new SqlCommand())
+            {
+                sqlCommand.CommandText = commandText;
+                sqlCommand.CommandType = commandType;
+                sqlCommand.Parameters.AddRange(sqlParameters);
+                return await ExecuteScalarAsync(sqlCommand);
+            }
         }
     }
 }

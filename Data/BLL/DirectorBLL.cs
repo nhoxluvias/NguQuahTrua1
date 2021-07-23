@@ -222,30 +222,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
+                commandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
             else if(includeDescription)
-                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
+                commandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
             else if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[createAt], [Director].[updateAt] 
+                commandText = @"Select [Director].[ID], [Director].[name], [Director].[createAt], [Director].[updateAt] 
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name]
+                commandText = @"Select [Director].[ID], [Director].[name]
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return await db.ExecuteReaderAsync<List<DirectorInfo>>(sqlCommand);
+            return await db.ExecuteReaderAsync<List<DirectorInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<DirectorInfo> GetDirectorsByFilmId(string filmId)
@@ -253,30 +251,28 @@ namespace Data.BLL
             if (string.IsNullOrEmpty(filmId))
                 throw new Exception("@'filmId' must not be null or empty");
 
-            SqlCommand sqlCommand = new SqlCommand();
-            sqlCommand.CommandType = CommandType.Text;
+            string commandText;
             if (includeDescription && includeTimestamp)
-                sqlCommand.CommandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
+                commandText = @"Select [Director].* from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
             else if (includeDescription)
-                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
+                commandText = @"Select [Director].[ID], [Director].[name], [Director].[description] 
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
             else if (includeTimestamp)
-                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name], [Director].[createAt], [Director].[updateAt] 
+                commandText = @"Select [Director].[ID], [Director].[name], [Director].[createAt], [Director].[updateAt] 
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
             else
-                sqlCommand.CommandText = @"Select [Director].[ID], [Director].[name]
+                commandText = @"Select [Director].[ID], [Director].[name]
                             from [Director], [DirectorOfFilm] 
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
 
-            sqlCommand.Parameters.Add(new SqlParameter("@filmId", filmId));
-            return db.ExecuteReader<List<DirectorInfo>>(sqlCommand);
+            return db.ExecuteReader<List<DirectorInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateDirectorAsync(DirectorCreation directorCreation)
