@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace MSSQL_Lite.Access
 {
@@ -34,7 +33,6 @@ namespace MSSQL_Lite.Access
         {
             if (sqlAccess != null)
             {
-                sqlAccess.Dispose();
                 sqlAccess = null;
             }
         }

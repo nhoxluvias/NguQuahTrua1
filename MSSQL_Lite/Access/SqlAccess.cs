@@ -8,17 +8,15 @@ using System.Linq.Expressions;
 
 namespace MSSQL_Lite.Access
 {
-    public partial class SqlAccess<T> : IDisposable
+    public partial class SqlAccess<T>
     {
         private SqlQuery sqlQuery;
         private SqlData sqlData;
-        private bool disposedValue;
 
         internal SqlAccess(SqlData sqlData)
         {
             sqlQuery = new SqlQuery();
             this.sqlData = sqlData;
-            disposedValue = false;
             if (SqlConfig.connectionType == ConnectionType.ManuallyDisconnect)
                 sqlData.Connect();
         }
@@ -494,28 +492,6 @@ namespace MSSQL_Lite.Access
             {
                 return Count(sqlCommand);
             }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    sqlQuery = null;
-                }
-                disposedValue = true;
-            }
-        }
-        ~SqlAccess()
-        {
-            Dispose(disposing: false);
-        }
-
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
     }
 }
