@@ -100,19 +100,6 @@ namespace MSSQL_Lite.Access
             return obj;
         }
 
-        public int ExecuteNonQuery(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using(SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return ExecuteNonQuery(sqlCommand);
-            }
-        }
-
         public int ExecuteNonQuery(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
         {
             if (string.IsNullOrEmpty(commandText))
@@ -122,21 +109,10 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return ExecuteNonQuery(sqlCommand);
-            }
-        }
-
-        public object ExecuteReader(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return ExecuteReader(sqlCommand);
             }
         }
 
@@ -149,21 +125,10 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return ExecuteReader(sqlCommand);
-            }
-        }
-
-        public T ExecuteReader<T>(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return ExecuteReader<T>(sqlCommand);
             }
         }
 
@@ -176,21 +141,10 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return ExecuteReader<T>(sqlCommand);
-            }
-        }
-
-        public object ExecuteScalar(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return ExecuteScalar(sqlCommand);
             }
         }
 
@@ -203,7 +157,9 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return ExecuteScalar(sqlCommand);
             }
         }

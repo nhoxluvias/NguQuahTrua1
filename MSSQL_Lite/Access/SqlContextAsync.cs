@@ -72,19 +72,6 @@ namespace MSSQL_Lite.Access
             return obj;
         }
 
-        public async Task<int> ExecuteNonQueryAsync(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return await ExecuteNonQueryAsync(sqlCommand);
-            }
-        }
-
         public async Task<int> ExecuteNonQueryAsync(string commandText, CommandType commandType, params SqlParameter[] sqlParameters)
         {
             if (string.IsNullOrEmpty(commandText))
@@ -94,21 +81,10 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if(sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return await ExecuteNonQueryAsync(sqlCommand);
-            }
-        }
-
-        public async Task<object> ExecuteReaderAsync(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return await ExecuteReaderAsync(sqlCommand);
             }
         }
 
@@ -121,21 +97,10 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return await ExecuteReaderAsync(sqlCommand);
-            }
-        }
-
-        public async Task<T> ExecuteReaderAsync<T>(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return await ExecuteReaderAsync<T>(sqlCommand);
             }
         }
 
@@ -148,21 +113,10 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return await ExecuteReaderAsync<T>(sqlCommand);
-            }
-        }
-
-        public async Task<object> ExecuteScalarAsync(string commandText, CommandType commandType)
-        {
-            if (string.IsNullOrEmpty(commandText))
-                throw new Exception("@'commandText' must not be null or empty");
-
-            using (SqlCommand sqlCommand = new SqlCommand())
-            {
-                sqlCommand.CommandText = commandText;
-                sqlCommand.CommandType = commandType;
-                return await ExecuteScalarAsync(sqlCommand);
             }
         }
 
@@ -175,7 +129,9 @@ namespace MSSQL_Lite.Access
             {
                 sqlCommand.CommandText = commandText;
                 sqlCommand.CommandType = commandType;
-                sqlCommand.Parameters.AddRange(sqlParameters);
+                if (sqlParameters != null)
+                    sqlCommand.Parameters.AddRange(sqlParameters);
+
                 return await ExecuteScalarAsync(sqlCommand);
             }
         }
