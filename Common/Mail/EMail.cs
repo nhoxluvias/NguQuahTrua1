@@ -8,15 +8,16 @@ namespace Common.Mail
         public static string Address = null;
         public static string Password = null;
 
-        public bool Send(string sendTo, string subject, string message)
+        public void Send(string sendTo, string subject, string message)
         {
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = "smtp.gmail.com";
-            smtp.Port = 587;
-            smtp.EnableSsl = true;
-            smtp.Credentials = new NetworkCredential(Address, Password);
-            smtp.Send(Address, sendTo, subject, message);
-            return true;
+            using(SmtpClient smtp = new SmtpClient())
+            {
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential(Address, Password);
+                smtp.Send(Address, sendTo, subject, message);
+            }
         }
     }
 }

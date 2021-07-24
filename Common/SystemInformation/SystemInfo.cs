@@ -15,6 +15,7 @@ namespace Common.SystemInformation
         private string extenalIpAddress;
         private string ffmpegPath;
         private string[] path_EnvironmentVariable;
+
         public string OSName { get { return osName; } }
         public string MemoryUsed { get { return memoryUsed; } }
         public string TotalMemory { get { return totalMemory; } }
@@ -104,13 +105,13 @@ namespace Common.SystemInformation
 
         private string GetExtenalIPAddress()
         {
-            WebClient webClient = new WebClient();
-            string raw = webClient.DownloadString("http://checkip.dyndns.org");
-            webClient.Dispose();
-            webClient = null;
-            return Regex.Replace(raw, "<.*?>", String.Empty)
+            using(WebClient webClient = new WebClient())
+            {
+                string raw = webClient.DownloadString("http://checkip.dyndns.org");
+                return Regex.Replace(raw, "<.*?>", String.Empty)
                 .Replace("Current IP Check", String.Empty)
                 .Replace("Current IP Address: ", String.Empty);
+            }
         }
     }
 }
