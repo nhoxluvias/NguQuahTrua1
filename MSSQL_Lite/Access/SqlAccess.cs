@@ -1,6 +1,4 @@
-﻿using MSSQL_Lite.Config;
-using MSSQL_Lite.Connection;
-using MSSQL_Lite.Query;
+﻿using MSSQL_Lite.Query;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;

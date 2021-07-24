@@ -9,14 +9,6 @@ namespace MSSQL_Lite.Access
 {
     internal partial class SqlData : SqlExecution
     {
-        //public async Task ExecuteReaderAsync(SqlCommand sqlCommand)
-        //{
-        //    if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
-        //        data = await ExecuteReaderAsync<SqlDataReader>(sqlCommand);
-        //    else
-        //        data = await ExecuteReaderAsync<DataSet>(sqlCommand);
-        //}
-
         public async Task<Dictionary<string, object>> ToDictionaryAsync(SqlCommand sqlCommand)
         {
             if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)

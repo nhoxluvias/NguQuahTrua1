@@ -1,7 +1,7 @@
 ﻿
 namespace MSSQL_Lite.LambdaExpression
 {
-    public class ExpressionTree
+    internal class ExpressionTree
     {
         public ExpressionData Data { get; set; }
         public ExpressionTree Left { get; set; }

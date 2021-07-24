@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MSSQL_Lite.Mapping
 {
-    public class SqlMapping
+    internal class SqlMapping
     {
         private ObjReflection objReflection;
 

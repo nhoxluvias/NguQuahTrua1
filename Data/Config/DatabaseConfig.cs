@@ -19,7 +19,6 @@ namespace Data.Config
         public static void OtherSettings()
         {
             SqlConfig.objectReceivingData = ObjectReceivingData.DataSet;
-            SqlConfig.connectionType = ConnectionType.ManuallyDisconnect;
         }
     }
 }

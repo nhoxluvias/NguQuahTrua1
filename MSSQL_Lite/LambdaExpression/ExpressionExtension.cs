@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace MSSQL_Lite.LambdaExpression
 {
-    public class ExpressionExtension
+    internal class ExpressionExtension
     {
         public ExpressionExtension()
         {

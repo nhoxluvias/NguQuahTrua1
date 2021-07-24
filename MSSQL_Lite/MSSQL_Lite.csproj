@@ -51,7 +51,6 @@
     <Compile Include="Access\SqlContext.cs" />
     <Compile Include="Access\SqlData.cs" />
     <Compile Include="Config\SqlConfig.cs" />
-    <Compile Include="Connection\ConnectionType.cs" />
     <Compile Include="Connection\SqlConnectInfo.cs" />
     <Compile Include="Execution\SqlExecution.cs" />
     <Compile Include="Execution\SqlExecutionAsync.cs" />

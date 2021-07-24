@@ -2,7 +2,7 @@
 
 namespace MSSQL_Lite.Query
 {
-    public class SqlQueryParameter
+    internal class SqlQueryParameter
     {
         public string Name { get; set; }
         public object Value { get; set; }

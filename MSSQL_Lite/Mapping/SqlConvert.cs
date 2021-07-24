@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace MSSQL_Lite.Mapping
 {
-    public class SqlConvert
+    internal class SqlConvert
     {
         private ObjReflection objReflection;
 
