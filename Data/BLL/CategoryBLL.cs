@@ -245,7 +245,7 @@ namespace Data.BLL
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
 
-            return await db.ExecuteReaderAsync<List<CategoryInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return await db.Execute_ToListAsync<CategoryInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<CategoryInfo> GetCategoriesByFilmId(string filmId)
@@ -274,7 +274,7 @@ namespace Data.BLL
                                 where [CategoryDistribution].[categoryId] = [Category].[ID]
                                     and [CategoryDistribution].[filmId] = @filmId";
 
-            return db.ExecuteReader<List<CategoryInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return db.Execute_ToList<CategoryInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateCategoryAsync(CategoryCreation categoryCreation)

@@ -242,7 +242,7 @@ namespace Data.BLL
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
 
-            return await db.ExecuteReaderAsync<List<TagInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return await db.Execute_ToListAsync<TagInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<TagInfo> GetTagsByFilmId(string filmId)
@@ -271,7 +271,7 @@ namespace Data.BLL
                                 where [TagDistribution].[tagId] = [Tag].[ID]
                                     and [TagDistribution].[filmId] = @filmId";
 
-            return db.ExecuteReader<List<TagInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return db.Execute_ToList<TagInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateTagAsync(TagCreation tagCreation)

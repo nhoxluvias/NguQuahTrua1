@@ -67,7 +67,7 @@
     <Compile Include="Query\SqlQueryBase.cs" />
     <Compile Include="Query\SqlQueryData.cs" />
     <Compile Include="Reflection\ObjReflection.cs" />
-    <Compile Include="String\StringExtension.cs" />
+    <Compile Include="String\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

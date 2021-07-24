@@ -53,8 +53,12 @@ namespace MSSQL_Lite.Execution
                 SqlDataReader reader = sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
                 return (T)Convert.ChangeType(reader, type);
             }
-            DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
-            return (T)Convert.ChangeType(dataSet, type);
+
+            using(SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+            {
+                DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(sqlDataAdapter);
+                return (T)Convert.ChangeType(dataSet, type);
+            }
         }
 
         public object ExecuteScalar(SqlCommand sqlCommand)

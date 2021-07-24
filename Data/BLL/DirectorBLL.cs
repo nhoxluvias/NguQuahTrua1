@@ -243,7 +243,7 @@ namespace Data.BLL
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
 
-            return await db.ExecuteReaderAsync<List<DirectorInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return await db.Execute_ToListAsync<DirectorInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<DirectorInfo> GetDirectorsByFilmId(string filmId)
@@ -272,7 +272,7 @@ namespace Data.BLL
                             where [Director].[ID] = [DirectorOfFilm].[directorId]
                                 and [DirectorOfFilm].[filmId] = @filmId";
 
-            return db.ExecuteReader<List<DirectorInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return db.Execute_ToList<DirectorInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateDirectorAsync(DirectorCreation directorCreation)

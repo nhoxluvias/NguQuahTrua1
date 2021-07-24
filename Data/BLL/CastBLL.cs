@@ -243,7 +243,7 @@ namespace Data.BLL
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
-            return await db.ExecuteReaderAsync<List<CastInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return await db.Execute_ToListAsync<CastInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public List<CastInfo> GetCastsByFilmId(string filmId)
@@ -272,7 +272,7 @@ namespace Data.BLL
                                 where [CastOfFilm].[castId] = [Cast].[ID]
                                     and [CastOfFilm].[filmId] = @filmId";
 
-            return db.ExecuteReader<List<CastInfo>>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
+            return db.Execute_ToList<CastInfo>(commandText, CommandType.Text, new SqlParameter("@filmId", filmId));
         }
 
         public async Task<CreationState> CreateCastAsync(CastCreation castCreation)

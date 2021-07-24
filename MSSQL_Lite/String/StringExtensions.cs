@@ -2,7 +2,7 @@
 
 namespace System
 {
-    public static class StringExtension
+    public static class StringExtensions
     {
         public static string SubStr(this string input, int start, int end)
         {

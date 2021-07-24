@@ -1,7 +1,6 @@
 ﻿using MSSQL_Lite.Config;
 using MSSQL_Lite.Connection;
 using MSSQL_Lite.Execution;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -10,63 +9,91 @@ namespace MSSQL_Lite.Access
 {
     internal partial class SqlData : SqlExecution
     {
-        private object data;
         private bool disposed;
 
         public SqlData()
             : base(SqlConnectInfo.GetConnectionString())
         {
-            data = null;
             disposed = false;
         }
 
-        public void ExecuteReader(SqlCommand sqlCommand)
+        public Dictionary<string, object> ToDictionary(SqlCommand sqlCommand)
         {
             if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
-                data = ExecuteReader<SqlDataReader>(sqlCommand);
+            {
+                using (SqlDataReader sqlDataReader = ExecuteReader<SqlDataReader>(sqlCommand))
+                {
+                    return sqlConvert.ToDictionary(sqlDataReader);
+                }
+            }
             else
-                data = ExecuteReader<DataSet>(sqlCommand);
+            {
+                using(DataSet dataSet = ExecuteReader<DataSet>(sqlCommand))
+                {
+                    return sqlConvert.ToDictionary(dataSet);
+                }
+            }
         }
 
-        public Dictionary<string, object> ToDictionary()
+        public List<Dictionary<string, object>> ToDictionaryList(SqlCommand sqlCommand)
         {
-            if (!(data is DataSet) && !(data is SqlDataReader))
-                throw new Exception("@'data' must be DataSet or SqlDataReader");
-            if (data is DataSet)
-                return sqlConvert.ToDictionary((DataSet)data);
-            return sqlConvert.ToDictionary((SqlDataReader)data);
+            if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
+            {
+                using (SqlDataReader sqlDataReader = ExecuteReader<SqlDataReader>(sqlCommand))
+                {
+                    return sqlConvert.ToDictionaryList(sqlDataReader);
+                }
+            }
+            else
+            {
+                using (DataSet dataSet = ExecuteReader<DataSet>(sqlCommand))
+                {
+                    return sqlConvert.ToDictionaryList(dataSet);
+                }
+            }
         }
 
-        public List<Dictionary<string, object>> ToDictionaryList()
+        public T To<T>(SqlCommand sqlCommand)
         {
-            if (!(data is DataSet) && !(data is SqlDataReader))
-                throw new Exception("@'data' must be DataSet or SqlDataReader");
-            if (data is DataSet)
-                return sqlConvert.ToDictionaryList((DataSet)data);
-            return sqlConvert.ToDictionaryList((SqlDataReader)data);
+            if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
+            {
+                using (SqlDataReader sqlDataReader = ExecuteReader<SqlDataReader>(sqlCommand))
+                {
+                    return sqlConvert.To<T>(sqlDataReader);
+                }
+            }
+            else
+            {
+                using (DataSet dataSet = ExecuteReader<DataSet>(sqlCommand))
+                {
+                    return sqlConvert.To<T>(dataSet);
+                }
+            }
         }
 
-        public T To<T>()
+        public List<T> ToList<T>(SqlCommand sqlCommand)
         {
-            if (!(data is DataSet) && !(data is SqlDataReader))
-                throw new Exception("@'data' must be DataSet or SqlDataReader");
-            if (data is DataSet)
-                return sqlConvert.To<T>((DataSet)data);
-            return sqlConvert.To<T>((SqlDataReader)data);
+            if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
+            {
+                using (SqlDataReader sqlDataReader = ExecuteReader<SqlDataReader>(sqlCommand))
+                {
+                    return sqlConvert.ToList<T>(sqlDataReader);
+                }
+            }
+            else
+            {
+                using (DataSet dataSet = ExecuteReader<DataSet>(sqlCommand))
+                {
+                    return sqlConvert.ToList<T>(dataSet);
+                }
+            }
         }
 
-        public List<T> ToList<T>()
+        public object ToOriginalData(SqlCommand sqlCommand)
         {
-            if (!(data is DataSet) && !(data is SqlDataReader))
-                throw new Exception("@'data' must be DataSet or SqlDataReader");
-            if (data is DataSet)
-                return sqlConvert.ToList<T>((DataSet)data);
-            return sqlConvert.ToList<T>((SqlDataReader)data);
-        }
-
-        public object ToOriginalData()
-        {
-            return data;
+            if (SqlConfig.objectReceivingData == ObjectReceivingData.SqlDataReader)
+                return ExecuteReader<SqlDataReader>(sqlCommand);
+            return ExecuteReader<DataSet>(sqlCommand);
         }
 
         protected override void Dispose(bool disposing)
@@ -77,10 +104,7 @@ namespace MSSQL_Lite.Access
                 {
                     if (disposing)
                     {
-                        if (data is DataSet)
-                            ((DataSet)data).Dispose();
-                        if (data is SqlDataReader)
-                            ((DataSet)data).Dispose();
+
                     }
                     disposed = true;
                 }

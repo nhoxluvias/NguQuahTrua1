@@ -162,7 +162,7 @@ namespace Data.BLL
                                     where[CategoryDistribution].[categoryId] = [Category].[ID]) as 'count'
                                 from Category";
 
-            return await db.ExecuteReaderAsync(commandText, CommandType.Text);
+            return await db.Execute_ToOriginalDataAsync(commandText, CommandType.Text);
         }
 
         public async Task<List<FilmInfo>> SeachFilmsAsync(string name)
@@ -182,7 +182,7 @@ namespace Data.BLL
                             from [Film]
                             where [Film].[name] like @name";
 
-            return await db.ExecuteReaderAsync<List<FilmInfo>>(
+            return await db.Execute_ToListAsync<FilmInfo>(
                 commandText, CommandType.Text, new SqlParameter("@name", string.Format("%{0}%", name)));
         }
 
@@ -192,7 +192,7 @@ namespace Data.BLL
                                 [Film].[thumbnail], [Film].[countryId], [Film].[upvote], [Film].[downvote]
                             from [Film] order by [createAt] desc", count);
 
-            return (await db.ExecuteReaderAsync<List<Film>>(commandText, CommandType.Text))
+            return (await db.Execute_ToListAsync<Film>(commandText, CommandType.Text))
                 .Select(f => ToFilmInfo(f)).ToList();
         }
 
@@ -369,7 +369,7 @@ namespace Data.BLL
                             where [Film].[ID] = [CategoryDistribution].[filmId]
                                 and [CategoryDistribution].[categoryId] = @categoryId", count);
 
-            return await db.ExecuteReaderAsync<List<FilmInfo>>(commandText, CommandType.Text, new SqlParameter("@categoryId", categoryId));
+            return await db.Execute_ToListAsync<FilmInfo>(commandText, CommandType.Text, new SqlParameter("@categoryId", categoryId));
         }
 
         public async Task<CreationState> CreateFilmAsync(FilmCreation filmCreation)

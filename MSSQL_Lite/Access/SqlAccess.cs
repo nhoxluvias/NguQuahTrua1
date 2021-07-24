@@ -17,26 +17,13 @@ namespace MSSQL_Lite.Access
         {
             sqlQuery = new SqlQuery();
             this.sqlData = sqlData;
-            if (SqlConfig.connectionType == ConnectionType.ManuallyDisconnect)
-                sqlData.Connect();
-        }
-
-        private List<T> ToList(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            sqlData.ExecuteReader(sqlCommand);
-            List<T> items = sqlData.ToList<T>();
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return items;
         }
 
         public List<T> ToList()
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>())
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -44,7 +31,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -52,7 +39,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(orderBy, sqlOrderByOptions))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -60,7 +47,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(orderBy, sqlOrderByOptions, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -68,7 +55,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(top))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -76,7 +63,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(top, orderBy, sqlOrderByOptions))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -84,7 +71,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -92,7 +79,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -100,7 +87,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -108,7 +95,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, orderBy, sqlOrderByOptions, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -116,7 +103,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, top))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -124,7 +111,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, top, orderBy, sqlOrderByOptions))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -132,7 +119,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(set))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -140,7 +127,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -148,7 +135,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, orderBy, sqlOrderByOption))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -156,7 +143,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, orderBy, sqlOrderByOption, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -164,7 +151,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, top))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -172,7 +159,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, top, orderBy, sqlOrderByOption))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -180,7 +167,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -188,7 +175,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -196,7 +183,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -204,7 +191,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, orderBy, sqlOrderByOptions, skip, take))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -212,7 +199,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, top))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -220,7 +207,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(select, where, top, orderBy, sqlOrderByOptions))
             {
-                return ToList(sqlCommand);
+                return sqlData.ToList<T>(sqlCommand);
             }
         }
 
@@ -296,22 +283,11 @@ namespace MSSQL_Lite.Access
             return pagedList;
         }
 
-        public T SingleOrDefault(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            sqlData.ExecuteReader(sqlCommand);
-            T item = sqlData.To<T>();
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return item;
-        }
-
         public T SingleOrDefault()
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(1))
             {
-                return SingleOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
         }
 
@@ -319,7 +295,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, 1))
             {
-                return SingleOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
         }
 
@@ -327,7 +303,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, 1))
             {
-                return SingleOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
         }
 
@@ -335,26 +311,15 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, where, 1))
             {
-                return SingleOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
-        }
-
-        private T FirstOrDefault(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            sqlData.ExecuteReader(sqlCommand);
-            T item = sqlData.To<T>();
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return item;
         }
 
         public T FirstOrDefault()
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(1))
             {
-                return FirstOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
         }
 
@@ -362,7 +327,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(where, 1))
             {
-                return FirstOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
         }
 
@@ -370,7 +335,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, 1))
             {
-                return FirstOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
         }
 
@@ -378,25 +343,15 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Select<T>(set, where, 1))
             {
-                return FirstOrDefault(sqlCommand);
+                return sqlData.To<T>(sqlCommand);
             }
-        }
-
-        private int Delete(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return affected;
         }
 
         public int Delete()
         {
             using(SqlCommand sqlCommand = sqlQuery.Delete<T>())
             {
-                return Delete(sqlCommand);
+                return sqlData.ExecuteNonQuery(sqlCommand);
             }
         }
 
@@ -404,25 +359,15 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Delete<T>(where))
             {
-                return Delete(sqlCommand);
+                return sqlData.ExecuteNonQuery(sqlCommand);
             }
-        }
-
-        private int Update(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return affected;
         }
 
         public int Update(T model, Expression<Func<T, object>> set)
         {
             using(SqlCommand sqlCommand = sqlQuery.Update<T>(model, set))
             {
-                return Update(sqlCommand);
+                return sqlData.ExecuteNonQuery(sqlCommand);
             }
         }
 
@@ -430,25 +375,15 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Update<T>(model, set, where))
             {
-                return Update(sqlCommand);
+                return sqlData.ExecuteNonQuery(sqlCommand);
             }
-        }
-
-        private int Insert(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            int affected = sqlData.ExecuteNonQuery(sqlCommand);
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return affected;
         }
 
         public int Insert(T model)
         {
             using(SqlCommand sqlCommand = sqlQuery.Insert<T>(model))
             {
-                return Insert(sqlCommand);
+                return sqlData.ExecuteNonQuery(sqlCommand);
             }
         }
 
@@ -456,25 +391,15 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Insert<T>(model, excludeProperties))
             {
-                return Insert(sqlCommand);
+                return sqlData.ExecuteNonQuery(sqlCommand);
             }
-        }
-
-        private long Count(SqlCommand sqlCommand)
-        {
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Connect();
-            long result = long.Parse((string)sqlData.ExecuteScalar(sqlCommand));
-            if (SqlConfig.connectionType == ConnectionType.DisconnectAfterCompletion)
-                sqlData.Disconnect();
-            return result;
         }
 
         public long Count()
         {
             using (SqlCommand sqlCommand = sqlQuery.Count<T>())
             {
-                return Count(sqlCommand);
+                return long.Parse((string)sqlData.ExecuteScalar(sqlCommand));
             }
         }
 
@@ -482,7 +407,7 @@ namespace MSSQL_Lite.Access
         {
             using (SqlCommand sqlCommand = sqlQuery.Count<T>(where))
             {
-                return Count(sqlCommand);
+                return long.Parse((string)sqlData.ExecuteScalar(sqlCommand));
             }
         }
 
@@ -490,7 +415,7 @@ namespace MSSQL_Lite.Access
         {
             using(SqlCommand sqlCommand = sqlQuery.Count<T>(propertyName, where))
             {
-                return Count(sqlCommand);
+                return long.Parse((string)sqlData.ExecuteScalar(sqlCommand));
             }
         }
     }

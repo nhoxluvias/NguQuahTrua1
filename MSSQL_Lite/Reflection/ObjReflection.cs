@@ -8,7 +8,7 @@ namespace MSSQL_Lite.Reflection
 {
     using CustomAttribute = CustomAttributeData;
     using NamedArgument = CustomAttributeNamedArgument;
-    public class ObjReflection
+    internal class ObjReflection
     {
         public ObjReflection()
         {
