@@ -1,8 +1,8 @@
 ﻿using Common.Web;
 using Data.DAL;
 using Data.DTO;
-using MSSQL_Lite.Access;
-using MSSQL_Lite.Query;
+using MSSQL.Access;
+using MSSQL.Query;
 using System;
 using System.Collections.Generic;
 using System.Data;

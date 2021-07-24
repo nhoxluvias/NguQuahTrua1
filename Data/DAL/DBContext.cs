@@ -1,5 +1,5 @@
-﻿using MSSQL_Lite.Access;
-using MSSQL_Lite.Connection;
+﻿using MSSQL.Access;
+using MSSQL.Connection;
 
 namespace Data.DAL
 {

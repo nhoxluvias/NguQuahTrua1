@@ -109,10 +109,15 @@ namespace Web.Admin.FilmManagement
                     stateString = "Success";
                     stateDetail = "Đã xóa phim thành công, tuy nhiên tập tin video vẫn chưa được xóa";
                 }
-                else
+                else if(delVideo)
                 {
                     stateString = "Success";
                     stateDetail = "Đã xóa phim thành công, tuy nhiên tập tin hình ảnh vẫn chưa được xóa";
+                }
+                else
+                {
+                    stateString = "Success";
+                    stateDetail = "Đã xóa phim thành công, tuy nhiên tập tin hình ảnh và video vẫn chưa được xóa";
                 }
             }
             else if (state == DeletionState.Failed)

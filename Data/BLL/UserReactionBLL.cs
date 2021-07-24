@@ -1,5 +1,6 @@
 ﻿using Data.DAL;
 using System;
+using System.Threading.Tasks;
 
 namespace Data.BLL
 {
@@ -101,6 +102,25 @@ namespace Data.BLL
             int affected = db.UserReactions.Delete(ur => ur.filmId == filmId && ur.userId == userId);
             return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
         }
+
+        public DeletionState DeleteAllUserReaction(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("@'filmId' must not be null");
+
+            int affected = db.UserReactions.Delete(ur => ur.filmId == filmId);
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
+        }
+
+        public async Task<DeletionState> DeleteAllUserReactionAsync(string filmId)
+        {
+            if (string.IsNullOrEmpty(filmId))
+                throw new Exception("@'filmId' must not be null");
+
+            int affected = await db.UserReactions.DeleteAsync(ur => ur.filmId == filmId);
+            return (affected == 0) ? DeletionState.Failed : DeletionState.Success;
+        }
+
 
         public UpdateState UpdateUserReaction(string filmId, string userId, bool isUpvote)
         {

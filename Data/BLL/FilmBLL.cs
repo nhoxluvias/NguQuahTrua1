@@ -2,8 +2,8 @@
 using Common.Web;
 using Data.DAL;
 using Data.DTO;
-using MSSQL_Lite.Access;
-using MSSQL_Lite.Query;
+using MSSQL.Access;
+using MSSQL.Query;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -444,6 +444,7 @@ namespace Data.BLL
             DeletionState state2 = await DeleteAllTagAsync(filmId);
             DeletionState state3 = await DeleteAllDirectorAsync(filmId);
             DeletionState state4 = await DeleteAllCastAsync(filmId);
+            DeletionState state5 = await new UserReactionBLL(this).DeleteAllUserReactionAsync(filmId);
 
             if (state1 == DeletionState.Success && state2 == DeletionState.Success
                 && state3 == DeletionState.Success && state4 == DeletionState.Success)
