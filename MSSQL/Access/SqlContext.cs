@@ -13,7 +13,16 @@ namespace MSSQL.Access
         public SqlContext()
         {
             sqlData = new SqlData();
-            sqlData.Connect();
+            try
+            {
+                sqlData.Connect();
+            }
+            catch (Exception ex)
+            {
+                sqlData.Dispose();
+                sqlData = null;
+                throw new Exception("Database connection error", ex);
+            }
 
             disposedValue = false;
         }
