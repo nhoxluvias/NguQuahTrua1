@@ -54,7 +54,7 @@ namespace MSSQL.Execution
                 return (T)Convert.ChangeType(reader, type);
             }
 
-            using(SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+            using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
             {
                 DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(sqlDataAdapter);
                 return (T)Convert.ChangeType(dataSet, type);

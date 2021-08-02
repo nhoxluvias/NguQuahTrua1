@@ -31,8 +31,12 @@ namespace MSSQL.Execution
                 SqlDataReader reader = await sqlCommand.ExecuteReaderAsync(CommandBehavior.CloseConnection);
                 return (T)Convert.ChangeType(reader, type);
             }
-            DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(new SqlDataAdapter(sqlCommand));
-            return (T)Convert.ChangeType(dataSet, type);
+
+            using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+            {
+                DataSet dataSet = sqlConvert.GetDataSetFromSqlDataAdapter(sqlDataAdapter);
+                return (T)Convert.ChangeType(dataSet, type);
+            }
         }
 
         public async Task<object> ExecuteScalarAsync(SqlCommand sqlCommand)

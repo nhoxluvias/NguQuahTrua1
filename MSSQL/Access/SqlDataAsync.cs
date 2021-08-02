@@ -18,12 +18,10 @@ namespace MSSQL.Access
                     return sqlConvert.ToDictionary(sqlDataReader);
                 }
             }
-            else
+
+            using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
             {
-                using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
-                {
-                    return sqlConvert.ToDictionary(dataSet);
-                }
+                return sqlConvert.ToDictionary(dataSet);
             }
         }
 
@@ -36,12 +34,10 @@ namespace MSSQL.Access
                     return sqlConvert.ToDictionaryList(sqlDataReader);
                 }
             }
-            else
+
+            using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
             {
-                using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
-                {
-                    return sqlConvert.ToDictionaryList(dataSet);
-                }
+                return sqlConvert.ToDictionaryList(dataSet);
             }
         }
 
@@ -54,12 +50,10 @@ namespace MSSQL.Access
                     return sqlConvert.To<T>(sqlDataReader);
                 }
             }
-            else
+
+            using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
             {
-                using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
-                {
-                    return sqlConvert.To<T>(dataSet);
-                }
+                return sqlConvert.To<T>(dataSet);
             }
         }
 
@@ -72,12 +66,10 @@ namespace MSSQL.Access
                     return sqlConvert.ToList<T>(sqlDataReader);
                 }
             }
-            else
+
+            using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
             {
-                using (DataSet dataSet = await ExecuteReaderAsync<DataSet>(sqlCommand))
-                {
-                    return sqlConvert.ToList<T>(dataSet);
-                }
+                return sqlConvert.ToList<T>(dataSet);
             }
         }
 
