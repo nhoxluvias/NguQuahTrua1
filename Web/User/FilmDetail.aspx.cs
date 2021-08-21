@@ -13,8 +13,6 @@ namespace Web.User
 {
     public partial class FilmDetail : System.Web.UI.Page
     {
-     
-        private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
         protected string title_HeadTag;
         protected string keywords_MetaTag;
@@ -25,7 +23,6 @@ namespace Web.User
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL();
             try
             {
                 hyplnkUpvote = GetRouteUrl("User_UpvoteFilm", null);
@@ -39,7 +36,6 @@ namespace Web.User
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            filmBLL.Dispose();
         }
 
         private string GetFilmId()
@@ -69,13 +65,17 @@ namespace Web.User
             }
             else
             {
-                filmBLL.IncludeCategory = true;
-                filmBLL.IncludeTag = true;
-                filmBLL.IncludeCountry = true;
-                filmBLL.IncludeLanguage = true;
-                filmBLL.IncludeDirector = true;
-                filmBLL.IncludeCast = true;
-                filmInfo = await filmBLL.GetFilmAsync(id);
+                using(FilmBLL filmBLL = new FilmBLL())
+                {
+                    filmBLL.IncludeCategory = true;
+                    filmBLL.IncludeTag = true;
+                    filmBLL.IncludeCountry = true;
+                    filmBLL.IncludeLanguage = true;
+                    filmBLL.IncludeDirector = true;
+                    filmBLL.IncludeCast = true;
+                    filmInfo = await filmBLL.GetFilmAsync(id);
+                }
+
                 if(filmInfo == null)
                 {
                     Response.RedirectToRoute("User_Home", null);

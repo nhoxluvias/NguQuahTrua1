@@ -1775,6 +1775,9 @@
     <Content Include="User\CategoryList.aspx" />
     <Content Include="User\FilmDetail.aspx" />
     <Content Include="User\FilmsByCategory.aspx" />
+    <Content Include="User\LiteVersion\FilmDetailLite.aspx" />
+    <Content Include="User\LiteVersion\IndexLite.aspx" />
+    <Content Include="User\LiteVersion\WatchLite.aspx" />
     <Content Include="User\Search.aspx" />
     <Content Include="User\Watch.aspx" />
     <Content Include="User\WatchedList.aspx" />
@@ -2301,6 +2304,34 @@
     <Compile Include="User\Layout\UserLayout.Master.designer.cs">
       <DependentUpon>UserLayout.Master</DependentUpon>
     </Compile>
+    <Compile Include="User\Layout\UserLayoutLite.Master.cs">
+      <DependentUpon>UserLayoutLite.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\Layout\UserLayoutLite.Master.designer.cs">
+      <DependentUpon>UserLayoutLite.Master</DependentUpon>
+    </Compile>
+    <Compile Include="User\LiteVersion\FilmDetailLite.aspx.cs">
+      <DependentUpon>FilmDetailLite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\LiteVersion\FilmDetailLite.aspx.designer.cs">
+      <DependentUpon>FilmDetailLite.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\LiteVersion\IndexLite.aspx.cs">
+      <DependentUpon>IndexLite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\LiteVersion\IndexLite.aspx.designer.cs">
+      <DependentUpon>IndexLite.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\LiteVersion\WatchLite.aspx.cs">
+      <DependentUpon>WatchLite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\LiteVersion\WatchLite.aspx.designer.cs">
+      <DependentUpon>WatchLite.aspx</DependentUpon>
+    </Compile>
     <Compile Include="User\Search.aspx.cs">
       <DependentUpon>Search.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2401,6 +2432,7 @@
     <Content Include="user_assets\fonts\fontawesome-webfont.eot" />
     <Content Include="user_assets\fonts\fontawesome-webfont.ttf" />
     <Content Include="user_assets\fonts\fontawesome-webfont.woff" />
+    <Content Include="User\Layout\UserLayoutLite.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -736,7 +736,7 @@ namespace Data.BLL
                 return UpdateState.Failed;
 
             int affected = db.Films.Update(new Film { views = film.views + 1 }, f => new { f.views }, f => f.ID == filmId);
-            return UpdateState.Success;
+            return (affected == 0) ? UpdateState.Failed : UpdateState.Success;
         }
 
         public async Task<long> CountAllAsync()

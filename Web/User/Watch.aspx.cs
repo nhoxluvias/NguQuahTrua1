@@ -13,7 +13,6 @@ namespace Web.User
 {
     public partial class Watch : System.Web.UI.Page
     {
-        private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
         protected string title_HeadTag;
         protected string keywords_MetaTag;
@@ -22,7 +21,6 @@ namespace Web.User
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL();
             try
             {
                 hyplnkIncreaseView = GetRouteUrl("User_IncreaseView", null);
@@ -51,7 +49,6 @@ namespace Web.User
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            filmBLL.Dispose();
         }
 
         private string GetFilmId()
@@ -71,8 +68,12 @@ namespace Web.User
             }
             else
             {
-                filmBLL.IncludeTag = true;
-                filmInfo = await filmBLL.GetFilmAsync(id);
+                using(FilmBLL filmBLL = new FilmBLL())
+                {
+                    filmBLL.IncludeTag = true;
+                    filmInfo = await filmBLL.GetFilmAsync(id);
+                }
+
                 if (filmInfo == null)
                 {
                     Response.RedirectToRoute("User_Home", null);

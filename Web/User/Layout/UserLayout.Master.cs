@@ -9,7 +9,6 @@ namespace Web.User.Layout
 {
     public partial class UserLayout : System.Web.UI.MasterPage
     {
-        private CategoryBLL categoryBLL;
         protected List<CategoryInfo> categories;
         protected string hyplnkSearch;
         protected string hyplnkWatchedList;
@@ -17,7 +16,6 @@ namespace Web.User.Layout
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL();
             try
             {
                 object obj = Session["userSession"];
@@ -41,20 +39,21 @@ namespace Web.User.Layout
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            categoryBLL.Dispose();
         }
 
         private void GetCategories()
         {
-            categories = categoryBLL.GetCategories()
-                .Select(c => new CategoryInfo { 
-                    ID = c.ID, 
-                    name = c.name, 
+            using(CategoryBLL categoryBLL = new CategoryBLL())
+            {
+                categories = categoryBLL.GetCategories()
+                .Select(c => new CategoryInfo
+                {
+                    ID = c.ID,
+                    name = c.name,
                     description = c.description,
                     url = GetRouteUrl("User_FilmsByCategory", new { slug = c.name.TextToUrl(), id = c.ID })
                 }).ToList();
+            }
         }
-
-
     }
 }

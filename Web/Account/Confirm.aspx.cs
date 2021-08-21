@@ -11,12 +11,10 @@ namespace Web.Account
 {
     public partial class Confirm : System.Web.UI.Page
     {
-        private UserBLL userBLL;
         private CustomValidation customValidation;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL();
             customValidation = new CustomValidation();
             try
             {
@@ -43,7 +41,6 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            userBLL.Dispose();
         }
 
         private void InitHyperlink()
@@ -95,7 +92,11 @@ namespace Web.Account
         {
             if (IsReConfirm())
             {
-                UserInfo userInfo = await userBLL.GetUserAsync(GetUserId());
+                UserInfo userInfo;
+                using(UserBLL userBLL = new UserBLL())
+                {
+                    userInfo = await userBLL.GetUserAsync(GetUserId());
+                }
 
                 if (userInfo == null)
                     Response.RedirectToRoute("Notification_Error");
@@ -130,7 +131,12 @@ namespace Web.Account
             if (IsValidData() && CheckConfirmCode())
             {
                 string userId = GetUserId();
-                UserBLL.ActiveUserState activeUserState = await userBLL.ActiveUserAsync(userId);
+                UserBLL.ActiveUserState activeUserState;
+                using(UserBLL userBLL = new UserBLL())
+                {
+                    activeUserState = await userBLL.ActiveUserAsync(userId);
+                }
+
                 Session["confirmCode"] = null;
                 Session["confirmToken"] = null;
                 if (activeUserState == UserBLL.ActiveUserState.Success)

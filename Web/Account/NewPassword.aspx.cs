@@ -9,12 +9,10 @@ namespace Web.Account
 {
     public partial class NewPassword : System.Web.UI.Page
     {
-        private UserBLL userBLL;
         private CustomValidation customValidation;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL();
             customValidation = new CustomValidation();
             try
             {
@@ -41,7 +39,6 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            userBLL.Dispose();
         }
 
         private void InitValidation()
@@ -93,7 +90,12 @@ namespace Web.Account
             {
                 string userId = GetUserId();
                 string password = GetNewPassword();
-                UserBLL.CreateNewPasswordState createNewPasswordState = await userBLL.CreateNewPasswordAsync(userId, password);
+                UserBLL.CreateNewPasswordState createNewPasswordState;
+                using(UserBLL userBLL = new UserBLL())
+                {
+                    createNewPasswordState = await userBLL.CreateNewPasswordAsync(userId, password);
+                }
+
                 Session["newPasswordToken"] = null;
                 if (createNewPasswordState == UserBLL.CreateNewPasswordState.Success)
                     Response.RedirectToRoute("Account_Login", null);

@@ -12,12 +12,11 @@ namespace Web.User
 {
     public partial class Search : System.Web.UI.Page
     {
-        private FilmBLL filmBLL;
         protected List<FilmInfo> filmInfos;
         protected string keyword;
+
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL();
             try
             {
                 string searchContent = Request.QueryString["input"];
@@ -28,7 +27,6 @@ namespace Web.User
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            filmBLL.Dispose();
         }
 
         public async Task SearchFilms(string searchContent)
@@ -40,7 +38,11 @@ namespace Web.User
             }
             else
             {
-                filmInfos = await filmBLL.SeachFilmsAsync(searchContent);
+                using(FilmBLL filmBLL = new FilmBLL())
+                {
+                    filmInfos = await filmBLL.SeachFilmsAsync(searchContent);
+                }
+
                 foreach(FilmInfo filmInfo in filmInfos)
                 {
                     if (string.IsNullOrEmpty(filmInfo.thumbnail))

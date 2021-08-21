@@ -1,7 +1,5 @@
 ﻿using Data.BLL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 
 namespace Web.User
@@ -15,7 +13,6 @@ namespace Web.User
         public void ProcessRequest(HttpContext context)
         {
             context.Response.ContentType = "text/plain";
-            FilmBLL filmBLL = new FilmBLL();
 
             try
             {
@@ -26,18 +23,20 @@ namespace Web.User
                 }
                 else
                 {
-                    UpdateState state = filmBLL.IncreaseView(filmId);
-                    if (state == UpdateState.Success)
-                        context.Response.Write("Đã tăng lượt xem");
-                    else
-                        context.Response.Write("Lỗi tăng lượt xem");
+                    using (FilmBLL filmBLL = new FilmBLL())
+                    {
+                        UpdateState state = filmBLL.IncreaseView(filmId);
+                        if (state == UpdateState.Success)
+                            context.Response.Write("Đã tăng lượt xem");
+                        else
+                            context.Response.Write("Lỗi tăng lượt xem");
+                    }
                 }
             }
             catch (Exception ex)
             {
                 context.Response.Write(string.Format("Đã xảy ra ngoại lệ: {0}", ex.Message));
             }
-            filmBLL.Dispose();
         }
 
         public bool IsReusable

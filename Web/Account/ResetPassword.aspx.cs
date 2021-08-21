@@ -10,14 +10,12 @@ namespace Web.Account
 {
     public partial class ResetPassword : System.Web.UI.Page
     {
-        private UserBLL userBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL();
             customValidation = new CustomValidation();
             try
             {
@@ -32,7 +30,6 @@ namespace Web.Account
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            userBLL.Dispose();
         }
 
         private void InitValidation()
@@ -68,7 +65,12 @@ namespace Web.Account
             if (IsValidData())
             {
                 string email = GetEmailAddress();
-                UserInfo userInfo = await userBLL.GetUserByEmailAsync(email);
+                UserInfo userInfo;
+                using(UserBLL userBLL = new UserBLL())
+                {
+                    userInfo = await userBLL.GetUserByEmailAsync(email);
+                }
+
                 if(userInfo == null)
                 {
                     enableShowResult = true;

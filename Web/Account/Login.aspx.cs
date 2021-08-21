@@ -10,14 +10,12 @@ namespace Web.Account
 {
     public partial class Login : System.Web.UI.Page
     {
-        private UserBLL userBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            userBLL = new UserBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateDetail = null;
@@ -37,12 +35,11 @@ namespace Web.Account
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            userBLL.Dispose();
         }
 
         private void InitHyperLink()
@@ -105,41 +102,44 @@ namespace Web.Account
             if (IsValidData())
             {
                 UserLogin userLogin = GetUserLogin();
-                UserBLL.LoginState loginState = await userBLL.LoginAsync(userLogin);
-                if(loginState == UserBLL.LoginState.NotExists || loginState == UserBLL.LoginState.WrongPassword)
+                using (UserBLL userBLL = new UserBLL())
                 {
-                    if (loginState == UserBLL.LoginState.NotExists)
-                        stateDetail = "Không tồn tại tài khoản";
-                    else
-                        stateDetail = "Mật khẩu bạn nhập vào không đúng";
-
-                    enableShowResult = true;
-                }
-                else
-                {
-                    userBLL.IncludeRole = true;
-                    UserInfo userInfo = await userBLL.GetUserByUserNameAsync(userLogin.userName);
-                    if (loginState == UserBLL.LoginState.Success)
+                    UserBLL.LoginState loginState = await userBLL.LoginAsync(userLogin);
+                    if (loginState == UserBLL.LoginState.NotExists || loginState == UserBLL.LoginState.WrongPassword)
                     {
-                        Session["userSession"] = new UserSession { userId = userInfo.ID, username = userInfo.userName, role = userInfo.Role.name };
-                        if (userInfo.Role.name == "User")
-                            Response.RedirectToRoute("User_Home", null);
+                        if (loginState == UserBLL.LoginState.NotExists)
+                            stateDetail = "Không tồn tại tài khoản";
                         else
-                            Response.RedirectToRoute("Admin_Overview", null);
+                            stateDetail = "Mật khẩu bạn nhập vào không đúng";
+
+                        enableShowResult = true;
                     }
                     else
                     {
-                        ConfirmCode confirmCode = new ConfirmCode();
-                        Session["confirmCode"] = confirmCode.Send(userInfo.email);
-                        string confirmToken = confirmCode.CreateToken();
-                        Session["confirmToken"] = confirmToken;
-
-                        Response.RedirectToRoute("Account_Confirm", new
+                        userBLL.IncludeRole = true;
+                        UserInfo userInfo = await userBLL.GetUserByUserNameAsync(userLogin.userName);
+                        if (loginState == UserBLL.LoginState.Success)
                         {
-                            userId = userInfo.ID,
-                            confirmToken = confirmToken,
-                            type = "login_unconfirmed"
-                        });
+                            Session["userSession"] = new UserSession { userId = userInfo.ID, username = userInfo.userName, role = userInfo.Role.name };
+                            if (userInfo.Role.name == "User")
+                                Response.RedirectToRoute("User_Home", null);
+                            else
+                                Response.RedirectToRoute("Admin_Overview", null);
+                        }
+                        else
+                        {
+                            ConfirmCode confirmCode = new ConfirmCode();
+                            Session["confirmCode"] = confirmCode.Send(userInfo.email);
+                            string confirmToken = confirmCode.CreateToken();
+                            Session["confirmToken"] = confirmToken;
+
+                            Response.RedirectToRoute("Account_Confirm", new
+                            {
+                                userId = userInfo.ID,
+                                confirmToken = confirmToken,
+                                type = "login_unconfirmed"
+                            });
+                        }
                     }
                 }
             }
