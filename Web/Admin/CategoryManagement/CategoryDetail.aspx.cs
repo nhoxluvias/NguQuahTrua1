@@ -8,13 +8,11 @@ namespace Web.Admin.CategoryManagement
 {
     public partial class CategoryDetail : System.Web.UI.Page
     {
-        private CategoryBLL categoryBLL;
         protected CategoryInfo categoryInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL();
             enableShowDetail = false;
             try
             {
@@ -33,7 +31,6 @@ namespace Web.Admin.CategoryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            categoryBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -62,9 +59,13 @@ namespace Web.Admin.CategoryManagement
             }
             else
             {
-                categoryBLL.IncludeDescription = true;
-                categoryBLL.IncludeTimestamp = true;
-                categoryInfo = await categoryBLL.GetCategoryAsync(id);
+                using(CategoryBLL categoryBLL = new CategoryBLL())
+                {
+                    categoryBLL.IncludeDescription = true;
+                    categoryBLL.IncludeTimestamp = true;
+                    categoryInfo = await categoryBLL.GetCategoryAsync(id);
+                }
+
                 if (categoryInfo == null)
                     Response.RedirectToRoute("Admin_CategoryList", null);
                 else

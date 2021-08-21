@@ -9,7 +9,6 @@ namespace Web.Admin.RoleManagement
 {
     public partial class CreateRole : System.Web.UI.Page
     {
-        private RoleBLL roleBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.RoleManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            roleBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -93,7 +90,12 @@ namespace Web.Admin.RoleManagement
             if (IsValidData())
             {
                 RoleCreation role = GetRoleCreation();
-                CreationState state = await roleBLL.CreateRoleAsync(role);
+                CreationState state;
+                using(RoleBLL roleBLL = new RoleBLL())
+                {
+                    state = await roleBLL.CreateRoleAsync(role);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

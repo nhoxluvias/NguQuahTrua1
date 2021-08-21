@@ -9,7 +9,6 @@ namespace Web.Admin.CountryManagement
 {
     public partial class CreateCountry : System.Web.UI.Page
     {
-        private CountryBLL countryBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.CountryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            countryBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -94,7 +91,12 @@ namespace Web.Admin.CountryManagement
             if (IsValidData())
             {
                 CountryCreation country = GetCountryCreation();
-                CreationState state = await countryBLL.CreateCountryAsync(country);
+                CreationState state;
+                using(CountryBLL countryBLL = new CountryBLL())
+                {
+                    state = await countryBLL.CreateCountryAsync(country);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

@@ -1,25 +1,19 @@
 ﻿using Data.BLL;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Admin.LanguageManagement
 {
     public partial class LanguageDetail : System.Web.UI.Page
     {
-        private LanguageBLL languageBLL;
         protected LanguageInfo languageInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL();
             enableShowDetail = false;
             try
             {
@@ -38,7 +32,6 @@ namespace Web.Admin.LanguageManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            languageBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -67,9 +60,13 @@ namespace Web.Admin.LanguageManagement
             }
             else
             {
-                languageBLL.IncludeDescription = true;
-                languageBLL.IncludeTimestamp = true;
-                languageInfo = await languageBLL.GetLanguageAsync(id);
+                using(LanguageBLL languageBLL = new LanguageBLL())
+                {
+                    languageBLL.IncludeDescription = true;
+                    languageBLL.IncludeTimestamp = true;
+                    languageInfo = await languageBLL.GetLanguageAsync(id);
+                }
+
                 if (languageInfo == null)
                     Response.RedirectToRoute("Admin_LanguageList", null);
                 else

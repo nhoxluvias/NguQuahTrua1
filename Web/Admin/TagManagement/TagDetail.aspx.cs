@@ -9,13 +9,11 @@ namespace Web.Admin.TagManagement
 {
     public partial class TagDetail : System.Web.UI.Page
     {
-        private TagBLL tagBLL;
         protected TagInfo tagInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            tagBLL = new TagBLL();
             enableShowDetail = false;
             try
             {
@@ -34,7 +32,6 @@ namespace Web.Admin.TagManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            tagBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -63,9 +60,13 @@ namespace Web.Admin.TagManagement
             }
             else
             {
-                tagBLL.IncludeDescription = true;
-                tagBLL.IncludeTimestamp = true;
-                tagInfo = await tagBLL.GetTagAsync(id);
+                using(TagBLL tagBLL = new TagBLL())
+                {
+                    tagBLL.IncludeDescription = true;
+                    tagBLL.IncludeTimestamp = true;
+                    tagInfo = await tagBLL.GetTagAsync(id);
+                }
+                
                 if (tagInfo == null)
                     Response.RedirectToRoute("Admin_TagList", null);
                 else

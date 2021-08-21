@@ -9,13 +9,11 @@ namespace Web.Admin.CountryManagement
 {
     public partial class CountryDetail : System.Web.UI.Page
     {
-        private CountryBLL countryBLL;
         protected CountryInfo countryInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL();
             enableShowDetail = false;
             try
             {
@@ -34,7 +32,6 @@ namespace Web.Admin.CountryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            countryBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -63,9 +60,13 @@ namespace Web.Admin.CountryManagement
             }
             else
             {
-                countryBLL.IncludeDescription = true;
-                countryBLL.IncludeTimestamp = true;
-                countryInfo = await countryBLL.GetCountryAsync(id);
+                using(CountryBLL countryBLL = new CountryBLL())
+                {
+                    countryBLL.IncludeDescription = true;
+                    countryBLL.IncludeTimestamp = true;
+                    countryInfo = await countryBLL.GetCountryAsync(id);
+                }
+                
                 if (countryInfo == null)
                     Response.RedirectToRoute("Admin_CountryList", null);
                 else

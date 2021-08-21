@@ -9,7 +9,6 @@ namespace Web.Admin.CastManagement
 {
     public partial class CreateCast : System.Web.UI.Page
     {
-        private CastBLL castBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.CastManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            castBLL = new CastBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.CastManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            castBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -94,7 +91,12 @@ namespace Web.Admin.CastManagement
             if (IsValidData())
             {
                 CastCreation cast = GetCastCreation();
-                CreationState state = await castBLL.CreateCastAsync(cast);
+                CreationState state;
+                using(CastBLL castBLL = new CastBLL())
+                {
+                    state = await castBLL.CreateCastAsync(cast);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

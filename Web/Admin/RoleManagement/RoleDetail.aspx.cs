@@ -9,13 +9,11 @@ namespace Web.Admin.RoleManagement
 {
     public partial class RoleDetail : System.Web.UI.Page
     {
-        private RoleBLL roleBLL;
         protected RoleInfo roleInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL();
             enableShowDetail = false;
             try
             {
@@ -34,7 +32,6 @@ namespace Web.Admin.RoleManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            roleBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -63,8 +60,12 @@ namespace Web.Admin.RoleManagement
             }
             else
             {
-                roleBLL.IncludeTimestamp = true;
-                roleInfo = await roleBLL.GetRoleAsync(id);
+                using(RoleBLL roleBLL = new RoleBLL())
+                {
+                    roleBLL.IncludeTimestamp = true;
+                    roleInfo = await roleBLL.GetRoleAsync(id);
+                }
+
                 if (roleInfo == null)
                     Response.RedirectToRoute("Admin_RoleList", null);
                 else

@@ -9,7 +9,6 @@ namespace Web.Admin.DirectorManagement
 {
     public partial class CreateDirector : System.Web.UI.Page
     {
-        private DirectorBLL directorBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.DirectorManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            directorBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -94,7 +91,12 @@ namespace Web.Admin.DirectorManagement
             if (IsValidData())
             {
                 DirectorCreation director = GetDirectorCreation();
-                CreationState state = await directorBLL.CreateDirectorAsync(director);
+                CreationState state;
+                using(DirectorBLL directorBLL = new DirectorBLL())
+                {
+                    state = await directorBLL.CreateDirectorAsync(director);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

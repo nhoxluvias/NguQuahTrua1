@@ -9,7 +9,6 @@ namespace Web.Admin.LanguageManagement
 {
     public partial class CreateLanguage : System.Web.UI.Page
     {
-        private LanguageBLL languageBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.LanguageManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            languageBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -94,7 +91,12 @@ namespace Web.Admin.LanguageManagement
             if (IsValidData())
             {
                 LanguageCreation language = GetLanguageCreation();
-                CreationState state = await languageBLL.CreateLanguageAsync(language);
+                CreationState state;
+                using(LanguageBLL languageBLL = new LanguageBLL())
+                {
+                    state = await languageBLL.CreateLanguageAsync(language);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

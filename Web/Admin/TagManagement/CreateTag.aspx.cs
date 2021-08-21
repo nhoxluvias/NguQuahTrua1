@@ -9,7 +9,6 @@ namespace Web.Admin.TagManagement
 {
     public partial class CreateTag : System.Web.UI.Page
     {
-        private TagBLL tagBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            tagBLL = new TagBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.TagManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            tagBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -94,7 +91,12 @@ namespace Web.Admin.TagManagement
             if (IsValidData())
             {
                 TagCreation tag = GetTagCreation();
-                CreationState state = await tagBLL.CreateTagAsync(tag);
+                CreationState state;
+                using(TagBLL tagBLL = new TagBLL())
+                {
+                    state = await tagBLL.CreateTagAsync(tag);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

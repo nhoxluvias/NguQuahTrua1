@@ -9,7 +9,6 @@ namespace Web.Admin.CategoryManagement
 {
     public partial class CreateCategory : System.Web.UI.Page
     {
-        private CategoryBLL categoryBLL;
         private CustomValidation customValidation;
         protected bool enableShowResult;
         protected string stateString;
@@ -17,7 +16,6 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL();
             customValidation = new CustomValidation();
             enableShowResult = false;
             stateString = null;
@@ -44,7 +42,6 @@ namespace Web.Admin.CategoryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            categoryBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -94,7 +91,12 @@ namespace Web.Admin.CategoryManagement
             if (IsValidData())
             {
                 CategoryCreation category = GetCategoryCreation();
-                CreationState state = await categoryBLL.CreateCategoryAsync(category);
+                CreationState state;
+                using(CategoryBLL categoryBLL = new CategoryBLL())
+                {
+                    state = await categoryBLL.CreateCategoryAsync(category);
+                }
+
                 if (state == CreationState.Success)
                 {
                     stateString = "Success";

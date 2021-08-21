@@ -9,13 +9,11 @@ namespace Web.Admin.DirectorManagement
 {
     public partial class DirectorDetail : System.Web.UI.Page
     {
-        private DirectorBLL directorBLL;
         protected DirectorInfo directorInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL();
             enableShowDetail = false;
             try
             {
@@ -34,7 +32,6 @@ namespace Web.Admin.DirectorManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            directorBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -63,9 +60,13 @@ namespace Web.Admin.DirectorManagement
             }
             else
             {
-                directorBLL.IncludeDescription = true;
-                directorBLL.IncludeTimestamp = true;
-                directorInfo = await directorBLL.GetDirectorAsync(id);
+                using(DirectorBLL directorBLL = new DirectorBLL())
+                {
+                    directorBLL.IncludeDescription = true;
+                    directorBLL.IncludeTimestamp = true;
+                    directorInfo = await directorBLL.GetDirectorAsync(id);
+                }
+
                 if (directorInfo == null)
                     Response.RedirectToRoute("Admin_DirectorList", null);
                 else

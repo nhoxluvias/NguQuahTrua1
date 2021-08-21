@@ -9,13 +9,11 @@ namespace Web.Admin.CastManagement
 {
     public partial class CastDetail : System.Web.UI.Page
     {
-        private CastBLL castBLL;
         protected CastInfo castInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            castBLL = new CastBLL();
             enableShowDetail = false;
             try
             {
@@ -34,7 +32,6 @@ namespace Web.Admin.CastManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            castBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -63,9 +60,13 @@ namespace Web.Admin.CastManagement
             }
             else
             {
-                castBLL.IncludeDescription = true;
-                castBLL.IncludeTimestamp = true;
-                castInfo = await castBLL.GetCastAsync(id);
+                using(CastBLL castBLL = new CastBLL())
+                {
+                    castBLL.IncludeDescription = true;
+                    castBLL.IncludeTimestamp = true;
+                    castInfo = await castBLL.GetCastAsync(id);
+                }
+
                 if (castInfo == null)
                     Response.RedirectToRoute("Admin_CastList", null);
                 else

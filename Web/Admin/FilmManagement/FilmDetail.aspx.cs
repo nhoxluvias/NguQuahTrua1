@@ -11,13 +11,11 @@ namespace Web.Admin.FilmManagement
 {
     public partial class FilmDetail : System.Web.UI.Page
     {
-        private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
         protected bool enableShowDetail;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL();
             enableShowDetail = false;
             try
             {
@@ -42,7 +40,6 @@ namespace Web.Admin.FilmManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            filmBLL.Dispose();
         }
 
         private bool CheckLoggedIn()
@@ -71,14 +68,18 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
-                filmBLL.IncludeCategory = true;
-                filmBLL.IncludeTag = true;
-                filmBLL.IncludeLanguage = true;
-                filmBLL.IncludeCountry = true;
-                filmBLL.IncludeDirector = true;
-                filmBLL.IncludeCast = true;
-                filmBLL.IncludeTimestamp = true;
-                filmInfo = await filmBLL.GetFilmAsync(id);
+                using(FilmBLL filmBLL = new FilmBLL())
+                {
+                    filmBLL.IncludeCategory = true;
+                    filmBLL.IncludeTag = true;
+                    filmBLL.IncludeLanguage = true;
+                    filmBLL.IncludeCountry = true;
+                    filmBLL.IncludeDirector = true;
+                    filmBLL.IncludeCast = true;
+                    filmBLL.IncludeTimestamp = true;
+                    filmInfo = await filmBLL.GetFilmAsync(id);
+                }
+
                 if (filmInfo == null)
                 {
                     Response.RedirectToRoute("Admin_FilmList", null);
