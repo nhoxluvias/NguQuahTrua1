@@ -9,7 +9,6 @@ namespace Web.Admin.LanguageManagement
 {
     public partial class DeleteLanguage : System.Web.UI.Page
     {
-        private LanguageBLL languageBLL;
         protected LanguageInfo languageInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -18,7 +17,6 @@ namespace Web.Admin.LanguageManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            languageBLL = new LanguageBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -32,18 +30,15 @@ namespace Web.Admin.LanguageManagement
                     if (!IsPostBack)
                     {
                         await GetLanguageInfo();
-                        languageBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    languageBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                languageBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -76,7 +71,11 @@ namespace Web.Admin.LanguageManagement
             }
             else
             {
-                languageInfo = await languageBLL.GetLanguageAsync(id);
+                using(LanguageBLL languageBLL = new LanguageBLL())
+                {
+                    languageInfo = await languageBLL.GetLanguageAsync(id);
+                }
+                
                 if (languageInfo == null)
                     Response.RedirectToRoute("Admin_LanguageList", null);
                 else
@@ -87,7 +86,12 @@ namespace Web.Admin.LanguageManagement
         private async Task DeleteLanguageInfo()
         {
             int id = GetLanguageId();
-            DeletionState state = await languageBLL.DeleteLanguageAsync(id);
+            DeletionState state;
+            using(LanguageBLL languageBLL = new LanguageBLL())
+            {
+                state = await languageBLL.DeleteLanguageAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -117,7 +121,6 @@ namespace Web.Admin.LanguageManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            languageBLL.Dispose();
         }
     }
 }

@@ -13,7 +13,6 @@ namespace Web.Admin.FilmManagement
 {
     public partial class DeleteFilm : System.Web.UI.Page
     {
-        private FilmBLL filmBLL;
         protected FilmInfo filmInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -22,7 +21,6 @@ namespace Web.Admin.FilmManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            filmBLL = new FilmBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -36,18 +34,15 @@ namespace Web.Admin.FilmManagement
                     if (!IsPostBack)
                     {
                         await GetFilmInfo();
-                        filmBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    filmBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                filmBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -80,7 +75,11 @@ namespace Web.Admin.FilmManagement
             }
             else
             {
-                filmInfo = await filmBLL.GetFilmAsync(id);
+                using(FilmBLL filmBLL = new FilmBLL())
+                {
+                    filmInfo = await filmBLL.GetFilmAsync(id);
+                }
+
                 if (filmInfo == null)
                     Response.RedirectToRoute("Admin_FilmList", null);
                 else
@@ -91,9 +90,13 @@ namespace Web.Admin.FilmManagement
         private async Task DeleteFilmInfo()
         {
             string id = GetFilmId();
-            FilmInfo filmInfo = await filmBLL.GetFilmAsync(id);
-
-            DeletionState state = await filmBLL.DeleteFilmAsync(id);
+            DeletionState state;
+            using (FilmBLL filmBLL = new FilmBLL())
+            {
+                filmInfo = await filmBLL.GetFilmAsync(id);
+                state = await filmBLL.DeleteFilmAsync(id);
+            }
+            
             if (state == DeletionState.Success)
             {
                 FileUpload fileUpload = new FileUpload();
@@ -144,7 +147,6 @@ namespace Web.Admin.FilmManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            filmBLL.Dispose();
         }
     }
 }

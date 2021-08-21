@@ -9,7 +9,6 @@ namespace Web.Admin.CastManagement
 {
     public partial class DeleteCast : System.Web.UI.Page
     {
-        private CastBLL castBLL;
         protected CastInfo castInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -18,7 +17,6 @@ namespace Web.Admin.CastManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            castBLL = new CastBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -32,18 +30,15 @@ namespace Web.Admin.CastManagement
                     if (!IsPostBack)
                     {
                         await GetCastInfo();
-                        castBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    castBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                castBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -76,7 +71,11 @@ namespace Web.Admin.CastManagement
             }
             else
             {
-                castInfo = await castBLL.GetCastAsync(id);
+                using(CastBLL castBLL = new CastBLL())
+                {
+                    castInfo = await castBLL.GetCastAsync(id);
+                }
+
                 if (castInfo == null)
                     Response.RedirectToRoute("Admin_CastList", null);
                 else
@@ -87,7 +86,12 @@ namespace Web.Admin.CastManagement
         private async Task DeleteCastInfo()
         {
             int id = GetCastId();
-            DeletionState state = await castBLL.DeleteCastAsync(id);
+            DeletionState state;
+            using(CastBLL castBLL = new CastBLL())
+            {
+                state = await castBLL.DeleteCastAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -117,7 +121,6 @@ namespace Web.Admin.CastManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            castBLL.Dispose();
         }
     }
 }

@@ -1,19 +1,14 @@
 ﻿using Data.BLL;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using Web.Models;
 
 namespace Web.Admin.RoleManagement
 {
     public partial class DeleteRole : System.Web.UI.Page
     {
-        private RoleBLL roleBLL;
         protected RoleInfo roleInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -22,7 +17,6 @@ namespace Web.Admin.RoleManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            roleBLL = new RoleBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -36,18 +30,15 @@ namespace Web.Admin.RoleManagement
                     if (!IsPostBack)
                     {
                         await GetRoleInfo();
-                        roleBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    roleBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                roleBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -80,7 +71,11 @@ namespace Web.Admin.RoleManagement
             }
             else
             {
-                roleInfo = await roleBLL.GetRoleAsync(id);
+                using (RoleBLL roleBLL = new RoleBLL())
+                {
+                    roleInfo = await roleBLL.GetRoleAsync(id);
+                }
+
                 if (roleInfo == null)
                     Response.RedirectToRoute("Admin_RoleList", null);
                 else
@@ -91,7 +86,12 @@ namespace Web.Admin.RoleManagement
         private async Task DeleteRoleInfo()
         {
             string id = GetRoleId();
-            DeletionState state = await roleBLL.DeleteRoleAsync(id);
+            DeletionState state;
+            using (RoleBLL roleBLL = new RoleBLL())
+            {
+                state = await roleBLL.DeleteRoleAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -116,12 +116,11 @@ namespace Web.Admin.RoleManagement
             {
                 await DeleteRoleInfo();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            roleBLL.Dispose();
         }
     }
 }

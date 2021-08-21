@@ -9,7 +9,6 @@ namespace Web.Admin.DirectorManagement
 {
     public partial class DeleteDirector : System.Web.UI.Page
     {
-        private DirectorBLL directorBLL;
         protected DirectorInfo directorInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -18,14 +17,12 @@ namespace Web.Admin.DirectorManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            directorBLL = new DirectorBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
             stateDetail = null;
             try
             {
-                
                 hyplnkList.NavigateUrl = GetRouteUrl("Admin_DirectorList", null);
 
                 if (CheckLoggedIn())
@@ -33,18 +30,15 @@ namespace Web.Admin.DirectorManagement
                     if (!IsPostBack)
                     {
                         await GetDirectorInfo();
-                        directorBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    directorBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                directorBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -77,7 +71,11 @@ namespace Web.Admin.DirectorManagement
             }
             else
             {
-                directorInfo = await directorBLL.GetDirectorAsync(id);
+                using(DirectorBLL directorBLL = new DirectorBLL())
+                {
+                    directorInfo = await directorBLL.GetDirectorAsync(id);
+                }
+                
                 if (directorInfo == null)
                     Response.RedirectToRoute("Admin_DirectorList", null);
                 else
@@ -88,7 +86,12 @@ namespace Web.Admin.DirectorManagement
         private async Task DeleteDirectorInfo()
         {
             int id = GetDirectorId();
-            DeletionState state = await directorBLL.DeleteDirectorAsync(id);
+            DeletionState state;
+            using(DirectorBLL directorBLL = new DirectorBLL())
+            {
+                state = await directorBLL.DeleteDirectorAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -118,7 +121,6 @@ namespace Web.Admin.DirectorManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            directorBLL.Dispose();
         }
     }
 }

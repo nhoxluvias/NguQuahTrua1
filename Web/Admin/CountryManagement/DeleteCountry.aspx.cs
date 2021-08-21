@@ -13,7 +13,6 @@ namespace Web.Admin.CountryManagement
 {
     public partial class DeleteCountry : System.Web.UI.Page
     {
-        private CountryBLL countryBLL;
         protected CountryInfo countryInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -22,7 +21,6 @@ namespace Web.Admin.CountryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            countryBLL = new CountryBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -36,18 +34,15 @@ namespace Web.Admin.CountryManagement
                     if (!IsPostBack)
                     {
                         await GetCountryInfo();
-                        countryBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    countryBLL.Dispose();
                 }   
             }
             catch (Exception ex)
             {
-                countryBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -80,7 +75,11 @@ namespace Web.Admin.CountryManagement
             }
             else
             {
-                countryInfo = await countryBLL.GetCountryAsync(id);
+                using(CountryBLL countryBLL = new CountryBLL())
+                {
+                    countryInfo = await countryBLL.GetCountryAsync(id);
+                }
+                
                 if (countryInfo == null)
                     Response.RedirectToRoute("Admin_CountryList", null);
                 else
@@ -91,7 +90,12 @@ namespace Web.Admin.CountryManagement
         private async Task DeleteCountryInfo()
         {
             int id = GetCountryId();
-            DeletionState state = await countryBLL.DeleteCountryAsync(id);
+            DeletionState state;
+            using(CountryBLL countryBLL = new CountryBLL())
+            {
+                state = await countryBLL.DeleteCountryAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -121,7 +125,6 @@ namespace Web.Admin.CountryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            countryBLL.Dispose();
         }
     }
 }

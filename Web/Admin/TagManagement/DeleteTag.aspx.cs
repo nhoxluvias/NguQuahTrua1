@@ -9,7 +9,6 @@ namespace Web.Admin.TagManagement
 {
     public partial class DeleteTag : System.Web.UI.Page
     {
-        private TagBLL tagBLL;
         protected TagInfo tagInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -18,7 +17,6 @@ namespace Web.Admin.TagManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            tagBLL = new TagBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -32,18 +30,15 @@ namespace Web.Admin.TagManagement
                     if (!IsPostBack)
                     {
                         await GetTagInfo();
-                        tagBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    tagBLL.Dispose();
                 }
             }
             catch (Exception ex)
             {
-                tagBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -76,7 +71,11 @@ namespace Web.Admin.TagManagement
             }
             else
             {
-                tagInfo = await tagBLL.GetTagAsync(id);
+                using (TagBLL tagBLL = new TagBLL())
+                {
+                    tagInfo = await tagBLL.GetTagAsync(id);
+                }
+
                 if (tagInfo == null)
                     Response.RedirectToRoute("Admin_TagList", null);
                 else
@@ -87,7 +86,12 @@ namespace Web.Admin.TagManagement
         private async Task DeleteTagInfo()
         {
             long id = GetTagId();
-            DeletionState state = await tagBLL.DeleteTagAsync(id);
+            DeletionState state;
+            using (TagBLL tagBLL = new TagBLL())
+            {
+                state = await tagBLL.DeleteTagAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -117,7 +121,6 @@ namespace Web.Admin.TagManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            tagBLL.Dispose();
         }
     }
 }

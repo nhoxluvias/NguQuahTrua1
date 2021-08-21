@@ -9,7 +9,6 @@ namespace Web.Admin.CategoryManagement
 {
     public partial class DeleteCategory : System.Web.UI.Page
     {
-        private CategoryBLL categoryBLL;
         protected CategoryInfo categoryInfo;
         protected bool enableShowInfo;
         protected bool enableShowResult;
@@ -18,7 +17,6 @@ namespace Web.Admin.CategoryManagement
 
         protected async void Page_Load(object sender, EventArgs e)
         {
-            categoryBLL = new CategoryBLL();
             enableShowInfo = false;
             enableShowResult = false;
             stateString = null;
@@ -32,18 +30,15 @@ namespace Web.Admin.CategoryManagement
                     if (!IsPostBack)
                     {
                         await GetCategoryInfo();
-                        categoryBLL.Dispose();
                     }
                 }
                 else
                 {
                     Response.RedirectToRoute("Account_Login", null);
-                    categoryBLL.Dispose();
                 }    
             }
             catch(Exception ex)
             {
-                categoryBLL.Dispose();
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
@@ -76,7 +71,11 @@ namespace Web.Admin.CategoryManagement
             }
             else
             {
-                categoryInfo = await categoryBLL.GetCategoryAsync(id);
+                using(CategoryBLL categoryBLL = new CategoryBLL())
+                {
+                    categoryInfo = await categoryBLL.GetCategoryAsync(id);
+                }
+
                 if (categoryInfo == null)
                     Response.RedirectToRoute("Admin_CategoryList", null);
                 else
@@ -87,7 +86,12 @@ namespace Web.Admin.CategoryManagement
         private async Task DeleteCategoryInfo()
         {
             int id = GetCategoryId();
-            DeletionState state = await categoryBLL.DeleteCategoryAsync(id);
+            DeletionState state;
+            using(CategoryBLL categoryBLL = new CategoryBLL())
+            {
+                state = await categoryBLL.DeleteCategoryAsync(id);
+            }
+
             if (state == DeletionState.Success)
             {
                 stateString = "Success";
@@ -117,7 +121,6 @@ namespace Web.Admin.CategoryManagement
                 Session["error"] = new ErrorModel { ErrorTitle = "Ngoại lệ", ErrorDetail = ex.Message };
                 Response.RedirectToRoute("Notification_Error", null);
             }
-            categoryBLL.Dispose();
         }
     }
 }
