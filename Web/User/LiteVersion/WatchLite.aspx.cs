@@ -14,11 +14,13 @@ namespace Web.User.LiteVersion
     public partial class WatchLite : System.Web.UI.Page
     {
         protected FilmInfo filmInfo;
+        protected string hyplnkIncreaseView;
 
         protected async void Page_Load(object sender, EventArgs e)
         {
             try
             {
+                hyplnkIncreaseView = GetRouteUrl("User_IncreaseView", null);
                 await LoadFilmInfo();
                 object obj = Session["userSession"];
                 if (obj != null && filmInfo != null)

@@ -28,7 +28,7 @@
             <p>Ngôn ngữ: <% = filmInfo.Language.name %></p>
             <p>Công ty SX: <% = filmInfo.productionCompany %></p>
             <p>Ngày phát hành: <% = filmInfo.releaseDate %></p>
-            <p style="color:red;">Các thông tin như đạo diễn, diễn viên, thẻ tag,... không đc hiển thị trong phiên bản rút gọn, vui lòng chuyển qua phiên bản đầy đủ để xem chi tiết</p>
+            <p style="color:red;">Các thông tin như đạo diễn, diễn viên, thẻ tag,... không được hiển thị trong phiên bản rút gọn, vui lòng chuyển qua phiên bản đầy đủ để xem chi tiết</p>
         </div>
         <div class="film-tool">
             <a href="<% = filmInfo.url %>">Xem phim ngay</a>

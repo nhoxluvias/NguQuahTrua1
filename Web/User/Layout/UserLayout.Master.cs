@@ -12,6 +12,7 @@ namespace Web.User.Layout
         protected List<CategoryInfo> categories;
         protected string hyplnkSearch;
         protected string hyplnkWatchedList;
+        protected string hyplnkLiteVersion;
         protected string hyplnkHome;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -31,6 +32,7 @@ namespace Web.User.Layout
                 }
                 hyplnkSearch = GetRouteUrl("User_Search", null);
                 hyplnkWatchedList = GetRouteUrl("User_WatchedList", null);
+                hyplnkLiteVersion = GetRouteUrl("User_Home_Lite", null);
                 hyplnkHome = GetRouteUrl("User_Home", null);
                 GetCategories();
             }

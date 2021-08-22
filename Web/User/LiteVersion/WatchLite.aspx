@@ -7,6 +7,7 @@
     <%} %>
     <link href="<% = ResolveUrl("~/common_assets/video-js/video-js.min.css") %>" rel="stylesheet">
     <script src="<% = ResolveUrl("~/common_assets/video-js/video.js") %>"></script>
+    <script src="<%= ResolveUrl("~/user_assets/js/jquery.js") %>"></script>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
@@ -21,5 +22,22 @@
             Your browser does not support the video tag.
         </video>
     </div>
+    <%} %>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="foot" runat="server">
+    <% if (hyplnkIncreaseView != null && filmInfo != null)
+        { %>
+    <script type="text/javascript">
+        setTimeout(function () {
+            $(document).ready(function (e) {
+                $.post("<% = hyplnkIncreaseView %>", {
+                    filmId: "<% = filmInfo.ID %>"
+                }, function (data) {
+                    console.log(data);
+                });
+            });
+        }, 30000);
+    </script>
     <%} %>
 </asp:Content>

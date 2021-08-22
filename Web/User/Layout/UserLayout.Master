@@ -75,6 +75,7 @@
                                 </a>
                                 <ul class="dropdown-menu level1">
                                     <li><a href="#">API</a></li>
+                                    <li><a href="<% = hyplnkLiteVersion %>">Phiên bản rút gọn</a></li>
                                 </ul>
                             </li>
                             <li><a href="#">Hỗ trợ</a></li>
