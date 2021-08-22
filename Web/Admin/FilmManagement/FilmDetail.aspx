@@ -9,7 +9,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <% if (enableShowDetail)
         { %>
-    <!--Tables-->
     <h5 class="mt-2">Chi tiết phim</h5>
     <a class="anchor" name="tables"></a>
     <div class="row grid-responsive">

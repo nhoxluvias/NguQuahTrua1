@@ -1776,11 +1776,13 @@
     <Content Include="User\FilmDetail.aspx" />
     <Content Include="User\FilmsByCategory.aspx" />
     <Content Include="User\LiteVersion\FilmDetailLite.aspx" />
+    <Content Include="User\LiteVersion\FilmsByCategoryLite.aspx" />
     <Content Include="User\LiteVersion\IndexLite.aspx" />
     <Content Include="User\LiteVersion\WatchLite.aspx" />
     <Content Include="User\Search.aspx" />
     <Content Include="User\Watch.aspx" />
     <Content Include="User\WatchedList.aspx" />
+    <Content Include="user_assets\css\lite.css" />
     <Content Include="user_assets\css\plugins.css" />
     <Content Include="user_assets\css\style.css" />
     <Content Include="user_assets\fonts\fontawesome-webfont.svg" />
@@ -2317,6 +2319,13 @@
     </Compile>
     <Compile Include="User\LiteVersion\FilmDetailLite.aspx.designer.cs">
       <DependentUpon>FilmDetailLite.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="User\LiteVersion\FilmsByCategoryLite.aspx.cs">
+      <DependentUpon>FilmsByCategoryLite.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="User\LiteVersion\FilmsByCategoryLite.aspx.designer.cs">
+      <DependentUpon>FilmsByCategoryLite.aspx</DependentUpon>
     </Compile>
     <Compile Include="User\LiteVersion\IndexLite.aspx.cs">
       <DependentUpon>IndexLite.aspx</DependentUpon>

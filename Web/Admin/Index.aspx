@@ -21,7 +21,6 @@
         </div>
     </div>
 
-    <!--Tables-->
     <h5 class="mt-2">Thông tin hệ thống</h5>
     <a class="anchor" name="tables"></a>
     <div class="row grid-responsive">

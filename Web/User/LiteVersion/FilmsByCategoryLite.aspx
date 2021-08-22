@@ -1,12 +1,11 @@
-﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayoutLite.Master" AutoEventWireup="true" CodeBehind="IndexLite.aspx.cs" Inherits="Web.User.LiteVersion.IndexLite" %>
-
+﻿<%@ Page Async="true" Title="" Language="C#" MasterPageFile="~/User/Layout/UserLayoutLite.Master" AutoEventWireup="true" CodeBehind="FilmsByCategoryLite.aspx.cs" Inherits="Web.User.LiteVersion.FilmsByCategoryLite" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <title>Trang chủ - Phiên bản rút gọn</title>
+     <title>Thể loại: <% = categoryName %> -- Trang xem theo thể loại - Phiên bản rút gọn</title>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="mainContent" runat="server">
     <div class="main-content-title">
-        <h3>Phim mới nhất</h3>
+        <h3>Phim của thể loại: <% = categoryName %></h3>
     </div>
 
     <div class="film-list">

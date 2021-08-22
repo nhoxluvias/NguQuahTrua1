@@ -53,7 +53,6 @@
 
     <% if (enableShowDetail)
         {%>
-    <!--Tables-->
     <h5 class="mt-2">Thẻ tag của phim</h5>
     <a class="anchor" name="tables"></a>
     <div class="row grid-responsive">

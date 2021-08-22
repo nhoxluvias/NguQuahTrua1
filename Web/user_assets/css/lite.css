@@ -1,0 +1,169 @@
+﻿body {
+    padding: 0px;
+    width: 80%;
+    margin: 0px auto 0px auto;
+}
+
+.header {
+    background: #d49633;
+    height: 35px;
+    width: 100%;
+}
+
+.main-menu {
+    line-height: 35px;
+    text-transform: uppercase;
+}
+
+.content {
+    margin-top: 10px;
+}
+
+.sidebar {
+    background: #d49633;
+    height: inherit;
+    float: left;
+    width: 20%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.main-content {
+    height: inherit;
+    float: right;
+    width: 80%;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.main-content-title {
+    width: 100%;
+    height: inherit;
+    margin: 0px 1% 0px 1%;
+    padding: 0px 0% 0px 0%;
+}
+
+    .main-content-title h3 {
+        text-transform: uppercase;
+        padding: 0px 0% 0px 0%;
+        margin: 0px 0% 0px 0%;
+    }
+
+.datalist {
+    margin: 0px 1% 0px 1%;
+    padding: 0px 0% 0px 0%;
+    width: 98%;
+}
+
+.item {
+    width: 185px;
+    height: 340px;
+    margin: 0px 0% 0px 0%;
+    padding: 0px 0% 0px 0%;
+}
+
+.image-item {
+    width: 100%;
+    height: 284px;
+}
+
+.hyperlink-item {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: blue;
+}
+
+.film-detail{
+    width: 100%;
+    height: inherit;
+    background-color: red;
+}
+
+.film-image{
+    margin: 5px 1% 5px 1%;
+    width: 30%;
+    height: inherit;
+    padding-top: 5px;
+    float: left;
+}
+
+.film-image img{
+   width: 100%;
+   height: 400px;
+}
+
+.film-description {
+    margin: 5px 1% 5px 1%;
+    width: 66%;
+    height: inherit;
+    float: right;
+}
+
+    .film-description h3 {
+        text-transform: uppercase;
+        padding: 0px 0% 0px 0%;
+        margin: 0px 0% 0px 0%;
+    }
+
+    .film-description p {
+        text-align: justify;
+    }
+
+.film-more-detail {
+    margin: 5px 1% 5px 1%;
+    width: 66%;
+    height: inherit;
+    float: right;
+}
+
+    .film-more-detail h3 {
+        text-transform: uppercase;
+        padding: 0px 0% 0px 0%;
+        margin: 0px 0% 0px 0%;
+    }
+
+    .film-more-detail p {
+        text-align: justify;
+    }
+
+.film-tool {
+    margin: 5px 1% 5px 1%;
+    width: 66%;
+    height: inherit;
+    float: right;
+}
+
+    .film-tool a {
+        text-transform: uppercase;
+        text-decoration: none;
+        background: #c08c49;
+        color: white;
+    }
+
+.watch {
+    margin: 5px 1% 5px 1%;
+    width: 98%;
+    height: inherit;
+}
+
+#vid {
+    width: 100% !important;
+    height: 500px !important;
+}
+
+.footer {
+    background: #d49633;
+    height: 35px;
+    width: 100%;
+    clear: both;
+}
+
+.footer-title {
+    text-align: center;
+    text-transform: uppercase;
+    color: white;
+    font-size: 15px;
+    line-height: 35px;
+}

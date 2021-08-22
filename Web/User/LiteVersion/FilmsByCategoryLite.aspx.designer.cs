@@ -11,7 +11,7 @@ namespace Web.User.LiteVersion
 {
 
 
-    public partial class IndexLite
+    public partial class FilmsByCategoryLite
     {
 
         /// <summary>

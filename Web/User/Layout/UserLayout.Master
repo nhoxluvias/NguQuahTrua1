@@ -3,40 +3,29 @@
 <%@ Import Namespace="Data.DTO" %>
 
 <!DOCTYPE html>
-<!--[if IE 7]>
-<html class="ie ie7 no-js" lang="en-US">
-<![endif]-->
-<!--[if IE 8]>
-<html class="ie ie8 no-js" lang="en-US">
-<![endif]-->
-<!--[if !(IE 7) | !(IE 8)  ]><!-->
 <html lang="en" class="no-js">
 <head runat="server">
-    <!--Google Font-->
     <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
-    <!-- Mobile specific meta -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone-no">
 
     <link rel="icon" type="image/png" href="<% = ResolveUrl("~/user_assets/images/favicon.png") %>"/>
 
-    <!-- CSS files -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/user_assets/css/plugins.css") %>">
     <link rel="stylesheet" href="<%= ResolveUrl("~/user_assets/css/style.css") %>">
 
     <script src="<%= ResolveUrl("~/user_assets/js/jquery.js") %>"></script>
 
-    <!--Basic need-->
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 </head>
 <body>
     <form id="form1" runat="server">
-        <!-- BEGIN | Header -->
         <header class="ht-header">
             <div class="container">
                 <nav class="navbar navbar-default navbar-custom">
-                    <!-- Brand and toggle get grouped for better mobile display -->
+
                     <div class="navbar-header logo">
                         <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                             <span class="sr-only">Toggle navigation</span>
@@ -49,7 +38,7 @@
                         <a href="<% = hyplnkHome %>">
                             <img class="logo" src="<% = ResolveUrl("~/user_assets/images/logo1.png") %>" alt="" width="119" height="58"></a>
                     </div>
-                    <!-- Collect the nav links, forms, and other content for toggling -->
+
                     <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav flex-child-menu menu-left">
                             <li class="hidden">
@@ -92,10 +81,10 @@
                             <li class="btn"><a id="hyplnkAccount" href="#" runat="server"></a></li>
                         </ul>
                     </div>
-                    <!-- /.navbar-collapse -->
+
                 </nav>
 
-                <!-- top search form -->
+
                 <div class="top-search">
                     <select>
                         <option value="united">Phim chiếu rạp</option>
@@ -105,12 +94,10 @@
                 </div>
             </div>
         </header>
-        <!-- END | Header -->
 
         <asp:ContentPlaceHolder ID="mainContent" runat="server">
         </asp:ContentPlaceHolder>
 
-        <!-- footer section-->
         <footer class="ht-footer">
             <div class="container">
                 <div class="flex-parent-ft">
@@ -166,14 +153,14 @@
             </div>
             <div class="ft-copyright">
                 <div class="ft-left">
-                    <p>© <% = DateTime.Now.ToString("yyyy") %> TP. Hồ Chí Minh . HUFI. Nhóm bài tập .</p>
+                    <p>© <% = DateTime.Now.ToString("yyyy") %> MovieWeb.</p>
                 </div>
                 <div class="backtotop">
                     <p><a href="#" id="back-to-top">Về đầu trang  <i class="ion-ios-arrow-thin-up"></i></a></p>
                 </div>
             </div>
         </footer>
-        <!-- end of footer section-->
+
     </form>
     <script src="<%= ResolveUrl("~/user_assets/js/plugins.js") %>"></script>
     <script src="<%= ResolveUrl("~/user_assets/js/plugins2.js") %>"></script>

@@ -6,24 +6,15 @@
 <head runat="server">
     <meta charset="utf-8">
 
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700" rel="stylesheet">
 
-    <!-- Template Styles -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/font-awesome.min.css") %>">
-    <!-- CSS Reset -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/normalize.css") %>">
-    <!-- Milligram CSS minified -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/milligram.min.css") %>">
-    <!-- Main Styles -->
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/styles.css") %>">
     <link rel="stylesheet" href="<%= ResolveUrl("~/admin_assets/css/addition.css") %>" />
 
     <script type="text/javascript" src="<%= ResolveUrl("~/admin_assets/js/jquery.js") %>"></script>
-    <!--[if lt IE 9]>
-	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
     <link rel="icon" type="image/png" href="<% = ResolveUrl("~/admin_assets/images/favicon.png") %>"/>
 
     <asp:ContentPlaceHolder ID="head" runat="server">

@@ -74,6 +74,11 @@ namespace Web.App_Start
             routes.MapHttpHandlerRoute("User_DownvoteFilm", "film/downvote", "~/User/DownvoteFilm.ashx");
             routes.MapHttpHandlerRoute("User_IncreaseView", "film/increase-view", "~/User/IncreaseView.ashx");
 
+            routes.MapPageRoute("User_Home_Lite", "lite-version/", "~/User/LiteVersion/IndexLite.aspx");
+            routes.MapPageRoute("User_FilmDetail_Lite", "lite-version/film-detail/{slug}/{id}", "~/User/LiteVersion/FilmDetailLite.aspx");
+            routes.MapPageRoute("User_Watch_Lite", "lite-version/watch/{slug}/{id}", "~/User/LiteVersion/WatchLite.aspx");
+            routes.MapPageRoute("User_FilmsByCategory_Lite", "lite-version/films-by-category/{slug}/{id}", "~/User/LiteVersion/FilmsByCategoryLite.aspx");
+
             routes.MapPageRoute("Notification_Error", "notification/error", "~/Notification/Error.aspx");
         }
     }
